@@ -36,7 +36,7 @@ this repository has been compiled.
 | 1 | Explicit 38-crossing lower-bound construction, `f(7,7) ≥ 38` | **VERIFIED IN LEAN** (combinatorial core) + **VERIFIED BY EXACT COMPUTATION** | `lean/LowerBound.lean`; `results/validation/2026-09-13_lean_build.log`; `data/lower_bound/lower_bound_38.json` | Kernel-checked 2026-09-13. `crossing_count_eq_38 : crossCount = 38`, plus `P_simple`, `Q_simple`, `general_position`, `per_P_side_counts = [6,6,6,6,6,6,2]`, `disjoint_count_eq_11`. **Core Lean only — zero imports**, verified to build with an empty `LEAN_PATH`, so Mathlib is not in its trust base. Axioms: `propext` only. Coordinates verified identical to the committed JSON. **Scope limit:** simplicity is proved at the *orientation* level (distinct vertices, no 3 of the 7 collinear, consecutive sides non-collinear, no proper crossing of non-adjacent sides). The step from that to "the closed polygonal curve is a Jordan curve in ℝ²" is standard but **not formalized**. |
 | 2 | Lemma A (new): an uncrossable `S ⊆ sides(P)` forces `|E| ≥ n + (m−|S|)` | **VERIFIED IN LEAN** (counting reduction only) | `lean/LemmaA.lean`; `results/validation/2026-09-13_lean_build.log` | Kernel-checked 2026-09-13 against Mathlib v4.33.1. `card_E_ge`, `card_E_ge_ten`, `card_E_ge_eleven` (the parity upgrade), and `crossings_le_38 : I ≤ 38`. Axioms: the three standard ones only. **What is proved is an implication**: the geometric content (`h1`, `h2`), parity (`hpar`) and `I + |E| = 49` (`hIE`) remain explicit hypotheses, discharged in Lean only for the one explicit certificate pair (`nonvacuous`, `cert_I_le_38`, `Rcert_card_E = 11`). The (★) vertex-avoiding-line subtlety lives in `h1` and is **not** formalized. |
 | 3 | Parity / `I + \|E\| = 49`, and `I` even | **MANUALLY CHECKED** + **VERIFIED BY EXACT COMPUTATION** on instances | `docs/proof-outline.md` Step 1; checked on the lower-bound certificate | Elementary. Two non-collinear segments meet at most once; ∂P, ∂Q are closed curves. |
-| 4 | General-position reduction (`f = f_general position`) | **EXTERNAL PUBLISHED LEMMA** (AKR §9) — and the project's own substitute argument is **INCORRECT** | `docs/external-lemma-audit.md` §7; `docs/proof-outline.md` Step 0 | **Downgraded 2026-09-13.** The *statement* the project needs is true and is correctly proved in AKR (DCG 2022) §9.1, pp. 1069–1072. But `proof-outline.md` Step 0, which claims to prove it independently ("proved here, not assumed"), contains a **real error**: its type-(iii) rule *push the vertex δ into the cone of Q at w* **loses** the intersection point whenever Cone_P(v) ⊂ Cone_Q(w), giving 0 crossings instead of ≥ 1. Confirmed by exact rational arithmetic, independently by the auditor and by the main agent. Step 0 also never addresses the case AKR §9.1 exists to handle — a side involved in several degeneracies at once. **The project should delete Step 0's type-(iii) argument and cite AKR §9 instead.** See `known-issues.md` K-10. |
+| 4 | General-position reduction (`f = f_general position`) | **EXTERNAL PUBLISHED LEMMA** (AKR §9.1) — the project's own earlier argument is **SUPERSEDED / KNOWN DEFECT** | `docs/proof-outline.md` Step 0; `docs/external-lemma-audit.md` §7; `known-issues.md` K-10 | **Repaired 2026-09-13.** Step 0 now cites AKR §9.1 rather than proving the reduction itself, and states exactly the consequences used downstream (simplicity; no vertex on the other boundary; no three combined vertices collinear; no two combined sides parallel; hence `ℓ(q_j)` contains no `P`-vertex; intersections countable as proper crossings). The **earlier project-specific perturbation rule was incorrect** — its type-(iii) step destroys the intersection point when `Cone_P(v) ⊂ Cone_Q(w)` — and never addressed a side participating in several degeneracies at once. The failed argument is preserved in git history, not edited away. |
 | 5 | Exceptional classification: exactly 16 labelled / 14 classes | **INDEPENDENTLY REIMPLEMENTED + EXTERNAL CROSS-CHECK** | `independent/order_type_audit/`; `data/exceptional_profiles/exceptional_profiles_14.json` | Audited 2026-09-13 by a fresh agent with no inherited context, from an external order-type database, without importing `chiro.py`/`geom.py`. Independently reproduced 6342 simple heptagons, the 6007/319/**16** split and the **14** classes. **All four downstream profile fields match 14/14** (`M_set`, `maximal_crossing_sets`, `lemma2_windows`, `avoiding_pairs`), verified twice: by the auditor recomputing its predicates on the project's representatives, and independently by the main agent transporting the project's stored fields through the dihedral group element. 33/33 adversarial tests pass, including 490 explicit rational witness lines and exhaustive chirotope-vs-coordinate cross-checks. |
 | 6 | Order-type enumeration: 1, 2, 3, 16, 135 for n = 3…7 | **EXTERNALLY CROSS-CHECKED (exact set equality)** | `independent/order_type_audit/external/otypes07.b08`; `data/order_types/order_types_7.json` | Compared 2026-09-13 against the **TU Graz order-type database** (`otypes07.b08`, 1890 bytes = 135×7×2, sha256 `0f13421854f049…`). The project's 135 chirotopes are **exactly** the 135 realizable order types up to relabelling and reflection — set equality in both directions, 0 in either difference. **Consequence:** the project's "superset of realizable order types" argument is sound but turns out to be *unnecessary* — the sets are equal. Every representative was independently confirmed to be a uniform rank-3 oriented matroid (44 topes each). |
 | 7 | Graph enumeration: 13,003,620 nine-edge bipartite graphs with min degree ≥ 1 | **VERIFIED BY EXACT COMPUTATION** | `results/logs/2026-09-13_audit_enum_E9.log`; `results/counts/pipeline_counts.json` | Reproduced exactly. Also cross-checked against the closed form and against the corrected split 5,040 + 476,280 + 13,003,620 = 13,484,940 (see `known-issues.md` K-01). |
@@ -55,6 +55,50 @@ this repository has been compiled.
 
 ## What a reader should take away
 
-1. **`f(7,7) ≥ 38` is solid.** One JSON file, one short script, a second of compute.
-2. **`f(7,7) ≤ 38` is a candidate result.** The computation reproduces exactly and cleanly, but it is conditional on four external lemmas (two of them via non-trivial translations that no one else has reviewed), and it has been run only from a single Python codebase written in a single LLM-assisted session.
-3. **Nothing is formalized.** The Lean directory is one uncompiled file.
+**Headline status.**
+
+> The candidate proof has **no known computational gap**. One superseded internal
+> perturbation argument is known to be **incorrect**, but the required reduction
+> follows from AKR §9.1. The principal remaining mathematical review item is the
+> interpretation and application of **AKR Observation 6 and Lemma 7** in the
+> deduction that the auxiliary graph `H` is bipartite.
+
+This is **not** a claim that `f(7,7) = 38` is proved, formally verified, or free
+of gaps. It is a claim about where the remaining risk is concentrated.
+
+### Verified / checked
+
+| Item | How |
+|---|---|
+| Explicit 38-crossing construction | **Lean kernel-checked**, core Lean, no Mathlib |
+| Lemma A counting + parity | **Lean kernel-checked** (as an implication) |
+| 225-case endgame | **Lean kernel-checked**, plus certificate + independent checker |
+| `AKR5Conclusion ↔ AKR5Adjacent` | **Lean kernel-checked**, axiom-free |
+| Černý L1, Černý L2 | Audited against the published paper, hypothesis by hypothesis |
+| AKR L5 (consecutive **and** avoiding) | Audited against the published paper |
+| Strict Lemma-A line condition | Proved from AKR §3's collinearity assumption |
+| AKR §9.1 general-position reduction | Audited; **imported**, not reproved |
+| 135 order types | Exact set equality with the TU Graz database |
+| 6,342 simple heptagons | Externally cross-checked (`hamilt07.b08`) |
+| 14 exceptional profiles | Independently reimplemented; all fields match |
+| Finite reduction → 225 triples | Two implementations (Python, C++), exact set match |
+
+### Superseded / known defect
+
+| Item | Status |
+|---|---|
+| The project's original Step 0 perturbation proof | **INCORRECT** in the cone-containment sub-case. Removed from the active proof and replaced by a citation to AKR §9.1. Preserved in git history; documented in `known-issues.md` K-10. |
+
+### Remaining human-review item
+
+| Item | Status |
+|---|---|
+| **AKR Observation 6 / Lemma 7, and the deduction that `H` is bipartite** | Observation 6 is unproved in both published versions and is **false** under the printed definition of "associated"; it holds under the narrower reading the project uses. The SoCG 2020 proof of Lemma 7 makes the intended existential choice explicit via cone conditions that the journal version deleted. No counterexample to the bipartiteness deduction was found. **Requires external expert confirmation** — see [`akr-l7-human-review.md`](akr-l7-human-review.md), which is self-contained and includes a drafted author question. |
+
+### Other standing limitations
+
+* Nothing establishes **completeness** of the 225-case list beyond the two
+  independent enumerations; it is not formalized.
+* `f(7,7) = 38` is **not** a Lean theorem; five of the seven planned Lean files
+  do not exist.
+* No person outside this AI-assisted process has reviewed any of it.

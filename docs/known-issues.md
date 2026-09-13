@@ -475,8 +475,16 @@ not in the project's use of it, and it is not something this project can close.
 
 ### Still open
 
-Independent expert review of AKR Lemma 7 and its Observation 6. Seven drafted
-author-contact questions are in `external-lemma-audit.md` §10.
+Independent expert review of AKR Lemma 7 and its Observation 6.
+
+**A self-contained note for that reviewer now exists:**
+[`akr-l7-human-review.md`](akr-l7-human-review.md). It states the source
+definitions verbatim from both versions, gives the explicit counterexample to
+Observation 6 under the printed definition of "associated", sets out the
+`H`-bipartite derivation with quantifiers made explicit, records a failed attempt
+to falsify it, documents AKR's own §10.2 computer verification, and ends with a
+narrow drafted question for the authors. It is roughly three pages and requires
+no other file and no code.
 
 **Unresolved:** the DCG PDF is stamped "corrected publication 2023" but contains
 no correction notice, and the publisher blocked retrieval of the correction
@@ -550,9 +558,16 @@ already has twice over. A one-clause fix also works ("push into `Cone_Q(w)` if
 `Cone_P(v) ⊄ Cone_Q(w)`, and out of it otherwise"), but it leaves the
 multiple-degeneracy gap unaddressed.
 
-**This has NOT been repaired.** `docs/proof-outline.md` is preserved unmodified,
-as the research record; the correction is documented here, per this repository's
-standing policy of documenting rather than silently patching.
+**REPAIRED 2026-09-13.** `docs/proof-outline.md` Step 0 now cites AKR §9.1 and
+lists exactly the consequences used downstream; it carries an explicit note that
+the earlier argument was incorrect and superseded.
+
+This is a deliberate exception to this repository's standing policy of preserving
+original documents unmodified. The policy exists to protect the *research record*,
+not to keep a false argument inside the *active proof*. The failed argument
+remains fully visible in git history (`git log -p docs/proof-outline.md`), the
+supersession is stated in the file, and no historical artifact — transcripts,
+logs, `archive/` — has been touched.
 
 ### Note on the counting model
 

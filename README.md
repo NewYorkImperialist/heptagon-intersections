@@ -69,7 +69,7 @@ Two halves, with very different levels of support:
 7. **Formalization and reproduction** are ongoing, and incomplete.
 
 **New in this work:** Lemma A; the exceptional classification; the
-general-position reduction (proved, not assumed); the "`H` is bipartite"
+the "`H` is bipartite"
 reformulation of AKR Lemma 7; the extension of AKR Lemma 5 to avoiding pairs;
 the final elimination.
 
@@ -111,9 +111,11 @@ full table. In brief:
 
 | | |
 |---|---|
-| Verified in Lean | **nothing** |
+| Verified in Lean | 38-crossing construction; Lemma A counting + parity; all 225 endgame cases; the AKR-L5 bridge as an `iff` |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
-| Manually checked (prose only) | Lemma A; parity; general-position reduction |
+| Manually checked (prose only) | parity |
+| Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR §9.1) |
+| **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — see [`docs/akr-l7-human-review.md`](docs/akr-l7-human-review.md) |
 | External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified |
 | Reproduced by a second implementation | the finite graph/profile reduction, exact 225-triple set match (C++, different enumeration) |
 | Needs independent reproduction | the order-type enumeration and exceptional classification; the upper bound as a whole |

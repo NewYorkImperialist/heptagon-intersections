@@ -1,35 +1,74 @@
-# f(7,7) = 38 — the proof, in theorem/lemma form
+# f(7,7) = 38 — the candidate proof, in theorem/lemma form
 
-**Theorem.** Two simple heptagons in general position have at most 38 boundary
+**Claim.** Two simple heptagons in general position have at most 38 boundary
 intersection points, and 38 is attained.  Hence f(7,7) = 38.
 
-External results used (statements verified, internal proofs not re-verified):
+> **Status.** This is a *candidate* proof. It has no known computational gap, and
+> most steps are now kernel-checked or independently cross-checked, but one
+> mathematical review item remains open: the interpretation and application of
+> AKR Observation 6 and Lemma 7 in the deduction that the auxiliary graph `H` is
+> bipartite (Step 7). See [`akr-l7-human-review.md`](akr-l7-human-review.md) and
+> [`verification-status.md`](verification-status.md). Do not read the word
+> "Theorem" below as a settled result.
+
+External results used (statements checked against the papers in
+[`external-lemma-audit.md`](external-lemma-audit.md); their internal proofs are
+**not** re-verified here):
 
 * **C1** = Černý–Kára–Kráľ–Podbrdský–Sotáková–Šámal 2003, Lemma 1.
 * **C2** = same paper, Lemma 2.
 * **A5** = Ackerman–Keszegh–Rote, DCG 68 (2022), Lemma 5.
-* **A7** = same paper, Lemma 7.
+* **A7** = same paper, Lemma 7 — **the open review item**.
+* **A9** = same paper, §9.1 (and §3), for the general-position reduction of
+  Step 0. This dependency replaces a project-specific argument that was found to
+  be incorrect; see Step 0.
 
 **Černý Lemma 3 is NOT needed.**  Verified: removing it from the pipeline leaves
-the final survivor count at 0.  This shrinks the external dependencies from five
-published lemmas to four.
+the final survivor count at 0.  This shrinks the *lemma* dependencies from five
+to four, though Step 0 now cites AKR §9 in addition.
 
 ---
 
-## Step 0 (reduction to general position — proved here, not assumed)
+## Step 0 (reduction to general position — imported from AKR §9.1)
 
-Every degeneracy is a vertex of one polygon on a side-interior of the other
-(type ii) or a vertex on a vertex (type iii).  Type (ii): move the vertex across
-the line of that side, choosing the side that yields 2 crossings when both
-neighbours lie on one side, else either (1 crossing).  Type (iii): if the four
-wedge-rays interleave, any move yields 2; if not — the case where separation
-would lose the point — push the vertex a distance δ **into the cone of Q at w**,
-so both incident sides of P must exit across q⁻ or q⁺ within O(δ) of w, yielding
-2.  Only two sides move; transversal crossings and simplicity are open
-conditions.  Finitely many degeneracies.  Afterwards the configuration lies in an
-open set on which I is constant, and "three of the 14 vertices collinear" /
-"two of the 14 sides parallel" are finitely many proper algebraic subsets, which
-cannot cover a nonempty open set.  Hence f = f_general position.
+By Ackerman–Keszegh–Rote §9.1 (DCG 68 (2022), PDF pp. 22–24, journal pp. 1070–1072), it suffices for the extremal upper-bound argument
+to work in the stated general-position regime: their perturbation removes the
+relevant degeneracies without decreasing the number of boundary intersections.
+
+Precisely the following consequences are used later, and nothing stronger:
+
+* both polygons remain **simple**;
+* **no vertex of one polygon lies on the boundary of the other**, so every
+  intersection point is an interior point of two sides — AKR §3 draws exactly
+  this consequence, and it is what licenses counting intersections as proper
+  crossings in the combinatorial argument;
+* **no three vertices of P and Q combined are collinear**;
+* **no two sides of P and Q combined are parallel**;
+* consequently **the supporting line ℓ(q_j) of any side of Q contains no vertex
+  of P** — ℓ(q_j) passes through two vertices of Q, so a vertex of P on it would
+  be a third collinear combined vertex. This is exactly the hypothesis the
+  strict form of Lemma A (Step 3) needs, and it is the only kind of line at
+  which Lemma A is ever instantiated.
+
+AKR obtain the first two by the perturbation of §9.1–§9.2 and the last two by a
+further small perturbation that does not change the intersection pattern (§3).
+
+> **Note on a superseded argument.** Earlier versions of this document proved
+> Step 0 by a project-specific perturbation rule ("proved here, not assumed").
+> That argument was found to be **incorrect** in one cone-containment sub-case:
+> its type-(iii) rule, *push the coincident vertex into Cone_Q(w)*, destroys the
+> intersection point whenever Cone_P(v) ⊂ Cone_Q(w), yielding 0 crossings
+> instead of ≥ 1. It also never addressed the case AKR §9.1 exists to handle, in
+> which one side participates in several degeneracies at once. It has been
+> replaced by the citation above, which is what the theorem actually needs. The
+> failed argument remains visible in this repository's git history and is
+> documented in `known-issues.md` K-10; it has not been edited to conceal the
+> error.
+
+**Caveat on the counting model.** AKR §9.3 explicitly leaves the variant that
+counts intersecting *side pairs* rather than intersection *points* as future
+research. Everything here is in the intersection-**point** model, and the result
+must not be restated in the pairs model.
 
 ## Step 1  I + |E(G^D)| = 49, and I is even
 
