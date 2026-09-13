@@ -92,7 +92,7 @@ combinatorial filters are the least secure steps in the argument — see
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. Currently **one uncompiled file**; see `lean/README.md`. |
+| `lean/` | Formalization. **Seven files, all compiling** (`lake build`, 752 jobs); six import nothing but core Lean. See `lean/README.md`. |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
 | `independent/` | Implementation B: an independent C++ reimplementation of the finite reduction, written from a written specification. |

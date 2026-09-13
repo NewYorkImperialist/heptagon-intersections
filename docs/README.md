@@ -26,7 +26,7 @@ stated in the file itself. The other two remain unedited:
 |---|---|---|
 | [`proof-outline.md`](proof-outline.md) | latest pipeline, **Step 0 repaired 2026-09-13** | The current argument in theorem/lemma form. Now carries a status banner and an explicit note recording that its original Step 0 was incorrect. Read alongside `verification-status.md`. |
 | [`audit-report.md`](audit-report.md) | mid-project | The project's adversarial self-audit. Found defects D1 and D2. Note it states that the result is *not* mitigated by an independent reimplementation — which contradicts the later `proof-outline.md` claim of "2 independent implementations" (see `known-issues.md` K-02). |
-| [`lean-architecture.md`](lean-architecture.md) | design stage | The seven-file Lean plan. **Six of the seven files do not exist.** See [`../lean/README.md`](../lean/README.md). |
+| [`lean-architecture.md`](lean-architecture.md) | design stage | The original seven-file Lean plan. **Superseded in an important way and preserved unedited.** It plans an `Imported.lean` holding Černý L1–L3 and AKR L5, L7 **as `axiom`s**, and an axiomatic `Classification.lean`. That is *not* what was built: `Lemma7Bridge.lean` takes the AKR-L7 consequence as an explicit **hypothesis**, never an axiom, and no project-specific axiom exists anywhere in `lean/`. Read [`../lean/README.md`](../lean/README.md) for what actually exists. |
 
 ## Reading them safely
 

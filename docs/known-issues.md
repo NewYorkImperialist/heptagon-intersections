@@ -359,10 +359,11 @@ UTF-8), commit the file, and hash that.
 
 ---
 
-## K-08 — Lean: first files now kernel-checked  (LARGELY RESOLVED 2026-09-13)
+## K-08 — Lean: seven files now kernel-checked  (LARGELY RESOLVED 2026-09-13)
 
-**Status:** the two foundational files compile with no `sorry` and no
-project-specific axioms. Five of the seven planned files remain unwritten.
+**Status:** seven Lean files compile with no `sorry` and no project-specific
+axioms. `f(7,7) = 38` is still **not** a Lean theorem, and the completeness of
+the 225-case list is not formalized.
 
 ### What now builds
 
@@ -373,6 +374,14 @@ a clean `rm -rf .lake/build`.
 |---|---|---|---|---|
 | `lean/LowerBound.lean` | **none (core Lean)** | none | none | `propext` only |
 | `lean/LemmaA.lean` | Mathlib v4.33.1 | none | none | `propext`, `Classical.choice`, `Quot.sound` |
+| `lean/EndgameDefs.lean` | **none (core Lean)** | none | none | `propext`, `Quot.sound` |
+| `lean/EndgameData.lean` | **none (core Lean)** | none | none | — (generated data) |
+| `lean/Endgame.lean` | **none (core Lean)** | none | none | `propext`, `Quot.sound` |
+| `lean/Lemma7Bridge.lean` | **none (core Lean)** | none | none | **none at all** |
+| `lean/CernyL2Interface.lean` | **none (core Lean)** | none | none | `propext`, `Classical.choice`, `Quot.sound` |
+
+`lake build` → 752 jobs, exit 0. Six of the seven import nothing whatsoever;
+only `LemmaA.lean` uses Mathlib.
 
 `LowerBound.lean` was additionally verified to compile with an **empty
 `LEAN_PATH`**, which demonstrates Mathlib is genuinely not in its trust base.
