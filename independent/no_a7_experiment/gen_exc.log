@@ -1,0 +1,5 @@
+loaded 135 deterministic order types from ot7_det.pkl
+(c) simple 7-gons examined: 6342
+    minimum uncrossable-set size distribution: {3: 6007, 4: 319, 5: 16}
+    exceptional polygon classes: 14
+wrote exc_det.pkl

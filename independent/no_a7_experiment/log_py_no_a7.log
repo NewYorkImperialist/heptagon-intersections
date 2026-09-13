@@ -1,0 +1,16 @@
+loaded 14 exceptional class profiles from exc_det.pkl
+  graphs |E|=9, min degree >=1 : 13003620
+  after AKR Lemma 5 consecutive: 42238
+  after AKR Lemma 7 H bipartite: 42238   [A7 FILTER OFF -- unchanged from previous line]
+  Cerny Lemma 3                : NOT APPLIED (not logically necessary)
+  graphs entering class filters : 42238
+  graphs after crossing-set compatibility : 6376
+  graphs after Cerny Lemma 2              : 533
+  (classP, classQ, graph) combinations reaching the final filter: 2412
+  combinations SURVIVING the final filter : 2187
+
+wrote py_no_a7.json: 2412 cases on 121 distinct graphs
+  degree sequences P: {(2, 2, 1, 1, 1, 1, 1): 225}
+  degree sequences Q: {(2, 2, 1, 1, 1, 1, 1): 225}
+  classes P: [1, 2, 3, 4, 9, 10, 11, 12, 13]
+  classes Q: [1, 2, 3, 4, 9, 10, 11, 12, 13]

@@ -1,0 +1,13 @@
+checking 225 residual triples from control_input.json
+  FAIL (classP=12, classQ=1, rows=[1, 1, 2, 20, 8, 16, 96]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=12, classQ=3, rows=[1, 1, 64, 40, 16, 8, 6]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=12, classQ=12, rows=[1, 1, 64, 40, 16, 8, 6]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=2, classQ=12, rows=[1, 1, 10, 4, 8, 48, 64]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=3, classQ=1, rows=[1, 2, 2, 20, 8, 16, 96]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=12, classQ=1, rows=[1, 2, 2, 20, 8, 16, 96]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=2, classQ=1, rows=[1, 2, 20, 8, 16, 96, 1]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=3, classQ=3, rows=[1, 64, 64, 40, 16, 8, 6]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=3, classQ=12, rows=[1, 64, 64, 40, 16, 8, 6]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+  FAIL (classP=12, classQ=3, rows=[1, 64, 64, 40, 16, 8, 6]): ['classP killed by avoiding-pair L5', 'classQ killed by avoiding-pair L5', 'H IS bipartite on P -- would have survived WITH A7 too', 'H IS bipartite on Q -- would have survived WITH A7 too']
+distinct graphs: 121
+VERIFY: 225 FAILURES

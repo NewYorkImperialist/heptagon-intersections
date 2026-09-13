@@ -87,3 +87,11 @@ paper/*.blg
 paper/*.out
 paper/*.toc
 paper/*.synctex.gz
+
+# no-A7 experiment: compiled binary and regenerable intermediates
+independent/no_a7_experiment/reduction_a7opt
+independent/no_a7_experiment/*.pkl
+# py_no_a7.json duplicates cpp_no_a7.json (same 2,412 triples, two code paths);
+# keep the C++ one as the committed artifact.
+independent/no_a7_experiment/py_no_a7.json
+independent/no_a7_experiment/py_with_a7.json

@@ -1,0 +1,3 @@
+checking 2187 residual triples from cpp_no_a7.json
+distinct graphs: 412
+VERIFY: OK -- every residual triple genuinely passes every applied filter and genuinely fails A7

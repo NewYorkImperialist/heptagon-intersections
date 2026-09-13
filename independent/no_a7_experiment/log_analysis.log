@@ -1,0 +1,20 @@
+residual: 2187 triples on 412 distinct graphs
+component (|P-sides|,|Q-sides|) profiles of the residual graphs:
+   ((1, 1), (1, 1), (1, 1), (2, 2), (2, 2)): 36
+   ((1, 1), (1, 1), (1, 2), (2, 1), (2, 2)): 180
+   ((1, 1), (1, 2), (1, 2), (2, 1), (2, 1)): 196
+same, for the 121 graphs A7 KEEPS (killed by avoiding-pair L5):
+   ((1, 1), (1, 1), (1, 1), (2, 2), (2, 2)): 9
+   ((1, 1), (1, 1), (1, 2), (2, 1), (2, 2)): 112
+overlap between the two graph sets: 0
+
+residual graphs fall into 4 orbits under <rotate P, rotate Q, reflect P, reflect Q, transpose>
+   orbit sizes: Counter({196: 4})
+   every orbit entirely inside the residual set: False
+the 121 A7-kept graphs fall into 3 orbits; sizes: Counter({196: 2, 392: 1})
+
+=== DIAGNOSTICS (NOT part of the verdict; these predicates are NOT justified by the project) ===
+[DIAG] Cerny Lemma 3 would kill 0 of the 412 residual graphs (412 would remain)
+[DIAG] dropping the different-component guard on the avoiding-pair filter would kill 0 of the 412 residual graphs
+[DIAG] AKR L5 on ALL non-adjacent pairs would kill 412 of 412 residual graphs
+[DIAG] residual graphs admitting classP == classQ: 124

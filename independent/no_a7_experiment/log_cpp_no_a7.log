@@ -1,0 +1,19 @@
+AKR Lemma 7 (H bipartite) filter: OFF
+loaded 14 profiles; M_set/maximal-crossing-set consistency OK; avoiding-pair format OK
+graphs |E|=9 min degree>=1        : 13003620
+after consecutive AKR Lemma 5     : 42238
+after AKR Lemma 7 (H bipartite)   : 42238   [FILTER OFF -- same as previous line]
+after crossing-set compatibility  : 6376
+after Cerny Lemma 2               : 533
+distinct surviving graphs         : 533
+(classP,classQ,graph) triples     : 2412
+-- final avoiding-pair AKR L5 --
+graphs surviving avoiding-pair L5 : 412
+distinct surviving graphs (final) : 412
+TRIPLES SURVIVING EVERYTHING      : 2187
+-- diagnostic: graphs by (H bip on P, H bip on Q) --
+  after consecutive L5      (F,F)=17248 (F,T)=0 (T,F)=0 (T,T)=24990
+  after compatibility       (F,F)=4076 (F,T)=0 (T,F)=0 (T,T)=2300
+  after Cerny L2            (F,F)=412 (F,T)=0 (T,F)=0 (T,T)=121
+  after avoiding-pair L5    (F,F)=412 (F,T)=0 (T,F)=0 (T,T)=0
+wrote cpp_no_a7.json

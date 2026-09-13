@@ -1,0 +1,13 @@
+A7 ON (baseline; must reproduce the shipped result)
+  [OK  ] triples reaching the final avoiding-pair filter: |A|=225 |B|=225
+  [OK  ] triples surviving everything: |A|=0 |B|=0
+      baseline survivor count is 0 in both paths, as shipped
+A7 OFF (the experiment)
+  [OK  ] triples reaching the final avoiding-pair filter: |A|=2412 |B|=2412
+  [OK  ] triples SURVIVING everything: |A|=2187 |B|=2187
+cross-relations
+  reaching=2412  surviving=2187  killed=225
+  [OK  ] the triples killed by the avoiding-pair filter with A7 OFF are EXACTLY the 225 that the shipped A7-ON pipeline produces
+  [OK  ] no residual triple is one of the shipped 225
+  residual distinct graphs = 412, shipped distinct graphs = 121, intersection = 0
+RESULT: PATHS AGREE

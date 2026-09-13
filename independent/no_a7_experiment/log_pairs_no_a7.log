@@ -1,0 +1,12 @@
+graphs after consecutive AKR L5 (A7 OFF, no L3): 42238
+
+NO-A7 residual, per ordered class pair:
+  [as stored] total surviving triples = 2187; nonzero ordered class pairs = 81; per-pair counts = [(27, 81)]; distinct graphs in the union = 412
+  [rotated 3 + reflected] total surviving triples = 2187; nonzero ordered class pairs = 81; per-pair counts = [(27, 81)]; distinct graphs in the union = 412
+  [rotated 5] total surviving triples = 2187; nonzero ordered class pairs = 81; per-pair counts = [(27, 81)]; distinct graphs in the union = 412
+
+per-pair table identical under all three labellings: True
+total identical:   True  (= 2187)
+distinct-graph union identical: False  (sizes 412, 412, 412)
+
+CONCLUSION: the residual is NON-EMPTY under every labelling, so the verdict does not depend on the choice of class representative.

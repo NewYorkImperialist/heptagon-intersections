@@ -1,0 +1,10 @@
+max |[abc][ade]-[abd][ace]+[abe][acd]| over random points: 6.66e-16
+
+deterministic enumeration of abstract order types:
+  n=3: 1 order types
+  n=4: 2 order types
+  n=5: 3 order types
+  n=6: 16 order types
+  n=7: 135 order types
+known counts of order types (Aichholzer-Aurenhammer-Krasser): n=3:1  n=4:2  n=5:3  n=6:16  n=7:135
+all 105 GP + 35 Radon relations verified for every representative: True
