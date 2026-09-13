@@ -73,3 +73,8 @@ nohup.out
 
 # Implementation B compiled binary (rebuild with the command in its README)
 independent/implementation_b/reduction
+
+# Reference PDFs: published papers, identified by DOI and SHA-256 in
+# references/README.md rather than redistributed here (Springer DCG article
+# is not freely redistributable).
+references/*.pdf
