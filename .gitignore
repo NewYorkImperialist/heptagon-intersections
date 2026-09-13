@@ -1,0 +1,72 @@
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ---------------------------------------------------------------------------
+# Lean 4 / Lake
+# ---------------------------------------------------------------------------
+.lake/
+lake-packages/
+build/
+*.olean
+*.ilean
+*.trace
+lakefile.olean
+
+# ---------------------------------------------------------------------------
+# Editors / IDEs
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+\#*\#
+.\#*
+
+# ---------------------------------------------------------------------------
+# OS
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+# ---------------------------------------------------------------------------
+# Scratch / transient run output
+# ---------------------------------------------------------------------------
+scratch/
+tmp/
+*.tmp
+nohup.out
+
+# ---------------------------------------------------------------------------
+# IMPORTANT -- do NOT add blanket ignores for generated mathematical data.
+#
+# Files under data/ (order-type representatives, exceptional profiles,
+# survivor sets, certificates, SHA256SUMS) are generated, but they are the
+# auditable content of this project and MUST be committed.
+#
+# The regenerable intermediate pickles below are ignored ONLY because they are
+# large, machine-specific binary blobs that any user can rebuild in minutes
+# with the documented commands (see docs/computational-method.md).  Their
+# SHA-256 digests are recorded in data/hashes/SHA256SUMS instead.
+# ---------------------------------------------------------------------------
+*.pkl
+!data/**/*.pkl
