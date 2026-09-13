@@ -1,10 +1,11 @@
 # Lean formalization
 
-> **Current state: two files, both compiled clean with `lake build` on
+> **Current state: five files, all compiled clean with `lake build` on
 > Lean 4.33.1.** Read the scope notes below before extrapolating: what is
-> kernel-checked is the explicit integer certificate and the combinatorial
-> counting reduction — *not* the full `f(7,7) = 38` theorem, and not the
-> geometric passage from orientation predicates to point-set statements.
+> kernel-checked is the explicit integer certificate, the combinatorial
+> counting reduction, and the finite 225-case endgame — *not* the full
+> `f(7,7) = 38` theorem, and not the geometric passage from orientation
+> predicates to point-set statements.
 
 ## The three statuses that must never be conflated
 
@@ -163,3 +164,47 @@ imposes only *necessary* realizability conditions, so what it proves is
 > relabelling
 
 and that is all an exclusion theorem needs.
+
+
+## The 225-case endgame (`EndgameDefs.lean`, `EndgameData.lean`, `Endgame.lean`)
+
+Like `LowerBound.lean`, these three files import **nothing** outside themselves:
+core Lean only, no Mathlib, no Batteries. They compile with bare
+`lean` and `LEAN_PATH` pointing at their own build directory. Every proof is an
+ordinary `decide`/`rfl`, i.e. a kernel reduction; the only axioms reached are
+`propext` and `Quot.sound` (notably **not** `Classical.choice`).
+
+* `EndgameDefs.lean` — side indices mod 7, 7-bit neighbourhood bitmasks,
+  cyclic adjacency, the bipartite disjointness graph and its connectivity
+  relation `Conn`, the `Case` record, and the two forms of the AKR Lemma 5
+  requirement (`AKR5Conclusion`, the lemma's literal conclusion, and
+  `AKR5Adjacent`, the neighbourhood-difference condition the search code tests).
+  `akr5Conclusion_iff_adjacent` proves they are equivalent.
+* `EndgameData.lean` — **generated**, do not edit. Produced deterministically by
+  `gen_endgame_data.py` from `data/certificates/final_elimination_225.json`.
+* `Endgame.lean` — the theorems. Headline:
+  `all_225_cases_fail_AKR5_requirement` and
+  `all_225_cases_fail_AKR5_conclusion`.
+
+Regenerate and check the data with
+
+```
+python3 lean/gen_endgame_data.py --stdout | diff - lean/EndgameData.lean
+```
+
+### Scope
+
+What is proved is: *given* the 225 records of the certificate, and *given* AKR
+Lemma 5, all 225 are impossible. What is **not** proved: AKR Lemma 5 itself
+(external, geometric); that the stored pairs are geometrically *avoiding* (only
+the necessary combinatorial part — distinct and not cyclically consecutive — is
+recomputed); and **completeness of the 225-case list**, which rests entirely on
+the unformalised enumeration upstream. `sepP`/`sepQ` are derived data, not JSON
+fields, and are not trusted: the kernel re-checks that they are closed under
+adjacency, which is what makes "the two sides lie in different components" a
+theorem (`all_225_pairs_in_different_components`) rather than an assumption.
+
+Non-vacuity is checked inside Lean: `akr5_not_vacuous` shows that 2016 of the
+225 × 21 = 4725 side pairs of these very graphs *do* satisfy the condition, and
+`case0_contrast` exhibits one graph where the stored pair fails it while another
+pair of the same graph satisfies it.

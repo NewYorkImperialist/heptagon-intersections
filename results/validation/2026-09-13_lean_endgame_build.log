@@ -1,0 +1,15 @@
+✔ [739/748] Built EndgameDefs (725ms)
+✔ [741/748] Built LowerBound (1.5s)
+✔ [743/748] Built EndgameData (1.8s)
+✔ [745/748] Built LemmaA (20s)
+✔ [747/748] Built Endgame (23s)
+Build completed successfully (748 jobs).
+exit=0
+'Heptagon.Endgame.all_225_cases_fail_AKR5_requirement' depends on axioms: [propext, Quot.sound]
+'Heptagon.Endgame.all_225_cases_fail_AKR5_conclusion' depends on axioms: [propext, Quot.sound]
+'Heptagon.Endgame.akr5Conclusion_iff_adjacent' does not depend on any axioms
+'Heptagon.Endgame.card_certificates' does not depend on any axioms
+'Heptagon.Endgame.keys_distinct' depends on axioms: [propext, Quot.sound]
+'Heptagon.Endgame.all_225_pairs_in_different_components' depends on axioms: [propext, Quot.sound]
+'Heptagon.Endgame.endgame_summary' depends on axioms: [propext, Quot.sound]
+'Heptagon.Endgame.akr5_not_vacuous' depends on axioms: [propext]

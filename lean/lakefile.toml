@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame"]
 
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
@@ -13,3 +13,14 @@ name = "LowerBound"
 
 [[lean_lib]]
 name = "LemmaA"
+
+# The endgame files (EndgameDefs / EndgameData / Endgame) deliberately import
+# NOTHING outside themselves: core Lean only, like LowerBound.lean.
+[[lean_lib]]
+name = "EndgameDefs"
+
+[[lean_lib]]
+name = "EndgameData"
+
+[[lean_lib]]
+name = "Endgame"
