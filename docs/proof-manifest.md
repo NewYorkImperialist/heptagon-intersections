@@ -1,4 +1,31 @@
-# Proof dependency manifest — `f(7,7) = 38`
+# A Proof Dependency Manifest for a Candidate Computer-Assisted Proof of `f(7,7) = 38`
+
+**Jayden Lin** — Northeastern University · 13 September 2026
+
+## Disclosure of generative-AI use
+
+Generative-AI systems — principally Anthropic's Claude, together with OpenAI's
+ChatGPT — were used substantially throughout this project: proof exploration and
+the search for the reduction strategy; literature-guided reasoning about the
+published results; generation of essentially all software, in Python, C++ and
+Lean; the computational experimentation; debugging; the construction of redundant
+and independent verification paths; the Lean formalisation; source auditing of
+the cited papers; and the drafting of the documentation, including this manifest.
+
+The named author is responsible for the claims made here. AI-generated output was
+not treated as inherently trustworthy. Each major claim is discharged by an
+explicit, separately recorded mechanism — source audit, independent
+reimplementation in a second language, an externally sourced dataset, a
+machine-checkable certificate with a standalone checker, or Lean-kernel
+verification — and the dependency table records which applies to which claim.
+Several substantive errors introduced during AI-assisted development were caught
+by those mechanisms and are catalogued below rather than quietly repaired.
+Project artifacts and provenance, including the complete development
+transcripts, are preserved in the repository.
+
+No claim is made about conformance with any particular publisher's or
+institution's generative-AI policy; that must be assessed separately.
+
 
 > **The authoritative version of this document is
 > [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)** (compiled:

@@ -29,8 +29,10 @@
 \newcommand{\Cone}{\operatorname{Cone}}
 \newcommand{\CC}{\operatorname{CC}}
 
-\title{A Proof Dependency Manifest for $f(7,7)=38$}
-\author{Heptagon Intersection Project}
+\title{A Proof Dependency Manifest for a Candidate\\
+Computer-Assisted Proof of $f(7,7)=38$}
+\author{Jayden Lin\\
+\small Northeastern University}
 \date{13 September 2026}
 
 \begin{document}
@@ -53,6 +55,38 @@ components have been independently checked or formally verified, but the
 interpretation of \textsc{akr} Observation~6 / Lemma~7 remains subject to
 external human review. The result should not be treated as established.}}
 \end{center}
+
+\section*{Disclosure of generative-AI use}
+\addcontentsline{toc}{section}{Disclosure of generative-AI use}
+
+Generative-AI systems --- principally Anthropic's Claude, together with OpenAI's
+ChatGPT --- were used substantially throughout this project. Their use was not
+incidental: it extended to proof exploration and the search for the reduction
+strategy; literature-guided reasoning about the published results; generation of
+essentially all software, in Python, C++ and Lean; the computational
+experimentation itself; debugging; the construction of redundant and independent
+verification paths; the Lean formalisation; source auditing of the cited papers;
+and the drafting of the project's documentation, including this manifest.
+
+The named author is responsible for the claims made in this document.
+AI-generated output was not treated as inherently trustworthy at any point. Each
+major claim is discharged by an explicit, separately recorded mechanism ---
+source audit against the published papers, independent reimplementation in a
+second language, an externally sourced dataset, a machine-checkable certificate
+with a standalone checker, or Lean-kernel verification --- and
+\S\ref{sec:table} records which mechanism applies to which claim. Several
+substantive errors introduced during AI-assisted development were found by those
+mechanisms and are catalogued in \S\ref{sec:defects}; they are retained there
+rather than quietly repaired, because they calibrate how much checking the
+argument has actually received.
+
+Project artifacts and provenance --- source code, generated data, certificates,
+build and verification logs, the audit documents, and the complete development
+transcripts --- are preserved in the project repository.
+
+No claim is made here about conformance with any particular publisher's or
+institution's policy on generative-AI use; that must be assessed separately
+against the policy in force.
 
 \section{Claim and current status}
 
