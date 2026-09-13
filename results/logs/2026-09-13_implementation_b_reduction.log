@@ -1,0 +1,9 @@
+loaded 14 profiles; M_set/maximal-crossing-set consistency OK
+graphs |E|=9 min degree>=1        : 13003620
+after consecutive AKR Lemma 5     : 42238
+after AKR Lemma 7 (H bipartite)   : 24990
+after crossing-set compatibility  : 2300
+after Cerny Lemma 2               : 121
+distinct surviving graphs         : 121
+(classP,classQ,graph) triples     : 225
+wrote /tmp/b.json

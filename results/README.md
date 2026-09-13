@@ -40,6 +40,17 @@ not results. The superseded pipeline reported `3,522` and `64` at the same two
 stages. Only the final `0` is labelling-invariant, which is what the
 `audit_pairs` run establishes.
 
+Implementation B logs:
+
+| File | Run | Result | Time |
+|---|---|---|---|
+| `2026-09-13_implementation_b_reduction.log` | `independent/implementation_b/reduction` | identical counts through 225 triples | 1.6 s |
+| `2026-09-13_graph_count_closed_form.log` | `count_check.py` | 13,003,620 by generating function, no enumeration | <1 s |
+
+These are in a **different language with a different enumeration**, so unlike
+the logs above they are not simply this project's code re-running itself. See
+`../docs/known-issues.md` K-02 for what that does and does not establish.
+
 ## `counts/pipeline_counts.json`
 
 Every headline count in the project, as **documented** in the research
@@ -56,9 +67,17 @@ materials, alongside what was actually **reproduced** here — with an explicit
 **225** cases of the endgame certificate, and
 `..._with_cernyL3.log` for the control. Both pass.
 
-These confirm that each of the 225 final cases is refuted. They do **not**
-confirm that the list of 225 is complete — that rests on the enumeration, which
-no independent implementation has repeated. See `../docs/known-issues.md` K-03.
+`2026-09-13_implementation_b_unit_tests.log` — 23 adversarial unit tests for
+Implementation B's filters, all passing.
+
+`2026-09-13_implementation_b_vs_certificate.log` — the strong comparison:
+Implementation B's 225 triples are **set-equal** to the certificate's, with zero
+elements in either difference.
+
+Together these confirm that each of the 225 final cases is refuted, and that the
+list of 225 is complete *with respect to a second, independently written
+enumeration*. They do not address a shared reading of the external lemmas or the
+single-sourced profile data. See `../docs/known-issues.md` K-02, K-03, K-09.
 
 ## Preserved historical figures
 

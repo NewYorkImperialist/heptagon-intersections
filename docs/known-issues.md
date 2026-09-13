@@ -53,36 +53,98 @@ figures have deliberately NOT been rewritten. See `archive/superseded/README.md`
 
 ---
 
-## K-02 — "Implementation B" has no source code in this repository
+## K-02 — Independent reimplementation  (PARTIALLY RESOLVED 2026-09-13)
 
-**Status:** open. This is the single biggest gap.
+**Status:** the finite graph/profile reduction has been independently
+reimplemented and agrees exactly. Author independence remains open.
 
-`docs/proof-outline.md` certifies the final result as "0, over all 196 ordered
-class pairs, under 3 representative labellings, **in 2 independent
-implementations**", and the transcript describes Implementation B in detail
-(Q-side enumeration, BFS components, union-find-with-parity bipartiteness,
-separating-axis tests) and reports an identical survivor-set SHA-256.
+### What was done
 
-**No Implementation B source file is present in these materials.** The claim is
-currently unauditable. Everything reproduced in `results/` came from the single
-codebase now in `python/`.
+`independent/implementation_b/` contains a second implementation of the finite
+reduction, written in **C++** from a written specification (`SPEC.md`) rather
+than from Implementation A's code, using a materially different enumeration and
+a different algorithm for every filter:
 
-Note also that `docs/audit-report.md`, written earlier, states that code
-correctness is *"not mitigated by an independent reimplementation, which a
-referee should demand"*. These two documents disagree, and the disagreement is
-unresolved in the surviving record.
+| | A (Python) | B (C++) |
+|---|---|---|
+| enumeration axis | P-side rows | **Q-side columns** (transposed) |
+| enumeration control | running edge budget | **degree sequence fixed in advance** |
+| graph key | tuple of 7 ints | **49-bit `uint64_t` bitboard** |
+| components | union-find | **iterative bitmask closure** |
+| consecutive AKR L5 | double loop | **cyclic bitmask rotation** |
+| H bipartiteness | DFS 2-colouring | **union-find with parity** |
+| compatibility | 128-entry lookup table | direct containment in the 5 maximal crossing sets |
+| Černý L2 | all `C(7,4)` subsets | **systems of distinct representatives** |
+| Černý L3 | applied | **not implemented** |
 
-**On whether A and B are genuinely independent:** even if the code is recovered,
-the transcript is explicit and should be taken at face value —
+### Result: exact agreement
 
-> "both implementations are mine, in Python, in one session. They share an
-> author and a language, so they cannot rule out a shared conceptual error —
-> only a shared coding error."
+| stage | A | B |
+|---|---|---|
+| 9-edge graphs, min degree ≥ 1 | 13,003,620 | **13,003,620** |
+| after consecutive AKR L5 | 42,238 | **42,238** |
+| after AKR L7 (`H` bipartite) | 24,990 | **24,990** |
+| after crossing-set compatibility | 2,300 | **2,300** |
+| after Černý L2 | 121 | **121** |
+| `(classP, classQ, graph)` triples | 225 | **225** |
 
-Two implementations generated in the same LLM-assisted session share prompts,
-framing, and any misreading of the source papers. They are a check on
-*transcription*, not on *interpretation*. The README and
-`verification-status.md` should not be softened on this point.
+And, more than matching counts, **the canonical set of 225 triples is exactly
+equal** — zero elements in either set difference, same 121 distinct graphs, same
+class pairs, all degree sequence `(2,2,1⁵)` on both sides, same 9 classes
+`{1,2,3,4,9,10,11,12,13}`. Verified by
+`independent/implementation_b/compare_with_certificate.py`.
+
+The graph count is additionally confirmed by a closed-form generating-function
+derivation involving **no enumeration at all**
+(`independent/implementation_b/count_check.py`):
+`Σ_j (−1)^j C(7,j) [x⁹]((1+x)^{7−j} − 1)⁷ = 13,003,620`, which also reproduces
+5,040 and 476,280 for `|E| = 7, 8` and their sum 13,484,940 (K-01).
+
+Runtime: **1.56 s** for B versus ~3 minutes for A.
+
+23 adversarial unit tests, positive and negative for every filter, all pass.
+Three initially failed — the **fixtures** were wrong (built to be safe on
+window 0, while class 12 has windows `{0,2,3}`), not the implementation. The
+tests were rewritten; `l2_ok` was not touched. Recorded in the B README.
+
+### What remains open — and it is not small
+
+**This is not a clean-room reimplementation, and must not be described as one.**
+
+The same agent (Claude) wrote both this implementation and the repository
+organization, and had **already read Implementation A's source in full** —
+`audit_enum.py`, `audit_pairs.py`, `chiro.py`, `geom.py`, and the certificate
+generator — earlier in the same session. That exposure cannot be undone.
+
+So the agreement is strong evidence against **transcription and coding errors**,
+and against a missed branch in either enumeration, since the traversal orders
+differ completely. It is **no evidence at all** against:
+
+1. **A shared misreading of the published lemmas.** Both implementations encode
+   the same reading of AKR Lemmas 5 and 7 and Černý Lemma 2. If the reading of
+   AKR Lemma 7 is wrong (K-09), both are wrong identically.
+2. **An error in the canonical profile data.** B consumes
+   `data/exceptional_profiles/exceptional_profiles_14.json` as input. It does
+   **not** re-derive the 14 exceptional classes, their crossing sets, their
+   Lemma-2 windows, or the order-type enumeration behind them. That whole
+   pipeline is still single-sourced.
+3. **Author independence.** A check by a different person remains the thing that
+   is missing, and it is what K-02 was originally about.
+
+The conservative summary: *the finite graph/profile reduction has been
+independently reimplemented with a materially different method and the exact
+225-case set reproduced; a shared mathematical specification and a shared author
+remain common-mode dependencies.*
+
+### Historical note
+
+`docs/proof-outline.md` certifies the result "in 2 independent implementations"
+and the transcript describes an earlier Implementation B with a matching
+survivor-set SHA-256. **That earlier implementation is still absent** from these
+materials; the one in `independent/implementation_b/` was written on
+2026-09-13 and is unrelated to it. The transcript's claim remains unauditable,
+and `docs/audit-report.md` still disagrees with `proof-outline.md` on whether an
+independent reimplementation existed at all.
 
 ---
 
@@ -167,8 +229,11 @@ killed`.
 * **Completeness.** The checker verifies that each listed case dies. It does
   **not** verify that the list is the complete set of cases reaching the final
   filter — that rests on the exhaustive enumeration inside the generator, which
-  the checker deliberately does not repeat. A referee who wants completeness
-  must still trust or re-run the 13,003,620-graph search.
+  the checker deliberately does not repeat.
+  **Update 2026-09-13:** completeness has since been independently
+  reproduced by Implementation B (K-02), a separate C++ codebase with a
+  materially different enumeration, which derives exactly the same 225 triples.
+  The residual risk is a shared *specification*, not a shared enumeration.
 * **The canonical profile data.** The checker reads
   `data/exceptional_profiles/exceptional_profiles_14.json` as given input. It
   cannot verify that these are the correct 14 exceptional classes, nor that the
@@ -409,6 +474,9 @@ standard library only, from the repository sources:
 | final certificate, L3-free (K-03) | 225 cases, 121 graphs, all (2,2,1⁵), 0 survivors ✓ | 3 m 6 s |
 | final certificate, with Cerny L3 (control) | identical 225 cases ✓ | 3 m 6 s |
 | independent certificate check | 225/225 contradictions verified ✓ | <1 s |
+| Implementation B, full reduction (C++) | identical counts; exact 225-triple set match ✓ | 1.6 s |
+| graph count by closed form (no enumeration) | 13,003,620 ✓ | <1 s |
+| Implementation B unit tests | 23/23 pass ✓ | <1 s |
 | lower bound | I=38, \|E\|=11, 3 components ✓ | <1 s |
 
 Every documented figure that the shipped code is capable of producing was

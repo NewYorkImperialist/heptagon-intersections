@@ -70,3 +70,6 @@ nohup.out
 # ---------------------------------------------------------------------------
 *.pkl
 !data/**/*.pkl
+
+# Implementation B compiled binary (rebuild with the command in its README)
+independent/implementation_b/reduction

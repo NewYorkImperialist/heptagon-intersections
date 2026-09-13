@@ -1,0 +1,16 @@
+inclusion-exclusion over uncovered Q-sides:
+ j  C(7,j)         T(7-j)             term
+ 0       1    184,473,632      184,473,632
+ 1       7     43,273,440     -302,914,080
+ 2      21      7,656,250      160,781,250
+ 3      35        888,832      -31,109,120
+ 4      35         51,030        1,786,050
+ 5      21            672          -14,112
+ 6       7              0                0
+ 7       1              0                0
+
+9-edge graphs, min degree >= 1 both sides : 13,003,620
+  |E| = 7 : 5,040
+  |E| = 8 : 476,280
+  |E| = 9 : 13,003,620
+  sum     : 13,484,940   (the historical 13,484,940 figure; see known-issues.md K-01)

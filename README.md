@@ -89,6 +89,7 @@ combinatorial filters are the least secure steps in the argument — see
 | `lean/` | Formalization. Currently **one uncompiled file**; see `lean/README.md`. |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
+| `independent/` | Implementation B: an independent C++ reimplementation of the finite reduction, written from a written specification. |
 | `transcripts/` | Unmodified LLM session transcripts, kept as provenance. |
 | `archive/superseded/` | The earlier pipeline, including a file with a documented defect. Preserved, not deleted. Do not cite. |
 
@@ -114,7 +115,8 @@ full table. In brief:
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Manually checked (prose only) | Lemma A; parity; general-position reduction |
 | External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified |
-| Needs independent reproduction | the entire upper bound (its final step now ships a per-case certificate; the enumeration behind it does not) |
+| Reproduced by a second implementation | the finite graph/profile reduction, exact 225-triple set match (C++, different enumeration) |
+| Needs independent reproduction | the order-type enumeration and exceptional classification; the upper bound as a whole |
 | Not present at all | Implementation B; six of seven planned Lean files |
 
 ## Reproducibility
@@ -146,6 +148,17 @@ the exceptional classification:
 mkdir -p /tmp/f77 && cd /tmp/f77
 python3 $REPO/python/core/chiro.py
 python3 $REPO/python/classification/make_exceptional_profiles.py
+```
+
+**Independent reduction, Implementation B (about 2 seconds)** — a separate C++
+codebase that reproduces the reduction and the exact 225-case set:
+
+```bash
+cd independent/implementation_b
+c++ -O2 -std=c++17 -o reduction reduction.cpp
+./reduction --test profiles.txt                      # 23 unit tests
+./reduction profiles.txt implementation_b_output.json
+python3 compare_with_certificate.py
 ```
 
 **Full elimination (about 6.5 minutes)**:

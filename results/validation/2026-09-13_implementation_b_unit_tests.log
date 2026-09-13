@@ -1,0 +1,31 @@
+loaded 14 profiles; M_set/maximal-crossing-set consistency OK
+SPEC sec.1  consecutive AKR Lemma 5
+  [PASS] L5 satisfied: {0} vs {1}  (got 1, want 1)
+  [PASS] L5 fails: {0} vs {3}  (got 0, want 0)
+  [PASS] L5 satisfied across wrap: {0} vs {6}  (got 1, want 1)
+  [PASS] L5 fails: {3} vs {5,6} (certificate case 0)  (got 0, want 0)
+  [PASS] L5 fails: {0,1} vs {0,1} (differences empty)  (got 0, want 0)
+SPEC sec.2  H bipartite
+  [PASS] H has an odd cycle when all 7 sides are in distinct components  (got 0, want 0)
+  [PASS] H is a matching -> bipartite  (got 1, want 1)
+  [PASS] H empty -> bipartite  (got 1, want 1)
+  [PASS] H isolated vertices -> bipartite  (got 1, want 1)
+SPEC sec.3  crossing-set compatibility
+  [PASS] compatible: every N(q_j)={0}, 0 in M_set  (got 1, want 1)
+  [PASS] incompatible: every N(q_j)={1}, 1 not in M_set  (got 0, want 0)
+  [PASS] incompatible: one bad column suffices  (got 0, want 0)
+SPEC sec.4  Cerny Lemma 2
+  [PASS] C2 VIOLATED: sides 0-3 form an induced perfect matching  (got 0, want 0)
+  [PASS] C2 satisfied: all four sides share one neighbour, no SDR  (got 1, want 1)
+  [PASS] C2 satisfied: only two candidate Q-sides for four P-sides  (got 1, want 1)
+  [PASS] C2 satisfied: extra edge means the block is not EXACTLY a matching  (got 1, want 1)
+  [PASS] C2 VIOLATED: a matching exists on an alternative representative  (got 0, want 0)
+  [PASS] C2 vacuously satisfied when the class has no windows  (got 1, want 1)
+  [PASS] C2 satisfied on real class 12 when all sides share neighbour 0  (got 1, want 1)
+  [PASS] C2 violated on real class 12 by the identity matching  (got 0, want 0)
+components
+  [PASS] p0 and p1 share neighbour q0 -> same component  (got 1, want 1)
+  [PASS] p0 and p2 -> different components  (got 0, want 0)
+  [PASS] q6 is isolated from p0's component  (got 0, want 0)
+
+all unit tests passed

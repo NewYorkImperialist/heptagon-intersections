@@ -1,0 +1,16 @@
+Implementation B : 225 triples (225 distinct)
+Certificate (A)  : 225 cases (225 distinct)
+
+  B graphs_E9_mindeg1                 : 13,003,620
+  B after_AKR_L5_consecutive          : 42,238
+  B after_AKR_L7_H_bipartite          : 24,990
+  B after_crossing_set_compatibility  : 2,300
+  B after_Cerny_L2                    : 121
+  B distinct_graphs                   : 121
+  B triples                           : 225
+
+triples only in the certificate : 0
+triples only in Implementation B: 0
+distinct graphs A / B           : 121 / 121  equal: True
+
+EXACT SET EQUALITY: Implementation B independently reproduces the certificate's 225 triples.
