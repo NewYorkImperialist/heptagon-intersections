@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface"]
 
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
@@ -33,3 +33,9 @@ name = "Endgame"
 # disjointness condition is an explicit hypothesis of every theorem.
 [[lean_lib]]
 name = "Lemma7Bridge"
+
+# CernyL2Interface.lean formalises ONLY the code-to-mathematics bridge for the
+# Cerny L2 filter predicate (exact induced perfect matching).  It does NOT
+# formalise Cerny Lemma 2 itself.
+[[lean_lib]]
+name = "CernyL2Interface"
