@@ -2,7 +2,7 @@
   CernyL2Interface.lean
 
   The code-to-mathematics bridge for the {\v C}ern{\'y} et al. (2003) Lemma 2
-  filter (`C2` in `paper/proof-manifest.tex` §4.3 / the `C2` subsection).
+  filter (`C2` in `paper/proof-manifest.tex` the `C2` subsection of §4).
 
   **Core Lean only — this file imports NOTHING.**  No Mathlib, no `axiom`, no
   `sorry`, no `native_decide`, no `unsafe`, no `partial`.

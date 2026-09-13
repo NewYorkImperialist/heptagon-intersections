@@ -2,10 +2,16 @@ cff-version: 1.2.0
 title: "Heptagon Intersection Project: a candidate computer-assisted proof that f(7,7) = 38"
 message: >-
   STATUS WARNING. This repository contains a CANDIDATE computer-assisted proof
-  that f(7,7) = 38, undergoing independent verification and Lean formalization.
-  It has NOT been peer-reviewed, has NOT been independently verified by a second
-  party, and NO part of it has been formally verified in Lean. Do not cite it as
-  a peer-reviewed or settled result. If you refer to this work, describe it as a
+  that f(7,7) = 38. It has NOT been peer-reviewed and has NOT been reviewed by
+  any expert outside the AI-assisted development process. Do not cite it as a
+  peer-reviewed or settled result.
+  Several components ARE now formally verified in Lean (the 38-crossing
+  construction, the Lemma A counting/parity core, the 225-case endgame, the
+  AKR-L5 bridge, the AKR-L7 bipartiteness inference, and the Cerny-L2 filter
+  interface), and the finite reduction has been independently reimplemented in
+  a second language. But f(7,7) = 38 is NOT a Lean theorem: the published
+  geometric lemmas remain external dependencies, and the interpretation of AKR
+  Observation 6 / Lemma 7 is still an open review item. If you refer to this work, describe it as a
   candidate computer-assisted proof undergoing verification, and cite the
   specific commit you examined. See docs/verification-status.md.
 type: software

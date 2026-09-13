@@ -2,6 +2,11 @@
 
 **Last updated:** 2026-09-13
 
+> The authoritative, and more complete, AI-use disclosure is now the one on the
+> title page of [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)
+> (mirrored in [`proof-manifest.md`](proof-manifest.md)). This file predates it
+> and is kept for continuity.
+
 ## Summary
 
 This project was developed with extensive large-language-model assistance.
@@ -27,7 +32,11 @@ checking stands behind each claim. The answer, at present, is: very little.
 * running the enumerations and the elimination pipeline;
 * conducting an adversarial self-audit that found two real defects in its own
   earlier work (see `known-issues.md` K-01 and K-11);
-* writing `lean/LemmaA.lean` and designing the Lean architecture;
+* writing **every** Lean file in this repository — `LowerBound.lean`,
+  `LemmaA.lean`, `EndgameDefs.lean`, `EndgameData.lean`, `Endgame.lean`,
+  `Lemma7Bridge.lean` and `CernyL2Interface.lean` — and designing the Lean
+  architecture;
+* auditing the cited papers against their published text;
 * organizing this repository and writing the documentation in `docs/`.
 
 **ChatGPT** was used for auditing, debugging Lean, reviewing claims, and

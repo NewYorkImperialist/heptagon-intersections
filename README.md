@@ -6,10 +6,16 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > **Status: candidate computer-assisted proof that `f(7,7) = 38`, undergoing
 > independent verification and Lean formalization.**
 >
-> This is **not** a peer-reviewed result. It has not been independently
-> verified, and no part of it has been formally verified in Lean. See
-> [`docs/verification-status.md`](docs/verification-status.md) before citing or
-> relying on anything here.
+> This is **not** a peer-reviewed result, and it has not been reviewed by any
+> expert outside the AI-assisted development process.
+>
+> Several components **are** now formally verified in Lean, and the finite
+> reduction has been independently reimplemented in a second language — but
+> `f(7,7) = 38` is **not** a Lean theorem, and the interpretation of AKR
+> Observation 6 / Lemma 7 remains an open review item. See
+> [`docs/verification-status.md`](docs/verification-status.md) and
+> [`paper/proof-manifest.tex`](paper/proof-manifest.tex) before citing or relying
+> on anything here.
 
 ## Problem
 

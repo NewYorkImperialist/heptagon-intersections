@@ -1,7 +1,7 @@
 /-
   Lemma7Bridge.lean
 
-  The purely logical step of `A7` (§4.5 of the manifest):
+  The purely logical step of `A7` (the A7-BRIDGE subsection of §4 of the manifest):
 
       "disjoint status sets on adjacent vertices  ⟹  H is bipartite".
 

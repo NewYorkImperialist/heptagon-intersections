@@ -46,7 +46,7 @@ I = 40  ⟹  |E^D| = 9                         [ I + |E^D| = 49 ]
         ⟹  δ(G^D) ≥ 1                        [ C1  = Černý L1 ]
         ⟹  P and Q both exceptional          [ LA  = Lemma A + parity ]
         ⟹  profiles ∈ {14} × {14}            [ OT, EX = order-type classification ]
-        ⟹  225 terminal triples / 121 graphs [ GR, COMP + A5-C, A7, C2 ]
+        ⟹  225 terminal triples / 121 graphs [ GR, COMP + A5-C, A7-EXT, C2 ]
         ⟹  every triple violates AKR L5      [ A5-A, CERT, LEAN-END ]
         ⟹  ⊥
 ```
@@ -59,7 +59,7 @@ explicit construction attains 38. Therefore `f(7,7) = 38`.
 Černý Lemma 3, unaudited here). The argument uses only Černý *Lemma 1*, which
 caps `I ≤ 42`, so `I = 42` must be excluded on its own: `|E| = 7` forces a
 perfect matching, giving **7** components each a matched pair, so `H` is the
-complement of `C₇` and contains a triangle, contradicting A7. Theorem 4 is
+complement of `C₇` and contains a triangle, contradicting A7-EXT. Theorem 4 is
 corroboration, not an input.
 
 ## Dependency summary
@@ -84,7 +84,7 @@ corroboration, not an input.
 | **LEAN-LA** | counting + parity core | Lean | `lean/LemmaA.lean` | LEAN-KERNEL-CHECKED | an implication |
 | **LEAN-END** | all 225 fail L5; `iff` bridge | Lean | `lean/Endgame.lean` | LEAN-KERNEL-CHECKED | completeness not formalized |
 | **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | none known |
-| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5, A7-EXT, A7-BRIDGE, LA, COMP | conditional on **A7-EXT** | **fails if A7-EXT fails** |
+| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5-C, A5-A, A7-EXT, A7-BRIDGE, LA, COMP | conditional on **A7-EXT** | **fails if A7-EXT fails** |
 
 ## Filter pipeline
 
@@ -162,8 +162,8 @@ Formalizing all of Černý or all of AKR is **not** required by this architectur
 > The project currently contains a heavily audited **candidate** computer-assisted
 > proof of `f(7,7) = 38`. The novel finite reductions and the terminal elimination
 > have been independently implemented, certificate checked, and in key places
-> Lean-kernel verified. The principal remaining mathematical issue is the
-> issue is **A7-EXT**: whether the published Observation 6 / Lemma 7 language
+> Lean-kernel verified. The principal remaining mathematical issue is
+> **A7-EXT**: whether the published Observation 6 / Lemma 7 language
 > licenses precisely the disjoint-status consequence the argument uses.
 > Conditional on that consequence, the deduction that `H` is bipartite
 > (**A7-BRIDGE**) is formally verified in Lean. Independent expert review remains

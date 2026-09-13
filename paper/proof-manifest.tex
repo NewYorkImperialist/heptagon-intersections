@@ -153,7 +153,7 @@ justification.
   P \text{ and } Q \text{ are both \emph{exceptional}} \\[4pt]
   &\stackrel{\text{\footnotesize \textsf{OT},\textsf{EX} (order-type classification)}}{\Longrightarrow}&
   (\text{profile}_P,\text{profile}_Q) \in \{14\}\times\{14\} \\[4pt]
-  &\stackrel{\text{\footnotesize \textsf{GR},\textsf{COMP} (enumeration; \textsf{A5-C},\textsf{A7},\textsf{C2})}}{\Longrightarrow}&
+  &\stackrel{\text{\footnotesize \textsf{GR},\textsf{COMP} (enumeration; \textsf{A5-C},\textsf{A7-EXT},\textsf{C2})}}{\Longrightarrow}&
   225 \text{ terminal triples on } 121 \text{ graphs} \\[4pt]
   &\stackrel{\text{\footnotesize \textsf{A5-A},\textsf{CERT},\textsf{LEAN-END}}}{\Longrightarrow}&
   \text{every terminal triple violates \textsc{akr} Lemma 5} \\[4pt]
@@ -258,8 +258,12 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & construction & this project
   & \stat{lean-kernel-checked} & none known \\
 \addlinespace
+\textsf{UB42} & $I=42$ is impossible
+  & project inference & this project, \S\ref{sec:i42}
+  & \stat{manually checked} & inherits \textsf{A7-EXT}; \textsf{C1} gives only $I\le42$, so this branch is needed \\
+\addlinespace
 \textsf{UB40} & $I=40$ is impossible, hence $f(7,7)\le38$
-  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}
+  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5-C}, \textsf{A5-A}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}, \textsf{UB42}
   & conditional on \textsf{A7-EXT} & \textbf{fails if \textsf{A7-EXT} fails} \\
 \end{longtable}
 }
@@ -321,7 +325,9 @@ Together with $|\ED|=49-I$ this also gives $I\le42$.
 \subsection{Excluding $I=42$}\label{sec:i42}
 
 The manifest previously asserted twice that $I=42$ is ``excluded separately''
-without giving the argument. It is this.
+without giving the argument. It is this. (This subsection is a
+\emph{project-original} argument --- dependency \textsf{UB42} --- placed here
+because it consumes \textsf{C1} directly; it is not itself an external result.)
 
 $I=42$ forces $|\ED|=7$. With $\delta(\GD)\ge1$ on $7+7$ vertices and only $7$
 edges, every vertex has degree exactly $1$, so $\GD$ is a \emph{perfect
@@ -338,7 +344,7 @@ contradicting \textsf{A7-EXT} together with \textsf{A7-BRIDGE}.
 
 \begin{remark}
 The shipped $|\ED|=7$ sweep reproduces this independently:
-$5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7}). The companion
+$5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7-EXT}). The companion
 $|\ED|=8$ sweep gives $476{,}280\to1{,}078\to0$, for $I=41$, which parity already
 excludes. Both were a by-product of the historical enumeration bug of
 Remark~\ref{rem:bug} and are corroborative rather than load-bearing.
@@ -888,7 +894,7 @@ and the completeness of the $225$-case list is not formalized.}}
                              |
                       f(7,7) = 38   (candidate)
 
-   * A7-EXT: HUMAN REVIEW PENDING -- see Section 4.5.  The chain is
+   * A7-EXT: HUMAN REVIEW PENDING -- see the A7-EXT subsection of Section 4.  The chain is
          A7-EXT  ==>  A7-BRIDGE  ==>  H bipartite
      where A7-EXT is the external reading of AKR Observation 6 / Lemma 7
      (adjacent H-vertices have disjoint status sets), and A7-BRIDGE is the
@@ -940,7 +946,7 @@ Listed because they calibrate how much checking this argument has had.
 
 \begin{enumerate}[leftmargin=*,nosep]
   \item External human review of the \textsc{akr} Observation 6 / Lemma 7
-    interpretation (\S\ref{sec:a7}).
+    interpretation (\S\ref{sec:a7ext}).
   \item Ideally, confirmation from one of the \textsc{akr} authors on the
     intended reading of ``associated'' and ``is hooking''.
   \item Independent expert review of the overall proof.

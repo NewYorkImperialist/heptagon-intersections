@@ -26,6 +26,21 @@ and the assembly into `f 7 7 = 38` are **not formalized at all**. See
 
 ## What is here
 
+**Updated 2026-09-13.** Seven Lean sources now build (`lake build`, 752 jobs).
+Per-file trust summary:
+
+| File | Imports | Axioms | Proves |
+|---|---|---|---|
+| `LowerBound.lean` | **none** | `propext` | 38 crossings; simplicity; general position; counted over provably all 49 pairs |
+| `LemmaA.lean` | Mathlib | `propext`, `Classical.choice`, `Quot.sound` | counting + parity ⟹ `I ≤ 38`, as an implication; non-vacuity |
+| `EndgameDefs/Data/Endgame.lean` | **none** | `propext`, `Quot.sound` | all 225 cases fail AKR-L5; components recomputed in-kernel; `AKR5Conclusion ↔ AKR5Adjacent` (axiom-free) |
+| `Lemma7Bridge.lean` | **none** | **none at all** | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
+| `CernyL2Interface.lean` | **none** | `propext`, `Classical.choice`, `Quot.sound` | Černý-L2 filter fires **iff** exact induced perfect matching |
+
+No `sorry`, `admit`, project `axiom`, `unsafe`, or `native_decide` in any file.
+`f(7,7) = 38` is **not** a Lean theorem.
+
+
 | File | `sorry` | `axiom` | `native_decide` | Compiles? | Depends on |
 |---|---|---|---|---|---|
 | `LowerBound.lean` | none | none | none | **yes** | core Lean only |
