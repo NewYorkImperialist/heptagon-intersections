@@ -1,0 +1,14 @@
+L3-survivors rebuilt: 9702
+
+per-pair verification with the canonical representatives:
+  [as stored] 196 ordered class pairs; max survivors over any pair = 0; total = 0
+per-pair verification with EVERY representative re-labelled (rotation 3, reflected):
+  [rotated+reflected] 196 ordered class pairs; max survivors over any pair = 0; total = 0
+per-pair verification with a different re-labelling (rotation 5):
+  [rotated] 196 ordered class pairs; max survivors over any pair = 0; total = 0
+
+ALL THREE LABELLINGS GIVE ZERO SURVIVORS: True
+
+real	3m8.139s
+user	3m7.239s
+sys	0m0.626s

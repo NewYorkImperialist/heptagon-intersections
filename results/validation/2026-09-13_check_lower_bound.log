@@ -1,0 +1,15 @@
+checking data/lower_bound/lower_bound_38.json
+
+  PASS  P is a simple polygon: True
+  PASS  Q is a simple polygon: True
+  PASS  all 14 vertices in general position: True
+  PASS  no vertex lies on the other boundary: True
+  PASS  boundary intersections I: 38
+  PASS  disjointness graph edges |E|: 11
+  PASS  I + |E| = 49: 49
+  PASS  minimum degree on the P side: 1
+  PASS  per-P-side crossing counts: [6, 6, 6, 6, 6, 6, 2]
+  PASS  disjointness graph components: 3
+
+All checks passed.  This certifies f(7,7) >= 38.
+It does NOT certify the upper bound f(7,7) <= 38.

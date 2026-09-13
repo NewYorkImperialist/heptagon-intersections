@@ -1,0 +1,29 @@
+{
+  "_comment": [
+    "Explicit lower-bound certificate for f(7,7) >= 38.",
+    "The two coordinate lists are transcribed verbatim from section 6 of the",
+    "superseded archive/superseded/REPORT.md, which is the original source of",
+    "record for this construction.  The 'verified' block below was produced by",
+    "python/validation/check_lower_bound.py on 2026-09-13 using the exact",
+    "integer predicates in python/core/geom.py.",
+    "This is the one part of the f(7,7)=38 claim that is fully checkable in",
+    "under a second and depends on no external lemma and no enumeration."
+  ],
+  "claim": "f(7,7) >= 38",
+  "P": [[373,157],[132,5],[369,182],[88,157],[327,282],[60,272],[372,298]],
+  "Q": [[344,24],[89,303],[345,19],[373,214],[270,338],[325,93],[192,284]],
+  "verified": {
+    "P_simple": true,
+    "Q_simple": true,
+    "general_position_all_14_vertices": true,
+    "no_vertex_on_other_boundary": true,
+    "boundary_intersections_I": 38,
+    "disjointness_graph_edges_E": 11,
+    "I_plus_E": 49,
+    "disjointness_graph_components": 3,
+    "min_degree": 1,
+    "per_P_side_crossing_counts": [6,6,6,6,6,6,2]
+  },
+  "verified_on": "2026-09-13",
+  "verified_by": "python/validation/check_lower_bound.py (exact integer arithmetic)"
+}

@@ -1,0 +1,12 @@
+|E| = 9
+  graphs with min degree >=1 on both sides : 13003620
+  after AKR Lemma 5 (consecutive pairs)    : 42238
+  after AKR Lemma 7 (H bipartite)          : 24990
+  after Cerny et al. Lemma 3               : 9702
+  component counts: [5]
+  after crossing-set compatibility with the 14 exceptional classes : 2300
+  after Cerny et al. Lemma 2 (class-dependent)                     : 121
+  after AKR Lemma 5 on AVOIDING pairs (class-dependent)            : 0
+  FINAL SURVIVORS: 0
+
+python3 audit_enum.py 9  185.57s user 0.61s system 99% cpu 3:06.53 total

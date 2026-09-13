@@ -1,0 +1,11 @@
+|E| = 7
+  graphs with min degree >=1 on both sides : 5040
+  after AKR Lemma 5 (consecutive pairs)    : 14
+  after AKR Lemma 7 (H bipartite)          : 0
+  after Cerny et al. Lemma 3               : 0
+  -> ELIMINATED ENTIRELY
+
+
+real	0m0.208s
+user	0m0.197s
+sys	0m0.007s

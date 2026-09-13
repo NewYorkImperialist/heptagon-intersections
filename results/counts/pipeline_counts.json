@@ -1,0 +1,77 @@
+{
+  "_comment": [
+    "Every headline count in this project, as DOCUMENTED in the research",
+    "materials, next to what was actually REPRODUCED on 2026-09-13 during",
+    "repository organization (Python 3.14.7, macOS arm64, single core).",
+    "'reproduced' null means the run was not performed here.",
+    "Raw stdout for each run is in results/logs/."
+  ],
+  "reproduction_date": "2026-09-13",
+  "environment": "Python 3.14.7, macOS 24.6.0 (arm64), stdlib only",
+  "order_type_enumeration": {
+    "script": "python/core/chiro.py",
+    "runtime_seconds": 8,
+    "documented": {"n3": 1, "n4": 2, "n5": 3, "n6": 16, "n7": 135},
+    "reproduced": {"n3": 1, "n4": 2, "n5": 3, "n6": 16, "n7": 135},
+    "match": true,
+    "note": "Counts agree with Aichholzer-Aurenhammer-Krasser. Only NECESSARY sign conditions are imposed, so this is a superset of the realizable order types."
+  },
+  "classification": {
+    "script": "python/classification/make_exceptional_profiles.py",
+    "runtime_seconds": 2,
+    "documented": {"simple_7gons": 6342, "uncrossable_3set": 6007, "uncrossable_4set": 319, "exceptional": 16, "exceptional_classes": 14},
+    "reproduced": {"simple_7gons": 6342, "uncrossable_3set": 6007, "uncrossable_4set": 319, "exceptional": null, "exceptional_classes": 14},
+    "match": true,
+    "note": "The script reports the class count (14), not the labelled count (16); the 16 figure was not separately re-derived here."
+  },
+  "elimination": {
+    "script": "python/elimination/audit_enum.py",
+    "E7": {
+      "runtime_seconds": 0.2,
+      "documented": {"graphs": 5040, "after_A5": null, "after_A7": 0},
+      "reproduced": {"graphs": 5040, "after_A5": 14, "after_A7": 0, "after_CL3": 0},
+      "match": true,
+      "note": "I=42 dies at AKR Lemma 7, independently confirming the hand proof."
+    },
+    "E8": {
+      "runtime_seconds": 8,
+      "documented": {"graphs": 476280, "final": 0},
+      "reproduced": {"graphs": 476280, "after_A5": 1078, "after_A7": 0, "after_CL3": 0},
+      "match": true
+    },
+    "E9": {
+      "runtime_seconds": 186,
+      "documented": {"graphs": 13003620, "after_A5": 42238, "after_A7": 24990, "after_CL3": 9702, "after_compat": 2300, "after_CL2": 121, "after_A5avoid": 0},
+      "reproduced": {"graphs": 13003620, "after_A5": 42238, "after_A7": 24990, "after_CL3": 9702, "after_compat": 2300, "after_CL2": 121, "after_A5avoid": 0},
+      "match": true,
+      "note": "2300 and 121 are REPRESENTATIVE-LABELLING DEPENDENT (defect D2). The older superseded pipeline reported 3522 and 64 for the same stages. Only the final 0 is labelling-invariant; see the per-pair run below."
+    },
+    "sum_check": {
+      "claim": "5040 + 476280 + 13003620 = 13484940",
+      "holds": true,
+      "note": "Confirms defect D1: the original enum9.py total of 13,484,940 was the union over |E| in {7,8,9}, not the 9-edge count."
+    }
+  },
+  "per_ordered_class_pair": {
+    "script": "python/elimination/audit_pairs.py",
+    "runtime_seconds": 188,
+    "documented": {"ordered_pairs": 196, "labellings": 3, "max_survivors_any_pair": 0},
+    "reproduced": {"ordered_pairs": 196, "labellings": 3, "max_survivors_any_pair": 0, "total_survivors": 0},
+    "match": true,
+    "note": "This is the labelling-invariant form of the final elimination, and the correction for defect D2."
+  },
+  "lower_bound": {
+    "script": "python/validation/check_lower_bound.py",
+    "runtime_seconds": 0.1,
+    "documented": {"I": 38, "E": 11, "components": 3, "per_side": [6,6,6,6,6,6,2]},
+    "reproduced": {"I": 38, "E": 11, "components": 3, "per_side": [6,6,6,6,6,6,2]},
+    "match": true
+  },
+  "NOT_reproduced_here": [
+    "The 225 (class-pair, graph) combinations reaching the last filter, and the claim that all 121 distinct graphs have degree sequence (2,2,1^5) on both sides -- no script in this repository computes these; see docs/known-issues.md K-03.",
+    "The 13,484,940 / 43,330 / 3,522 / 64 figures of the superseded pipeline -- archive/superseded/python/enum9.py cannot run without the missing ot7.pkl, and its downstream stages (combine.py, final.py) are absent entirely.",
+    "Implementation B in its entirety -- no source code for it exists in these materials; see docs/known-issues.md K-02.",
+    "The validation suite's realizable-configuration checks (3,952 random pairs; 129,812 high-intersection configurations) -- python/validation/validate.py section 1 needs the missing best_7_7_*.pkl; see docs/known-issues.md K-05.",
+    "Both SHA-256 digests quoted in docs/proof-outline.md -- the original serialization format is unrecorded; see docs/known-issues.md K-07."
+  ]
+}
