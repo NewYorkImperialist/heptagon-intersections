@@ -78,3 +78,12 @@ independent/implementation_b/reduction
 # references/README.md rather than redistributed here (Springer DCG article
 # is not freely redistributable).
 references/*.pdf
+
+# LaTeX build intermediates (the PDF itself is committed)
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz

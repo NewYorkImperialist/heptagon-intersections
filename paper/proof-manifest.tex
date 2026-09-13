@@ -1,0 +1,785 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=1in}
+\emergencystretch=3em
+\sloppy
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+
+\newcommand{\GD}{G^{D}}
+\newcommand{\ED}{E^{D}}
+\newcommand{\Cone}{\operatorname{Cone}}
+\newcommand{\CC}{\operatorname{CC}}
+
+\title{A Proof Dependency Manifest for $f(7,7)=38$}
+\author{Heptagon Intersection Project}
+\date{13 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This document is a dependency manifest, not a paper. It states exactly what the
+candidate proof of $f(7,7)=38$ consists of, and separates published external
+mathematics from project-original arguments, computational reductions, external
+database checks, certificate verification, Lean-kernel verification, and the
+items still requiring human review. Every claim carries a source and a
+verification status. It is written so that a referee can locate the weakest link
+quickly.
+\end{abstract}
+
+\begin{center}
+\fbox{\parbox{0.93\textwidth}{\textbf{Status.} This document describes a
+\emph{candidate} computer-assisted proof. All currently known computational
+components have been independently checked or formally verified, but the
+interpretation of \textsc{akr} Observation~6 / Lemma~7 remains subject to
+external human review. The result should not be treated as established.}}
+\end{center}
+
+\section{Claim and current status}
+
+Let $f(m,n)$ denote the maximum number of boundary intersection points of two
+simple polygons with $m$ and $n$ sides in general position.
+
+\begin{theorem}[Claimed]\label{thm:main}
+$f(7,7)=38$.
+\end{theorem}
+
+Three facts frame the problem.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{$38$ is realizable.} An explicit pair of integer-coordinate
+    heptagons attains $38$ crossings (\S\ref{sec:lean}, \textsf{LB38}); this is
+    verified by the Lean kernel.
+  \item \textbf{The published bounds leave only $40$.}{\v C}ern{\'y} et
+    al.~\cite{CernyEtAl2003} give $f(7,7)\le 40$, and
+    \cite{AckermanKeszeghRote2022} is asymptotically optimal but vacuous at
+    $m=n=7$. The number of crossings of two closed curves in general position is
+    even, so $39$ and $41$ are impossible. Hence
+    $f(7,7)\in\{38,40\}$, and $I=42$ is excluded separately.
+  \item \textbf{The upper bound is a proof by contradiction.} One assumes a pair
+    with $I=40$ and derives a contradiction. Everything in
+    \S\ref{sec:flow}--\S\ref{sec:cert} serves that single reductio.
+\end{enumerate}
+
+We do \emph{not} claim Theorem~\ref{thm:main} is established. We claim that no
+computational gap is currently known, and that the remaining risk is
+concentrated in one identified place (\textsf{A7}, \S\ref{sec:a7}).
+
+\section{One-page proof flow}\label{sec:flow}
+
+Write $\GD$ for the bipartite \emph{disjointness graph} on the $7+7$ sides, with
+$(p_i,q_j)\in\ED$ iff the closed segments $p_i$ and $q_j$ are disjoint. Since two
+non-collinear segments meet at most once, crossings biject with intersecting side
+pairs, so
+\[
+  I + |\ED| = 49 .
+\]
+
+The reductio proceeds as follows; the label under each arrow names the
+justification.
+{\small\[
+\begin{array}{rcl}
+  I=40
+  &\stackrel{\text{\footnotesize $I+|\ED|=49$}}{\Longrightarrow}&
+  |\ED| = 9 \\[4pt]
+  &\stackrel{\text{\footnotesize \textsf{C1} ({\v C}ern{\'y} L1)}}{\Longrightarrow}&
+  \delta(\GD)\ge 1 \\[4pt]
+  &\stackrel{\text{\footnotesize \textsf{LA} (Lemma A + parity)}}{\Longrightarrow}&
+  P \text{ and } Q \text{ are both \emph{exceptional}} \\[4pt]
+  &\stackrel{\text{\footnotesize \textsf{OT},\textsf{EX} (order-type classification)}}{\Longrightarrow}&
+  (\text{profile}_P,\text{profile}_Q) \in \{14\}\times\{14\} \\[4pt]
+  &\stackrel{\text{\footnotesize \textsf{GR},\textsf{COMP} (enumeration; \textsf{A5-C},\textsf{A7},\textsf{C2})}}{\Longrightarrow}&
+  225 \text{ terminal triples on } 121 \text{ graphs} \\[4pt]
+  &\stackrel{\text{\footnotesize \textsf{A5-A},\textsf{CERT},\textsf{LEAN-END}}}{\Longrightarrow}&
+  \text{every terminal triple violates \textsc{akr} Lemma 5} \\[4pt]
+  &\Longrightarrow& \bot .
+\end{array}
+\]}
+
+Hence $I\neq 40$; with $I\neq 42$, $I\neq 41$, $I\neq 39$ this gives $I\le 38$,
+and the explicit construction \textsf{LB38} attains $38$. Therefore
+$f(7,7)=38$.
+
+\begin{remark}
+All of this is conditional on the general-position regime \textsf{GP}, imported
+from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
+\end{remark}
+
+\section{Dependency table}\label{sec:table}
+
+\newcommand{\stat}[1]{\footnotesize\textsc{#1}}
+{\footnotesize\setlength{\tabcolsep}{3pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.8cm}@{}}
+\toprule
+\textbf{ID} & \textbf{Claim} & \textbf{Type} & \textbf{Source} & \textbf{Verification} & \textbf{Remaining risk} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{Claim} & \textbf{Type} & \textbf{Source} & \textbf{Verification} & \textbf{Remaining risk} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+
+\textsf{GP} & General-position regime may be assumed w.l.o.g.
+  & published theorem & \cite[\S9.1,\S3]{AckermanKeszeghRote2022}
+  & \stat{source-audited} & none known; project's own earlier proof was wrong and is removed \\
+\addlinespace
+\textsf{C1} & A line meets a simple $7$-gon in at most $6$ sides; hence $\delta(\GD)\ge1$
+  & published theorem & \cite[Lemma 1]{CernyEtAl2003}
+  & \stat{source-audited} & none known \\
+\addlinespace
+\textsf{C2} & Forbidden local matching on $4$ consecutive sides with $D\in\operatorname{int}\triangle ABC$
+  & published theorem & \cite[Lemma 2]{CernyEtAl2003}
+  & \stat{source-audited} & none known \\
+\addlinespace
+\textsf{A5-C} & Lemma 5 applied to \emph{consecutive} side pairs in different components
+  & published theorem & \cite[Lemma 5]{AckermanKeszeghRote2022}
+  & \stat{source-audited} & none known \\
+\addlinespace
+\textsf{A5-A} & Lemma 5 applied to \emph{avoiding} side pairs
+  & published theorem & \cite[Lemma 5]{AckermanKeszeghRote2022}
+  & \stat{source-audited}; bridge \stat{lean-kernel-checked} & none known \\
+\addlinespace
+\textsf{A7} & Lemma 7 $\Rightarrow$ auxiliary graph $H$ is bipartite
+  & published theorem $+$ project inference & \cite[Lemma 7]{AckermanKeszeghRote2022}, \cite{AckermanKeszeghRote2020}
+  & \stat{human review pending} & \textbf{principal open item}; Observation 6 unproved and false under the printed definition of ``associated'' \\
+\addlinespace
+\textsf{LA} & Lemma A: an uncrossable $4$-set forces $|\ED|\ge10$, parity gives $\ge11$, so $I\le38$
+  & project lemma & this project
+  & \stat{lean-kernel-checked} (counting core) & geometric premises $h_1,h_2$ remain hypotheses \\
+\addlinespace
+\textsf{OT} & There are exactly $135$ order types of $7$ points
+  & external dataset cross-check & \cite{AichholzerAurenhammerKrasser2002,OrderTypeDatabase}
+  & \stat{externally cross-checked} (exact set equality) & none known \\
+\addlinespace
+\textsf{EX} & $6{,}342$ simple heptagons; $16$ exceptional; $14$ profile classes
+  & finite enumeration & this project
+  & \stat{independently reimplemented}; $6{,}342$ \stat{externally cross-checked} & none known \\
+\addlinespace
+\textsf{GR} & Exactly $13{,}003{,}620$ candidate disjointness graphs
+  & finite enumeration & this project
+  & \stat{independently reimplemented} $+$ closed form & none known \\
+\addlinespace
+\textsf{COMP} & Filter pipeline down to $121$ graphs / $225$ triples
+  & finite enumeration & this project
+  & \stat{independently reimplemented} (exact set match) & inherits \textsf{A7} \\
+\addlinespace
+\textsf{CERT} & Each of the $225$ triples violates the \textsc{akr}-L5 consequence
+  & certificate & this project
+  & \stat{certificate-checked} & completeness of the list is not certified \\
+\addlinespace
+\textsf{LEAN-LB} & The explicit pair has $38$ crossings and is simple
+  & Lean formalization & \texttt{lean/}\allowbreak\texttt{LowerBound}\allowbreak\texttt{.lean}
+  & \stat{lean-kernel-checked} & simplicity is orientation-level, not Jordan-curve \\
+\addlinespace
+\textsf{LEAN-LA} & Counting and parity core of Lemma A
+  & Lean formalization & \texttt{lean/}\allowbreak\texttt{LemmaA}\allowbreak\texttt{.lean}
+  & \stat{lean-kernel-checked} & proved as an implication \\
+\addlinespace
+\textsf{LEAN-END} & All $225$ cases fail the \textsc{akr}-L5 condition; conclusion $\leftrightarrow$ predicate
+  & Lean formalization & \texttt{lean/}\allowbreak\texttt{Endgame}\allowbreak\texttt{.lean}
+  & \stat{lean-kernel-checked} & completeness of the $225$ list not formalized \\
+\addlinespace
+\textsf{LB38} & $f(7,7)\ge38$
+  & construction & this project
+  & \stat{lean-kernel-checked} & none known \\
+\addlinespace
+\textsf{UB40} & $I=40$ is impossible, hence $f(7,7)\le38$
+  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5}, \textsf{A7}, \textsf{LA}, \textsf{COMP}
+  & conditional on \textsf{A7} & \textbf{fails if \textsf{A7} fails} \\
+\end{longtable}
+}
+
+\section{External mathematical dependencies}
+
+\subsection{\textsf{GP} --- general position, AKR \S9}\label{sec:gp}
+
+\textbf{Role.} The whole combinatorial argument is carried out in a
+general-position regime. \textsf{GP} is what licenses that restriction.
+
+\textbf{Source.} \cite[\S9.1, and \S3]{AckermanKeszeghRote2022}. Their
+perturbation removes the relevant degeneracies without decreasing the number of
+boundary intersections.
+
+\textbf{Exact consequences used, and nothing stronger.}
+\begin{enumerate}[label=(GP\arabic*),leftmargin=*]
+  \item both polygons remain simple;
+  \item no vertex of one polygon lies on the boundary of the other, so every
+    intersection point is interior to two sides --- this is what allows
+    intersections to be counted as proper crossings;
+  \item no three vertices of $P$ and $Q$ combined are collinear;
+  \item no two sides of $P$ and $Q$ combined are parallel;
+  \item consequently the supporting line $\ell(q_j)$ of any side of $Q$ contains
+    no vertex of $P$ (it passes through two vertices of $Q$, so a vertex of $P$
+    on it would violate (GP3)). This is exactly the hypothesis that
+    Lemma~A needs, and it is the \emph{only} kind of line at which Lemma~A is
+    ever instantiated.
+\end{enumerate}
+
+\begin{remark}[A superseded project argument]
+Earlier versions of this project proved \textsf{GP} by a project-specific
+perturbation rule. That argument is \textbf{incorrect}: its rule for a
+vertex-on-vertex degeneracy, ``push the coincident vertex into $\Cone_Q(w)$'',
+destroys the intersection point whenever $\Cone_P(v)\subset\Cone_Q(w)$, yielding
+$0$ crossings instead of $\ge1$. It also never addressed the case in which one
+side participates in several degeneracies at once. It has been removed from the
+active proof and replaced by the citation above. See \S\ref{sec:defects}.
+\end{remark}
+
+\begin{remark}[Counting model]
+\cite[\S9.3]{AckermanKeszeghRote2022} explicitly leaves the variant counting
+intersecting \emph{side pairs} rather than intersection \emph{points} as future
+research. Everything here is in the intersection-\emph{point} model, and the
+result must not be restated in the pairs model.
+\end{remark}
+
+\subsection{\textsf{C1} --- {\v C}ern{\'y} Lemma 1}
+
+A line meets a simple $k$-gon an even number of times, hence at most $k-1$ times
+for odd $k$ \cite[Lemma 1]{CernyEtAl2003}. Applied to $\ell(p_i)$ against $Q$ and
+to $\ell(q_j)$ against $P$, every side misses at least one side of the other
+polygon. The single consequence used is
+\[
+  \delta(\GD)\ \ge\ 1 .
+\]
+Together with $|\ED|=49-I$ this also gives $I\le42$.
+
+\subsection{\textsf{C2} --- {\v C}ern{\'y} Lemma 2}
+
+The only consequence used is a local forbidden configuration. Let
+$A,B,C,D,E$ be five consecutive vertices of $P$, giving four consecutive sides
+$AB,BC,CD,DE$, and suppose $D\in\operatorname{int}\triangle ABC$. Then for no
+four sides of $Q$ is the induced subgraph of $\GD$ on those four sides of $P$ and
+those four sides of $Q$ \emph{exactly} a perfect matching
+\cite[Lemma 2]{CernyEtAl2003}.
+
+The geometric hypothesis depends only on the order type and is tabulated per
+exceptional class as the \emph{Lemma-2 windows}. The word \emph{exactly} is
+load-bearing: a block containing a perfect matching \emph{plus} an extra edge is
+not forbidden, and the implementation was checked not to reject such blocks.
+
+\subsection{\textsf{A5} --- AKR Lemma 5}
+
+\textbf{Statement used.} If two sides $p_a,p_b$ of $P$ that are \emph{consecutive
+or avoiding} lie in different components of $\GD$, then there are consecutive
+sides $q_i,q_{i\pm1}$ of $Q$ with
+\[
+  (p_a,q_i),\,(p_b,q_{i\pm1})\in\ED
+  \qquad\text{and}\qquad
+  (p_a,q_{i\pm1}),\,(p_b,q_i)\notin\ED .
+\]
+
+\textbf{\textsf{A5-C}, consecutive use.} Applied to every consecutive pair in
+different components; this is the first filter of the pipeline.
+
+\textbf{\textsf{A5-A}, avoiding use.} Two non-adjacent sides are \emph{avoiding}
+when neither contains the intersection point of their supporting lines. This is an
+order-type predicate, tabulated per exceptional class. \textsf{A5-A} is the final
+filter and the one the certificate records.
+
+\textbf{Combinatorial consequence.} Writing $N(\cdot)$ for neighbourhoods in
+$\GD$, the displayed conclusion is equivalent to
+\begin{equation}\label{eq:adj}
+  \exists\, k\in N(p_a)\setminus N(p_b),\quad
+  \exists\, k'\in N(p_b)\setminus N(p_a),\qquad
+  k' \equiv k\pm 1 \pmod 7 .
+\end{equation}
+Both directions are immediate by unfolding: $k\in N(p_a)\setminus N(p_b)$ says
+exactly $(p_a,q_k)\in\ED$ and $(p_b,q_k)\notin\ED$.
+
+\begin{remark}
+This equivalence is \textbf{Lean-kernel-checked}, as
+\texttt{akr5Conclusion\_iff\_adjacent} in \texttt{lean/EndgameDefs.lean}, and
+depends on no axioms. It matters because it shows the implemented predicate is
+neither a weakening nor a strengthening of the published conclusion.
+\end{remark}
+
+\begin{remark}
+If $\CC(p_a)\neq\CC(p_b)$ then $N(p_a)\cap N(p_b)=\emptyset$, since a shared
+neighbour would join them in one component. The set differences in
+\eqref{eq:adj} are then the neighbourhoods themselves.
+\end{remark}
+
+\subsection{\textsf{A7} --- AKR Lemma 7 and bipartiteness of $H$}\label{sec:a7}
+
+\textbf{Statement.} If $p_i,p_{i+1}$ and $p_j,p_{j+1}$ are two pairs of
+consecutive sides of $P$ lying in four different components of $\GD$, then they
+cannot both be hooking, nor both hooked \cite[Lemma 7]{AckermanKeszeghRote2022}.
+
+\textbf{Project use.} Define $H$ with vertex set
+$\{\,i : \CC(p_i)\neq\CC(p_{i+1})\,\}$ and $i\sim_H k$ iff the two pairs share no
+side and their four sides lie in four distinct components. Assigning to each
+vertex the set $S(e)\subseteq\{\text{hooking},\text{hooked}\}$ of statuses
+realised by \emph{some} associated pair, Lemma 7 gives
+$S(e)\cap S(e')=\emptyset$ for $e\sim_H e'$, whence every non-isolated vertex has
+a singleton status and $H$ is bipartite. Bipartiteness of $H$ is the second
+filter.
+
+\textbf{Why this is not marked verified.} Three points, in increasing order of
+comfort.
+\begin{enumerate}[leftmargin=*]
+  \item \textsc{akr}'s Observation 6 (the Axis Property) is stated
+    \emph{without proof} in both versions, and is \emph{false} under the printed
+    definition of ``associated'', which requires only two edges of $\GD$ and not
+    the two cross non-edges. An explicit rational counterexample is recorded in
+    the project's review note. Observation 6 is used throughout Lemma 7's case
+    analysis.
+  \item The conference version \cite{AckermanKeszeghRote2020} opens its proof of
+    Lemma 7 by \emph{selecting} the associated pairs subject to the cone
+    conditions $I(q_{i'},q_{i'\pm1})\in\Cone(p_i,p_{i+1})$, which forces the
+    existential reading of ``is hooking'' that the project uses. The journal
+    version deleted those clauses, leaving its own next sentence unsupported.
+    This strongly indicates the intended reading but does not state it in one
+    place.
+  \item \cite[\S10.2]{AckermanKeszeghRote2022}, journal only, reports the
+    authors' own independent computer verification of Lemma 7: $158{,}830$
+    arrangements of eight lines, $840$ assignments each after symmetry, yielding
+    $14$ configurations of which $13$ fail Lemma 5's hooking/hooked pattern.
+    This corroborates the \emph{statement}, not the project's interpretation.
+\end{enumerate}
+This is the principal remaining human-review item.
+
+\section{Project-original mathematical reductions}
+
+\subsection{Lemma A}
+
+\begin{lemma}[Lemma A]\label{lem:A}
+Let $S\subseteq\operatorname{sides}(P)$ satisfy
+\[
+  (\star)\qquad
+  \forall \ell,\ \ \ell\cap V(P)=\emptyset
+  \ \Longrightarrow\
+  \ell \text{ misses at least one member of } S .
+\]
+Then $|\ED| \ge n + (m-|S|)$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+For each side $q_j$ of $Q$, (GP5) gives $\ell(q_j)\cap V(P)=\emptyset$, so
+$(\star)$ applies and yields $p\in S$ with $\ell(q_j)\cap p=\emptyset$, hence
+$q_j\cap p=\emptyset$. This is $n$ edges with distinct $Q$-endpoints, all with
+$P$-endpoint in $S$. By \textsf{C1} each $p\notin S$ misses some side of $Q$,
+giving $m-|S|$ further edges with distinct $P$-endpoints outside $S$. The two
+families are disjoint because their $P$-endpoints lie inside versus outside $S$.
+\end{proof}
+
+For $m=n=7$ and $|S|=4$ this gives $|\ED|\ge10$; since $I$ is even, $|\ED|=49-I$
+is odd, so $|\ED|\ge11$ and $I\le38$. Call $P$ \emph{exceptional} when no
+$4$-subset of its sides satisfies $(\star)$. Then
+\[
+  I=40 \ \Longrightarrow\ P \text{ and } Q \text{ are both exceptional}.
+\]
+
+\textbf{Lean boundary.} \texttt{lean/}\allowbreak\texttt{LemmaA}\allowbreak\texttt{.lean} kernel-checks the counting and
+the parity upgrade (\texttt{card\_E\_ge}, \texttt{card\_E\_ge\_eleven},
+\texttt{crossings\_le\_38}) as an \emph{implication}. The geometric premises
+--- that each $q_j$ is disjoint from some member of $S$, and that each
+$p\notin S$ is disjoint from some $q_j$ --- remain explicit hypotheses,
+discharged in Lean only for the one explicit certificate pair. The
+$(\star)$ condition itself is not formalized.
+
+\subsection{Exceptional classification}
+
+All predicates used --- simplicity, crossing sets, the avoiding relation, the
+Lemma-2 windows --- are Boolean functions of the order type of the seven
+vertices. The classification is therefore finite:
+\[
+\begin{aligned}
+  135 \text{ order types}\ \times\ 360 \text{ cyclic orders}
+  &\ \longrightarrow\ 6{,}342 \text{ simple heptagons} \\
+  &\ \longrightarrow\ 16 \text{ exceptional}
+  \ \longrightarrow\ 14 \text{ classes}.
+\end{aligned}
+\]
+The $6{,}342$ split as $6{,}007$ with an uncrossable $3$-set, $319$ with an
+uncrossable $4$-set, and $16$ exceptional. Each of the $14$ classes has
+$|M|=5$, exactly five maximal crossing sets all of size $6$, and two avoiding
+pairs --- except one class with none.
+
+\begin{remark}[Strict versus loose, and why it matters]\label{rem:strict}
+Two readings of ``uncrossable'' must be distinguished.
+\[
+  \textbf{strict: } (\star) \text{ above}
+  \qquad\text{versus}\qquad
+  \textbf{loose: } \text{no line at all meets all four closed sides.}
+\]
+Measured over all $6{,}342$ simple heptagons these give
+\[
+  \textbf{strict} \rightsquigarrow 16 \text{ exceptional},
+  \qquad
+  \textbf{loose} \rightsquigarrow 2{,}268 \text{ exceptional},
+\]
+differing on $2{,}252$ objects. The \emph{strict} reading is the correct one:
+Lemma~A is only ever instantiated at lines $\ell(q_j)$, which avoid $V(P)$ by
+(GP5). The $2{,}252$ differing objects are exactly those $4$-sets whose only
+transversals pass through a vertex of $P$ --- and no $\ell(q_j)$ can be such a
+line. Had the loose phrasing been implemented, the finite search would have been
+infeasible.
+\end{remark}
+
+\section{Computational reduction}\label{sec:comp}
+
+\subsection{The universe of candidate graphs}
+
+There are $7\times 7 = 49$ side pairs, and $I+|\ED|=49$, so $I=40$ forces
+$|\ED|=9$. By \textsf{C1} the minimum degree is at least $1$ on both sides. The
+number of bipartite graphs on $7+7$ vertices with exactly $9$ edges and minimum
+degree at least $1$ is
+\[
+  \sum_{j=0}^{7}(-1)^j\binom{7}{j}\,[x^9]\bigl((1+x)^{7-j}-1\bigr)^{7}
+  \;=\; 13{,}003{,}620 ,
+\]
+by inclusion--exclusion over uncovered $Q$-sides. This closed form was evaluated
+in exact integer arithmetic independently of both enumerations.
+
+\begin{remark}[A historical enumeration bug]\label{rem:bug}
+An earlier implementation reported $13{,}484{,}940$ as ``the number of $9$-edge
+graphs''. Its recursion never forced the edge budget to be exhausted at the leaf,
+so it enumerated $|\ED|\in\{7,8,9\}$:
+\[
+  5{,}040 \;+\; 476{,}280 \;+\; 13{,}003{,}620 \;=\; 13{,}484{,}940 .
+\]
+The searched universe was therefore a \emph{superset} of what was needed. No
+candidate was missed and the exclusion was not invalidated --- only the reported
+figure was wrong, and the $|\ED|=7$ and $|\ED|=8$ cases were swept for free. The
+bug nonetheless motivated the independent reimplementation of \S\ref{sec:impl}.
+\end{remark}
+
+\subsection{The filter pipeline}
+
+\begin{center}
+{\footnotesize
+\begin{tabular}{@{}rlll@{}}
+\toprule
+\textbf{Count} & \textbf{Filter applied next} & \textbf{Justification} & \textbf{Checked by} \\
+\midrule
+$13{,}003{,}620$ & \textsc{akr} L5, consecutive pairs & \textsf{A5-C} & Python, C++ \\
+$42{,}238$       & \textsc{akr} L7 $\Rightarrow$ $H$ bipartite & \textsf{A7} & Python, C++ \\
+$24{,}990$       & crossing-set compatibility & elementary (order type) & Python, C++ \\
+$2{,}300$        & {\v C}ern{\'y} L2, class-dependent & \textsf{C2} & Python, C++ \\
+$121$            & \emph{(change of counted object)} & --- & Python, C++ \\
+$225$            & \textsc{akr} L5, avoiding pairs & \textsf{A5-A} & Python, C++, certificate, Lean \\
+$0$              & --- & --- & --- \\
+\bottomrule
+\end{tabular}}
+\end{center}
+
+\begin{remark}[The $121\to225$ step is not a filter]\label{rem:121}
+This is a change in what is being counted, and it should not be read as a
+reduction. The figures $13{,}003{,}620$ through $121$ count \emph{graphs}; the
+figure $225$ counts \emph{triples} $(\text{class}_P,\text{class}_Q,G)$. The $225$
+triples live on exactly those same $121$ graphs: a graph may be compatible with
+several exceptional classes on either side, and $225=\sum_G |ok_P(G)|\cdot|ok_Q(G)|$
+over the $121$ surviving graphs. Every one of the $121$ graphs has degree sequence
+$(2,2,1,1,1,1,1)$ on both sides, and only $9$ of the $14$ classes occur.
+\end{remark}
+
+\begin{remark}[{\v C}ern{\'y} Lemma 3 is not a dependency]
+An earlier pipeline also applied {\v C}ern{\'y} Lemma 3 between \textsf{A7} and
+the compatibility filter, reducing $24{,}990$ to $9{,}702$. Running the pipeline
+with and without it produces \emph{identical} results at every subsequent stage
+and an identical set of $225$ terminal triples: the graphs Lemma 3 removes are
+all removed by crossing-set compatibility in any case. Lemma 3 is therefore
+\emph{not} a logical dependency of this proof and is omitted throughout.
+\end{remark}
+
+\section{Independent implementations}\label{sec:impl}
+
+\textbf{Python (reference).} The readable implementation: recursion over
+$P$-side neighbourhoods with a running edge budget, union-find components,
+DFS $2$-colouring for bipartiteness, a $128$-entry lookup table for
+compatibility, and iteration over all $\binom{7}{4}$ subsets for {\v C}ern{\'y}
+L2.
+
+\textbf{C++17 (independent reduction).} Written from a written specification,
+with every major algorithm chosen differently: enumeration transposed to
+$Q$-side columns and partitioned by an explicit degree sequence rather than an
+edge budget; graphs keyed as a packed $49$-bit word; components by iterative
+bitmask closure; bipartiteness by union-find \emph{with parity}; compatibility by
+direct containment in the five maximal crossing sets; {\v C}ern{\'y} L2 by
+enumeration of systems of distinct representatives.
+
+\textbf{Agreement.} Both produce the same universe $13{,}003{,}620$; the same
+intermediate counts $42{,}238$, $24{,}990$, $2{,}300$, $121$; the same $121$
+graphs; and the same canonical set of $225$ terminal triples, with
+\emph{zero set difference} in either direction.
+
+\begin{remark}[Scope of the independence claim]
+This is \textbf{implementation-independent in algorithm and data representation,
+but not fully author- or specification-independent}: the second implementation
+was written by an agent that had already seen the first implementation and its
+specification. The agreement is therefore strong evidence against transcription
+and coding errors, and against a missed branch in either enumeration, but it is
+\emph{not} evidence against a shared misreading of the published lemmas.
+\end{remark}
+
+\section{Certificates}\label{sec:cert}
+
+A \emph{certificate} here is a file that lets a referee re-derive the terminal
+contradictions without trusting --- or rerunning --- the exhaustive search. For
+each of the $225$ terminal triples it stores the class identifiers, a canonical
+graph encoding (seven neighbourhood bitmasks), the degree sequences, the
+component partitions, the relevant side pair and its kind, both neighbourhoods,
+the two set differences, and the list of cyclic adjacencies found, which is empty
+in every case.
+
+The standalone checker recomputes every quantity from the canonical encoding:
+neighbourhoods, degree sequences, components (by breadth-first search, where the
+generator used union-find), the set differences, and the adjacency test. The
+certificate's convenience fields are treated as claims to be checked, never as
+input.
+
+\begin{remark}[Component labels are compared modulo relabelling]
+Component identifiers are arbitrary. The checker compares the induced
+\emph{partitions}, not the integer labels. An earlier version of the comparison
+compared raw labels and reported spurious failures on $217$ of $225$ cases; the
+check was corrected to be relabelling-invariant.
+\end{remark}
+
+\textbf{Adversarial controls.} The checker was validated against ten deliberate
+corruptions, all detected: a case marked as surviving, a pair not avoiding for
+its class, falsified neighbourhoods, falsified difference sets, a falsified
+adjacency list, a graph edited to break the edge count or minimum degree, a wrong
+degree sequence, a wrong component partition, and --- the essential control --- an
+\emph{honestly constructed} witness using a different avoiding pair of the same
+class for which Lemma 5 genuinely \emph{is} satisfied. That last case is rejected
+with a message naming the satisfying adjacency, which confirms the checker does
+not simply reject everything.
+
+\subsection*{A worked terminal case}
+
+Take the first certificate entry. The graph is given by the $P$-side
+neighbourhoods
+\[
+  N(p_0),\dots,N(p_6)
+  \;=\;
+  \{0\},\{0\},\{1\},\{2,4\},\{3\},\{4\},\{5,6\},
+\]
+with $P$ assigned exceptional class $12$, whose $M$-set is $\{0,2,3,4,6\}$ and
+whose avoiding pairs are $(0,2)$ and $(4,6)$. The sides $p_4$ and $p_6$ are
+avoiding and lie in different components. Now
+\[
+  N(p_4)=\{3\},\qquad N(p_6)=\{5,6\},
+\]
+so $N(p_4)\setminus N(p_6)=\{3\}$ and $N(p_6)\setminus N(p_4)=\{5,6\}$. In
+$\mathbb{Z}_7$ the element $3$ is cyclically adjacent only to $2$ and $4$, and
+neither lies in $\{5,6\}$. So \eqref{eq:adj} fails, contradicting \textsf{A5-A}.
+All $225$ cases have this shape.
+
+For contrast, the \emph{other} avoiding pair $(0,2)$ of the same class on the same
+graph gives $N(p_0)\setminus N(p_2)=\{0\}$ and $N(p_2)\setminus N(p_0)=\{1\}$,
+and $0$ \emph{is} adjacent to $1$ --- so \eqref{eq:adj} holds there. The
+condition is genuinely discriminating: across the $225$ certificate graphs,
+$2{,}016$ of the $4{,}725$ side pairs satisfy it.
+
+\section{Lean trust boundary}\label{sec:lean}
+
+Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
+\texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
+
+None of the three files contains \texttt{sorry}, \texttt{admit}, a
+project-specific \texttt{axiom}, \texttt{unsafe}, or \texttt{native\_decide};
+this was verified by scanning the sources with comments stripped. All
+\texttt{decide} calls are ordinary kernel reduction.
+
+\subsection*{\texttt{LowerBound.lean} --- \textsf{LEAN-LB}}
+\textbf{Imports: none.} Core Lean only; verified to compile with an empty
+\texttt{LEAN\_PATH}, so Mathlib is not in its trust base.
+\textbf{Axioms:} \texttt{propext} only.
+
+Twenty theorems, including \texttt{P\_simple}, \texttt{Q\_simple} (distinct
+vertices; no three of the seven collinear; consecutive sides non-collinear; no
+proper crossing of non-adjacent sides), \texttt{general\_position} (no vertex of
+one polygon on a side-line of the other), \texttt{crossing\_count\_eq\_38},
+\texttt{per\_P\_side\_counts} $=[6,6,6,6,6,6,2]$, \texttt{disjoint\_count\_eq\_11}
+and \texttt{crossCount\_add\_disjointCount}. Crucially
+\texttt{allPairs\_length} $=49$, \texttt{allPairs\_nodup} and
+\texttt{allPairs\_complete} establish that the count of $38$ is taken over
+provably all $49$ side pairs.
+
+\textbf{Not formalized:} the step from these orientation-level facts to ``the
+closed polygonal curve is a simple closed curve in $\mathbb{R}^2$''.
+
+\subsection*{\texttt{LemmaA.lean} --- \textsf{LEAN-LA}}
+\textbf{Imports:} Mathlib (\texttt{Finset.Card}, \texttt{Fintype.Prod},
+\texttt{Fintype.Card}, \texttt{Algebra.Ring.Parity}) and \texttt{LowerBound}.
+\textbf{Axioms:} \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}.
+
+Theorems \texttt{card\_E\_ge}, \texttt{card\_E\_ge\_ten},
+\texttt{ge\_eleven\_of\_ge\_ten\_of\_odd}, \texttt{card\_E\_ge\_eleven},
+\texttt{crossings\_le\_38}, together with a non-vacuity block
+(\texttt{Rcert\_h1}, \texttt{Rcert\_h2}, \texttt{Rcert\_card\_E} $=11$,
+\texttt{nonvacuous}, \texttt{cert\_I\_le\_38},
+\texttt{hypotheses\_are\_restrictive}) showing the hypotheses are simultaneously
+satisfiable, the bound tight, and the empty relation excluded.
+
+\begin{remark}[A defect in the earlier skeleton]
+An earlier, never-compiled version of this file did not have \texttt{Odd} in
+scope. Lean's auto-bound implicits silently turned it into a free variable, so
+\texttt{card\_E\_ge\_eleven} and \texttt{crossings\_le\_38} elaborated as vacuous
+statements \emph{with no error reported}. The file now sets
+\texttt{autoImplicit false}, which makes this class of failure impossible.
+\end{remark}
+
+\subsection*{\texttt{Endgame.lean} --- \textsf{LEAN-END}}
+\textbf{Imports:} \texttt{EndgameData} only, which imports \texttt{EndgameDefs},
+which imports nothing --- core Lean throughout, confirmed standalone with bare
+\texttt{lean} and \texttt{LEAN\_PATH=.}\ \textbf{Axioms:} \texttt{propext} and
+\texttt{Quot.sound} only; notably \emph{no} \texttt{Classical.choice}.
+
+Principal theorems:
+\begin{itemize}[leftmargin=*,nosep]
+  \item \texttt{card\_certificates} : the list has length $225$;
+  \item \texttt{keys\_distinct} : no duplicate records under the canonical key;
+  \item \texttt{all\_225\_cases\_fail\_AKR5\_requirement} and
+    \texttt{all\_225\_cases\_fail\_AKR5\_conclusion};
+  \item \texttt{all\_225\_pairs\_in\_different\_components} : component
+    separation is \emph{recomputed in the kernel} via a separator argument, not
+    taken from the stored data;
+  \item \texttt{akr5Conclusion\_iff\_adjacent} : the published conclusion and the
+    implemented predicate are equivalent; this depends on no axioms at all;
+  \item \texttt{akr5\_not\_vacuous} : $2{,}016$ of the $4{,}725$ side pairs in
+    these graphs \emph{do} satisfy the condition.
+\end{itemize}
+The Lean data file is generated deterministically from the committed certificate
+JSON, whose hash is embedded in the generated header.
+
+\begin{center}
+\fbox{\parbox{0.93\textwidth}{Key finite and combinatorial components are
+formally verified in Lean; the published geometric lemmas themselves remain
+external dependencies. In particular $f(7,7)=38$ is \textbf{not} a Lean theorem,
+and the completeness of the $225$-case list is not formalized.}}
+\end{center}
+
+\section{Trust DAG}
+
+{\footnotesize
+\begin{verbatim}
+   AKR S9   (GP) ----------+
+   Cerny L1 (C1) ----------+
+   Cerny L2 (C2) ----------+        Lemma A (LA)  [Lean: counting core]
+   AKR L5   (A5) ----------+               |
+   AKR L7   (A7) * --------+               v
+                           |     exceptional classification (OT, EX)
+                           |       135 order types   [external DB]
+                           |       6,342 simple      [external DB]
+                           |       16 -> 14 classes  [reimplemented]
+                           v               |
+                    finite reduction (GR, COMP)
+                      /                  \
+                 Python                 C++17
+                      \                  /
+                    225 terminal triples
+                   (exact set match, 121 graphs)
+                             |
+                       certificates (CERT)
+                  standalone checker, 10 controls
+                             |
+                        Lean (LEAN-END)
+                 all 225 fail AKR-L5; iff bridge
+                             |
+                          I != 40
+                             |
+             explicit 38-example (LB38) [Lean: LEAN-LB]
+                             |
+                      f(7,7) = 38   (candidate)
+
+   * AKR L7: human review pending -- see Section 4.5.
+     If A7 fails, the H-bipartite filter is unjustified and the
+     reduction from 42,238 onwards must be redone; UB40 fails.
+\end{verbatim}
+}
+
+\section{Known defects found during development}\label{sec:defects}
+
+Listed because they calibrate how much checking this argument has had.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Enumeration bug ($13{,}484{,}940$).} The leaf test omitted the
+    edge-budget condition, so $|\ED|\in\{7,8,9\}$ was enumerated.
+    \emph{Effect on the theorem:} none --- a superset was searched, so no
+    candidate was missed. \emph{Repair:} corrected leaf test; the buggy file is
+    preserved unpatched as evidence. \emph{Superseded by:} the corrected
+    enumeration and the closed form of \S\ref{sec:comp}.
+  \item \textbf{Raw component-ID comparison.} A verification script compared
+    component \emph{labels} rather than the partitions they induce, and reported
+    failures on $217$ of $225$ cases. \emph{Effect:} none on the proof; it was a
+    checker bug. \emph{Repair:} compare partitions. \emph{Superseded by:} the
+    current relabelling-invariant checker.
+  \item \textbf{Lean \texttt{Odd} / \texttt{autoImplicit} defect.} In the earlier
+    \texttt{LemmaA.lean} skeleton, \texttt{Odd} was out of scope and became a
+    free implicit variable, so two theorems elaborated as vacuous statements with
+    no error. \emph{Effect:} none, because the file had never been compiled.
+    \emph{Repair:} rewritten with \texttt{autoImplicit false}.
+    \emph{Superseded by:} the current \texttt{LemmaA.lean}.
+  \item \textbf{Step 0 perturbation argument.} The project's own
+    general-position proof is incorrect when $\Cone_P(v)\subset\Cone_Q(w)$, where
+    its rule destroys the intersection point. \emph{Effect on the theorem:} none,
+    because the required statement follows from
+    \cite[\S9.1]{AckermanKeszeghRote2022}. \emph{Repair:} removed from the active
+    proof. \emph{Superseded by:} \textsf{GP}, \S\ref{sec:gp}.
+  \item \textbf{Strict versus loose exceptional condition.} Early phrasing said
+    ``no line meets all four sides'', which does not license what the computation
+    tests. \emph{Effect if it had been implemented:} severe --- $2{,}268$
+    exceptional objects instead of $16$, and an infeasible search.
+    \emph{Repair:} the strict, vertex-avoiding form $(\star)$.
+    \emph{Superseded by:} Lemma~\ref{lem:A} and Remark~\ref{rem:strict}.
+\end{enumerate}
+
+\section{Remaining work}
+
+\begin{enumerate}[leftmargin=*,nosep]
+  \item External human review of the \textsc{akr} Observation 6 / Lemma 7
+    interpretation (\S\ref{sec:a7}).
+  \item Ideally, confirmation from one of the \textsc{akr} authors on the
+    intended reading of ``associated'' and ``is hooking''.
+  \item Independent expert review of the overall proof.
+  \item Conversion of this manifest into a readable paper.
+  \item The human author learning the argument well enough to defend it.
+  \item Further Lean formalization \emph{only} where it improves the trust
+    boundary.
+\end{enumerate}
+
+Formalizing all of {\v C}ern{\'y} et al.\ or all of \textsc{akr} is
+\textbf{not} required by this proof architecture. Those results are used as
+published black boxes, and the appropriate check on them is source auditing and
+expert review, not formalization.
+
+\section{Final trust statement}
+
+\begin{center}
+\fbox{\parbox{0.93\textwidth}{
+The project currently contains a heavily audited \emph{candidate}
+computer-assisted proof of $f(7,7)=38$. The novel finite reductions and the
+terminal elimination have been independently implemented, certificate checked,
+and in key places Lean-kernel verified. The principal remaining mathematical
+issue is the interpretation and application of \textsc{akr} Observation 6 and
+Lemma 7 in the auxiliary-graph bipartiteness step. Independent expert review
+remains required before the result should be treated as established.
+}}
+\end{center}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
