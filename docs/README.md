@@ -1,0 +1,58 @@
+# Documentation index
+
+Two kinds of document live here, and the difference matters.
+
+**Written during repository organization (2026-09-13)** — these describe the
+project's status conservatively and are maintained going forward:
+
+| File | Purpose |
+|---|---|
+| [`verification-status.md`](verification-status.md) | **Authoritative.** Trust status of every claim. Overrides every other document and every transcript. |
+| [`known-issues.md`](known-issues.md) | Every open gap and unresolved question, numbered `K-01`…`K-12`. |
+| [`computational-method.md`](computational-method.md) | Method summary and the reproduction guide, with what does and does not run. |
+| [`literature-notes.md`](literature-notes.md) | Sources, published bounds, and the imported lemmas. |
+| [`ai-disclosure.md`](ai-disclosure.md) | How this work was produced and how LLM output is treated. |
+
+**Original research documents, preserved byte-for-byte** — not edited, not
+softened, not annotated:
+
+| File | Written | Status |
+|---|---|---|
+| [`proof-outline.md`](proof-outline.md) | latest pipeline | The current argument in theorem/lemma form. **Reflects the author's own confidence at the time of writing, which is higher than this repository's official status.** Read alongside `verification-status.md`. |
+| [`audit-report.md`](audit-report.md) | mid-project | The project's adversarial self-audit. Found defects D1 and D2. Note it states that the result is *not* mitigated by an independent reimplementation — which contradicts the later `proof-outline.md` claim of "2 independent implementations" (see `known-issues.md` K-02). |
+| [`lean-architecture.md`](lean-architecture.md) | design stage | The seven-file Lean plan. **Six of the seven files do not exist.** See [`../lean/README.md`](../lean/README.md). |
+
+## Reading them safely
+
+These three documents were written by the author mid-research, and they use
+language a finished result would earn. In particular `proof-outline.md` opens
+"**Theorem.** Two simple heptagons in general position have at most 38 boundary
+intersection points" and closes "∎".
+
+That is **not** this repository's position. The official status is:
+
+> Candidate computer-assisted proof that `f(7,7) = 38`, undergoing independent
+> verification and formalization.
+
+The documents were deliberately left unedited: rewriting the research record to
+match a later, more cautious assessment would destroy exactly the provenance
+this repository exists to preserve. The reconciliation lives in
+`verification-status.md`, which is authoritative.
+
+Specific things to keep in mind while reading them:
+
+* `proof-outline.md` certifies "0 … in **2 independent implementations**". Only
+  one implementation exists in these materials (K-02).
+* `proof-outline.md` asserts "**Černý Lemma 3 is NOT needed**". No shipped code
+  supports this; the pipeline still applies L3 (K-06).
+* `proof-outline.md` Step 8's figures — 225 combinations, 121 graphs, all
+  `(2,2,1⁵)` — are computed by no script here (K-03).
+* Both SHA-256 digests quoted in `proof-outline.md` refer to an unrecorded
+  serialization and cannot be checked (K-07).
+* `audit-report.md`'s correctness evidence (340,335 predicate cross-checks;
+  129,812 realizable configurations) cannot be re-run: the required data files
+  and scripts are absent (K-05).
+
+None of this makes the argument wrong. It means the argument is not yet
+*checkable* at the level a referee would require — which is precisely why the
+status is "candidate".
