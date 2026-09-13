@@ -14,7 +14,7 @@ authors:
     family-names: Lin
     email: lin.jayd@northeastern.edu
     affiliation: Northeastern University
-repository-code: "https://example.invalid/REPLACE-BEFORE-PUBLICATION"
+repository-code: "https://github.com/NewYorkImperialist/heptagon-intersections"
 abstract: >-
   Computational materials, proof notes, Lean formalization skeleton and full
   research provenance for an investigation of f(7,7), the maximum number of
