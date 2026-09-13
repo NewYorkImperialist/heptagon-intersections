@@ -995,7 +995,12 @@ consequence.
 * *Tried:* an *H*-vertex with *S*(*e*) = ∅, which would break Corollary (b). Requires
   a relevant pair with no associated pair, contradicting Lemma 5. None.
 * *Tried:* the triangle case. With |E| = 7 the disjointness graph is a perfect
-  matching, giving 14 singleton components; then every *e_i* is relevant and every
+  matching, giving **7 components, each a single matched pair** [corrected
+  2026-09-13: the original text said "14 singleton components", which is wrong --- a
+  perfect matching on 7+7 has 7 components of size 2 and no singletons. The
+  argument is unaffected, since what it needs is that distinct sides of *P* lie in
+  distinct components, and each component contains exactly one *P*-side]; then
+  every *e_i* is relevant and every
   non-index-adjacent pair has four distinct components, so *H* has 7 vertices and 14
   edges and contains triangles. Verified directly: `H_bip([0,1,2,3,4,5,6])` returns
   `False` with |E(*H*)| = 14. This is `proof-outline.md` Step 9's argument that

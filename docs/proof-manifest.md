@@ -51,8 +51,16 @@ I = 40  ⟹  |E^D| = 9                         [ I + |E^D| = 49 ]
         ⟹  ⊥
 ```
 
-Hence `I ≠ 40`; with `I ≠ 42` and parity excluding 39 and 41, `I ≤ 38`; and the
+Hence `I ≠ 40`; with `I ≤ 42` (C1), `I ≠ 42`, and `I` even, `I ≤ 38`; and the
 explicit construction attains 38. Therefore `f(7,7) = 38`.
+
+**On `I = 42`.** Černý Theorem 4 gives `f(7,7) ≤ 40`, which would make the
+`I = 42` case vacuous — but the project does **not** import it (it rests on
+Černý Lemma 3, unaudited here). The argument uses only Černý *Lemma 1*, which
+caps `I ≤ 42`, so `I = 42` must be excluded on its own: `|E| = 7` forces a
+perfect matching, giving **7** components each a matched pair, so `H` is the
+complement of `C₇` and contains a triangle, contradicting A7. Theorem 4 is
+corroboration, not an input.
 
 ## Dependency summary
 
@@ -61,27 +69,29 @@ explicit construction attains 38. Therefore `f(7,7) = 38`.
 | **GP** | general position may be assumed | published | AKR §9.1, §3 | SOURCE-AUDITED | none known; project's own earlier proof was **wrong**, removed |
 | **C1** | `δ(G^D) ≥ 1` | published | Černý L1 | SOURCE-AUDITED | none known |
 | **C2** | forbidden local perfect matching | published | Černý L2 | SOURCE-AUDITED | none known |
+| **C2-BRIDGE** | filter fires iff *exact induced* perfect matching | project inference | this project | LEAN-KERNEL-CHECKED | certifies the Lean transcription, not the Python/C++ source |
 | **A5-C** | L5 on consecutive pairs | published | AKR L5 | SOURCE-AUDITED | none known |
 | **A5-A** | L5 on avoiding pairs | published | AKR L5 | SOURCE-AUDITED; bridge LEAN-KERNEL-CHECKED | none known |
-| **A7** | L7 ⟹ `H` bipartite | published + project inference | AKR L7 | **HUMAN REVIEW PENDING** | **principal open item** |
+| **A7-EXT** | under the intended reading, AKR L7 gives: adjacent `H`-vertices have disjoint status sets | published + interpretation | AKR L7 | **HUMAN REVIEW PENDING** | **principal open item** |
+| **A7-BRIDGE** | non-empty status sets + disjoint across edges ⟹ `H` bipartite | project inference | this project | LEAN-KERNEL-CHECKED | none known; conditional on A7-EXT |
 | **LA** | Lemma A + parity ⟹ `I ≤ 38` | project lemma | this project | LEAN-KERNEL-CHECKED (counting core) | geometric premises stay hypotheses |
 | **OT** | 135 order types | external dataset | Aichholzer et al. | EXTERNALLY CROSS-CHECKED (exact set equality) | none known |
 | **EX** | 6,342 simple → 16 exceptional → 14 classes | enumeration | this project | INDEPENDENTLY REIMPLEMENTED; 6,342 externally cross-checked | none known |
 | **GR** | 13,003,620 candidate graphs | enumeration | this project | INDEPENDENTLY REIMPLEMENTED + closed form | none known |
-| **COMP** | pipeline → 121 graphs / 225 triples | enumeration | this project | INDEPENDENTLY REIMPLEMENTED (exact set match) | inherits **A7** |
+| **COMP** | pipeline → 121 graphs / 225 triples | enumeration | this project | INDEPENDENTLY REIMPLEMENTED (exact set match) | inherits **A7-EXT** |
 | **CERT** | each of the 225 violates AKR L5 | certificate | this project | CERTIFICATE-CHECKED | completeness not certified |
 | **LEAN-LB** | 38 crossings, simple, general position | Lean | `lean/LowerBound.lean` | LEAN-KERNEL-CHECKED | simplicity is orientation-level |
 | **LEAN-LA** | counting + parity core | Lean | `lean/LemmaA.lean` | LEAN-KERNEL-CHECKED | an implication |
 | **LEAN-END** | all 225 fail L5; `iff` bridge | Lean | `lean/Endgame.lean` | LEAN-KERNEL-CHECKED | completeness not formalized |
 | **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | none known |
-| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5, A7, LA, COMP | conditional on **A7** | **fails if A7 fails** |
+| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5, A7-EXT, A7-BRIDGE, LA, COMP | conditional on **A7-EXT** | **fails if A7-EXT fails** |
 
 ## Filter pipeline
 
 | Count | Next filter | Justification | Checked by |
 |---:|---|---|---|
 | 13,003,620 | AKR L5, consecutive | A5-C | Python, C++ |
-| 42,238 | AKR L7 ⟹ `H` bipartite | A7 | Python, C++ |
+| 42,238 | AKR L7 ⟹ `H` bipartite | A7-EXT + A7-BRIDGE | Python, C++ |
 | 24,990 | crossing-set compatibility | elementary | Python, C++ |
 | 2,300 | Černý L2, class-dependent | C2 | Python, C++ |
 | 121 | *(change of counted object)* | — | — |
@@ -112,12 +122,18 @@ Strict is the correct reading: Lemma A is only ever instantiated at the lines
 | `LowerBound.lean` | **none** (core Lean) | `propext` | 38 crossings; simplicity; general position; counted over provably all 49 pairs |
 | `LemmaA.lean` | Mathlib | `propext`, `Classical.choice`, `Quot.sound` | counting + parity ⟹ `I ≤ 38`, as an implication; non-vacuity |
 | `Endgame.lean` | **none** (core Lean) | `propext`, `Quot.sound` | all 225 fail AKR-L5; components recomputed in-kernel; `AKR5Conclusion ↔ AKR5Adjacent` (axiom-free) |
+| `Lemma7Bridge.lean` | **none** (core Lean) | **none at all** | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
+| `CernyL2Interface.lean` | **none** (core Lean) | `propext`, `Classical.choice`, `Quot.sound` | filter fires **iff** exact induced perfect matching; extra edge inside the block ⟹ no fire, outside ⟹ still fires |
 
 No `sorry`, `admit`, project `axiom`, `unsafe`, or `native_decide` in any file.
 
 > Key finite and combinatorial components are formally verified in Lean; the
 > published geometric lemmas remain external dependencies. `f(7,7) = 38` is
 > **not** a Lean theorem.
+>
+> In particular: Lean verifies the project's *implication* A7-BRIDGE, **not**
+> AKR's geometric theorem. The chain is
+> `A7-EXT ⟹ A7-BRIDGE ⟹ H bipartite`, and only the second arrow is machine-checked.
 
 ## Known defects found during development
 
@@ -147,6 +163,8 @@ Formalizing all of Černý or all of AKR is **not** required by this architectur
 > proof of `f(7,7) = 38`. The novel finite reductions and the terminal elimination
 > have been independently implemented, certificate checked, and in key places
 > Lean-kernel verified. The principal remaining mathematical issue is the
-> interpretation and application of AKR Observation 6 and Lemma 7 in the
-> auxiliary-graph bipartiteness step. Independent expert review remains required
-> before the result should be treated as established.
+> issue is **A7-EXT**: whether the published Observation 6 / Lemma 7 language
+> licenses precisely the disjoint-status consequence the argument uses.
+> Conditional on that consequence, the deduction that `H` is bipartite
+> (**A7-BRIDGE**) is formally verified in Lean. Independent expert review remains
+> required before the result should be treated as established.

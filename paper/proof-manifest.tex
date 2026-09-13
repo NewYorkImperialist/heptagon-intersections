@@ -103,12 +103,24 @@ Three facts frame the problem.
   \item \textbf{$38$ is realizable.} An explicit pair of integer-coordinate
     heptagons attains $38$ crossings (\S\ref{sec:lean}, \textsf{LB38}); this is
     verified by the Lean kernel.
-  \item \textbf{The published bounds leave only $40$.}{\v C}ern{\'y} et
-    al.~\cite{CernyEtAl2003} give $f(7,7)\le 40$, and
-    \cite{AckermanKeszeghRote2022} is asymptotically optimal but vacuous at
-    $m=n=7$. The number of crossings of two closed curves in general position is
-    even, so $39$ and $41$ are impossible. Hence
-    $f(7,7)\in\{38,40\}$, and $I=42$ is excluded separately.
+  \item \textbf{The published state of the art leaves only $40$.}
+    {\v C}ern{\'y} et al.~\cite[Theorem 4]{CernyEtAl2003} prove
+    $f(k,\ell)\le k\ell-\lceil k/6\rceil-\ell$ for odd $7\le k\le\ell$, which at
+    $k=\ell=7$ gives $f(7,7)\le 40$; \cite{AckermanKeszeghRote2022} is
+    asymptotically optimal but vacuous at $m=n=7$. Crossings of two closed curves
+    in general position are even, so $f(7,7)\in\{38,40\}$ and the whole question
+    is whether $40$ is attainable.
+
+    \emph{This bound is context, not a dependency.} Importing it would shorten
+    the argument --- $I\le40$, $I\neq40$ and parity would give $I\le38$ at once,
+    with no $I=42$ case --- but \cite[Theorem 4]{CernyEtAl2003} rests on
+    \cite[Lemma 3]{CernyEtAl2003}, a four-page case analysis this project has not
+    audited, and importing it would contradict the project's own accounting of
+    its dependencies. The argument here instead uses only
+    \cite[Lemma 1]{CernyEtAl2003} (\textsf{C1}), which gives the weaker cap
+    $I\le42$, and excludes $I=42$ separately in \S\ref{sec:i42}. {\v C}ern{\'y}
+    Theorem 4 is therefore independent corroboration of the upper bound, not an
+    input to it.
   \item \textbf{The upper bound is a proof by contradiction.} One assumes a pair
     with $I=40$ and derives a contradiction. Everything in
     \S\ref{sec:flow}--\S\ref{sec:cert} serves that single reductio.
@@ -116,7 +128,7 @@ Three facts frame the problem.
 
 We do \emph{not} claim Theorem~\ref{thm:main} is established. We claim that no
 computational gap is currently known, and that the remaining risk is
-concentrated in one identified place (\textsf{A7}, \S\ref{sec:a7}).
+concentrated in one identified place (\textsf{A7-EXT}, \S\ref{sec:a7ext}).
 
 \section{One-page proof flow}\label{sec:flow}
 
@@ -149,9 +161,9 @@ justification.
 \end{array}
 \]}
 
-Hence $I\neq 40$; with $I\neq 42$, $I\neq 41$, $I\neq 39$ this gives $I\le 38$,
-and the explicit construction \textsf{LB38} attains $38$. Therefore
-$f(7,7)=38$.
+Hence $I\neq 40$; with $I\le42$ (\textsf{C1}), $I\neq42$ (\S\ref{sec:i42}) and
+$I$ even, this gives $I\le 38$, and the explicit construction \textsf{LB38}
+attains $38$. Therefore $f(7,7)=38$.
 
 \begin{remark}
 All of this is conditional on the general-position regime \textsf{GP}, imported
@@ -186,6 +198,10 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & published theorem & \cite[Lemma 2]{CernyEtAl2003}
   & \stat{source-audited} & none known \\
 \addlinespace
+\textsf{C2-BRIDGE} & The implemented filter predicate fires iff an \emph{exact induced} perfect matching exists
+  & project inference & this project
+  & \stat{lean-kernel-checked} & certifies the Lean transcription of the filter, not the Python/C++ source \\
+\addlinespace
 \textsf{A5-C} & Lemma 5 applied to \emph{consecutive} side pairs in different components
   & published theorem & \cite[Lemma 5]{AckermanKeszeghRote2022}
   & \stat{source-audited} & none known \\
@@ -194,9 +210,13 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & published theorem & \cite[Lemma 5]{AckermanKeszeghRote2022}
   & \stat{source-audited}; bridge \stat{lean-kernel-checked} & none known \\
 \addlinespace
-\textsf{A7} & Lemma 7 $\Rightarrow$ auxiliary graph $H$ is bipartite
-  & published theorem $+$ project inference & \cite[Lemma 7]{AckermanKeszeghRote2022}, \cite{AckermanKeszeghRote2020}
+\textsf{A7-EXT} & Under the intended reading of ``associated''/``is hooking'', AKR Lemma 7 gives: adjacent $H$-vertices have disjoint status sets
+  & published theorem $+$ interpretation & \cite[Lemma 7]{AckermanKeszeghRote2022}, \cite{AckermanKeszeghRote2020}
   & \stat{human review pending} & \textbf{principal open item}; Observation 6 unproved and false under the printed definition of ``associated'' \\
+\addlinespace
+\textsf{A7-BRIDGE} & Non-empty status sets $+$ disjoint status sets across edges $\Rightarrow$ $H$ bipartite
+  & project inference & this project
+  & \stat{lean-kernel-checked} & none known; conditional on \textsf{A7-EXT} \\
 \addlinespace
 \textsf{LA} & Lemma A: an uncrossable $4$-set forces $|\ED|\ge10$, parity gives $\ge11$, so $I\le38$
   & project lemma & this project
@@ -216,7 +236,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{COMP} & Filter pipeline down to $121$ graphs / $225$ triples
   & finite enumeration & this project
-  & \stat{independently reimplemented} (exact set match) & inherits \textsf{A7} \\
+  & \stat{independently reimplemented} (exact set match) & inherits \textsf{A7-EXT} \\
 \addlinespace
 \textsf{CERT} & Each of the $225$ triples violates the \textsc{akr}-L5 consequence
   & certificate & this project
@@ -239,8 +259,8 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & \stat{lean-kernel-checked} & none known \\
 \addlinespace
 \textsf{UB40} & $I=40$ is impossible, hence $f(7,7)\le38$
-  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5}, \textsf{A7}, \textsf{LA}, \textsf{COMP}
-  & conditional on \textsf{A7} & \textbf{fails if \textsf{A7} fails} \\
+  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}
+  & conditional on \textsf{A7-EXT} & \textbf{fails if \textsf{A7-EXT} fails} \\
 \end{longtable}
 }
 
@@ -287,7 +307,7 @@ research. Everything here is in the intersection-\emph{point} model, and the
 result must not be restated in the pairs model.
 \end{remark}
 
-\subsection{\textsf{C1} --- {\v C}ern{\'y} Lemma 1}
+\subsection{\textsf{C1} --- {\v C}ern{\'y} Lemma 1}\label{sec:c1}
 
 A line meets a simple $k$-gon an even number of times, hence at most $k-1$ times
 for odd $k$ \cite[Lemma 1]{CernyEtAl2003}. Applied to $\ell(p_i)$ against $Q$ and
@@ -297,6 +317,44 @@ polygon. The single consequence used is
   \delta(\GD)\ \ge\ 1 .
 \]
 Together with $|\ED|=49-I$ this also gives $I\le42$.
+
+\subsection{Excluding $I=42$}\label{sec:i42}
+
+The manifest previously asserted twice that $I=42$ is ``excluded separately''
+without giving the argument. It is this.
+
+$I=42$ forces $|\ED|=7$. With $\delta(\GD)\ge1$ on $7+7$ vertices and only $7$
+edges, every vertex has degree exactly $1$, so $\GD$ is a \emph{perfect
+matching}. Its components are therefore the $7$ matched pairs: each component
+contains exactly one side of $P$ and one of $Q$. In particular no two sides of
+$P$ share a component.
+
+Hence every consecutive pair $e_i=(p_i,p_{i+1})$ is relevant, so
+$V(H)=\mathbb{Z}_7$; and for any $i,k$ with $(k-i)\bmod7\notin\{0,1,6\}$ the four
+sides $p_i,p_{i+1},p_k,p_{k+1}$ are distinct and hence lie in four distinct
+components. So $H$ is exactly the complement of the $7$-cycle: $7$ vertices and
+$14$ edges, containing the triangle $e_0e_2e_4$. A triangle is not bipartite,
+contradicting \textsf{A7-EXT} together with \textsf{A7-BRIDGE}.
+
+\begin{remark}
+The shipped $|\ED|=7$ sweep reproduces this independently:
+$5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7}). The companion
+$|\ED|=8$ sweep gives $476{,}280\to1{,}078\to0$, for $I=41$, which parity already
+excludes. Both were a by-product of the historical enumeration bug of
+Remark~\ref{rem:bug} and are corroborative rather than load-bearing.
+\end{remark}
+
+\begin{remark}[Why not route around \textsf{A7-EXT} here]
+$I=42$ could instead be excluded by \cite[Lemma 3]{CernyEtAl2003} directly --- the
+six matched partners of six consecutive sides of $P$ form precisely the
+configuration that lemma forbids --- which would avoid \textsf{A7-EXT} in this
+branch. We do not do this. Since the $I\neq40$ branch is already
+\textsf{A7-EXT}-gated and the theorem is the conjunction of the two branches, the
+conjunction is \textsf{A7-EXT}-gated either way: routing $I\neq42$ around it
+reduces the \emph{number of appearances} of the weak link without reducing the
+probability that the theorem survives. It would buy presentation at the cost of
+importing a further un-audited lemma.
+\end{remark}
 
 \subsection{\textsf{C2} --- {\v C}ern{\'y} Lemma 2}
 
@@ -354,23 +412,45 @@ neighbour would join them in one component. The set differences in
 \eqref{eq:adj} are then the neighbourhoods themselves.
 \end{remark}
 
-\subsection{\textsf{A7} --- AKR Lemma 7 and bipartiteness of $H$}\label{sec:a7}
+\subsection{\textsf{A7-EXT} and \textsf{A7-BRIDGE} --- AKR Lemma 7 and bipartiteness of $H$}\label{sec:a7ext}
 
-\textbf{Statement.} If $p_i,p_{i+1}$ and $p_j,p_{j+1}$ are two pairs of
-consecutive sides of $P$ lying in four different components of $\GD$, then they
-cannot both be hooking, nor both hooked \cite[Lemma 7]{AckermanKeszeghRote2022}.
+This dependency was previously recorded as a single item. It bundles two things
+of very different character, and is split here:
+\[
+  \underbrace{\textsf{A7-EXT}}_{\text{published theorem}+\text{interpretation}}
+  \;\Longrightarrow\;
+  \underbrace{\textsf{A7-BRIDGE}}_{\text{project inference, Lean-checked}}
+  \;\Longrightarrow\;
+  H \text{ bipartite}.
+\]
 
-\textbf{Project use.} Define $H$ with vertex set
-$\{\,i : \CC(p_i)\neq\CC(p_{i+1})\,\}$ and $i\sim_H k$ iff the two pairs share no
-side and their four sides lie in four distinct components. Assigning to each
-vertex the set $S(e)\subseteq\{\text{hooking},\text{hooked}\}$ of statuses
-realised by \emph{some} associated pair, Lemma 7 gives
-$S(e)\cap S(e')=\emptyset$ for $e\sim_H e'$, whence every non-isolated vertex has
-a singleton status and $H$ is bipartite. Bipartiteness of $H$ is the second
-filter.
+\textbf{Definition of $H$.} Fix $P$ (symmetrically for $Q$). Vertices are the
+relevant consecutive pairs, $V(H)=\{\,i : \CC(p_i)\neq\CC(p_{i+1})\,\}$, and
+$i\sim_H k$ iff the two pairs share no side, i.e.\ $(k-i)\bmod 7\notin\{0,1,6\}$,
+\emph{and} the four sides $p_i,p_{i+1},p_k,p_{k+1}$ lie in four distinct
+components of $\GD$. Condition (b) is imposed directly, so an $H$-edge reproduces
+Lemma 7's hypothesis exactly.
 
-\textbf{Why this is not marked verified.} Three points, in increasing order of
-comfort.
+For $e\in V(H)$ let $A(e)$ be the set of pairs of consecutive sides of $Q$
+associated to $e$ \emph{in the narrow sense} --- carrying the two cross
+non-edges, i.e.\ the full conclusion of Lemma 5 --- and put
+\[
+  S(e)=\{\text{hooking}: \exists\alpha\in A(e),\ I(\alpha)\in\Cone(e)\}
+     \cup\{\text{hooked}: \exists\alpha\in A(e),\ I(e)\in\Cone(\alpha)\}.
+\]
+$S(e)\neq\emptyset$: $e\in V(H)$ is Lemma 5's hypothesis, so $A(e)\neq\emptyset$,
+and Lemma 5's dichotomy realises at least one status.
+
+\subsubsection*{\textsf{A7-EXT} --- external, \stat{human review pending}}
+
+\begin{quote}
+Under the intended interpretation of ``associated'' and ``is hooking'',
+\cite[Lemma 7]{AckermanKeszeghRote2022} yields: if $e\sim_H e'$ then
+$S(e)\cap S(e')=\emptyset$.
+\end{quote}
+
+This is the one item that remains subject to external human review, for three
+reasons, in increasing order of comfort.
 \begin{enumerate}[leftmargin=*]
   \item \textsc{akr}'s Observation 6 (the Axis Property) is stated
     \emph{without proof} in both versions, and is \emph{false} under the printed
@@ -381,17 +461,42 @@ comfort.
   \item The conference version \cite{AckermanKeszeghRote2020} opens its proof of
     Lemma 7 by \emph{selecting} the associated pairs subject to the cone
     conditions $I(q_{i'},q_{i'\pm1})\in\Cone(p_i,p_{i+1})$, which forces the
-    existential reading of ``is hooking'' that the project uses. The journal
-    version deleted those clauses, leaving its own next sentence unsupported.
-    This strongly indicates the intended reading but does not state it in one
-    place.
+    existential reading of ``is hooking'' used above. The journal version deleted
+    those clauses, leaving its own next sentence unsupported. This strongly
+    indicates the intended reading but does not state it in one place.
   \item \cite[\S10.2]{AckermanKeszeghRote2022}, journal only, reports the
     authors' own independent computer verification of Lemma 7: $158{,}830$
     arrangements of eight lines, $840$ assignments each after symmetry, yielding
-    $14$ configurations of which $13$ fail Lemma 5's hooking/hooked pattern.
-    This corroborates the \emph{statement}, not the project's interpretation.
+    $14$ configurations of which $13$ fail Lemma 5's hooking/hooked pattern. This
+    corroborates the \emph{statement}, not the project's interpretation.
 \end{enumerate}
-This is the principal remaining human-review item.
+
+\subsubsection*{\textsf{A7-BRIDGE} --- project inference, \stat{lean-kernel-checked}}
+
+\begin{quote}
+If every relevant vertex has a non-empty status set, and adjacent vertices have
+disjoint status sets, then $H$ is bipartite.
+\end{quote}
+
+\emph{Proof.} Let $e\sim_H e'$. Both $S(e),S(e')$ are non-empty and disjoint
+subsets of a two-element set, hence distinct singletons. So if
+$S(e)=\{\text{hooking},\text{hooked}\}$ then $e$ has no $H$-neighbour at all; every
+non-isolated vertex has $|S(e)|=1$; every $H$-edge joins opposite singletons; and
+$e\mapsto S(e)$ is a proper $2$-colouring of the non-isolated part, isolated
+vertices being irrelevant to $2$-colourability. $\square$
+
+This inference is formalised in \texttt{lean/}\allowbreak\texttt{Lemma7Bridge}\allowbreak\texttt{.lean}
+(\S\ref{sec:lean}). The disjointness condition is an explicit \emph{hypothesis};
+AKR Lemma 7 is not assumed, not axiomatised, and not named in the file.
+
+\begin{remark}[What the Lean check does and does not buy]
+It settles the ``different associated pairs witness different statuses'' worry
+completely: a both-status vertex is \emph{proved} isolated, so the scenario in
+which Lemma 7 is applied with inconsistent choices on different $H$-edges is
+vacuous. It says nothing whatever about whether \textsc{akr}'s published language
+licenses \textsf{A7-EXT}. Lean verifies the project's implication; it does not
+verify \textsc{akr}'s geometric theorem.
+\end{remark}
 
 \section{Project-original mathematical reductions}
 
@@ -508,7 +613,7 @@ bug nonetheless motivated the independent reimplementation of \S\ref{sec:impl}.
 \textbf{Count} & \textbf{Filter applied next} & \textbf{Justification} & \textbf{Checked by} \\
 \midrule
 $13{,}003{,}620$ & \textsc{akr} L5, consecutive pairs & \textsf{A5-C} & Python, C++ \\
-$42{,}238$       & \textsc{akr} L7 $\Rightarrow$ $H$ bipartite & \textsf{A7} & Python, C++ \\
+$42{,}238$       & \textsc{akr} L7 $\Rightarrow$ $H$ bipartite & \textsf{A7-EXT} $+$ \textsf{A7-BRIDGE} & Python, C++ \\
 $24{,}990$       & crossing-set compatibility & elementary (order type) & Python, C++ \\
 $2{,}300$        & {\v C}ern{\'y} L2, class-dependent & \textsf{C2} & Python, C++ \\
 $121$            & \emph{(change of counted object)} & --- & Python, C++ \\
@@ -529,7 +634,7 @@ $(2,2,1,1,1,1,1)$ on both sides, and only $9$ of the $14$ classes occur.
 \end{remark}
 
 \begin{remark}[{\v C}ern{\'y} Lemma 3 is not a dependency]
-An earlier pipeline also applied {\v C}ern{\'y} Lemma 3 between \textsf{A7} and
+An earlier pipeline also applied {\v C}ern{\'y} Lemma 3 between \textsf{A7-EXT} and
 the compatibility filter, reducing $24{,}990$ to $9{,}702$. Running the pipeline
 with and without it produces \emph{identical} results at every subsequent stage
 and an identical set of $225$ terminal triples: the graphs Lemma 3 removes are
@@ -698,6 +803,51 @@ Principal theorems:
 The Lean data file is generated deterministically from the committed certificate
 JSON, whose hash is embedded in the generated header.
 
+\subsection*{\texttt{Lemma7Bridge.lean} --- \textsf{A7-BRIDGE}}
+\textbf{Imports: none.} Core Lean; builds standalone with an empty
+\texttt{LEAN\_PATH}. \textbf{Axioms: none at all} --- every theorem reports
+\emph{does not depend on any axioms}, not even \texttt{propext}.
+
+Formalises only the implication of \S\ref{sec:a7ext}. The two hypotheses are
+\texttt{hne}~:~$\forall e,\exists s,\ S\,e\,s$ and
+\texttt{hdisj}~:~$\forall e\,e'\,s,\ \mathrm{Adj}\,e\,e'\to S\,e\,s\to S\,e'\,s\to\bot$.
+Theorems: \texttt{adj\_irrefl} (irreflexivity is derived, not assumed),
+\texttt{isolated\_of\_both}, \texttt{status\_unique\_of\_adj},
+\texttt{statusIs\_of\_adj}, \texttt{opposite\_of\_adj},
+\texttt{disjoint\_statuses\_imply\_bipartite} (main), and a partition-form
+variant carrying no decidability hypothesis. Non-vacuity is proved rather than
+asserted: a concrete model with a real edge; a both-status vertex shown isolated;
+and a triangle shown both non-bipartite and admitting no valid status assignment,
+so the hypotheses genuinely constrain the graph.
+
+\textbf{AKR Lemma 7 does not appear} --- not as an axiom, not by name. Grepping
+the code with comments stripped finds no occurrence of \textsc{akr} or
+Observation.
+
+\subsection*{\texttt{CernyL2Interface.lean} --- \textsf{C2-BRIDGE}}
+\textbf{Imports: none.} \textbf{Axioms:} the three standard ones; the pure
+\texttt{decide} facts are \texttt{propext}-only.
+
+Proves \texttt{l2FiresB\_iff}: the implemented filter fires iff an \emph{exact
+induced} perfect matching exists, the single clause
+$\mathrm{Edge}\,(s_t)\,(q_u)\leftrightarrow t=u$ carrying both halves --- all four
+matching edges present, all twelve cross pairs absent. The decisive fixtures:
+a matching plus an extra edge \emph{inside} the $4$-block does \textbf{not} fire,
+while a matching plus an edge \emph{outside} the block \textbf{still} fires, so
+the predicate is certified to be about the induced subgraph rather than about
+degrees.
+
+\begin{remark}[Limits of \textsf{C2-BRIDGE}]
+It certifies the Lean transcription of the filter, \emph{not} the Python/C++
+source: there is no extraction, and the correspondence remains a human-eyeball
+link. One representational shortcut is unverified --- the code computes
+$\mathrm{popcount}(N_s\wedge S)$ where the Lean definition sums four indicator
+bits; these agree exactly when the four indices are distinct, which the
+enumeration enforces, but the bit-level identity is not proved. And it says
+nothing about {\v C}ern{\'y} Lemma 2 itself, nor about the per-class Lemma-2
+window sets, which remain fully external.
+\end{remark}
+
 \begin{center}
 \fbox{\parbox{0.93\textwidth}{Key finite and combinatorial components are
 formally verified in Lean; the published geometric lemmas themselves remain
@@ -713,7 +863,7 @@ and the completeness of the $225$-case list is not formalized.}}
    Cerny L1 (C1) ----------+
    Cerny L2 (C2) ----------+        Lemma A (LA)  [Lean: counting core]
    AKR L5   (A5) ----------+               |
-   AKR L7   (A7) * --------+               v
+   AKR L7 (A7-EXT) * ------+               v
                            |     exceptional classification (OT, EX)
                            |       135 order types   [external DB]
                            |       6,342 simple      [external DB]
@@ -738,8 +888,14 @@ and the completeness of the $225$-case list is not formalized.}}
                              |
                       f(7,7) = 38   (candidate)
 
-   * AKR L7: human review pending -- see Section 4.5.
-     If A7 fails, the H-bipartite filter is unjustified and the
+   * A7-EXT: HUMAN REVIEW PENDING -- see Section 4.5.  The chain is
+         A7-EXT  ==>  A7-BRIDGE  ==>  H bipartite
+     where A7-EXT is the external reading of AKR Observation 6 / Lemma 7
+     (adjacent H-vertices have disjoint status sets), and A7-BRIDGE is the
+     project's own inference from that to bipartiteness -- the latter is
+     LEAN-KERNEL-CHECKED, with the disjointness condition as an explicit
+     hypothesis and no AKR axiom.
+     If A7-EXT fails, the H-bipartite filter is unjustified and the
      reduction from 42,238 onwards must be redone; UB40 fails.
 \end{verbatim}
 }
@@ -807,9 +963,11 @@ The project currently contains a heavily audited \emph{candidate}
 computer-assisted proof of $f(7,7)=38$. The novel finite reductions and the
 terminal elimination have been independently implemented, certificate checked,
 and in key places Lean-kernel verified. The principal remaining mathematical
-issue is the interpretation and application of \textsc{akr} Observation 6 and
-Lemma 7 in the auxiliary-graph bipartiteness step. Independent expert review
-remains required before the result should be treated as established.
+issue is \textsf{A7-EXT}: whether the published Observation 6 / Lemma 7 language
+licenses precisely the disjoint-status consequence the argument uses.
+Conditional on that consequence, the deduction that the auxiliary graph $H$ is
+bipartite (\textsf{A7-BRIDGE}) is formally verified in Lean. Independent expert
+review remains required before the result should be treated as established.
 }}
 \end{center}
 

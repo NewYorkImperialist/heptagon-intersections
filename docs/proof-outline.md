@@ -149,8 +149,11 @@ A5 is violated.  All 225 cases are of this shape.
 ## Step 9  conclusion
 
 No admissible configuration survives, so I = 40 is impossible; I = 42 is
-impossible (|E| = 7 forces a perfect matching, hence 14 singleton components,
-hence a triangle in H, contradicting A7); I = 41, 39 are impossible by parity.
+impossible (|E| = 7 forces a perfect matching, hence 7 components, each one
+matched pair, so no two sides of P share a component; every consecutive pair is
+then relevant and every two index-non-adjacent pairs span four distinct
+components, making H the complement of C₇, which contains a triangle,
+contradicting A7); I = 41, 39 are impossible by parity.
 With the explicit 38-example, **f(7,7) = 38**. ∎
 
 ---
@@ -163,7 +166,8 @@ With the explicit 38-example, **f(7,7) = 38**. ∎
 | simple heptagons | 6342 |
 | exceptional | 16 labelled, 14 classes |
 | 9-edge graphs, min degree 1 | 13,003,620 (enumeration = closed form) |
-| after A5 / A7 / C-L3 | 42,238 / 24,990 / 9,702 |
+| after A5 / A7 | 42,238 / 24,990 |
+| after A5 / A7 / C-L3 *(historical; L3 no longer applied)* | 42,238 / 24,990 / 9,702 |
 | SHA-256 of sorted survivor set | `451cd2893234813952946fc2c92671853827035be337003451bdd7cea631d467` |
 | SHA-256 of the 14-class profile table | `dabf1fb12de23a81a8285da306d9cccd16287758fe4a547d658bdf23627f09a5` |
 | combinations reaching the last filter | 225, on 121 graphs, all (2,2,1⁵)/(2,2,1⁵) |
