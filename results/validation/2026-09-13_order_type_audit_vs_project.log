@@ -1,0 +1,65 @@
+==========================================================================
+B1  ORDER TYPES: project's 135 vs the TU Graz realizable 135
+==========================================================================
+  project file sha256 : 521f7ebd5e9422a66debad4f3789e2fa590a1557faf92d930aff15c1bf654020
+  project count field : 135
+  triple_order matches my lex convention : yes
+  entries : 135 ; all in {-1,+1} : True
+  tope counts over the project's 135 (44 expected for a rank-3 uniform
+    oriented matroid): {44: 135}
+
+  canonical forms (lex-min over S_7 x {+-1} = relabelling + reflection):
+    external distinct : 135
+    project  distinct : 135
+    project \ external : 0
+    external \ project : 0
+    EXACT SET EQUALITY up to relabelling and reflection : True
+    (relabelling only, no reflection) equal : False
+    => the project's 135 is NOT a proper superset; it is exactly the set
+       of realizable order types.  The 'superset' argument is sound but
+       turns out to be unnecessary here: True
+
+==========================================================================
+B2  EXCEPTIONAL PROFILES: project's 14 classes vs mine
+==========================================================================
+  project file sha256 : 4cb2625c4e728d76b38f6462778a9385eff7f180c36b2399474e9f0493372505
+  project count field : 14 ; classes present : 14
+  every project representative is a realizable order type : True
+  every project representative has 44 topes               : True
+  identity cycle 0..6 is a simple polygon in all 14       : True
+  all 14 are EXCEPTIONAL under the strict reading         : True
+
+  class bijection project -> independent:
+    project class  0  ->  independent class 7
+    project class  1  ->  independent class 8
+    project class  2  ->  independent class 11
+    project class  3  ->  independent class 9
+    project class  4  ->  independent class 13
+    project class  5  ->  independent class 12
+    project class  6  ->  independent class 1
+    project class  7  ->  independent class 2
+    project class  8  ->  independent class 0
+    project class  9  ->  independent class 4
+    project class 10  ->  independent class 5
+    project class 11  ->  independent class 3
+    project class 12  ->  independent class 10
+    project class 13  ->  independent class 6
+  bijection is total and injective : True
+
+  FIELD-BY-FIELD (my predicates recomputed on THEIR representative):
+    M_set                        14 / 14 match
+    maximal_crossing_sets        14 / 14 match
+    maximal_crossing_set_sizes   14 / 14 match
+    lemma2_windows               14 / 14 match
+    avoiding_pairs               14 / 14 match
+
+  NO substantive differences.
+  no ordering-only differences either (byte-order identical).
+
+  stored structural_invariants_observed : {"avoiding_pair_counts": [2, 2, 2, 2, 2, 2, 2, 0, 2, 2, 2, 2, 2, 2], "every_class_has_M_set_of_size_5": true, "every_maximal_crossing_set_has_size_6": true, "number_of_maximal_crossing_sets_per_class": [5]}
+  my  structural_invariants_observed    : {"M_set_equals_complements_of_maximal_crossing_sets": true, "avoiding_pair_counts": [2, 2, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], "every_class_has_M_set_of_size_5": true, "every_maximal_crossing_set_has_size_6": true, "lemma2_window_counts": [3, 3, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3, 5, 3], "number_of_maximal_crossing_sets_per_class": [5], "reflex_vertex_counts": [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]}
+
+  profile-signature multiset comparison (numbering-free):
+    project vs my-recomputation-on-their-reps : True
+
+  WROTE /Users/jaydenlin/dev/lean/heptagon-intersections/independent/order_type_audit/comparison_report.json  sha256=59ea06a02560c0bd0df302cbcacd1f070cff754d5ebde56b88b218ed1df6a810

@@ -1,0 +1,3237 @@
+{
+ "_comment": [
+  "INDEPENDENT AUDIT (subagent B, 2026-09-13) of the exceptional",
+  "heptagon classification for f(7,7).  Generated from the TU Graz",
+  "order-type database otypes07.b08 by independent/order_type_audit/",
+  "run_audit.py + otlib.py, exact integer arithmetic, Python stdlib.",
+  "Definitions are stated inline in otlib.py.  This file was written",
+  "BEFORE the project's own data/exceptional_profiles/*.json was read.",
+  "Side j joins vertex j to vertex j+1 mod 7.  Chirotope entries are",
+  "chi(a,b,c) for the 35 lex-ordered triples a<b<c."
+ ],
+ "generator": "independent/order_type_audit/run_audit.py",
+ "external_source": {
+  "url": "http://www.ist.tugraz.at/aichholzer/research/rp/triangulations/ordertypes/data/otypes07.b08",
+  "bytes": 1890,
+  "sha256": "0f13421854f049564ca8e96029c29106d2bfa92d42bebcd528f6ba982d6d5380",
+  "equivalence": "realizable order types up to relabelling AND reflection (readme.txt section B2)"
+ },
+ "counts": {
+  "order_types": 135,
+  "cyclic_orders_per_order_type": 360,
+  "simple_heptagons": 6342,
+  "stratification": {
+   "uncrossable_3": 6007,
+   "uncrossable_4_not_3": 319,
+   "exceptional": 16
+  },
+  "exceptional_objects_strict_reading": 16,
+  "exceptional_objects_loose_reading": 2268,
+  "exceptional_classes": 14,
+  "exceptional_classes_without_plane_reflection": 14
+ },
+ "triple_order": [
+  [
+   0,
+   1,
+   2
+  ],
+  [
+   0,
+   1,
+   3
+  ],
+  [
+   0,
+   1,
+   4
+  ],
+  [
+   0,
+   1,
+   5
+  ],
+  [
+   0,
+   1,
+   6
+  ],
+  [
+   0,
+   2,
+   3
+  ],
+  [
+   0,
+   2,
+   4
+  ],
+  [
+   0,
+   2,
+   5
+  ],
+  [
+   0,
+   2,
+   6
+  ],
+  [
+   0,
+   3,
+   4
+  ],
+  [
+   0,
+   3,
+   5
+  ],
+  [
+   0,
+   3,
+   6
+  ],
+  [
+   0,
+   4,
+   5
+  ],
+  [
+   0,
+   4,
+   6
+  ],
+  [
+   0,
+   5,
+   6
+  ],
+  [
+   1,
+   2,
+   3
+  ],
+  [
+   1,
+   2,
+   4
+  ],
+  [
+   1,
+   2,
+   5
+  ],
+  [
+   1,
+   2,
+   6
+  ],
+  [
+   1,
+   3,
+   4
+  ],
+  [
+   1,
+   3,
+   5
+  ],
+  [
+   1,
+   3,
+   6
+  ],
+  [
+   1,
+   4,
+   5
+  ],
+  [
+   1,
+   4,
+   6
+  ],
+  [
+   1,
+   5,
+   6
+  ],
+  [
+   2,
+   3,
+   4
+  ],
+  [
+   2,
+   3,
+   5
+  ],
+  [
+   2,
+   3,
+   6
+  ],
+  [
+   2,
+   4,
+   5
+  ],
+  [
+   2,
+   4,
+   6
+  ],
+  [
+   2,
+   5,
+   6
+  ],
+  [
+   3,
+   4,
+   5
+  ],
+  [
+   3,
+   4,
+   6
+  ],
+  [
+   3,
+   5,
+   6
+  ],
+  [
+   4,
+   5,
+   6
+  ]
+ ],
+ "structural_invariants_observed": {
+  "every_class_has_M_set_of_size_5": true,
+  "every_maximal_crossing_set_has_size_6": true,
+  "number_of_maximal_crossing_sets_per_class": [
+   5
+  ],
+  "avoiding_pair_counts": [
+   2,
+   2,
+   0,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "reflex_vertex_counts": [
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2,
+   2
+  ],
+  "lemma2_window_counts": [
+   3,
+   3,
+   5,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   3,
+   5,
+   3
+  ],
+  "M_set_equals_complements_of_maximal_crossing_sets": true
+ },
+ "classes": [
+  {
+   "independent_class_id": 0,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    124
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 124,
+     "cyclic_order": [
+      0,
+      5,
+      4,
+      2,
+      3,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    2,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 1,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    102
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 102,
+     "cyclic_order": [
+      0,
+      5,
+      4,
+      2,
+      3,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    2,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 2,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    -1
+   ],
+   "source_order_types": [
+    98
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 98,
+     "cyclic_order": [
+      0,
+      4,
+      5,
+      2,
+      3,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    2,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    2,
+    3,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    2,
+    6
+   ],
+   "avoiding_pairs": [],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 3,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    123
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 123,
+     "cyclic_order": [
+      0,
+      1,
+      4,
+      2,
+      5,
+      3,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    1,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 4,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    129
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 129,
+     "cyclic_order": [
+      0,
+      1,
+      4,
+      2,
+      5,
+      3,
+      6
+     ]
+    },
+    {
+     "otypes07_index": 129,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      4,
+      5,
+      3,
+      2
+     ]
+    },
+    {
+     "otypes07_index": 129,
+     "cyclic_order": [
+      0,
+      4,
+      3,
+      2,
+      5,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 3,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    1,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 5,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    123
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 123,
+     "cyclic_order": [
+      0,
+      1,
+      5,
+      3,
+      6,
+      4,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    5,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    2,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    2,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     3,
+     5
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 6,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    123
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 123,
+     "cyclic_order": [
+      0,
+      5,
+      4,
+      1,
+      3,
+      2,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    5,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    2,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    2,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     3,
+     5
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 7,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    115
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 115,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      4,
+      5,
+      3,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    2,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     2,
+     4
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 8,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    100
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 100,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      3,
+      5,
+      4,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    1,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 9,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    113
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 113,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      4,
+      5,
+      3,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    1,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 10,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    -1
+   ],
+   "source_order_types": [
+    123
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 123,
+     "cyclic_order": [
+      0,
+      5,
+      3,
+      2,
+      4,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    5,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    3,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     3,
+     5
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 11,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    -1
+   ],
+   "source_order_types": [
+    99
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 99,
+     "cyclic_order": [
+      0,
+      5,
+      3,
+      2,
+      4,
+      1,
+      6
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    2,
+    3,
+    5,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    3,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     0,
+     2
+    ],
+    [
+     3,
+     5
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 12,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    109
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 109,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      3,
+      4,
+      5,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    2,
+    3,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    1,
+    2,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    1,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     3,
+     6
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  },
+  {
+   "independent_class_id": 13,
+   "canonical_chirotope": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    1,
+    -1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    -1,
+    1,
+    1,
+    1
+   ],
+   "source_order_types": [
+    112
+   ],
+   "source_objects": [
+    {
+     "otypes07_index": 112,
+     "cyclic_order": [
+      0,
+      1,
+      6,
+      3,
+      5,
+      4,
+      2
+     ]
+    }
+   ],
+   "num_labelled_objects": 1,
+   "canonical_polygon": {
+    "vertices": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "sides": [
+     [
+      0,
+      1
+     ],
+     [
+      1,
+      2
+     ],
+     [
+      2,
+      3
+     ],
+     [
+      3,
+      4
+     ],
+     [
+      4,
+      5
+     ],
+     [
+      5,
+      6
+     ],
+     [
+      6,
+      0
+     ]
+    ],
+    "note": "side j joins vertex j to vertex j+1 mod 7"
+   },
+   "exceptional": true,
+   "exceptional_reading": "strict: every line disjoint from V(P)",
+   "uncrossable_4_subsets": [],
+   "M_set": [
+    0,
+    1,
+    3,
+    4,
+    6
+   ],
+   "maximal_crossing_sets": [
+    [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    [
+     0,
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    [
+     0,
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    [
+     0,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   ],
+   "maximal_crossing_set_sizes": [
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "lemma2_windows": [
+    0,
+    4,
+    6
+   ],
+   "lemma2_windows_forward_only": [
+    0,
+    6
+   ],
+   "avoiding_pairs": [
+    [
+     1,
+     3
+    ],
+    [
+     4,
+     6
+    ]
+   ],
+   "reflex_vertices": 2,
+   "all_crossing_sets_count": 22,
+   "crossing_set_sizes": [
+    0,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    4,
+    6,
+    6,
+    6,
+    6,
+    6
+   ],
+   "symmetry": {
+    "group_quotiented_by": "D_7 (order 14) x plane reflection (chi -> -chi)",
+    "group_order": 28,
+    "stabiliser_order": 1,
+    "orbit_size": 28,
+    "achiral": false
+   }
+  }
+ ]
+}

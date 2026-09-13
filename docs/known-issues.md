@@ -545,3 +545,91 @@ additions:
 Known defects were **documented, not fixed**: the `enum9.py` budget bug (K-01)
 and the dead `for m in range(1,8): pass` loop in the same file remain exactly as
 written.
+
+---
+
+## K-13 — Order-type / exceptional-profile classification  (RESOLVED 2026-09-13)
+
+**Status:** resolved. Independently reimplemented *and* cross-checked against an
+external published database. This was the largest single-sourced dependency in
+the proof; it no longer is.
+
+### Why it mattered
+
+Both elimination implementations (the Python original and the C++
+Implementation B of K-02) consumed the **same** stored file
+`data/exceptional_profiles/exceptional_profiles_14.json` as ground truth. An
+error in it would have invalidated everything downstream, and neither
+implementation could have detected it.
+
+### External cross-check of the 135 order types
+
+Source: the **TU Graz order-type database** (Aichholzer–Aurenhammer–Krasser),
+file `otypes07.b08`, 1890 bytes = 135 × 7 × 2, sha256
+`0f13421854f049564ca8e96029c29106d2bfa92d42bebcd528f6ba982d6d5380`, retained at
+`independent/order_type_audit/external/`.
+
+* Every one of the 135 external point sets is in general position (exact integer
+  determinants) and yields a uniform rank-3 oriented matroid with **44 topes**.
+* Canonicalising both sets over relabelling **and** reflection:
+  **project \ external = 0 and external \ project = 0 — exact set equality.**
+* **The project's 135 are therefore exactly the realizable order types.** Its
+  "we only impose necessary conditions, so this is a superset" argument is
+  sound, but it turns out to be *unnecessary*: no unrealizable chirotope
+  survived its filters at n = 7.
+
+### External cross-check of 6,342 simple heptagons
+
+Independently confirmed against a **second** external file, `hamilt07.b08`
+(crossing-free Hamiltonian cycle counts per order type): **all 135 per-set
+counts agree**, and the external total is **6,342**. This number is now
+externally sourced, not merely recomputed.
+
+### The 16 / 14 classification
+
+Reproduced independently: 6007 with an uncrossable 3-subset, 319 with a
+4-subset, **16 exceptional**, falling into **14** classes under
+`D₇ × {±1}` (class sizes `[1×13, 3]`).
+
+**All four downstream profile fields match 14/14** — `M_set`,
+`maximal_crossing_sets`, `lemma2_windows`, `avoiding_pairs` — verified twice and
+by two different methods: the auditor recomputed its own predicates on the
+*project's* representatives, and the main agent separately transported the
+project's stored fields through the explicit dihedral group element mapping each
+project class to its independent counterpart. The class bijection was computed
+twice, independently, and agrees.
+
+### THE MOST IMPORTANT FINDING: the two readings are wildly different
+
+The audit measured both readings of "uncrossable" on all 6,342 simple
+heptagons:
+
+| reading of the exceptional condition | exceptional objects |
+|---|---|
+| **(a) STRICT** — every line *disjoint from V(P)* misses some side of `S` | **16** |
+| (b) LOOSE — no line at all meets all four *closed* sides | **2,268** |
+
+`(a) ⊆ (b)`, and they differ on **2,252** objects.
+
+The project uses **(a)**, which is the reading Lemma A actually licenses: the
+only lines the lemma ever applies are the `ℓ(q_j)`, which avoid `V(P)` by
+general position. So the classification is correct.
+
+But this vindicates the mid-project repair recorded in the transcript
+("I had been writing (★) as 'no line meets all of S'. That is wrong as stated")
+in the strongest possible terms. Had the loose phrasing been implemented, the
+exceptional set would have been **2,268 objects instead of 16**, and the entire
+finite elimination would have been infeasible. This is the single largest
+latent error the project avoided, and it was a wording distinction.
+
+### Residual common-mode risk
+
+Perfect independence is impossible here: same model family, same session
+environment. The mitigations actually achieved were that the auditor was a
+**fresh agent with no inherited conversation context**, it did **not** read
+`chiro.py`, `geom.py` or any prior classifier, and the decisive checks are
+against **external published data** rather than against this project's own code.
+
+What this does **not** touch: the reading of Černý L2 and AKR L5/L7 (K-09).
+The auditor was attempting to fetch the Černý paper to check Lemma 2's exact
+statement when it hit a session rate limit; that verification remains **open**.

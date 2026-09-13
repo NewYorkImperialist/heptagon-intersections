@@ -1,0 +1,64 @@
+==========================================================================
+GROUP 1  proper segment crossing
+==========================================================================
+  positive: (0,0)-(10,10) crosses (0,10)-(10,0)                  PASS 
+  negative: (0,0)-(10,10) does NOT cross (20,20)-(30,0)          PASS 
+  negative: touching-at-a-shared-line but disjoint segments      PASS 
+  EXHAUSTIVE chirotope cross() vs coordinates, 14175 segment pairs PASS mismatches=0
+  the crossing predicate is non-trivial (both outcomes occur)    PASS true=2333 of 14175
+
+==========================================================================
+GROUP 2  polygon simplicity
+==========================================================================
+  positive: the convex 7-gon in convex position order is simple  PASS 
+  negative: the same 7 points in a shuffled order self-intersect PASS 
+  EXHAUSTIVE is_simple chirotope vs coordinates, 48600 polygons  PASS mismatches=0
+  simplicity is non-trivial: 6342 simple, 42258 self-intersecting PASS 
+
+==========================================================================
+GROUP 3  exceptional / non-exceptional 4-subsets, with witness LINES
+==========================================================================
+  POSITIVE: all 14 exceptional classes, all C(7,4)=35 four-subsets, an explicit rational line PASS 490 witnesses verified, 0 bad
+  NEGATIVE: uncrossable 4-subsets are genuinely uncrossable (all 44 topes + coordinate topes) PASS 135 polygons checked, 0 violations
+  the exceptional predicate is non-trivial (16 yes, 6326 no)     PASS 
+
+==========================================================================
+GROUP 4  avoiding pairs
+==========================================================================
+  positive: [(0,0),(10,1)] and [(0,50),(10,51)] avoid            PASS 
+  negative: crossing segments are not avoiding                   PASS 
+  negative: non-crossing but the supporting line of one meets the other PASS 
+  EXHAUSTIVE derived sign test vs literal 'intersection point of the two supporting lines' PASS 14175 pairs, 0 mismatches
+  the avoiding predicate is non-trivial                          PASS avoiding=4666 of 14175
+
+==========================================================================
+GROUP 5  Cerny L2 windows / point in triangle
+==========================================================================
+  positive: (1,1) is inside triangle (0,0),(10,0),(0,10)         PASS 
+  negative: (9,9) is outside triangle (0,0),(10,0),(0,10)        PASS 
+  EXHAUSTIVE point_in_triangle chirotope vs coordinates          PASS 18900 tests, 0 mismatches
+  point-in-triangle is non-trivial                               PASS inside=2392
+  forward-only vs direction-symmetric windows differ (they must: 4 consecutive sides can be traversed either way) PASS forward-only total=24, symmetric total=46
+
+==========================================================================
+GROUP 6  canonicalisation: rotation, reflection, and non-merging
+==========================================================================
+  the 14 canonical keys are pairwise distinct                    PASS 
+  POSITIVE: all 7 cyclic rotations of every class map to the same key PASS 
+  POSITIVE: all 7 polygon reversals map to the same key          PASS 
+  POSITIVE: plane reflection (chi -> -chi) maps to the same key  PASS 
+  POSITIVE: |M_set| = 5 for every dihedral image of every class  PASS 
+  NEGATIVE: no two of the 14 classes lie in a common orbit (they must stay distinct) PASS collisions=0
+  NEGATIVE: corrupting one chirotope entry never leaves the canonical class key unchanged PASS 0/490 unchanged
+  NEGATIVE: 382/490 corruptions are detected as non-oriented-matroids by the tope count PASS the other 108 are genuine mutations
+  CLOSURE: no single-mutation probe produces an exceptional class outside the 14 PASS escapes=0
+  (observation, not a defect) class pairs at Hamming distance 1  PASS [(0, 1), (0, 7), (3, 4), (3, 8), (4, 9), (5, 6), (8, 9), (10, 11)]
+
+==========================================================================
+GROUP 7  reflex vertices, chirotope vs coordinates
+==========================================================================
+  EXHAUSTIVE reflex count: hull-vertex chirotope method vs signed area PASS 6342 simple polygons, 0 mismatches
+
+==========================================================================
+RESULT: 33 passed, 0 failed
+==========================================================================

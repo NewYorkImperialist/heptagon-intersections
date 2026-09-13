@@ -1,0 +1,2291 @@
+{
+ "order_types_exact_set_equality_up_to_relabelling_and_reflection": true,
+ "project_order_types_all_44_topes": {
+  "44": 135
+ },
+ "class_bijection": {
+  "0": 7,
+  "1": 8,
+  "2": 11,
+  "3": 9,
+  "4": 13,
+  "5": 12,
+  "6": 1,
+  "7": 2,
+  "8": 0,
+  "9": 4,
+  "10": 5,
+  "11": 3,
+  "12": 10,
+  "13": 6
+ },
+ "field_match_counts": {
+  "M_set": 14,
+  "maximal_crossing_sets": 14,
+  "maximal_crossing_set_sizes": 14,
+  "lemma2_windows": 14,
+  "avoiding_pairs": 14
+ },
+ "substantive_differences": [],
+ "ordering_only_differences": [],
+ "details": [
+  {
+   "project_class_index": 0,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     3,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     3,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     3,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      1,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 7,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 1,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     0,
+     1,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     3,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     0,
+     1,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     3,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 8,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 2,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     2,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      3,
+      5
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     3,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     2,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      3,
+      5
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 11,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 3,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     0,
+     1,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     3,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     0,
+     1,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     3,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      3
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 9,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 4,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     5
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 13,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 5,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     0,
+     1,
+     2,
+     3,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     2,
+     4,
+     5,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      3,
+      5
+     ],
+     [
+      3,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     0,
+     1,
+     2,
+     3,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     2,
+     4,
+     5,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      3,
+      5
+     ],
+     [
+      3,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 12,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 6,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     1,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     1,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 1,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 7,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "avoiding_pairs": []
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "avoiding_pairs": []
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 2,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 8,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     1,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     1,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 0,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 9,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     0,
+     1,
+     2,
+     4,
+     5
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      0,
+      5
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     0,
+     1,
+     2,
+     4,
+     5
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      0,
+      5
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 4,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 10,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 5,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 11,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     1,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 3,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 12,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     0,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     2,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      0,
+      2
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     0,
+     2,
+     3,
+     4,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     0,
+     2,
+     3
+    ],
+    "avoiding_pairs": [
+     [
+      0,
+      2
+     ],
+     [
+      4,
+      6
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 10,
+   "canonical_key_found_in_mine": true
+  },
+  {
+   "project_class_index": 13,
+   "is_realizable_order_type": true,
+   "num_topes": 44,
+   "identity_cycle_is_simple": true,
+   "is_exceptional_strict": true,
+   "recomputed": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "stored": {
+    "M_set": [
+     1,
+     2,
+     4,
+     5,
+     6
+    ],
+    "maximal_crossing_sets": [
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      4,
+      6
+     ],
+     [
+      0,
+      1,
+      2,
+      3,
+      5,
+      6
+     ],
+     [
+      0,
+      1,
+      3,
+      4,
+      5,
+      6
+     ],
+     [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    ],
+    "maximal_crossing_set_sizes": [
+     6,
+     6,
+     6,
+     6,
+     6
+    ],
+    "lemma2_windows": [
+     2,
+     4,
+     6
+    ],
+    "avoiding_pairs": [
+     [
+      1,
+      6
+     ],
+     [
+      2,
+      4
+     ]
+    ]
+   },
+   "field_match": {
+    "M_set": true,
+    "maximal_crossing_sets": true,
+    "maximal_crossing_set_sizes": true,
+    "lemma2_windows": true,
+    "avoiding_pairs": true
+   },
+   "matched_independent_class_id": 6,
+   "canonical_key_found_in_mine": true
+  }
+ ]
+}
