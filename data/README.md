@@ -12,12 +12,15 @@ the bottom of `../.gitignore`.
 | `lower_bound/lower_bound_38.json` | **canonical input** | **No.** The coordinates are the primary artifact of the lower bound. Everything else in the file is verified output. |
 | `order_types/order_types_7.json` | regenerable certificate | Yes — `core/chiro.py` + `classification/export_profiles.py`, ~10 s. |
 | `exceptional_profiles/exceptional_profiles_14.json` | regenerable certificate | Yes — same, ~12 s total. |
+| `certificates/final_elimination_225.json` | **certificate** | Yes — `make_final_certificate.py`, ~3 min. |
+| `certificates/final_elimination_225_with_cernyL3.json` | control | Yes — same, `--with-l3`. |
 | `hashes/SHA256SUMS` | manifest | Yes — see below. |
+| `hashes/SHA256SUMS.tools` | manifest for the generator/checker scripts | Yes. |
 
-Nothing in this directory is expensive to rebuild. The expensive artifact — the
-9,702 survivor set and the final elimination — is **not** stored here, because
-the shipped code does not emit it in a serialized form. See
-`../docs/known-issues.md` K-03 and K-07.
+Rebuilding the certificates takes about 3 minutes each (they contain the whole
+13,003,620-graph enumeration); everything else here rebuilds in seconds. The
+9,702-survivor set itself is still not stored in serialized form — see
+`../docs/known-issues.md` K-07.
 
 ## Contents
 
@@ -63,6 +66,39 @@ confirming the claims the Lean architecture depends on:
 * every class has `|M| = 5`;
 * every class has exactly **five** maximal crossing sets, **all of size 6**;
 * every class has exactly 2 avoiding pairs, except class 7 which has **0**.
+
+### `certificates/final_elimination_225.json`
+
+**The endgame certificate.** Every one of the **225** `(classP, classQ, graph)`
+combinations that reach the final avoiding-pair filter, each with an explicit
+witness of its refutation: class IDs, canonical graph encoding (seven
+neighbourhood bitmasks), degree sequences, component partitions, the side pair
+and whether it is consecutive or avoiding, both neighbourhoods, the two
+difference sets, and the list of cyclic adjacencies found (empty in every case —
+which *is* the contradiction).
+
+Generated with **Černý Lemma 3 switched off**, so it depends on four published
+lemmas: Černý L1, L2 and AKR L5, L7.
+
+Verify it — this is the cheapest audit of the upper bound's last step:
+
+```bash
+python3 ../python/validation/check_final_certificate.py \
+        certificates/final_elimination_225.json
+```
+
+The checker is independent: standard library only, no shared code with the
+generator or any search script, every quantity recomputed from the canonical
+encoding.
+
+`final_elimination_225_with_cernyL3.json` is the same run with L3 on. Its case
+list is **identical**, which is the evidence that Černý Lemma 3 is redundant
+(`../docs/known-issues.md` K-06). Its pipeline counts also reproduce
+`audit_enum.py` exactly, which is the faithfulness control for the generator.
+
+> **What this certificate proves:** each listed case dies. **What it does not
+> prove:** that the list is complete. Completeness rests on the exhaustive
+> enumeration, which the checker deliberately does not repeat. See K-03.
 
 ### `hashes/SHA256SUMS`
 

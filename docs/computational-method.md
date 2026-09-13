@@ -136,6 +136,44 @@ L3-survivors rebuilt: 9702
 ALL THREE LABELLINGS GIVE ZERO SURVIVORS: True
 ```
 
+## Tier 4 — the endgame certificate (about 3 minutes, or <1 s to check)
+
+The final elimination step ships a per-case certificate. **Checking it costs
+under a second** and requires none of the above:
+
+```bash
+python3 $REPO/python/validation/check_final_certificate.py \
+        $REPO/data/certificates/final_elimination_225.json
+```
+
+Expected:
+
+```
+cases checked        : 225
+distinct graphs      : 121
+degree sequences (P) : {(2, 2, 1, 1, 1, 1, 1): 225}
+degree sequences (Q) : {(2, 2, 1, 1, 1, 1, 1): 225}
+classes P            : [1, 2, 3, 4, 9, 10, 11, 12, 13]
+OK: all 225 cases establish the AKR Lemma 5 contradiction.
+```
+
+To regenerate the certificate from scratch (~3 min), from a directory holding
+`exc_det.pkl`:
+
+```bash
+cd /tmp/f77
+python3 $REPO/python/elimination/make_final_certificate.py \
+        --out final_elimination_225.json           # Cerny L3 OFF (default)
+
+python3 $REPO/python/elimination/make_final_certificate.py --with-l3 \
+        --out final_elimination_225_with_cernyL3.json   # control
+```
+
+The `--with-l3` run is the faithfulness control: its counts must reproduce
+`audit_enum.py` exactly (13,003,620 → 42,238 → 24,990 → 9,702 → 2,300 → 121),
+and they do. Its case list is identical to the L3-free run, which is why Černý
+Lemma 3 is not needed — see `known-issues.md` K-06.
+
 ## Regenerating the JSON certificates
 
 ```bash
@@ -177,12 +215,14 @@ small certificate without rerunning the expensive search:
 
 * **Achieved** for the lower bound: one JSON file, one short script, <1 s, no
   external lemma, no enumeration.
-* **Not achieved** for the upper bound. Today a referee must rerun the whole
-  6.5-minute pipeline and trust the same codebase that produced the claim.
-  Closing K-03 — emitting the 225 final cases as a checkable file — is the
-  single highest-value step toward fixing this, because each of the 225 is a
-  two-line cyclic-adjacency check that a human or a twenty-line program in any
-  language can confirm.
+* **Partly achieved** for the upper bound, as of 2026-09-13. The *last* step is
+  now a small certificate: 225 cases, each a two-line cyclic-adjacency check,
+  verified in under a second by an independent checker (Tier 4). A referee no
+  longer has to take "the program returned zero" on faith for that step.
+* **Still not achieved** for the enumeration that produces those 225 cases. The
+  certificate establishes that each listed case dies, not that the list is
+  complete, so a referee who wants completeness must still rerun the
+  13,003,620-graph search and trust the same codebase that produced the claim.
 
 ## Method summary
 

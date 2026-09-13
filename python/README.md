@@ -132,6 +132,25 @@ representative labellings (as stored; rotation 3 + reflection; rotation 5).
 
 Reproduced 2026-09-13: all three labellings give 0 survivors over all 196 pairs.
 
+**`make_final_certificate.py`** — **added during repository organization.** The
+certificate generator for the endgame (issue K-03).
+
+**This is the original search, instrumented — not an independent check.** Every
+mathematical predicate is the original `audit_enum.py` code, obtained by
+exec-ing slices of its source (the same idiom `audit_pairs.py` already uses).
+Only the driver is new: which filters fire, plus the bookkeeping that records
+each `(classP, classQ, graph)` combination and the witness that kills it.
+`audit_enum.py` itself was **not** modified.
+
+* `python3 make_final_certificate.py [--with-l3] [--out FILE]`
+* Inputs: `exc_det.pkl` in the CWD.
+* Outputs: the certificate JSON.
+* Runtime: ~3 min.
+* **Černý Lemma 3 is OFF by default** — it is not logically necessary (K-06),
+  and leaving it off keeps the dependency list at four published lemmas.
+  `--with-l3` turns it on and doubles as the generator's faithfulness control:
+  it must reproduce `audit_enum.py`'s counts exactly, and it does.
+
 ---
 
 ## `validation/`
@@ -143,6 +162,25 @@ lemma, no enumeration, <1 s, exit status 0 iff all ten properties hold.
 
 The cheapest meaningful audit of this project. It establishes the lower bound
 outright and says nothing about the upper bound.
+
+**`check_final_certificate.py`** — **added during repository organization.** The
+**independent checker** for the endgame certificate.
+
+Reads only the certificate JSON and
+`../data/exceptional_profiles/exceptional_profiles_14.json`. Standard library
+only; shares no code with the generator or any search script; recomputes every
+quantity from the canonical graph encoding (components by BFS, where the
+generator used union-find) and treats the certificate's convenience fields as
+claims to be checked. Exits non-zero and prints every problem if any case fails.
+
+* `python3 check_final_certificate.py <certificate.json> [profiles.json]`
+* Runtime: <1 s for all 225 cases.
+
+Validated against ten adversarial controls — all detected, including an
+honestly-constructed witness for which AKR Lemma 5 is actually *satisfied*.
+
+It verifies that each listed case dies. It does **not** verify that the case
+list is complete; see `../docs/known-issues.md` K-03.
 
 **`validate.py`** — the adversarial check that no filter rejects a *realizable*
 configuration. This is the main evidence that the filters are not

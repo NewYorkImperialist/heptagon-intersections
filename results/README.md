@@ -24,6 +24,8 @@ correct. See `../docs/verification-status.md`.
 | `2026-09-13_audit_enum_E8.log` | `audit_enum.py 8` | 476,280 → 1,078 → **0** | 8 s |
 | `2026-09-13_audit_enum_E9.log` | `audit_enum.py 9` | 13,003,620 → 42,238 → 24,990 → 9,702 → 2,300 → 121 → **0** | 3 m 6 s |
 | `2026-09-13_audit_pairs_196_class_pairs.log` | `audit_pairs.py` | 0 survivors over all 196 ordered class pairs, under 3 labellings | 3 m 8 s |
+| `2026-09-13_make_final_certificate_no_cernyL3.log` | `make_final_certificate.py` | 225 cases on 121 graphs, 0 survivors, **Černý L3 not applied** | 3 m 6 s |
+| `2026-09-13_make_final_certificate_with_cernyL3.log` | `make_final_certificate.py --with-l3` | identical 225 cases; counts reproduce `audit_enum.py` exactly | 3 m 6 s |
 
 Two things worth reading carefully:
 
@@ -49,6 +51,14 @@ materials, alongside what was actually **reproduced** here — with an explicit
 
 `2026-09-13_check_lower_bound.log` — the ten exact checks confirming
 `f(7,7) ≥ 38`. This is the only fully established claim in the repository.
+
+`2026-09-13_check_final_certificate.log` — the independent checker verifying all
+**225** cases of the endgame certificate, and
+`..._with_cernyL3.log` for the control. Both pass.
+
+These confirm that each of the 225 final cases is refuted. They do **not**
+confirm that the list of 225 is complete — that rests on the enumeration, which
+no independent implementation has repeated. See `../docs/known-issues.md` K-03.
 
 ## Preserved historical figures
 

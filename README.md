@@ -63,7 +63,9 @@ Two halves, with very different levels of support:
    bipartite graphs, cut to 9,702.
 6. **Elimination.** Class-dependent filters reduce the survivors to **zero**,
    for each of the 196 ordered pairs of exceptional classes, under three
-   different representative labellings.
+   different representative labellings. Exactly **225** (class-pair, graph)
+   combinations reach the final filter, and each is refuted by AKR Lemma 5 on an
+   avoiding pair — all 225 ship as a checkable certificate.
 7. **Formalization and reproduction** are ongoing, and incomplete.
 
 **New in this work:** Lemma A; the exceptional classification; the
@@ -71,8 +73,9 @@ general-position reduction (proved, not assumed); the "`H` is bipartite"
 reformulation of AKR Lemma 7; the extension of AKR Lemma 5 to avoiding pairs;
 the final elimination.
 
-**External, imported as black boxes:** Černý et al. Lemmas 1, 2, 3 and AKR
-Lemmas 5, 7. Their statements and applicability were checked; **their internal
+**External, imported as black boxes:** Černý et al. Lemmas 1 and 2, and AKR
+Lemmas 5 and 7. (Černý Lemma 3 was shown redundant on 2026-09-13 — see
+`docs/known-issues.md` K-06 — so the dependency list is four lemmas, not five.) Their statements and applicability were checked; **their internal
 proofs were not re-verified here.** The translations of AKR Lemmas 5 and 7 into
 combinatorial filters are the least secure steps in the argument — see
 [`docs/known-issues.md`](docs/known-issues.md) K-09.
@@ -84,7 +87,7 @@ combinatorial filters are the least secure steps in the argument — see
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
 | `lean/` | Formalization. Currently **one uncompiled file**; see `lean/README.md`. |
-| `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, SHA-256 manifest. |
+| `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
 | `transcripts/` | Unmodified LLM session transcripts, kept as provenance. |
 | `archive/superseded/` | The earlier pipeline, including a file with a documented defect. Preserved, not deleted. Do not cite. |
@@ -111,8 +114,8 @@ full table. In brief:
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Manually checked (prose only) | Lemma A; parity; general-position reduction |
 | External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified |
-| Needs independent reproduction | the entire upper bound |
-| Not present at all | Implementation B; the 225-case certificate; six of seven planned Lean files |
+| Needs independent reproduction | the entire upper bound (its final step now ships a per-case certificate; the enumeration behind it does not) |
+| Not present at all | Implementation B; six of seven planned Lean files |
 
 ## Reproducibility
 
@@ -126,6 +129,14 @@ independent of every external lemma:
 export REPO=$PWD
 export PYTHONPATH=$REPO/python/core
 python3 python/validation/check_lower_bound.py
+```
+
+**Check the endgame certificate (under a second)** — verifies all 225 final
+cases of the upper-bound argument with an independent checker:
+
+```bash
+python3 python/validation/check_final_certificate.py \
+        data/certificates/final_elimination_225.json
 ```
 
 **Quick validation (about 15 seconds)** — adds the order-type enumeration and

@@ -11,16 +11,40 @@
   "order_type_enumeration": {
     "script": "python/core/chiro.py",
     "runtime_seconds": 8,
-    "documented": {"n3": 1, "n4": 2, "n5": 3, "n6": 16, "n7": 135},
-    "reproduced": {"n3": 1, "n4": 2, "n5": 3, "n6": 16, "n7": 135},
+    "documented": {
+      "n3": 1,
+      "n4": 2,
+      "n5": 3,
+      "n6": 16,
+      "n7": 135
+    },
+    "reproduced": {
+      "n3": 1,
+      "n4": 2,
+      "n5": 3,
+      "n6": 16,
+      "n7": 135
+    },
     "match": true,
     "note": "Counts agree with Aichholzer-Aurenhammer-Krasser. Only NECESSARY sign conditions are imposed, so this is a superset of the realizable order types."
   },
   "classification": {
     "script": "python/classification/make_exceptional_profiles.py",
     "runtime_seconds": 2,
-    "documented": {"simple_7gons": 6342, "uncrossable_3set": 6007, "uncrossable_4set": 319, "exceptional": 16, "exceptional_classes": 14},
-    "reproduced": {"simple_7gons": 6342, "uncrossable_3set": 6007, "uncrossable_4set": 319, "exceptional": null, "exceptional_classes": 14},
+    "documented": {
+      "simple_7gons": 6342,
+      "uncrossable_3set": 6007,
+      "uncrossable_4set": 319,
+      "exceptional": 16,
+      "exceptional_classes": 14
+    },
+    "reproduced": {
+      "simple_7gons": 6342,
+      "uncrossable_3set": 6007,
+      "uncrossable_4set": 319,
+      "exceptional": null,
+      "exceptional_classes": 14
+    },
     "match": true,
     "note": "The script reports the class count (14), not the labelled count (16); the 16 figure was not separately re-derived here."
   },
@@ -28,21 +52,54 @@
     "script": "python/elimination/audit_enum.py",
     "E7": {
       "runtime_seconds": 0.2,
-      "documented": {"graphs": 5040, "after_A5": null, "after_A7": 0},
-      "reproduced": {"graphs": 5040, "after_A5": 14, "after_A7": 0, "after_CL3": 0},
+      "documented": {
+        "graphs": 5040,
+        "after_A5": null,
+        "after_A7": 0
+      },
+      "reproduced": {
+        "graphs": 5040,
+        "after_A5": 14,
+        "after_A7": 0,
+        "after_CL3": 0
+      },
       "match": true,
       "note": "I=42 dies at AKR Lemma 7, independently confirming the hand proof."
     },
     "E8": {
       "runtime_seconds": 8,
-      "documented": {"graphs": 476280, "final": 0},
-      "reproduced": {"graphs": 476280, "after_A5": 1078, "after_A7": 0, "after_CL3": 0},
+      "documented": {
+        "graphs": 476280,
+        "final": 0
+      },
+      "reproduced": {
+        "graphs": 476280,
+        "after_A5": 1078,
+        "after_A7": 0,
+        "after_CL3": 0
+      },
       "match": true
     },
     "E9": {
       "runtime_seconds": 186,
-      "documented": {"graphs": 13003620, "after_A5": 42238, "after_A7": 24990, "after_CL3": 9702, "after_compat": 2300, "after_CL2": 121, "after_A5avoid": 0},
-      "reproduced": {"graphs": 13003620, "after_A5": 42238, "after_A7": 24990, "after_CL3": 9702, "after_compat": 2300, "after_CL2": 121, "after_A5avoid": 0},
+      "documented": {
+        "graphs": 13003620,
+        "after_A5": 42238,
+        "after_A7": 24990,
+        "after_CL3": 9702,
+        "after_compat": 2300,
+        "after_CL2": 121,
+        "after_A5avoid": 0
+      },
+      "reproduced": {
+        "graphs": 13003620,
+        "after_A5": 42238,
+        "after_A7": 24990,
+        "after_CL3": 9702,
+        "after_compat": 2300,
+        "after_CL2": 121,
+        "after_A5avoid": 0
+      },
       "match": true,
       "note": "2300 and 121 are REPRESENTATIVE-LABELLING DEPENDENT (defect D2). The older superseded pipeline reported 3522 and 64 for the same stages. Only the final 0 is labelling-invariant; see the per-pair run below."
     },
@@ -55,23 +112,149 @@
   "per_ordered_class_pair": {
     "script": "python/elimination/audit_pairs.py",
     "runtime_seconds": 188,
-    "documented": {"ordered_pairs": 196, "labellings": 3, "max_survivors_any_pair": 0},
-    "reproduced": {"ordered_pairs": 196, "labellings": 3, "max_survivors_any_pair": 0, "total_survivors": 0},
+    "documented": {
+      "ordered_pairs": 196,
+      "labellings": 3,
+      "max_survivors_any_pair": 0
+    },
+    "reproduced": {
+      "ordered_pairs": 196,
+      "labellings": 3,
+      "max_survivors_any_pair": 0,
+      "total_survivors": 0
+    },
     "match": true,
     "note": "This is the labelling-invariant form of the final elimination, and the correction for defect D2."
   },
   "lower_bound": {
     "script": "python/validation/check_lower_bound.py",
     "runtime_seconds": 0.1,
-    "documented": {"I": 38, "E": 11, "components": 3, "per_side": [6,6,6,6,6,6,2]},
-    "reproduced": {"I": 38, "E": 11, "components": 3, "per_side": [6,6,6,6,6,6,2]},
+    "documented": {
+      "I": 38,
+      "E": 11,
+      "components": 3,
+      "per_side": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2
+      ]
+    },
+    "reproduced": {
+      "I": 38,
+      "E": 11,
+      "components": 3,
+      "per_side": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        2
+      ]
+    },
     "match": true
   },
   "NOT_reproduced_here": [
-    "The 225 (class-pair, graph) combinations reaching the last filter, and the claim that all 121 distinct graphs have degree sequence (2,2,1^5) on both sides -- no script in this repository computes these; see docs/known-issues.md K-03.",
+    "COMPLETENESS of the 225-case list: the certificate and its checker establish that each listed case dies, not that the list is exhaustive. Completeness rests on the 13,003,620-graph enumeration inside the generator, which no independent implementation has repeated. See docs/known-issues.md K-02 and K-03.",
     "The 13,484,940 / 43,330 / 3,522 / 64 figures of the superseded pipeline -- archive/superseded/python/enum9.py cannot run without the missing ot7.pkl, and its downstream stages (combine.py, final.py) are absent entirely.",
     "Implementation B in its entirety -- no source code for it exists in these materials; see docs/known-issues.md K-02.",
     "The validation suite's realizable-configuration checks (3,952 random pairs; 129,812 high-intersection configurations) -- python/validation/validate.py section 1 needs the missing best_7_7_*.pkl; see docs/known-issues.md K-05.",
     "Both SHA-256 digests quoted in docs/proof-outline.md -- the original serialization format is unrecorded; see docs/known-issues.md K-07."
-  ]
+  ],
+  "final_elimination_certificate": {
+    "script": "python/elimination/make_final_certificate.py",
+    "checker": "python/validation/check_final_certificate.py",
+    "runtime_seconds_generate": 186,
+    "runtime_seconds_check": 1,
+    "cerny_lemma_3_applied": false,
+    "external_lemmas_relied_on": [
+      "Cerny L1",
+      "Cerny L2",
+      "AKR L5",
+      "AKR L7"
+    ],
+    "documented": {
+      "combinations": 225,
+      "distinct_graphs": 121,
+      "degree_sequence_both_sides": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "classes_surviving": 9,
+      "final_survivors": 0
+    },
+    "reproduced": {
+      "combinations": 225,
+      "distinct_graphs": 121,
+      "degree_sequence_both_sides": [
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "classes_surviving": 9,
+      "classes_P": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "classes_Q": [
+        1,
+        2,
+        3,
+        4,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "final_survivors": 0,
+      "all_witness_pairs_avoiding": true
+    },
+    "match": true,
+    "note": "Every claim of proof-outline.md Step 8 reproduced exactly, including its worked example (case 0: class 12, N=[{0},{0},{1},{2,4},{3},{4},{5,6}], avoiding pair (4,6), M_P={0,2,3,4,6}). The independent checker verified all 225 contradictions and was validated against ten adversarial controls. The certificate proves each listed case dies; it does NOT prove the list is complete. See docs/known-issues.md K-03."
+  },
+  "cerny_lemma_3_redundancy": {
+    "script": "python/elimination/make_final_certificate.py (--with-l3 vs default)",
+    "documented": "proof-outline.md: 'Cerny Lemma 3 is NOT needed'",
+    "reproduced": {
+      "with_L3": {
+        "entering_class_filters": 9702,
+        "after_compat": 2300,
+        "after_L2": 121,
+        "combinations": 225,
+        "survivors": 0
+      },
+      "without_L3": {
+        "entering_class_filters": 24990,
+        "after_compat": 2300,
+        "after_L2": 121,
+        "combinations": 225,
+        "survivors": 0
+      },
+      "case_lists_identical": true
+    },
+    "match": true,
+    "note": "The 15,288 graphs Cerny L3 removes are all removed by crossing-set compatibility anyway, so L3 is redundant GIVEN that filter. The elimination rests on four published lemmas, not five. See docs/known-issues.md K-06."
+  }
 }

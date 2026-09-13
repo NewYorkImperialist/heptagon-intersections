@@ -1,0 +1,14 @@
+certificate : final_elimination_225.json
+profiles    : exceptional_profiles_14.json (14 classes)
+Cerny L3 active in generation: False
+external lemmas relied on    : Cerny L1, Cerny L2, AKR L5, AKR L7
+
+cases checked        : 225
+distinct graphs      : 121
+degree sequences (P) : {(2, 2, 1, 1, 1, 1, 1): 225}
+degree sequences (Q) : {(2, 2, 1, 1, 1, 1, 1): 225}
+classes P            : [1, 2, 3, 4, 9, 10, 11, 12, 13]
+classes Q            : [1, 2, 3, 4, 9, 10, 11, 12, 13]
+
+OK: all 225 cases establish the AKR Lemma 5 contradiction.
+Each case is refuted; COMPLETENESS of the case list is NOT checked here.

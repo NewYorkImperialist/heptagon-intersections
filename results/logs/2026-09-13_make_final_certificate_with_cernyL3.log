@@ -1,0 +1,24 @@
+$ PYTHONPATH=$REPO/python/core python3 make_final_certificate.py --with-l3 --out cert_with_l3.json
+loaded 14 exceptional class profiles from exc_det.pkl
+  graphs |E|=9, min degree >=1 : 13003620
+  after AKR Lemma 5 consecutive: 42238
+  after AKR Lemma 7 H bipartite: 24990
+  after Cerny Lemma 3          : 9702
+  graphs entering class filters : 9702
+  graphs after crossing-set compatibility : 2300
+  graphs after Cerny Lemma 2              : 121
+  (classP, classQ, graph) combinations reaching the final filter: 225
+  combinations SURVIVING the final filter : 0
+
+wrote cert_with_l3.json: 225 cases on 121 distinct graphs
+  degree sequences P: {(2, 2, 1, 1, 1, 1, 1): 225}
+  degree sequences Q: {(2, 2, 1, 1, 1, 1, 1): 225}
+  classes P: [1, 2, 3, 4, 9, 10, 11, 12, 13]
+  classes Q: [1, 2, 3, 4, 9, 10, 11, 12, 13]
+
+real	3m6.554s
+
+NOTE: this run is the FAITHFULNESS CONTROL for the generator's driver.  Its
+graph-level counts (13003620 / 42238 / 24990 / 9702) and its class-level counts
+(2300 / 121) reproduce audit_enum.py's published output exactly, which is the
+evidence that the generator's new driver applies the original filters faithfully.

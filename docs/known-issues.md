@@ -86,36 +86,100 @@ framing, and any misreading of the source papers. They are a check on
 
 ---
 
-## K-03 — The 225-case final elimination has no standalone certificate
+## K-03 — The 225-case final elimination certificate  (RESOLVED 2026-09-13)
 
-**Status:** open.
+**Status:** resolved. Every figure claimed in `proof-outline.md` Step 8
+reproduced exactly, and a certificate plus an independent checker are now
+shipped.
 
-`docs/proof-outline.md` Step 8 makes three specific claims:
+### What was claimed, and what reproduced
 
-* exactly **225** (class-pair, graph) combinations reach the final filter;
-* they lie on **121** distinct graphs;
-* *every* one has degree sequence **(2,2,1,1,1,1,1) on both sides**, and only 9
-  of the 14 classes survive that far.
+| Claim (`proof-outline.md` Step 8 / transcript) | Reproduced |
+|---|---|
+| exactly **225** (class-pair, graph) combinations reach the final filter | **225** yes |
+| on **121** distinct graphs | **121** yes |
+| *every* one has degree sequence **(2,2,1,1,1,1,1)** on **both** sides | 225/225 both sides |
+| only **9** of the 14 classes survive that far | classes `{1,2,3,4,9,10,11,12,13}` = 9 |
+| all are killed by AKR Lemma 5 on an avoiding pair | 225/225, all `pair_kind = "avoiding"` |
+| worked example: `N = [{0},{0},{1},{2,4},{3},{4},{5,6}]`, class 12, `M_P = {0,2,3,4,6}`, avoiding pair (4,6), `N(p4) = {3}`, `N(p6) = {5,6}` | case 0 of the certificate, verbatim |
 
-**No script in this repository computes any of these numbers.** They cannot be
-reproduced from the shipped code. The pipeline reports aggregate counts only
-(`2300 → 121 → 0`); note that the `121` there is a count of *graphs surviving
-Lemma 2*, which is numerically equal to but conceptually distinct from the
-"121 distinct graphs" of Step 8, and the two should not be conflated without a
-script that establishes the connection.
+The transcript's values were **not** treated as authoritative: the pipeline was
+re-run and the numbers fell out of it. They happen to agree.
 
-This matters more than a missing count. The 225 cases are the project's answer
-to "give a referee something human-readable instead of `survivors == 0`". That
-answer currently consists of a narrative, a structural argument, and one worked
-example — with no emitted list of the 225 cases a referee could check.
+### Which stage the 225 corresponds to
 
-**Recommended:** emit `data/certificates/final_225_cases.json` listing, for each
-case, the class pair, the neighbourhood lists, the avoiding pair used, and the
-two indices that fail the cyclic-adjacency test. That file would be small,
-independently checkable by hand or by a twenty-line script in any language, and
-would be the highest-value artifact this project could add.
+The number of `(classP, classQ, graph)` triples entering the avoiding-pair
+Lemma 5 filter — that is, the sum over surviving graphs of `|okP| x |okQ|` after
+crossing-set compatibility and Cerny Lemma 2. `audit_enum.py` prints only the
+*graph* count at each stage (`2300 -> 121`), never the triple count, which is why
+225 could not previously be reproduced from shipped code. The `121` it prints
+after Cerny Lemma 2 is the same 121 distinct graphs; K-03 previously warned the
+two might not be the same set, and they are.
 
----
+### Filters active in the shipped certificate
+
+`data/certificates/final_elimination_225.json` is generated with **Cerny Lemma 3
+switched OFF**:
+
+| filter | active | source |
+|---|---|---|
+| min degree >= 1, 9 edges | yes | Cerny L1 |
+| AKR Lemma 5, consecutive pairs | yes | AKR L5 |
+| AKR Lemma 7 => H bipartite | yes | AKR L7 |
+| **Cerny Lemma 3** | **NO** | — |
+| crossing-set compatibility | yes | elementary (P9) |
+| Cerny Lemma 2 | yes | Cerny L2 |
+| AKR Lemma 5, avoiding pairs | the final filter, certified | AKR L5 |
+
+So the certificate depends on **four** published lemmas: Cerny L1, L2 and AKR
+L5, L7.
+
+### Artifacts
+
+* `python/elimination/make_final_certificate.py` — generator. **This is the
+  original search, instrumented.** Every mathematical predicate is the original
+  `audit_enum.py` code, obtained by exec-ing slices of its source; only the
+  driver (which filters fire, plus bookkeeping) is new. `audit_enum.py` itself
+  was not modified.
+* `data/certificates/final_elimination_225.json` — 225 cases, each with class
+  IDs, canonical graph encoding, degree sequences, component partitions, the
+  side pair and its kind, both neighbourhoods, the two difference sets, and the
+  explicit (empty) list of cyclic adjacencies.
+* `python/validation/check_final_certificate.py` — **independent checker**,
+  standard library only, sharing no code with the generator or any search
+  script. Recomputes every quantity from the canonical graph encoding and treats
+  the certificate's convenience fields as claims to be checked.
+* `results/validation/2026-09-13_check_final_certificate.log` — all 225 pass.
+
+### The checker has teeth
+
+Ten adversarial controls were run; **all ten were detected**: a case marked
+`SURVIVES`; a pair that is not avoiding for its class; falsified neighbourhoods;
+falsified difference sets; a falsified adjacency list; a graph edited to break
+the edge count or minimum degree; a wrong degree sequence; a wrong component
+partition; and — the core check — an *honestly constructed* witness using a
+different avoiding pair of the same class for which Lemma 5 **is** satisfied,
+correctly rejected with `AKR Lemma 5 is SATISFIED via [[0, 1]]: this case is NOT
+killed`.
+
+### What the certificate does NOT establish
+
+* **Completeness.** The checker verifies that each listed case dies. It does
+  **not** verify that the list is the complete set of cases reaching the final
+  filter — that rests on the exhaustive enumeration inside the generator, which
+  the checker deliberately does not repeat. A referee who wants completeness
+  must still trust or re-run the 13,003,620-graph search.
+* **The canonical profile data.** The checker reads
+  `data/exceptional_profiles/exceptional_profiles_14.json` as given input. It
+  cannot verify that these are the correct 14 exceptional classes, nor that the
+  listed avoiding pairs are geometrically correct.
+* **The neighbour-adjacency reduction itself.** That the stated cyclic-adjacency
+  condition really is implied by AKR Lemma 5 is a mathematical claim about
+  someone else's published lemma; see K-09. The checker assumes it.
+
+**This resolves K-03 only.** It does not make the upper bound verified, and it
+does not touch K-02, K-05, K-07, K-08 or K-09.
+
 
 ## K-04 — Missing data files break the pipeline as shipped
 
@@ -170,24 +234,42 @@ wrongly rejects would produce exactly the observed outcome (zero survivors).
 
 ---
 
-## K-06 — "Černý Lemma 3 is unnecessary" is unsupported by shipped code
+## K-06 — "Cerny Lemma 3 is unnecessary"  (RESOLVED 2026-09-13)
 
-**Status:** open.
+**Status:** resolved, and the claim reproduces.
 
-`docs/proof-outline.md` opens with **"Černý Lemma 3 is NOT needed"**, and uses
-it to cut the external dependency list from five published lemmas to four. The
-transcript backs this with a filter-minimality table (drop L3 → 0 survivors;
-drop L2 → 64; drop L2 and L3 → 64; drop L2, L3 and A7 → 20,618).
+`proof-outline.md` opens with **"Cerny Lemma 3 is NOT needed"** but no shipped
+code supported it, so the conservative dependency count remained five lemmas.
 
-**No script in this repository performs that experiment**, and the shipped
-pipeline still applies L3 unconditionally. The reduced dependency claim rests
-entirely on a run whose code is absent.
+`python/elimination/make_final_certificate.py` now applies Cerny Lemma 3 only
+under an explicit `--with-l3` flag, and **defaults to leaving it off**. Both
+runs were performed on 2026-09-13:
 
-This is easy to fix: make the filter set a command-line option in
-`audit_enum.py` and re-run. Until then, the conservative statement is that the
-result depends on **five** external lemmas.
+| | with Cerny L3 | without Cerny L3 |
+|---|---|---|
+| after AKR L5 (consecutive) | 42,238 | 42,238 |
+| after AKR L7 (H bipartite) | 24,990 | 24,990 |
+| after Cerny L3 | 9,702 | *not applied* |
+| graphs entering class filters | 9,702 | **24,990** |
+| after crossing-set compatibility | **2,300** | **2,300** |
+| after Cerny Lemma 2 | **121** | **121** |
+| combinations reaching the final filter | **225** | **225** |
+| final survivors | **0** | **0** |
 
----
+The two certificates are **identical case for case** (verified: same 225 cases,
+in the same order, with the same witnesses).
+
+The mechanism is now visible: the 15,288 graphs that Cerny Lemma 3 removes are
+all removed by crossing-set compatibility anyway. L3 is redundant *given* the
+compatibility filter, not redundant in isolation.
+
+**Consequence:** the elimination depends on **four** published lemmas — Cerny
+Lemmas 1 and 2, AKR Lemmas 5 and 7 — not five. Cerny Lemma 3, the most intricate
+of the Cerny lemmas, is not needed.
+
+Caveat: this was established with one codebase. The redundancy is a statement
+about this pipeline's filters, and inherits every caveat in K-02 and K-09.
+
 
 ## K-07 — The published SHA-256 digests cannot be checked
 
@@ -324,6 +406,9 @@ standard library only, from the repository sources:
 | `\|E\|=8` | 476,280 → 1,078 → **0** ✓ | 8 s |
 | `\|E\|=9` | 13,003,620 → 42,238 → 24,990 → 9,702 → 2,300 → 121 → **0** ✓ | 3 m 6 s |
 | 196 ordered class pairs × 3 labellings | **0** everywhere ✓ | 3 m 8 s |
+| final certificate, L3-free (K-03) | 225 cases, 121 graphs, all (2,2,1⁵), 0 survivors ✓ | 3 m 6 s |
+| final certificate, with Cerny L3 (control) | identical 225 cases ✓ | 3 m 6 s |
+| independent certificate check | 225/225 contradictions verified ✓ | <1 s |
 | lower bound | I=38, \|E\|=11, 3 components ✓ | <1 s |
 
 Every documented figure that the shipped code is capable of producing was
@@ -348,6 +433,8 @@ additions:
 |---|---|---|
 | `python/classification/make_exceptional_profiles.py` | **new** wrapper | K-04. Execs the unmodified part (c) of `audit_ot.py`. No logic reimplemented. |
 | `python/validation/check_lower_bound.py` | **new** checker | Provides the cheap standalone referee check the brief asks for. Uses only `core/geom.py` predicates. |
+| `python/elimination/make_final_certificate.py` | **new** generator | K-03. The original search, instrumented. All predicates exec-sliced from `audit_enum.py`'s own source; only the driver is new, so Cerny L3 can be switched off. `audit_enum.py` unmodified. |
+| `python/validation/check_final_certificate.py` | **new** checker | K-03. Independent verifier, standard library only, no shared code with any search script. |
 | `python/classification/export_profiles.py` | **new** exporter | Serializes classification output to JSON. Transcribes the `classdata` function already duplicated verbatim in `audit_enum.py` and `audit_pairs.py`; no predicate redefined. |
 
 Known defects were **documented, not fixed**: the `enum9.py` budget bug (K-01)
