@@ -3,10 +3,22 @@
 **Last updated:** 2026-09-13
 
 Extracted and consolidated from `archive/superseded/REPORT.md` §1–2 and the
-session transcript. The bibliographic facts below were established by the
-original author reading the sources; they have **not** been re-checked against
-the papers during repository organization, and no PDF of any source paper is
-included in this repository.
+session transcript.
+
+**Updated 2026-09-13.** The lemma statements below **have** since been checked
+against the published papers, hypothesis by hypothesis — see
+[`external-lemma-audit.md`](external-lemma-audit.md). The three source papers
+are identified by DOI and SHA-256 in [`../references/README.md`](../references/README.md)
+(the PDFs themselves are not committed; see that file for why).
+
+Two corrections arising from the audit:
+
+* The audit found the project's own general-position argument (`proof-outline.md`
+  Step 0) to be **incorrect** in one sub-case; the needed statement is instead
+  correctly proved in AKR (DCG 2022) §9.1. See `known-issues.md` K-10.
+* **AKR §10.2 of the journal version reports the authors' own independent
+  computer verification of Lemma 7** — the project's principal external
+  dependency. This should be cited; see `known-issues.md` K-09.
 
 ## The problem
 

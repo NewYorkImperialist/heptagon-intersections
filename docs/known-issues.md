@@ -426,39 +426,139 @@ hypotheses do real work and the conclusion is not free.
 
 ---
 
-## K-09 — External lemma translations have had no independent review
+## K-09 — External lemma translations  (MATERIALLY DE-RISKED 2026-09-13)
 
-**Status:** open.
+**Status:** audited hypothesis by hypothesis against the published papers.
+Černý L1, Černý L2 and AKR L5 are now **VERIFIED**; AKR L7 remains **PROBABLY
+CORRECT — HUMAN REVIEW STILL DESIRABLE**, for a reason that lies in the *source*
+rather than in the project's translation.
 
-Two translations are doing heavy lifting and both were produced, revised, and
-audited within the same LLM-assisted session:
+Full audit: [`external-lemma-audit.md`](external-lemma-audit.md).
 
-1. **AKR Lemma 7 ⟹ `H` bipartite.** Depends on reading Lemma 7's "both hooking"
-   hypothesis existentially. The author argues this is how AKR's own proof uses
-   it. Plausible, and the reasoning is written out — but it is an interpretation
-   of another paper's prose, and the entire L7 filter rests on it. The author's
-   own recommendation was to confirm it by correspondence with the AKR authors.
-2. **AKR Lemma 5 on avoiding pairs.** Requires the corrected definition of an
-   *associated pair* including the two non-edges. Under the looser reading taken
-   from AKR's prose, AKR's own Observation 6 is false — the transcript gives an
-   explicit counterexample. So the project is knowingly using a reading that
-   differs from the published wording, on the grounds that the published wording
-   cannot be what was meant. That is very likely right, and it is exactly the
-   kind of judgement a referee must confirm rather than accept.
+### Two findings the project had not noticed
 
-Neither has been reviewed by anyone else.
+**(i) The SoCG 2020 version settles the existential reading.** This was recorded
+as the project's single largest interpretive risk. The conference proof of
+Lemma 7 selects the associated pairs *with the cone conditions stated
+explicitly*:
+
+> …let `q_{i′}, q_{i′±1}` and `q_{j′}, q_{j′±1}` be their associated (hooked)
+> pairs such that: … **`I(q_{i′},q_{i′±1}) ∈ Cone(p_i,p_{i+1})` and
+> `I(q_{j′},q_{j′±1}) ∈ Cone(p_j,p_{j+1})`**
+
+Those clauses are only possible under the **existential** reading of "is
+hooking" — exactly the project's reading. The **journal version deleted them**,
+which makes its own next sentence ("Hence, `I(A,B) ∈ Cone(a,b)`…") a non
+sequitur. So for this one point the conference version is the better source.
+Both passages were verified verbatim in both PDFs by the main agent.
+
+**(ii) AKR independently computer-verified Lemma 7 themselves.** §10.2 of the
+journal version — **journal-only, absent from SoCG** — reports:
+
+> "We have independently confirmed Lemma 7 … by a computer enumeration."
+> 158,830 arrangements of eight lines; 840 assignments each after symmetry;
+> "after a few days of computing … there were, up to isomorphism, 14
+> configurations with the required intersection pattern. In 13 of them, some
+> associated pair did not conform to the hooking/hooked pattern of Lemma 5."
+
+This is the best available corroboration of the project's principal external
+dependency — the very lemma this repository has repeatedly flagged as "a
+twelve-case argument carried largely by figures" — and **it should be cited.**
+
+### Why AKR L7 is still not VERIFIED
+
+AKR's **Observation 6 (the Axis Property) is unproved in both versions**, and is
+false under AKR's literal definition of "associated"; it is used throughout
+Lemma 7's case analysis. The project's own counterexample to the loose reading
+was re-verified during the audit. That residual risk is in the published source,
+not in the project's use of it, and it is not something this project can close.
+
+### Still open
+
+Independent expert review of AKR Lemma 7 and its Observation 6. Seven drafted
+author-contact questions are in `external-lemma-audit.md` §10.
+
+**Unresolved:** the DCG PDF is stamped "corrected publication 2023" but contains
+no correction notice, and the publisher blocked retrieval of the correction
+record. What was corrected is unknown.
 
 ---
 
-## K-10 — Degenerate configurations
+## K-10 — General position: the project's Step 0 is INCORRECT  (UPGRADED 2026-09-13)
 
-**Status:** argued in prose; not formalized, not refereed.
+**Status:** open, and upgraded from a completeness caveat to a **correctness
+defect**. The conclusion is still true; the project's own proof of it is not.
 
-`f(7,7)` is defined over configurations in general position, as in all three
-source papers. `docs/proof-outline.md` Step 0 argues the reduction rather than
-assuming it — a real improvement on the one-sentence assertion in Černý et al. —
-but it is prose, with the type-(iii) non-interleaved case carried by an `O(δ)`
-argument, and no formal treatment exists.
+### The defect
+
+`docs/proof-outline.md` Step 0 claims to prove the general-position reduction
+rather than assume it ("proved here, not assumed"). Its rule for type-(iii)
+degeneracies (a vertex `v` of `P` coincident with a vertex `w` of `Q`) reads:
+
+> if the four wedge-rays interleave, any move yields 2; if not — the case where
+> separation would lose the point — push the vertex a distance δ **into the cone
+> of Q at w**, so both incident sides of `P` must exit across `q⁻` or `q⁺`
+> within `O(δ)` of `w`, yielding 2.
+
+**This is false when `Cone_P(v) ⊂ Cone_Q(w)`** — a narrow spike of `P` inside a
+wider wedge of `Q`, with both polygons simple. Pushing `v` into `Cone_Q` then
+yields **0** crossings, destroying the intersection point that was there. The
+count *decreases*, and the reduction fails.
+
+The stated justification fails visibly in the same case: both `P`-sides start
+inside `Cone_Q` and point in directions interior to it, so they **never exit**
+across `q⁻` or `q⁺`.
+
+Confirmed twice by exact rational arithmetic — by the auditor over 720 sampled
+displacement directions across five wedge configurations, and independently by
+the main agent with an explicit exact construction:
+
+```
+Cone_P = [~84.3°, ~95.7°]  strictly inside  Cone_Q = [~78.7°, ~101.3°]
+  move INTO  Cone_Q  ->  0 crossings   (LOSES the intersection point)
+  move OUT of Cone_Q ->  2 crossings   (preserves it)
+```
+
+A secondary inaccuracy: the clause "if the four wedge-rays interleave, any move
+yields 2" is also wrong — the interleaved case yields **1 or 3**, never 2 —
+though harmlessly, since the original count is 1 and 1 or 3 is ≥ 1.
+
+### A second gap in Step 0
+
+Step 0 treats degeneracies one at a time ("Only two sides move … Finitely many
+degeneracies"). It never addresses the case AKR §9.1 opens with — *"a side may
+be involved in multiple degeneracies"* — where resolving one coincidence moves a
+vertex another degeneracy depends on. AKR's entire §9.1 apparatus (dependence
+graph, Lemma 16, Theorem 17, Lemma 18) exists for exactly that. Step 0's
+sequential argument is plausible but is not argued.
+
+### Severity and repair
+
+**The conclusion is not in doubt.** The statement the project needs is true and
+is correctly proved in AKR (DCG 2022) §9.1, pp. 1069–1072 — audited separately
+and marked VERIFIED. So this does not propagate to the theorem on the present
+audit.
+
+But it is a genuine error in a step the project explicitly advertises as its own
+contribution, and it was found only by checking the argument against a concrete
+configuration rather than reading it for plausibility.
+
+**Recommended repair: delete Step 0's type-(iii) argument and cite AKR §9.1.**
+This converts a hand-written and currently-broken argument into a citation of a
+peer-reviewed one, at the cost of making explicit a dependency the project
+already has twice over. A one-clause fix also works ("push into `Cone_Q(w)` if
+`Cone_P(v) ⊄ Cone_Q(w)`, and out of it otherwise"), but it leaves the
+multiple-degeneracy gap unaddressed.
+
+**This has NOT been repaired.** `docs/proof-outline.md` is preserved unmodified,
+as the research record; the correction is documented here, per this repository's
+standing policy of documenting rather than silently patching.
+
+### Note on the counting model
+
+AKR §9.3 explicitly leaves the "count intersecting *side pairs*" model as future
+research. The project works in the intersection-*point* model, so it is fine —
+but the result must never be restated in the pairs model.
 
 ---
 
