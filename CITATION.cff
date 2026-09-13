@@ -1,0 +1,88 @@
+cff-version: 1.2.0
+title: "Heptagon Intersection Project: a candidate computer-assisted proof that f(7,7) = 38"
+message: >-
+  STATUS WARNING. This repository contains a CANDIDATE computer-assisted proof
+  that f(7,7) = 38, undergoing independent verification and Lean formalization.
+  It has NOT been peer-reviewed, has NOT been independently verified by a second
+  party, and NO part of it has been formally verified in Lean. Do not cite it as
+  a peer-reviewed or settled result. If you refer to this work, describe it as a
+  candidate computer-assisted proof undergoing verification, and cite the
+  specific commit you examined. See docs/verification-status.md.
+type: software
+authors:
+  - given-names: Jayden
+    family-names: Lin
+    email: lin.jayd@northeastern.edu
+    affiliation: Northeastern University
+repository-code: "https://example.invalid/REPLACE-BEFORE-PUBLICATION"
+abstract: >-
+  Computational materials, proof notes, Lean formalization skeleton and full
+  research provenance for an investigation of f(7,7), the maximum number of
+  boundary intersections of two simple heptagons and the smallest open case of
+  the Dillencourt-Mount-Saalfeld conjecture. The repository contains an explicit
+  verified 38-crossing lower-bound construction, a new counting lemma
+  ("Lemma A"), an exhaustive classification of the 16 exceptional simple
+  heptagons (14 classes), and a finite elimination of the I = 40 case
+  conditional on published lemmas of Cerny et al. (2003) and
+  Ackerman-Keszegh-Rote (2022). Substantial portions of the work were produced
+  with large-language-model assistance; see docs/ai-disclosure.md.
+keywords:
+  - discrete geometry
+  - computational geometry
+  - simple polygons
+  - polygon intersections
+  - Dillencourt-Mount-Saalfeld conjecture
+  - order types
+  - chirotopes
+  - computer-assisted proof
+  - Lean 4
+license: MIT
+date-released: "2026-09-13"
+references:
+  - type: article
+    title: "On the number of intersections of two polygons"
+    authors:
+      - family-names: "Cerny"
+        given-names: "J."
+      - family-names: "Kara"
+        given-names: "J."
+      - family-names: "Kral"
+        given-names: "D."
+      - family-names: "Podbrdsky"
+        given-names: "P."
+      - family-names: "Sotakova"
+        given-names: "M."
+      - family-names: "Samal"
+        given-names: "R."
+    journal: "Commentationes Mathematicae Universitatis Carolinae"
+    volume: 44
+    start: 217
+    end: 228
+    year: 2003
+  - type: article
+    title: "An almost optimal bound on the number of intersections of two simple polygons"
+    authors:
+      - family-names: "Ackerman"
+        given-names: "E."
+      - family-names: "Keszegh"
+        given-names: "B."
+      - family-names: "Rote"
+        given-names: "G."
+    journal: "Discrete & Computational Geometry"
+    volume: 68
+    start: 1049
+    end: 1077
+    year: 2022
+  - type: conference-paper
+    title: "On the maximum number of intersections of two polyhedra in 2 and 3 dimensions"
+    authors:
+      - family-names: "Dillencourt"
+        given-names: "M. B."
+      - family-names: "Mount"
+        given-names: "D. M."
+      - family-names: "Saalfeld"
+        given-names: "A. J."
+    collection-title: "Proceedings of the 5th Canadian Conference on Computational Geometry (CCCG)"
+    start: 49
+    end: 54
+    year: 1993
