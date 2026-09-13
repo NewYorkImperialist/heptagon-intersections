@@ -1,0 +1,16 @@
+✔ [739/742] Built LowerBound (1.4s)
+✔ [741/742] Built LemmaA (7.4s)
+Build completed successfully (742 jobs).
+exit=0
+'Heptagon.LowerBound.P_simple' depends on axioms: [propext]
+'Heptagon.LowerBound.Q_simple' depends on axioms: [propext]
+'Heptagon.LowerBound.general_position' depends on axioms: [propext]
+'Heptagon.LowerBound.crossing_count_eq_38' depends on axioms: [propext]
+'Heptagon.LowerBound.per_P_side_counts' depends on axioms: [propext]
+'Heptagon.LemmaA.card_E_ge' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Heptagon.LemmaA.card_E_ge_eleven' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Heptagon.LemmaA.crossings_le_38' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Heptagon.LemmaA.nonvacuous' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Heptagon.LemmaA.cert_I_le_38' depends on axioms: [propext, Classical.choice, Quot.sound]
+--- standalone, empty LEAN_PATH ---
+LowerBound.lean: CLEAN with no Mathlib

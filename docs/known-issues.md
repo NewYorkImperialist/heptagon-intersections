@@ -359,33 +359,70 @@ UTF-8), commit the file, and hash that.
 
 ---
 
-## K-08 — Lean: nothing compiles, and nothing has been shown to compile
+## K-08 — Lean: first files now kernel-checked  (LARGELY RESOLVED 2026-09-13)
 
-**Status:** open.
+**Status:** the two foundational files compile with no `sorry` and no
+project-specific axioms. Five of the seven planned files remain unwritten.
 
-* The only Lean file is `lean/LemmaA.lean`.
-* It contains **no** `sorry`, **no** `axiom`, **no** `admit`, **no**
-  `native_decide` — verified by grep.
-* **It has never been compiled.** There is no `lakefile.lean`/`lakefile.toml`,
-  no `lean-toolchain`, no Mathlib dependency, no `.lake/`, and no build log. No
-  Lean toolchain was installed in the environment where this repository was
-  organized, so compilation could not be attempted.
-* Its own header says `Status: skeleton. Mathlib lemma names marked -- CHECK may
-  need adjusting`, and six proof steps carry `-- CHECK`.
+### What now builds
 
-**Do not read "no `sorry`" as "verified".** For a file that has never been
-through the elaborator, the two are unrelated.
+`lake build` → exit 0, 742 jobs, verified independently by the main agent after
+a clean `rm -rf .lake/build`.
 
-There is also a **contradiction in the record**: the transcript states "The Lean
-files are skeletons with `sorry`s in the places I flagged", but the delivered
-`LemmaA.lean` contains none. The likely explanation is that the remark referred
-to the other six designed files, which are absent. Unresolved.
+| file | imports | `sorry` | new `axiom` | axioms used |
+|---|---|---|---|---|
+| `lean/LowerBound.lean` | **none (core Lean)** | none | none | `propext` only |
+| `lean/LemmaA.lean` | Mathlib v4.33.1 | none | none | `propext`, `Classical.choice`, `Quot.sound` |
 
-Finally, per `docs/lean-architecture.md`, the eventual `Main.lean` would import
-`Imported.lean` (the five published lemmas as `axiom`s) and, at first, an
-axiomatized classification. **When that first compiles it will be a theorem
-conditional on project-specific axioms, not a kernel-verified theorem from
-Mathlib foundations.** These must never be conflated. See `lean/README.md`.
+`LowerBound.lean` was additionally verified to compile with an **empty
+`LEAN_PATH`**, which demonstrates Mathlib is genuinely not in its trust base.
+Its coordinates were checked programmatically against
+`data/lower_bound/lower_bound_38.json` and are identical.
+
+Environment: Lean 4.33.1 (`819816b2e0a3bf405af45ae5c7af2491d8f5bee6`),
+Mathlib tag `v4.33.1` rev `0df444a360eaa60ab8c11dca51a86af692955474`
+(prebuilt oleans, not compiled from source).
+
+Build: `export PATH="$HOME/.elan/bin:$PATH"; cd lean && lake build`
+
+### A latent defect found in the old skeleton
+
+The previous `LemmaA.lean` was **rewritten, not patched**. Beyond its six
+`-- CHECK` markers it contained a genuine and instructive bug: `Odd` was not in
+scope under its imports (`Mathlib.Data.Finset.Card`,
+`Mathlib.Data.Fintype.Prod`), so Lean's auto-bound-implicit feature silently
+turned `Odd` into a free implicit variable. `card_E_ge_eleven` and
+`crossings_le_38` therefore elaborated as **vacuous nonsense, with no error
+reported**. Had the file ever been compiled without reading it, it would have
+looked fine.
+
+This is a concrete instance of the warning in this repository's own docs: a
+Lean file that has never been elaborated tells you nothing, and even one that
+elaborates can state something other than what it appears to. The rewrite adds
+`set_option autoImplicit false` so this class of failure cannot recur.
+
+### What is still NOT formalized
+
+* **Simplicity is orientation-level.** `P_simple` / `Q_simple` assert distinct
+  vertices, no three of the seven collinear, consecutive sides non-collinear,
+  and no proper crossing of non-adjacent sides. The inference from that to
+  "the closed polygonal curve is a simple closed curve in ℝ²" is standard but
+  **not formalized**. Likewise "proper crossing ⇒ the closed segments meet in
+  exactly one interior point".
+* **Lemma A is an implication.** `h1`, `h2`, `hpar`, `hIE` are hypotheses. They
+  are discharged in Lean only for the single explicit certificate pair
+  (`nonvacuous`, `cert_I_le_38`), not for a general pair of heptagons. The (★)
+  vertex-avoiding-line subtlety (K-09, and the mid-project repair recorded in
+  the transcript) lives inside `h1` and is not formalized.
+* **Nothing else.** The five published lemmas, the exceptional classification
+  and the elimination are not formalized at all. `f(7,7) = 38` is **not** a
+  Lean theorem.
+
+Non-vacuity was checked rather than assumed: the certificate relation
+`Rcert i j := ¬ PQCross i j` with `Scert = {0,1,3,6}` satisfies `h1` and `h2` by
+`decide`, gives `(E Rcert).card = 11` (so the bound is tight), and
+`hypotheses_are_restrictive` shows the empty relation fails `h1` — so the
+hypotheses do real work and the conclusion is not free.
 
 ---
 

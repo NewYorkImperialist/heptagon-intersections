@@ -1,0 +1,15 @@
+name = "heptagon"
+defaultTargets = ["LowerBound", "LemmaA"]
+
+# LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
+# dependency below is used solely by LemmaA.lean.
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.1"
+
+[[lean_lib]]
+name = "LowerBound"
+
+[[lean_lib]]
+name = "LemmaA"
