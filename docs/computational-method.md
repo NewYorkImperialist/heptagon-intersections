@@ -116,9 +116,14 @@ emptiness **separately for each of the 196 ordered pairs of exceptional
 classes**, under three different representative labellings (as stored;
 rotation 3 + reflection; rotation 5).
 
+`audit_pairs.py` reuses `audit_enum.py`'s helpers by exec-ing a slice of its
+source **from the current working directory**, and it loads `exc_det.pkl` from
+there too. So both must be present in the directory you run it from:
+
 ```bash
-cd $REPO/python/elimination      # must run from here: see the PYTHONPATH note
-python3 audit_pairs.py           # 3 m 8 s
+cd /tmp/f77                                    # already holds exc_det.pkl
+cp $REPO/python/elimination/audit_enum.py .    # required: read from the CWD
+python3 $REPO/python/elimination/audit_pairs.py   # 3 m 8 s
 ```
 
 Reproduced 2026-09-13:

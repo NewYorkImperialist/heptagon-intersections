@@ -16,8 +16,10 @@ export REPO=/path/to/heptagon-intersections
 export PYTHONPATH=$REPO/python/core
 ```
 
-`elimination/audit_pairs.py` additionally reads `audit_enum.py` **from the
-current working directory**, so it must be run from `elimination/`.
+`elimination/audit_pairs.py` additionally reads **both** `audit_enum.py` (whose
+helpers it reuses by exec-ing a slice of its source) and `exc_det.pkl` from the
+**current working directory**. Copy `audit_enum.py` into your scratch directory
+alongside `exc_det.pkl` and run it from there.
 
 Scripts read and write their pickles in the **current working directory**. Run
 them from a scratch directory, not from inside the repository.
@@ -124,9 +126,7 @@ defect D2. Rebuilds the 9,702 survivors, then verifies emptiness **separately
 for each of the 196 ordered pairs** of exceptional classes, under three
 representative labellings (as stored; rotation 3 + reflection; rotation 5).
 
-* Must be run from this directory: it reuses `audit_enum.py`'s helpers by
-  exec-ing a slice of its source from the CWD.
-* Inputs: `exc_det.pkl` in the CWD.
+* Inputs: **both** `exc_det.pkl` and a copy of `audit_enum.py` in the CWD.
 * Runtime: ~3 min.
 * **Current. This is the load-bearing run.**
 

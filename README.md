@@ -145,7 +145,9 @@ python3 $REPO/python/elimination/audit_enum.py 7
 python3 $REPO/python/elimination/audit_enum.py 8
 python3 $REPO/python/elimination/audit_enum.py 9
 
-cd $REPO/python/elimination && python3 audit_pairs.py
+# audit_pairs.py reads audit_enum.py from the working directory
+cp $REPO/python/elimination/audit_enum.py .
+python3 $REPO/python/elimination/audit_pairs.py
 ```
 
 Full details, expected output and the parts that **cannot** currently be run are
