@@ -1,0 +1,9 @@
+# Environment record for independent/akr_l7_reproduction
+date: 2026-09-14T00:18:31Z
+uname: Darwin Jaydens-MacBook-Pro.local 24.6.0 Darwin Kernel Version 24.6.0: Mon Jul 14 11:30:34 PDT 2025; root:xnu-11417.140.69~1/RELEASE_ARM64_T8103 arm64
+sw_vers: ProductName:		macOS ProductVersion:		15.6.1 BuildVersion:		24G90 
+python: Python 3.14.7 at /opt/homebrew/bin/python3
+z3 python bindings: 5.1.0
+z3 cli: Z3 version 5.1.0 - 64 bit at /opt/homebrew/bin/z3
+third-party python packages used: z3 only (stdlib otherwise: itertools, fractions, random, json, hashlib, time, subprocess)
+no network access was used by any program in this directory

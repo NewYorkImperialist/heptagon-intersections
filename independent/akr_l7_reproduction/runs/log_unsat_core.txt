@@ -1,0 +1,91 @@
+=== generic / both-hooking -> unsat
+    minimal core has 22 of the pattern/status constraints:
+       CROSS a-Ap
+       CROSS a-B
+       CROSS a-Bp
+       CROSS ap-A
+       CROSS ap-B
+       CROSS ap-Bp
+       CROSS b-A
+       CROSS b-Ap
+       CROSS b-Bp
+       CROSS bp-A
+       CROSS bp-Ap
+       CROSS bp-B
+       DISJOINT A-Ap
+       DISJOINT A-Bp
+       DISJOINT B-Ap
+       DISJOINT B-Bp
+       DISJOINT a-ap
+       DISJOINT a-bp
+       DISJOINT b-ap
+       DISJOINT b-bp
+       STATUS both-hooking #1
+       STATUS both-hooking #2
+=== generic / both-hooked -> unsat
+    minimal core has 22 of the pattern/status constraints:
+       CROSS a-Ap
+       CROSS a-B
+       CROSS a-Bp
+       CROSS ap-A
+       CROSS ap-B
+       CROSS ap-Bp
+       CROSS b-A
+       CROSS b-Ap
+       CROSS b-Bp
+       CROSS bp-A
+       CROSS bp-Ap
+       CROSS bp-B
+       DISJOINT A-Ap
+       DISJOINT A-Bp
+       DISJOINT B-Ap
+       DISJOINT B-Bp
+       DISJOINT a-ap
+       DISJOINT a-bp
+       DISJOINT b-ap
+       DISJOINT b-bp
+       STATUS both-hooked #1
+       STATUS both-hooked #2
+=== P-adj / both-hooking -> unsat
+    minimal core has 18 of the pattern/status constraints:
+       CROSS a-Ap
+       CROSS a-B
+       CROSS a-Bp
+       CROSS ap-A
+       CROSS ap-B
+       CROSS ap-Bp
+       CROSS b-A
+       CROSS b-Ap
+       CROSS b-Bp
+       CROSS bp-A
+       CROSS bp-Ap
+       CROSS bp-B
+       DISJOINT A-Ap
+       DISJOINT B-Bp
+       DISJOINT a-ap
+       DISJOINT b-bp
+       STATUS both-hooking #1
+       STATUS both-hooking #2
+=== P-adj / mixed-1 -> unsat
+    minimal core has 19 of the pattern/status constraints:
+       CROSS a-Ap
+       CROSS a-B
+       CROSS a-Bp
+       CROSS ap-A
+       CROSS ap-B
+       CROSS ap-Bp
+       CROSS b-A
+       CROSS b-Ap
+       CROSS b-Bp
+       CROSS bp-A
+       CROSS bp-Ap
+       CROSS bp-B
+       DISJOINT A-Ap
+       DISJOINT B-Bp
+       DISJOINT a-ap
+       DISJOINT a-bp
+       DISJOINT b-bp
+       STATUS mixed-1 #1
+       STATUS mixed-1 #2
+
+wrote unsat_core.json

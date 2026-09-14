@@ -1,0 +1,22 @@
+# Partial results from a longer arr8.py search (10 x 60000 arrangements requested)
+# These runs were terminated at ~33000 arrangements each before writing JSON;
+# the per-run progress lines below are the surviving record.  Nothing in the
+# report depends on them: they only corroborate RESULTS.md section 1.
+
+runs/partial_long/log_seed201.txt:   33500 arrangements,    1894 realisations,  12 distinct types, 0 both-h, 1894 axis-violations   (1955s)
+runs/partial_long/log_seed202.txt:   33600 arrangements,    1990 realisations,  11 distinct types, 0 both-h, 1990 axis-violations   (1956s)
+runs/partial_long/log_seed203.txt:   33500 arrangements,    1901 realisations,  11 distinct types, 0 both-h, 1901 axis-violations   (1954s)
+runs/partial_long/log_seed204.txt:   33500 arrangements,    1928 realisations,  12 distinct types, 0 both-h, 1927 axis-violations   (1954s)
+runs/partial_long/log_seed205.txt:   33400 arrangements,    1841 realisations,  11 distinct types, 0 both-h, 1841 axis-violations   (1955s)
+runs/partial_long/log_seed206.txt:   33400 arrangements,    1890 realisations,  12 distinct types, 0 both-h, 1890 axis-violations   (1953s)
+runs/partial_long/log_seed207.txt:   33500 arrangements,    2060 realisations,  12 distinct types, 0 both-h, 2060 axis-violations   (1954s)
+runs/partial_long/log_seed208.txt:   33550 arrangements,    1933 realisations,  11 distinct types, 0 both-h, 1933 axis-violations   (1956s)
+runs/partial_long/log_seed209.txt:   33650 arrangements,    2000 realisations,  10 distinct types, 0 both-h, 2000 axis-violations   (1956s)
+runs/partial_long/log_seed210.txt:   33350 arrangements,    2038 realisations,  10 distinct types, 0 both-h, 2038 axis-violations   (1954s)
+
+TOTALS (sum of the last progress line of each run):
+  arrangements sampled          : 334950
+  (arrangement,assignment) checks: 844074000
+  realisations of the pattern   : 19475
+  both-hooking or both-hooked   : 0
+  Axis-Property violations      : 19474

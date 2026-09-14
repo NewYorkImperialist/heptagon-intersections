@@ -1,0 +1,38 @@
+{
+ "variant": "generic",
+ "status": "mixed-1",
+ "acyclic_constraint": true,
+ "attempts": [
+  {
+   "attempt": 0,
+   "om": "sat",
+   "realised": false
+  },
+  {
+   "attempt": 1,
+   "om": "sat",
+   "realised": false
+  },
+  {
+   "attempt": 2,
+   "om": "sat",
+   "realised": false
+  },
+  {
+   "attempt": 3,
+   "om": "sat",
+   "realised": false
+  },
+  {
+   "attempt": 4,
+   "om": "sat",
+   "realised": false
+  },
+  {
+   "attempt": 5,
+   "om": "sat",
+   "realised": false
+  }
+ ],
+ "conclusion": "6 distinct acyclic chirotopes satisfying the pattern + mixed-1 were found; none could be realised with rational coordinates by the coordinate-wise method"
+}

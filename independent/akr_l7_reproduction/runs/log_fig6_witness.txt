@@ -1,0 +1,63 @@
+source file : runs/arr8_seed302.json
+8 lines  A*x + B*y + C = 0  (exact integers):
+   L0 :     -3 x +     21 y +    -29 = 0
+   L1 :     32 x +     34 y +    -16 = 0
+   L2 :    -13 x +    -35 y +    -27 = 0
+   L3 :     24 x +     31 y +    -10 = 0
+   L4 :     11 x +      4 y +      2 = 0
+   L5 :      6 x +    -11 y +    -29 = 0
+   L6 :     -6 x +      2 y +     24 = 0
+   L7 :     11 x +    -23 y +      6 = 0
+side -> line assignment:
+   a   -> L0
+   b   -> L2
+   ap  -> L1
+   bp  -> L5
+   A   -> L3
+   B   -> L7
+   Ap  -> L6
+   Bp  -> L4
+
+re-verified intersection pattern (all exact integer sign tests):
+   A   Ap   must be DISJOINT   OK
+   A   Bp   must be DISJOINT   OK
+   A   a    must be DISJOINT   OK
+   A   ap   must CROSS      OK
+   A   b    must CROSS      OK
+   A   bp   must CROSS      OK
+   Ap  B    must be DISJOINT   OK
+   Ap  a    must CROSS      OK
+   Ap  ap   must be DISJOINT   OK
+   Ap  b    must CROSS      OK
+   Ap  bp   must CROSS      OK
+   B   Bp   must be DISJOINT   OK
+   B   a    must CROSS      OK
+   B   ap   must CROSS      OK
+   B   b    must be DISJOINT   OK
+   B   bp   must CROSS      OK
+   Bp  a    must CROSS      OK
+   Bp  ap   must CROSS      OK
+   Bp  b    must CROSS      OK
+   Bp  bp   must be DISJOINT   OK
+   a   ap   must be DISJOINT   OK
+   a   bp   must be DISJOINT   OK
+   ap  b    must be DISJOINT   OK
+   b   bp   must be DISJOINT   OK
+
+status: {'hooking1': True, 'hooked1': False, 'hooking2': False, 'hooked2': True}
+  (a,b)   is hooking with respect to (A,B)
+  (a',b') is hooked with respect to (A',B')
+Axis Property (Observation 6): {'axis1': True, 'axis2': True}
+order of crossings along each side, from its apex:
+   a   : Bp -> B -> Ap
+   b   : Bp -> A -> Ap
+   ap  : A -> B -> Bp
+   bp  : A -> Ap -> B
+   A   : ap -> bp -> b
+   B   : ap -> a -> bp
+   Ap  : b -> bp -> a
+   Bp  : b -> ap -> a
+
+This is AKR's Fig. 6: one pair hooking, the other hooked, four distinct
+components, the full required intersection pattern realised, and the Axis
+Property holding for both associated pairs.

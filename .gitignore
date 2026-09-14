@@ -95,3 +95,12 @@ independent/no_a7_experiment/*.pkl
 # keep the C++ one as the committed artifact.
 independent/no_a7_experiment/py_no_a7.json
 independent/no_a7_experiment/py_with_a7.json
+
+# A7 reproduction: compiled/scratch artefacts
+independent/akr_l7_reproduction/__pycache__/
+
+# A7 reproduction: 24MB of generated DIMACS CNF.  Regenerable deterministically;
+# SHA-256 of every file is committed in CNF_SHA256SUMS.txt so the UNSAT results
+# remain independently re-checkable by regenerating and comparing hashes.
+independent/akr_l7_reproduction/cnf/
+independent/akr_l7_reproduction/__pycache__/

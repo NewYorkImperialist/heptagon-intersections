@@ -1,0 +1,13 @@
+pairs: 12 disjoint, 4 share-a-vertex, 12 must-cross (total 28 = C(8,2))
+|Aut(disjointness graph)|            =  48   8!/|Aut| = 840
+|Aut(disjointness AND shares-vertex)|=  16   8!/|Aut| = 2520
+orbit of the shares-a-vertex matching under Aut(disjointness) = 3
+    [('A', 'B'), ('Ap', 'Bp'), ('a', 'b'), ('ap', 'bp')]
+    [('A', 'ap'), ('Ap', 'a'), ('B', 'bp'), ('Bp', 'b')]
+    [('A', 'bp'), ('Ap', 'b'), ('B', 'ap'), ('Bp', 'a')]
+disjointness graph isomorphic to the 3-cube Q3: True
+    {'a': '000', 'b': '011', 'ap': '001', 'bp': '010', 'A': '100', 'B': '111', 'Ap': '101', 'Bp': '110'}
+
+CONCLUSION: 840 = 8!/|Aut(Q3)| uses a group that does NOT preserve
+            which pairs of sides are consecutive; the correct number
+            of assignment classes is 2520 = 3 x 840.

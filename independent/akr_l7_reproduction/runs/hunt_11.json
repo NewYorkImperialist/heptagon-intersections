@@ -1,0 +1,15 @@
+{
+ "n_arrangements": 2000,
+ "n_realisations": 93,
+ "seed": 11,
+ "status_histogram": {
+  "('both', 'neither')": 19,
+  "('hooked', 'neither')": 1,
+  "('hooking', 'neither')": 3,
+  "('neither', 'neither')": 70
+ },
+ "both_conforming": [],
+ "n_both_conforming": 0,
+ "counterexamples": [],
+ "n_counterexamples": 0
+}

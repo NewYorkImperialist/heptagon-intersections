@@ -1,0 +1,5 @@
+CONTROL 1: all three pairings of 4 points cross      -> unsat  (expected unsat ) OK
+CONTROL 2: exactly one pairing of 4 points crosses   -> sat    (expected sat   ) OK
+CONTROL 3: AKR Observation 3 violated                -> unsat  (expected unsat ) OK
+CONTROL 4: Observation 3 respected (crosses one)     -> sat    (expected sat   ) OK
+RESULT: CONTROLS PASSED

@@ -1,0 +1,22 @@
+generic  none         p cnf 13585 89631            s SATISFIABLE sha256=1a8e76a1dfc871fe
+generic  mixed-1      p cnf 13587 89645            s SATISFIABLE sha256=af6b180c984ced65
+generic  mixed-2      p cnf 13587 89645            s SATISFIABLE sha256=c87810779b0255a1
+generic  both-hooking p cnf 13587 89645            s UNSATISFIABLE sha256=cd45e40d359e6399
+generic  both-hooked  p cnf 13587 89645            s UNSATISFIABLE sha256=b8e5a95908b4af9b
+P-adj    none         p cnf 8090 52855             s SATISFIABLE sha256=8a706b9bf582954e
+P-adj    mixed-1      p cnf 8092 52869             s UNSATISFIABLE sha256=55cdaed891c0c197
+P-adj    mixed-2      p cnf 8091 52866             s UNSATISFIABLE sha256=878800da635c9660
+P-adj    both-hooking p cnf 8091 52866             s UNSATISFIABLE sha256=5a65b499926648da
+P-adj    both-hooked  p cnf 8092 52869             s UNSATISFIABLE sha256=1b13e53eee6d4dce
+Q-adj    none         p cnf 8090 52855             s SATISFIABLE sha256=03b02ab3f294ec76
+Q-adj    mixed-1      p cnf 8091 52865             s UNSATISFIABLE sha256=e7149e1898d46e2f
+Q-adj    mixed-2      p cnf 8092 52869             s UNSATISFIABLE sha256=d6736f336b9133d8
+Q-adj    both-hooking p cnf 8092 52869             s UNSATISFIABLE sha256=20254e913c967c62
+Q-adj    both-hooked  p cnf 8091 52865             s UNSATISFIABLE sha256=c8c2d0f0c578404b
+PQ-adj   none         p cnf 4540 29264             s UNSATISFIABLE sha256=5b5e94751e4f4c01
+PQ-adj   mixed-1      p cnf 4541 29274             s UNSATISFIABLE sha256=c65f6615f59f7ea4
+PQ-adj   mixed-2      p cnf 4541 29275             s UNSATISFIABLE sha256=4cf9749416006085
+PQ-adj   both-hooking p cnf 4541 29275             s UNSATISFIABLE sha256=990aaf7a98413aaa
+PQ-adj   both-hooked  p cnf 4541 29274             s UNSATISFIABLE sha256=0f27eba96fdd7e25
+
+wrote cnf/INDEX.txt

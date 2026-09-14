@@ -1,0 +1,6 @@
+point sets tested            : 40 (n=12, exact integer coords)
+GP axiom instances checked    : 158400   violations: 0
+acyclicity instances checked  : 19800   violations: 0
+cross() comparisons           : 59400   mismatches: 0
+in_cone() comparisons         : 237600   mismatches: 0
+RESULT: ALL PREDICATES VALIDATED

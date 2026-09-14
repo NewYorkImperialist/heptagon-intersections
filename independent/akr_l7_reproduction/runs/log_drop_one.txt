@@ -1,0 +1,31 @@
+full instance: unsat
+  drop DISJOINT A-Ap      -> sat
+  drop DISJOINT A-Bp      -> sat
+  drop DISJOINT B-Ap      -> sat
+  drop DISJOINT B-Bp      -> sat
+  drop DISJOINT a-A       -> unsat
+  drop CROSS a-Ap         -> sat
+  drop CROSS a-B          -> sat
+  drop CROSS a-Bp         -> sat
+  drop DISJOINT a-ap      -> sat
+  drop DISJOINT a-bp      -> sat
+  drop CROSS ap-A         -> sat
+  drop DISJOINT ap-Ap     -> unsat
+  drop CROSS ap-B         -> sat
+  drop CROSS ap-Bp        -> sat
+  drop CROSS b-A          -> sat
+  drop CROSS b-Ap         -> sat
+  drop DISJOINT b-B       -> unsat
+  drop CROSS b-Bp         -> sat
+  drop DISJOINT b-ap      -> sat
+  drop DISJOINT b-bp      -> sat
+  drop CROSS bp-A         -> sat
+  drop CROSS bp-Ap        -> sat
+  drop CROSS bp-B         -> sat
+  drop DISJOINT bp-Bp     -> unsat
+  drop STATUS #1          -> sat
+  drop STATUS #2          -> sat
+
+22 of 26 single-constraint weakenings become SAT, 4 stay UNSAT
+(SAT for all of them means the constraint set is exactly minimal: the
+ contradiction is not an artefact of some redundant over-constraint.)
