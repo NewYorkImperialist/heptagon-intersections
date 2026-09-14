@@ -17,6 +17,16 @@ Geometry **68** (2022) 1049–1077 — `references/akr-dcg-2022.pdf`. Section 10
 
 ---
 
+> **Reproducing this.** Run `./reproduce.sh` (about 5 minutes, no SAT solver
+> required). It re-checks 15 DRAT refutation certificates, validates the
+> checker against pigeonhole positives and deliberate negative controls,
+> verifies models for the 5 satisfiable instances, and re-runs the Fig. 6
+> positive control, the Observation 6 certificate and the n = 7 coverage
+> argument. See **[REPRODUCE.md](REPRODUCE.md)** for prerequisites, the
+> per-certificate table and known gaps.
+
+---
+
 ## 0. Executive summary
 
 **Positive.**

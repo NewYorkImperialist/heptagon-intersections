@@ -1,0 +1,7 @@
+generic_none         clauses=64542   satisfied=64542   violated=0
+generic_mixed-1      clauses=64566   satisfied=64566   violated=0
+generic_mixed-2      clauses=64566   satisfied=64566   violated=0
+P-adj_none           clauses=37808   satisfied=37808   violated=0
+Q-adj_none           clauses=37808   satisfied=37808   violated=0
+
+OK: all 5 exported models verified in pure Python (no solver).

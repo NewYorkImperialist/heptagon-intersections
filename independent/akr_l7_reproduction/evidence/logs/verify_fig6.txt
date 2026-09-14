@@ -1,0 +1,3 @@
+pattern conditions checked: 24 mismatches: 0
+hooking1=True hooked1=False hooking2=False hooked2=True
+clauses in independent generic/mixed-1 CNF: 64566  VIOLATED by the real configuration: 0

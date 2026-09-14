@@ -1,0 +1,45 @@
+P (triangle) sides:
+   p0 = ((2, 0), (3, 4))
+   p1 = ((3, 4), (-2, 0))
+   p2 = ((-2, 0), (2, 0))
+Q (pentagon) sides:
+   q0 = ((4, -4), (-3, 1))
+   q1 = ((-3, 1), (0, -1))
+   q2 = ((0, -1), (3, 3))
+   q3 = ((3, 3), (2, 1))
+   q4 = ((2, 1), (4, -4))
+
+P simple: True    Q simple: True
+14/8 vertices distinct: True
+no 3 of the 8 combined vertices collinear (GP2): True
+no vertex of one polygon on the other (GP1): True
+no two of the 8 sides parallel (GP3): True
+
+Disjointness graph G^D  (edge = the two sides are DISJOINT):
+   p0 : E E . . .
+   p1 : . . E E E
+   p2 : . . . E E
+   (E = disjoint = edge of G^D,  . = they cross)
+components: [['p0', 'q0', 'q1'], ['p1', 'p2', 'q2', 'q3', 'q4']]
+CC(p0) != CC(p1) : True
+
+The consecutive P-pair  a=p0, b=p1  (shared vertex {(3, 4)})
+The consecutive Q-pair  A=q0, B=q4  (shared vertex {(4, -4)})
+  (p0,q0) in E^D  [a,A disjoint] : True
+  (p1,q4) in E^D  [b,B disjoint] : True
+  => q0,q4 is ASSOCIATED to p0,p1 under AKR's printed definition
+  (p0,q4) NOT in E^D [a,B cross]  : True    <- Lemma 5's cross non-edge (N1)
+  (p1,q0) NOT in E^D [b,A cross]  : True    <- Lemma 5's cross non-edge (N2)
+
+  I(a,b) = (3, 4)    I(A,B) = (4, -4)
+  hooking?  I(A,B) in Cone(a,b) : False
+  hooked ?  I(a,b) in Cone(A,B) : False
+  => the pair is NEITHER hooking NOR hooked; Lemma 5's cone dichotomy FAILS for it
+
+  axis = the line through I(a,b)=(3, 4) and I(A,B)=(4, -4)
+    a=p0  endpoints on sides [-1, 0]
+    b=p1  endpoints on sides [0, -1]
+    A=q0  endpoints on sides [0, -1]
+    B=q4  endpoints on sides [-1, 0]
+  Observation 6 demands {a,B} on one side and {b,A} on the other.
+  AXIS PROPERTY HOLDS: False

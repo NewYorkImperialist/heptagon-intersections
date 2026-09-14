@@ -1,0 +1,10 @@
+P-side endpoint coincidences for n = 7, as a function of d = (j-i) mod 7:
+  d=2  vertices {'a2': 6, 'ap2': 1, 'b2': 1, 'bp2': 3, 'v1': 0, 'v2': 2}  coincidences {1: ['b2', 'ap2']}  -> P-adj (up to the a<->b, a'<->b' symmetry)
+  d=3  vertices {'a2': 6, 'ap2': 2, 'b2': 1, 'bp2': 4, 'v1': 0, 'v2': 3}  coincidences none  -> generic
+  d=4  vertices {'a2': 6, 'ap2': 3, 'b2': 1, 'bp2': 5, 'v1': 0, 'v2': 4}  coincidences none  -> generic
+  d=5  vertices {'a2': 6, 'ap2': 4, 'b2': 1, 'bp2': 6, 'v1': 0, 'v2': 5}  coincidences {6: ['a2', 'bp2']}  -> P-adj (up to the a<->b, a'<->b' symmetry)
+
+Q-side adjacency: the four possible adjacencies between the pairs (A,B)
+and (A',B') of Q, and their images under the order-16 automorphism group:
+  orbits among the four Q-adjacencies: [[('A', 'Ap'), ('A', 'Bp'), ('Ap', 'B'), ('B', 'Bp')]]
+  => 1 orbit(s); the Q-adj variant models one representative, so all are covered.

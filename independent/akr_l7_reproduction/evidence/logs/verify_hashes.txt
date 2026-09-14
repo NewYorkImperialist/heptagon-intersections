@@ -1,0 +1,2 @@
+hash-verified: 56 file(s)
+OK: every artifact matches SHA256SUMS.txt

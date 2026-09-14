@@ -104,3 +104,10 @@ independent/akr_l7_reproduction/__pycache__/
 # remain independently re-checkable by regenerating and comparing hashes.
 independent/akr_l7_reproduction/cnf/
 independent/akr_l7_reproduction/__pycache__/
+
+# A7 evidence: 19MB of CNF, regenerable byte-identically in ~2s by
+# evidence/regen_cnf.py.  The 15 DRAT refutations ARE committed (small and not
+# re-derivable without a solver).  Hashes for everything in evidence/SHA256SUMS.txt.
+independent/akr_l7_reproduction/evidence/cnf/
+independent/akr_l7_reproduction/evidence/fixtures/negative/
+independent/akr_l7_reproduction/evidence/**/__pycache__/
