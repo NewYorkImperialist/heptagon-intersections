@@ -117,47 +117,37 @@ project has twice built infrastructure it did not need.
 
 ## 5. Recommended next milestone — one, bounded
 
-> **Completed 2026-09-14, in one overnight run:** the `I2` milestone
-> (`DisjointnessGraph.lean`), then enumeration obligations **(1)**
-> (`EnumerationDomain.lean`), **(2)** (`DomainCount.lean` —
-> `domainFinset.card = 13003620`) and **(3)** (`EnumerationComplete.lean` —
-> `enumerate_complete`, by induction on the recursion depth, with
-> `enumerate_sound` pinning the enumeration exactly). `CounterexampleCount.lean`
-> joins (1) and (2): a counterexample is one of exactly 13,003,620 mask
-> functions. The previous entry in this slot proposed (3) as the next milestone
-> and predicted the induction would be the tractable route; it was.
+> **Completed 2026-09-14, over one extended run:** the `I2` milestone; enumeration
+> obligations **(1)**, **(2)** and **(3)**; obligation **(4)** *stated* filter by
+> filter with (E6) fully and (E8) half discharged; **UB42** formalized; the
+> **upper-bound assembly**, including the unconditional `I ≤ 42`; the **(X3)**
+> bridge making Lemma A usable at the mask level; and **the target statement
+> itself** (`MainTheorem.isGreatest_38`). Twenty-one Lean libraries, 657
+> theorems, no project axiom anywhere.
 
-**Next: enumeration obligation (4) — that every valid configuration survives
-each filter down to a terminal case proved impossible.**
+**The situation has changed shape, and the next milestone should be chosen with
+that in mind.**
 
-This is now the **sole remaining enumeration gap**, and the only one of the four
-obligations untouched by Lean. The filters, in pipeline order, are AKR L5
-(consecutive pairs), AKR L7 ⟹ `H` bipartite, crossing-set compatibility,
-Černý L2 (class-dependent), and AKR L5 (avoiding pairs). Each needs the same
-shape of result: *if a valid configuration induces this graph, the filter does
-not discard it.*
+After the above, the upper bound rests on exactly two things: **parity** (that
+`I` is even) and **`hne40`** (the enumeration). Everything else is
+kernel-checked. And `hne40`'s remaining hypotheses (E1)–(E5), (E7) are now *all*
+external mathematics — the published Černý and AKR lemmas plus the exceptional
+classification. There is no more "project's own algorithms" work left inside
+obligation (4); that was (E6) and (E8), and they are done or half done.
 
-Two of the five already have a Lean-side foothold, which is why this is bounded
-rather than open-ended:
-* `Endgame.akr5Conclusion_iff_adjacent` already kernel-checks the L5 filter as an
-  **iff**, so it is provably neither a weakening nor a strengthening of the
-  lemma's conclusion;
-* `CernyL2Interface.lean` certifies the L2 filter fires *iff* an exact induced
-  perfect matching exists.
+So the candidate milestones are of two quite different kinds:
 
-The gap is that neither is connected to a `Config`. `DisjointnessGraph.lean` now
-supplies exactly that connection for the graph itself, so the missing step is
-per-filter soundness against the geometry, not new infrastructure.
+**(a) Formalize an external lemma.** Černý L2 is the most self-contained (a
+statement about 5 consecutive vertices and a 4×4 induced matching). AKR L5 and
+L7 are harder. This is real mathematical formalization, not bridge-building, and
+should be scoped as such.
 
-Note what obligation (4) is **not**: it is not the claim that the 225 surviving
-cases die — `Endgame.lean` already proves that, and the certificate checker
-re-proves it independently. It is the claim that nothing was dropped on the way
-down. K-17 is a worked example of the distinction: a filter question that looked
-like a gap in (4) and turned out not to be one.
+**(b) Attack the enumeration barrier itself.** See §8 below — this is the item
+that determines whether the stated end goal is reachable at all, and it should
+probably be settled before investing in (a).
 
-Explicitly **not** recommended next: a Lean SAT checker (large, and A7 is
-corroborated with certificates since K-16's closure); the full classification;
-point-set semantics (needs ℝ², orthogonal — see the `I2b` note).
+Explicitly **not** recommended: point-set semantics (`I2b`, needs ℝ², orthogonal);
+a Lean SAT checker (A7 is certificate-backed since K-16 closed).
 
 ### The `I2`/`I2a`/`I2b` split, recorded
 
@@ -192,3 +182,80 @@ counterexample rather than a proof. Both are data, neither is a schedule.
 
 Unchanged: **a candidate computer-assisted proof**. Component C is the first
 external dependency replaced by a proof; nothing else moved.
+
+---
+
+## 8. The enumeration barrier — measured, 2026-09-14
+
+**This section decides whether the stated end goal is reachable, and it should
+be read before planning any further formalization work.**
+
+The goal is a kernel-checked `f(7,7) = 38` with **no unproved project-specific
+axioms**. That excludes `native_decide`, which discharges a goal by running
+compiled code and adds `Lean.ofReduceBool` to the axiom set — it would be exactly
+the kind of unchecked computation the goal rules out.
+
+So `hne40` — "no configuration attains 40" — has to be established by the kernel.
+As currently structured that means the kernel must certify the outcome of a
+search over **13,003,620** graphs. The question is whether it can.
+
+### What was measured
+
+* **Kernel `decide`, trivial per-element work** (seven bitmask tests per
+  element): 10,000 elements in ~6.2 s and 20,000 in ~12.6 s of user time —
+  clean linear scaling, about **2,000 elements/second**. At that rate 13,003,620
+  elements would be roughly **1.8 hours**, and that is a *floor*: it does no
+  filtering at all.
+* **The project's own enumeration**, `EnumerationComplete.enumRec`, at depth 3 —
+  **5,670** leaves, about 1/2,300 of the full run — did **not complete in over
+  ten minutes** of kernel reduction under `decide`. Scaling that to the full
+  13,003,620 leaves gives **weeks at minimum**, before any filter is applied.
+
+Caveats, stated because the numbers are doing real work here: this is one
+machine; another job was competing for CPU during the second measurement; and
+`decide` cost is dominated by term construction, which grows worse than linearly
+as the lists get longer. The measurement should be read as an order of
+magnitude and a *lower bound*, not a precise figure. It is not close enough to
+feasible for those caveats to change the conclusion.
+
+Note also (found the hard way) that `#eval` here runs the **IR interpreter**, not
+the kernel, because the project does not set `precompileModules`. `#eval` timings
+say nothing about kernel cost in either direction.
+
+### The conclusion
+
+**`hne40` cannot be closed by kernel-evaluating the search.** Not "would be
+slow" — not feasible as a build step, by orders of magnitude.
+
+### The way forward, and there is a good one
+
+**`UB42` is the proof of concept, and it is in this repository.**
+
+The `I = 42` branch also had an exhaustive computational justification: a sweep
+over all `7! = 5,040` perfect matchings against all 14 classes, 70,560 cases, 0
+survivors. That sweep is *not* what `lean/Exclude42.lean` checks. Instead the
+argument was restructured into: 7 edges with δ ≥ 1 forces a perfect matching; the
+crossing set of each `q_j` is a 6-set; two 6-subsets of a 7-set nest only if
+equal (**one line**, by instantiating containment at `i := m`); the partners are
+distinct; seven distinct indices cannot fit in a 5-element set. The kernel checks
+that in milliseconds.
+
+The same should be sought for `I = 40`. There is direct evidence such structure
+exists: the project's own pipeline reports that every surviving graph has degree
+sequence `(2,2,1,1,1,1,1)` on **both** sides and that only 9 of the 14 classes
+survive — the repository's own phrasing is that "the structure is forced, not
+observed". If those forcings can be *proved* rather than observed, the case count
+collapses and the residual may be small enough to check directly.
+
+**Recommended next milestone: prove the structural forcings for `I = 40`** —
+starting with "the degree sequence must be `(2,2,1,1,1,1,1)` on both sides",
+which `EnumerationDomain.degSeq_of_sum_nine` already reduces to excluding the
+`{3,1,1,1,1,1,1}` branch. That is a bounded, well-posed question with a known
+answer (the branch does die in the filters — see K-17), and it is the natural
+first step of the same restructuring that worked for `UB42`.
+
+If no such restructuring exists, the honest options are to accept
+`native_decide` with a clearly documented trust caveat — which **changes the
+stated goal** and should be the user's decision, not a drift — or to leave
+`hne40` as a computational result standing outside the kernel, which is what the
+project has today.
