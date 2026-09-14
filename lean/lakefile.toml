@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics", "CernyL2Derivation", "PolygonSimple"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics", "CernyL2Derivation", "PolygonSimple", "ClassDataWitness"]
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
 [[require]]
@@ -172,3 +172,9 @@ name = "CernyL2Derivation"
 
 [[lean_lib]]
 name = "PolygonSimple"
+
+# Non-vacuity witness for the `hclass` hypothesis of isGreatest_38_final: the
+# per-configuration class condition is satisfiable, so that theorem is not
+# vacuous.  Imports IntersectionParity, so it comes last.
+[[lean_lib]]
+name = "ClassDataWitness"

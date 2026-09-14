@@ -29,7 +29,7 @@ institution's generative-AI policy; that must be assessed separately.
 
 > **The authoritative version of this document is
 > [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)** (compiled:
-> `paper/proof-manifest.pdf`, 23 pages). This Markdown file is a convenience
+> `paper/proof-manifest.pdf`, 24 pages). This Markdown file is a convenience
 > mirror; where the two differ, the LaTeX file is correct.
 
 > **Status.** This describes a *candidate* computer-assisted proof. All currently
@@ -41,7 +41,7 @@ institution's generative-AI policy; that must be assessed separately.
 
 ## What is a Lean theorem today, and what is not
 
-Twenty-five Lean libraries is enough to create a false impression of coverage.
+Twenty-six Lean libraries is enough to create a false impression of coverage.
 The strongest statement in the development is
 
 ```lean
@@ -61,9 +61,13 @@ and neither hypothesis is proved anywhere:
   is **out of reach of the Lean kernel** — five routes tested, all dead.
 
 Two further gaps sit outside the statement. `Config` is *orientation-level* over
-`Pt := Int × Int`: "simple" is a conjunction of integer orientation predicates,
-not "the closed polygonal curve is a Jordan curve". And the reduction to general
-position is **GP** (AKR §9.1), cited and not formalized.
+`Pt := Int × Int`: "simple" is a conjunction of integer orientation predicates.
+Since 2026-09-14 that predicate is *known* to give the point-set property —
+`PolygonSimple.simple_closed_polygon` proves that distinct sides meet exactly at
+a shared cyclic endpoint or not at all, as subsets of ℝ² — so "simple closed
+polygonal curve" is no longer a gap. What is **not** formalized is the Jordan
+curve theorem itself (separation of the plane), and the reduction to general
+position, **GP** (AKR §9.1), which is cited.
 
 **Unconditional for an arbitrary `Config`:** `I + |E| = 49`; `δ(G^D) ≥ 1`;
 `I ≤ 42`; `I` even; 38 attained. So the answer lies in `{38, 40, 42}` with no
@@ -120,13 +124,13 @@ the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 | **GR** | 13,003,620 candidate graphs | enumeration | this project | INDEPENDENTLY REIMPLEMENTED + closed form + LEAN (`DomainCount`) | none known |
 | **COMP** | pipeline → 121 graphs / 225 triples | enumeration | this project | INDEPENDENTLY REIMPLEMENTED (exact set match, filters (a)–(d)) | inherits **A7-EXT**; K-20 |
 | **CERT** | each of the 225 violates AKR L5 | certificate | this project | CERTIFICATE-CHECKED | completeness not certified |
-| **LEAN-LB** | 38 crossings, simple, general position | Lean | `lean/LowerBound.lean` | LEAN-KERNEL-CHECKED | orientation-level; no Jordan-curve step |
+| **LEAN-LB** | 38 crossings, simple, general position | Lean | `lean/LowerBound.lean` | LEAN-KERNEL-CHECKED | counted over provably all 49 side pairs |
 | **LEAN-LA** | counting + parity core | Lean | `lean/LemmaA.lean` | LEAN-KERNEL-CHECKED | an implication |
 | **LEAN-END** | all 225 fail L5; `iff` bridge | Lean | `lean/Endgame.lean` | LEAN-KERNEL-CHECKED | completeness not formalized |
 | **LEAN-GEO** | polygon meets a line evenly ⟹ `δ(G^D) ≥ 1` and Lemma A's `h2` | Lean | `lean/SegmentGeometry.lean` | LEAN-KERNEL-CHECKED | Mathlib-free; orientation level |
 | **LEAN-I2** | the mask bit means point-set disjointness in ℝ² | Lean | `DisjointnessGraph` + `PointSetSemantics` | LEAN-KERNEL-CHECKED | I2a + I2b; the only step that reaches ℝ |
 | **LEAN-MAIN** | 38 is the greatest attained crossing count over `Config` | Lean | `MainTheorem`, `IntersectionParity` | proved *from* `hclass` and `hne40` | **not a proof of `f(7,7) = 38`** |
-| **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | orientation-level simplicity |
+| **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | simplicity now point-set (`PolygonSimple`); the Jordan curve theorem is still not formalized |
 | **UB42** | `I = 42` impossible | project inference | this project | LEAN-KERNEL-CHECKED given X1, X2 (`Exclude42`); also swept exhaustively | consumes C1, LA, EX only — **not** A7-EXT |
 | **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5-C, A5-A, A7-EXT, A7-BRIDGE, LA, COMP | NOT FORMALIZED; conditional on **A7-EXT** | **fails if A7-EXT fails**; carried in Lean as the bare hypothesis `hne40`, which is out of kernel reach |
 
@@ -179,19 +183,19 @@ Strict is the correct reading: Lemma A is only ever instantiated at the lines
 
 ## Lean trust boundary
 
-Lean 4.33.1, Mathlib `v4.33.1` (`0df444a3`). **Twenty-five libraries, 1,395 jobs,
+Lean 4.33.1, Mathlib `v4.33.1` (`0df444a3`). **Twenty-six libraries, 1,397 jobs,
 exit 0**, re-verified 2026-09-14. No `sorry`, `admit`, project-specific `axiom`,
 `unsafe`, `partial` or `native_decide` in any file (verified by scanning with
 comments stripped). All `decide` calls are ordinary kernel reduction.
 
-Thirteen of the twenty-five are Mathlib-free, and five import literally nothing
+Thirteen of the twenty-six are Mathlib-free, and five import literally nothing
 (`LowerBound`, `GeometryDefs`, `EndgameDefs`, `Lemma7Bridge`,
-`CernyL2Interface`). Exactly one library — `PointSetSemantics` — reaches ℝ.
+`CernyL2Interface`). Only two — `PointSetSemantics` and `PolygonSimple` — reach ℝ.
 
 | Layer | Libraries | What it gives |
 |---|---|---|
 | certificate & elementary geometry | `LowerBound`, `GeometryDefs`, `SegmentGeometry`, `LemmaA`, `LemmaABridge` | 38 crossings over provably all 49 pairs; `δ(G^D) ≥ 1` and Lemma A's `h2` from parity; the counting core; X3 |
-| geometry → combinatorics | `DisjointnessGraph`, `PointSetSemantics` | I1, I2a; I2b (mask bit = point-set disjointness in ℝ²) |
+| geometry → combinatorics | `DisjointnessGraph`, `PointSetSemantics`, `PolygonSimple` | I1, I2a; I2b (mask bit = point-set disjointness in ℝ²); `Simple7` ⟹ the real closed polygonal curve is non-self-intersecting — *not* the Jordan curve theorem |
 | stored endgame | `EndgameDefs`, `EndgameData`, `Endgame`, `AvoidingFlag` | all 225 cases fail AKR-L5; components recomputed in-kernel; the `avoiding` flag *equals* the class table (I3, flag half) |
 | filter transcriptions | `Lemma7Bridge`, `CernyL2Interface`, `FilterSoundness`, `ComponentLabelling`, `BipartiteDecision`, `CernyL2Derivation` | A7-BRIDGE; C2-BRIDGE; E1–E8 as named hypotheses; E6 and E8a discharged; E5 attempted and blocked |
 | enumeration obligations | `EnumerationDomain`, `DomainCount`, `EnumerationComplete`, `CounterexampleCount` | obligations (1), (2), (3) proved; a counterexample is one of exactly 13,003,620 mask functions |

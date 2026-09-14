@@ -1335,3 +1335,53 @@ which is why this is a clarification rather than a defect.
 discharged are those of filters (a)–(e). Černý L3 does **not** add a sixth
 obligation for the shipped result. It would if anyone relied on `audit_enum.py`'s
 counts directly, and `lean/FilterSoundness.lean` notes this in its header.
+
+---
+
+## K-22 — `hclass` is stronger than "the class data is correct", and had no non-vacuity witness  (FOUND AND ADDRESSED 2026-09-14)
+
+**Status:** the vacuity risk is closed; the strength observation stands and
+should be carried forward.
+
+`IntersectionParity.isGreatest_38_final` — the project's strongest statement —
+takes a hypothesis `hclass` quantified over **every** `Config`:
+
+```
+∀ K : Config, ∃ mcs MP, MP.card = 5
+            ∧ (every C ∈ mcs is FULL \ {m} for some m ∈ MP)
+            ∧ (every Q-side's crossing set lies in some C ∈ mcs)
+```
+
+**The risk.** Every other hypothesis in the development ships with a witness
+showing it is satisfiable. This one did not. A theorem whose hypothesis is
+unsatisfiable is **vacuous** — it would have said nothing whatever about
+`f(7,7)`, while looking like the headline result.
+
+**Closed.** `lean/ClassDataWitness.lean` exhibits the data explicitly for the
+certificate pair — `mcs = [123, 119, 111, 95, 63]`, `MP = {2,3,4,5,6}` — and
+proves the condition by `decide`. So the predicate is inhabited and the theorems
+consuming it are not vacuous.
+
+**The observation that remains, and it matters for whoever discharges `hclass`.**
+It is *not* merely a record of classification data. Measured:
+
+* For `I = 42` the disjointness graph is a perfect matching, so all seven
+  `N_Q(j)` are distinct singletons, and a five-element `MP` cannot meet all
+  seven. **`hclass` fails for every `I = 42` configuration** — checked over all
+  **5,040** perfect matchings, all 5,040 fail.
+* Over a sample of **20,000** `I = 40` domain graphs, about **21%** admit no
+  valid `MP`.
+
+So **`hclass` already entails `I ≠ 42`** — which is exactly the conclusion
+`Exclude42.lean` derives *from* it. Two consequences:
+
+1. Once `hclass` is assumed, **`UB42` should not be read as an independent
+   argument**. It is a consequence of the hypothesis, not a separate pillar.
+2. When the classification (E7) is formalised, the honest fix is to state this
+   hypothesis over the configurations it is actually about — exceptional
+   heptagons — rather than over every `Config`.
+
+**Credit where due:** this was surfaced by the agent auditing
+`paper/proof-manifest.tex`, which noticed the missing witness while checking
+that every hypothesis in the manifest had one. It is the kind of defect that
+survives because the statement *looks* like bookkeeping.

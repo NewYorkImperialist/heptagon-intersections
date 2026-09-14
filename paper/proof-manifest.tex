@@ -167,13 +167,19 @@ the development:
 
 Two further gaps sit outside the theorem statement and are not visible in it.
 \texttt{Config} is an \emph{orientation-level} object over
-$\texttt{Pt}:=\mathbb{Z}\times\mathbb{Z}$: ``simple'' means a conjunction of
-integer orientation predicates, not ``the closed polygonal curve is a Jordan
-curve''. And the reduction from arbitrary position to general position is
-\textsf{GP}, \textsc{akr} \S9.1, which is cited and not formalised. So even with
-both hypotheses discharged, the theorem would read ``$38$ is the maximum
-crossing count over integer-coordinate, orientation-level heptagon
-configurations'', and two further external steps would be needed to reach
+$\texttt{Pt}:=\mathbb{Z}\times\mathbb{Z}$: ``simple'' is a conjunction of integer
+orientation predicates. As of 2026-09-14 that predicate is \emph{known} to give
+the point-set property one wants --- \texttt{PolygonSimple.simple\_closed\_polygon}
+proves that distinct sides of such a heptagon meet exactly at a shared cyclic
+endpoint, or not at all, as subsets of $\mathbb{R}^2$ --- so ``simple closed
+polygonal curve'' is no longer a gap. What is \emph{not} formalised is the Jordan
+curve theorem itself, the separation of the plane into interior and exterior;
+nothing in this development asserts it. And the reduction from arbitrary position
+to general position is \textsf{GP}, \textsc{akr} \S9.1, cited and not formalised.
+Integer coordinates are harmless by scaling, but that too is argued and not
+proved. So even with both hypotheses discharged, the theorem would read ``$38$ is
+the maximum crossing count over integer-coordinate, orientation-level heptagon
+configurations'', and further external steps would be needed to reach
 $f(7,7)=38$.
 
 What \emph{is} unconditional, for an arbitrary \texttt{Config}, is the
@@ -304,7 +310,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{LEAN-LB} & The explicit pair has $38$ crossings and is simple
   & Lean formalization & \texttt{lean/}\allowbreak\texttt{LowerBound}\allowbreak\texttt{.lean}
-  & \stat{lean-kernel-checked} & simplicity is orientation-level, not Jordan-curve \\
+  & \stat{lean-kernel-checked} & counted over provably all $49$ side pairs \\
 \addlinespace
 \textsf{LEAN-LA} & Counting and parity core of Lemma A
   & Lean formalization & \texttt{lean/}\allowbreak\texttt{LemmaA}\allowbreak\texttt{.lean}
@@ -328,7 +334,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{LB38} & $f(7,7)\ge38$
   & construction & this project
-  & \stat{lean-kernel-checked} & orientation-level simplicity; no Jordan-curve step \\
+  & \stat{lean-kernel-checked} & simplicity now point-set (\texttt{PolygonSimple}); the Jordan curve theorem is still not formalized \\
 \addlinespace
 \textsf{UB42} & $I=42$ is impossible
   & project inference & this project, \S\ref{sec:i42}
@@ -1050,28 +1056,29 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-\textbf{Twenty-five} libraries are declared in \texttt{lakefile.toml} and all
-twenty-five build: $1{,}395$ jobs, exit $0$, verified 2026-09-14. None contains
+\textbf{Twenty-six} libraries are declared in \texttt{lakefile.toml} and all
+twenty-six build: $1{,}397$ jobs, exit $0$, verified 2026-09-14. None contains
 \texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
 \texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
 by scanning the sources with comments stripped. All \texttt{decide} calls are
 ordinary kernel reduction, so nothing rests on the compiler.
 
 \begin{remark}[Read \S\ref{sec:leanmain} first]
-Twenty-five libraries is enough to create a false impression of coverage. The
+Twenty-six libraries is enough to create a false impression of coverage. The
 target statement is \emph{not} proved; it is \emph{stated}, with two
 hypotheses. The value of the development is that it makes the residue precise
 and machine-readable, not that it closes it.
 \end{remark}
 
-\subsection*{The twenty-five libraries}
+\subsection*{The twenty-six libraries}
 
 Grouped by layer. ``core'' in the \textbf{Base} column means the library and
 everything it imports are Mathlib-free, so Mathlib is outside its trust base;
-thirteen of the twenty-five are, and five of those import literally nothing
+thirteen of the twenty-six are, and five of those import literally nothing
 (\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
-\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other twelve reach
-Mathlib, and exactly one --- \texttt{PointSetSemantics} --- reaches the reals.
+\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other thirteen reach
+Mathlib, and only two --- \texttt{PointSetSemantics} and \texttt{PolygonSimple}
+--- reach the reals.
 
 {\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
@@ -1095,6 +1102,7 @@ Mathlib, and exactly one --- \texttt{PointSetSemantics} --- reaches the reals.
 \multicolumn{4}{@{}l}{\emph{Geometry-to-combinatorics bridge}}\\
 \texttt{DisjointnessGraph} & core & \textsf{I1}, \textsf{I2a} & \texttt{Config}; \texttt{toMasks} and its orientation-level spec; minimum degree on both sides \\
 \texttt{PointSetSemantics} & Mathlib, $\mathbb{R}$ & \textsf{I2b} & \texttt{DisjointO} iff the two closed sides are disjoint \emph{as point sets in} $\mathbb{R}^2$ \\
+\texttt{PolygonSimple} & Mathlib, $\mathbb{R}$ & --- & \texttt{Simple7} implies the real closed polygonal curve is non-self-intersecting: distinct sides meet exactly at a shared cyclic endpoint, or not at all \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{The stored endgame}}\\
 \texttt{EndgameDefs} & core & --- & the endgame predicates; \texttt{akr5Conclusion\_iff\_adjacent} \\
@@ -1139,8 +1147,10 @@ and \texttt{crossCount\_add\_disjointCount}. Crucially
 \texttt{allPairs\_complete} establish that the count of $38$ is taken over
 provably all $49$ side pairs.
 
-\textbf{Not formalized:} the step from these orientation-level facts to ``the
-closed polygonal curve is a simple closed curve in $\mathbb{R}^2$''.
+\textbf{Scope.} These are orientation-level facts about integer points. The step
+to ``the closed polygonal curve is non-self-intersecting in $\mathbb{R}^2$'' is
+supplied separately by \texttt{PolygonSimple.lean}, below; the Jordan curve
+theorem is not.
 
 \subsection*{\texttt{LemmaA.lean} --- \textsf{LEAN-LA}}
 \textbf{Imports:} Mathlib (\texttt{Finset.Card}, \texttt{Fintype.Prod},
@@ -1330,13 +1340,35 @@ plane. Non-vacuity is proved on the certificate pair in both directions --- one
 disjoint pair, and one properly crossing pair together with an explicit common
 real point.
 
-\textbf{What this does \emph{not} do.} It makes \emph{side} disjointness
-faithful to $\mathbb{R}^2$. It says nothing about the polygon as a curve: the
-Jordan-curve step --- that the closed polygonal chain of \texttt{Simple7} bounds
-a region, which is what ``simple polygon'' means in $f(7,7)$ --- is still not
-formalised anywhere, and neither is the general-position reduction \textsf{GP}.
-Those are the two steps of \S\ref{sec:leanmain}, and this library reduces
-neither.
+\textbf{Scope.} This makes \emph{cross-polygon side} disjointness faithful to
+$\mathbb{R}^2$. It says nothing by itself about either polygon as a curve; that
+is \texttt{PolygonSimple.lean}. Neither library touches the general-position
+reduction \textsf{GP}.
+
+\subsection*{\texttt{PolygonSimple.lean} --- simplicity in the real plane}
+\textbf{Imports:} \texttt{PointSetSemantics}, \texttt{CernyL2Derivation}.
+\textbf{Axioms:} the three standard ones.
+
+\stat{lean-kernel-checked} as of 2026-09-14. For any $V$ satisfying
+\texttt{Simple7}, \texttt{simple\_closed\_polygon} computes the intersection of
+two distinct closed sides \emph{exactly}, as point sets in $\mathbb{R}^2$:
+\[
+  \mathrm{side}_i \cap \mathrm{side}_j \;=\;
+  \begin{cases}
+    \{V_{i+1}\} & j = i+1,\\
+    \{V_i\}     & i = j+1,\\
+    \emptyset   & \text{otherwise,}
+  \end{cases}
+\]
+with the wrap-around included. This is the side-intersection criterion for a
+simple closed polygonal curve, so the orientation-level \texttt{Simple7} is
+provably the right predicate rather than a plausible stand-in for it. Non-vacuity
+is instantiated at the certificate's $P$ heptagon.
+
+\textbf{What it does not claim.} It is not the Jordan curve theorem: no
+separation of the plane into interior and exterior is asserted, and no
+topological parametrisation is constructed. The file says so itself, and the
+distinction should be preserved when quoting it.
 
 \subsection*{The enumeration obligations --- \texttt{EnumerationDomain}, \texttt{DomainCount}, \texttt{EnumerationComplete}, \texttt{CounterexampleCount}}\label{sec:enumobl}
 \textbf{Imports:} \texttt{DisjointnessGraph}, \texttt{Endgame}, and Mathlib
@@ -1693,8 +1725,8 @@ branch touches \textsf{A7-EXT}, and only the right branch is unformalized.
              explicit 38-example (LB38) [Lean: LEAN-LB]
                                  |
                           f(7,7) = 38   (candidate)
-                     -- modulo the Jordan-curve step and GP,
-                        neither of which is formalized
+                     -- modulo GP (AKR 9.1) and the Jordan curve
+                        theorem, neither of which is formalized
 
    * A7-EXT: VERY STRONGLY CORROBORATED, HUMAN REVIEW STILL DESIRABLE -- see
      the A7-EXT subsection.  The chain is

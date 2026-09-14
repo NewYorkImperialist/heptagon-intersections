@@ -51,8 +51,8 @@ pdflatex proof-manifest.tex
 pdflatex proof-manifest.tex
 ```
 
-Last built 2026-09-14 with Tectonic: **23 pages, 0 errors, 0 undefined
-references, 0 undefined citations, 0 overfull boxes.** Eleven underfull boxes
+Last built 2026-09-14 with Tectonic: **24 pages, 0 errors, 0 undefined
+references, 0 undefined citations, 0 overfull boxes.** A dozen underfull boxes
 remain (loose spacing in the ragged narrow table columns and the bibliography);
 these are cosmetic.
 
