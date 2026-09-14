@@ -164,8 +164,19 @@ real analysis. It is therefore split:
   core Lean, no Mathlib, no reals.
 * **`I2b`** — the single isolated lemma
   `DisjointO K i j ↔ Disjoint (segP K i) (segQ K j)`, needing ℝ² and Mathlib.
-  **Not proved.** When proved it upgrades `I2a` to the interface as originally
-  written, touching nothing else.
+  **PROVED 2026-09-14** (`lean/PointSetSemantics.lean`,
+  `disjointO_iff_disjoint`), in **both directions and with no remaining
+  hypotheses**. The two cross-polygon vertex-avoidance fields of `Config` supply
+  the four nonzero determinants that rule out the degenerate cases — shared
+  endpoints, T-junctions, collinear overlap — and no unexcluded degenerate case
+  was found.
+
+  **So `I2` as originally written is now discharged**, not merely split:
+  `toMasks_pointSet_spec : bitAt (toMasks K i) j = true ↔ Disjoint (realSide K.PV i) (realSide K.QV j)`
+  is exactly the point-set statement this section was written to say could not be
+  reached. The isolation held: all real-number reasoning lives in the one new
+  file, and `GeometryDefs`, `SegmentGeometry` and `DisjointnessGraph` are
+  untouched and still Mathlib-free.
 
 The split costs nothing downstream because `Endgame.lean` never consumes
 `toMasks_spec`: every one of its theorems is parametric in `M : Nat → Nat`. It
