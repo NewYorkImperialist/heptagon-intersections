@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry"]
 
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
@@ -41,3 +41,16 @@ name = "Lemma7Bridge"
 # implements that predicate -- there is no extraction and no cross-check.
 [[lean_lib]]
 name = "CernyL2Interface"
+
+# First GEOMETRIC milestone.  GeometryDefs.lean imports NOTHING; SegmentGeometry
+# imports GeometryDefs, LowerBound and EndgameDefs -- all Mathlib-free, so the
+# whole geometry group stays outside Mathlib's trust base.
+#
+# These prove Cerny L1's project consequence (min disjointness degree) and
+# Lemma A's h2 from an actual parity argument about sign alternations around a
+# cycle, rather than assuming them.  Order matters: GeometryDefs first.
+[[lean_lib]]
+name = "GeometryDefs"
+
+[[lean_lib]]
+name = "SegmentGeometry"
