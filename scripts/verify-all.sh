@@ -381,17 +381,45 @@ PYEOF
       ASSERT_BAD=$((ASSERT_BAD+1))
     fi
 
-    # Undeclared sources: not built, not scanned, not verified -- say so.
-    undeclared=""
+    # Undeclared sources: not built, not scanned, not verified.
+    #
+    # An undeclared file that is TRACKED IN GIT is a defect, not a note: it sits
+    # in the repository looking like part of the development while lake never
+    # compiles it and the forbidden-construct scan never reads it, so it could
+    # contain `sorry` or anything else and nothing would say so.  This happened
+    # -- lean/IntersectionParity.lean was committed unregistered and sat unbuilt
+    # -- and the informational NOTE that used to live here was not enough to
+    # catch it.  Tracked-and-undeclared now FAILS.  Untracked scratch files are
+    # still only a note.
+    undeclared_tracked=""
+    undeclared_scratch=""
     for f in "$ROOT"/lean/*.lean; do
       [ -e "$f" ] || continue
       b="$(basename "$f" .lean)"
-      case " $LIBNAMES " in *" $b "*) ;; *) undeclared="$undeclared $b.lean" ;; esac
+      case " $LIBNAMES " in
+        *" $b "*) ;;
+        *)
+          if git -C "$ROOT" ls-files --error-unmatch "lean/$b.lean" >/dev/null 2>&1; then
+            undeclared_tracked="$undeclared_tracked $b.lean"
+          else
+            undeclared_scratch="$undeclared_scratch $b.lean"
+          fi
+          ;;
+      esac
     done
-    if [ -n "$undeclared" ]; then
-      printf '   NOTE (informational): these lean/*.lean files are NOT declared as a\n'
-      printf '   [[lean_lib]] in lakefile.toml, so lake did not build them and this run\n'
-      printf '   says nothing about them:%s\n' "$undeclared"
+    if [ -n "$undeclared_scratch" ]; then
+      printf '   NOTE (informational): these lean/*.lean files are untracked and NOT\n'
+      printf '   declared as a [[lean_lib]], so lake did not build them and this run\n'
+      printf '   says nothing about them:%s\n' "$undeclared_scratch"
+    fi
+    if [ -n "$undeclared_tracked" ]; then
+      printf '   *** ASSERT FAILED: these lean/*.lean files are COMMITTED but not\n'
+      printf '   declared as a [[lean_lib]] in lakefile.toml. They are not built, not\n'
+      printf '   scanned for sorry/admit/native_decide, and not verified by anything:%s\n' \
+        "$undeclared_tracked"
+      ASSERT_BAD=$((ASSERT_BAD+1))
+    else
+      printf '   assert OK   : every committed lean/*.lean is a declared lean_lib\n'
     fi
 
     JOBS="$(grep -oE 'Build completed successfully \([0-9]+ jobs\)' "$RUNDIR/01_lake_build.txt" \

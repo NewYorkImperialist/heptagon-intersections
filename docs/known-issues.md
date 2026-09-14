@@ -1151,6 +1151,34 @@ and `scripts/` is committed.
 **Not weakened to pass.** The check was left failing until the *data* was
 corrected; the manifest was not relaxed and no entry was dropped.
 
+### A third instance of the same failure mode (2026-09-14)
+
+`lean/IntersectionParity.lean` was committed **without being registered as a
+`[[lean_lib]]`**. Lake therefore never compiled it, the forbidden-construct scan
+never read it, and it sat in the repository for several commits as a Lean file
+that nothing verified — the exact state in which a `sorry` could hide in plain
+sight. It was in fact *broken* at the time (two type errors), which nothing
+reported.
+
+`verify-all.sh` did have a check for this, but it was **informational only**: it
+printed a NOTE and passed. A note that nobody reads is not a check.
+
+**Fixed.** The rule is now:
+
+* a `lean/*.lean` file that is **tracked in git** but not declared as a
+  `[[lean_lib]]` **fails** the run, naming the file;
+* an **untracked** scratch file still only produces a note, so local
+  experimentation is not punished.
+
+Validated in both directions: a tracked file is detected as tracked, an
+untracked one is not, and an untracked undeclared file passes with a note while
+the new assertion reports `every committed lean/*.lean is a declared lean_lib`.
+
+The common thread across all three instances in this entry — stale manifest,
+untracked `scripts/`, unregistered Lean source — is that **the failure is always
+something the verification apparatus does not look at**, and the fix is always to
+make it look and to make looking fatal.
+
 ---
 
 ## K-19 — Three validators exit 0 on inputs that establish nothing  (TWO FIXED AT SOURCE, ONE OPEN, 2026-09-14)
