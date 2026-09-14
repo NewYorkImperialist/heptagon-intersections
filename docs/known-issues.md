@@ -1,6 +1,6 @@
 # Known issues, gaps and open verification questions
 
-**Last updated:** 2026-09-13
+**Last updated:** 2026-09-14
 
 Nothing in this file is hidden elsewhere in the repository, and nothing here has
 been silently repaired. Where a defect was found in the research record, the
@@ -8,6 +8,28 @@ defective artifact is preserved (see `archive/superseded/`) and the correction
 is documented separately.
 
 Issues are numbered `K-nn` and referenced from other documents.
+
+| # | issue |
+|---|---|
+| K-01 | The 13,484,940 graph count was mislabelled (CORRECTED, historical) |
+| K-02 | Independent reimplementation  (PARTIALLY RESOLVED 2026-09-13) |
+| K-03 | The 225-case final elimination certificate  (RESOLVED 2026-09-13) |
+| K-04 | Missing data files break the pipeline as shipped |
+| K-05 | The validation evidence cannot be re-run |
+| K-06 | "Cerny Lemma 3 is unnecessary"  (RESOLVED 2026-09-13) |
+| K-07 | The published SHA-256 digests cannot be checked |
+| K-08 | Lean: seven files now kernel-checked  (LARGELY RESOLVED 2026-09-13) |
+| K-09 | External lemma translations  (MATERIALLY DE-RISKED 2026-09-13) |
+| K-10 | General position: the project's Step 0 is INCORRECT  (UPGRADED 2026-09-13) |
+| K-11 | Mismatch between the older and newer pipelines |
+| K-12 | Clean-environment reproduction: partial |
+| K-13 | Order-type / exceptional-profile classification  (RESOLVED 2026-09-13) |
+| K-14 | AKR Observation 6 is false as printed  (ERRATUM IN A PUBLISHED PAPER, 2026-09-13) |
+| K-15 | Stale `summary` block in `py_no_a7.json`  (REPORTING DEFECT, 2026-09-13) |
+| K-16 | The A7 encoder's PQ-adjacency coverage argument was wrong  (FOUND AND CLOSED 2026-09-14) |
+| K-17 | `Endgame.graphShapeOK` restricts the degree sequence; is that an unchecked filter?  (RAISED AND RESOLVED 2026-09-14) |
+| K-18 | `data/hashes/SHA256SUMS.lean` was stale, and `scripts/` was untracked  (FOUND AND FIXED 2026-09-14) |
+| K-19 | Two validators exit 0 on inputs that establish nothing  (OPEN, MITIGATED, 2026-09-14) |
 
 ---
 
