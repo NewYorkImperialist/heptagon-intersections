@@ -125,8 +125,9 @@ expect_reject "N1 missing endgame certificate" "$D" "3" \
 
 # ==========================================================================
 echo "$bar"
-echo "N2 -- VACUOUS certificate (zero cases).  The checker itself EXITS 0 on this:"
-echo "      it prints 'OK: all 0 cases establish the AKR Lemma 5 contradiction.'"
+echo "N2 -- VACUOUS certificate (zero cases).  Until 2026-09-14 the checker"
+echo "      itself EXITED 0 here, printing 'OK: all 0 cases establish ...'."
+echo "      Fixed at source (known-issues.md K-19); the guard must reject either way."
 echo "$bar"
 D="$(fresh n2)"
 "$PY" - "$D/data/certificates/final_elimination_225.json" <<'PYEOF'
@@ -151,7 +152,9 @@ expect_reject "N2 vacuous certificate (0 cases)" "$D" "3" \
 
 # ==========================================================================
 echo "$bar"
-echo "N3 -- INVALID but SELF-CONSISTENT lower-bound certificate."
+echo "N3 -- INVALID but SELF-CONSISTENT lower-bound certificate.  Until 2026-09-14"
+echo "      check_lower_bound.py EXITED 0 here, reporting I = 0 with every check"
+echo "      PASSing.  Fixed at source (K-19): it now asserts I == 38 absolutely."
 echo "      check_lower_bound.py compares each recomputed value against the"
 echo "      certificate's own 'verified' block, so a certificate whose geometry"
 echo "      and whose claims are both wrong-but-matching passes it outright."

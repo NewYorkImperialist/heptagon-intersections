@@ -213,6 +213,18 @@ print(f"classes P            : {sorted({c['class_P'] for c in cert['cases']})}")
 print(f"classes Q            : {sorted({c['class_Q'] for c in cert['cases']})}")
 print()
 
+# Non-vacuity (known-issues.md K-19).  With `cases: []` every loop above is
+# skipped, `errors` stays empty, and the script would otherwise print
+# "OK: all 0 cases establish ..." and exit 0 -- an empty certificate would be
+# indistinguishable, by exit status, from a complete one.  A certificate that
+# refutes nothing establishes nothing.
+if n == 0:
+    errors.append("VACUOUS: the certificate contains no cases at all; "
+                  "an empty case list refutes nothing")
+if not graphs:
+    errors.append("VACUOUS: no case carries a `graph` block, so no graph was "
+                  "actually checked")
+
 if errors:
     print(f"*** FAILED: {len(errors)} problem(s) ***")
     for e in errors[:40]:

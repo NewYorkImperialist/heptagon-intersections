@@ -1081,7 +1081,24 @@ consumes these scripts by exit code alone can be fooled.
 with a self-test (step 5a) that runs a truncated proof through its own gate on
 every invocation, failing the whole run if the gate accepts it.
 
-**Not yet done.** The underlying scripts still exit 0 on these inputs. Fixing
-them at the source — a non-zero exit on an empty case list, on a
-`verified` block that does not attain 38, and on a proof that derives no empty
-clause — is outstanding.
+**FIXED AT SOURCE, 2026-09-14 (two of the three).**
+
+* `check_final_certificate.py` now appends a `VACUOUS` error when the case list
+  is empty, or when no case carries a `graph` block, and therefore exits 1.
+* `check_lower_bound.py` now makes three **absolute** checks — stated against
+  the constants the claim is about, not against the file's own `verified`
+  block: `I == 38`, `I + |E| == 49`, and general position. The doctored
+  translated-`Q` file still passes every *relative* check (all PASS, `I = 0`)
+  and is now rejected by the absolute one, naming the reason.
+
+Both were confirmed against the real data first (`I = 38` and all 225 cases
+still pass, exit 0) and then against the doctored inputs (both now exit 1).
+`scripts/negative-tests.sh` still reports **10 passed, 0 failed**; its N2 and N3
+blocks were written to require rejection whether or not the underlying tool was
+fixed, so they continue to guard the harness.
+
+**Still outstanding:** `dratcheck.py` continues to exit 0 on a proof that
+derives no empty clause. It lives under `independent/akr_l7_reproduction/`,
+which was being edited concurrently, and was deliberately left untouched; the
+gate in `verify-all.sh` (and test N7) catches it, but the tool should be fixed
+too.

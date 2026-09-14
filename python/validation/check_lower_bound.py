@@ -96,6 +96,24 @@ for i in range(7):
 check("disjointness graph components", len({find(v) for v in range(14)}),
       exp["disjointness_graph_components"])
 
+# --------------------------------------------------------------------------
+# ABSOLUTE checks (known-issues.md K-19).
+#
+# Every `check` above compares a recomputed value against the file's OWN
+# `verified` block.  That catches a file whose stored numbers disagree with its
+# coordinates, but it does NOT catch a file that is internally consistent and
+# geometrically useless: translate Q far away, recompute the `verified` block,
+# and everything above passes while I = 0.  These three checks are therefore
+# stated against the CONSTANTS the claim is about, not against the file.
+if I != 38:
+    failures.append(f"ABSOLUTE: I = {I}, but this script certifies f(7,7) >= 38 "
+                    f"and so requires exactly 38 boundary intersections")
+if I + nE != 49:
+    failures.append(f"ABSOLUTE: I + |E| = {I + nE}, expected 49")
+if not no_incidence:
+    failures.append("ABSOLUTE: a vertex lies on the other boundary; the "
+                    "configuration is not in general position")
+
 print()
 if failures:
     print(f"FAILED: {len(failures)} check(s) did not hold: {', '.join(failures)}")
