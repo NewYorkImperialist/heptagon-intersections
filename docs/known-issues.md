@@ -29,7 +29,7 @@ Issues are numbered `K-nn` and referenced from other documents.
 | K-16 | The A7 encoder's PQ-adjacency coverage argument was wrong  (FOUND AND CLOSED 2026-09-14) |
 | K-17 | `Endgame.graphShapeOK` restricts the degree sequence; is that an unchecked filter?  (RAISED AND RESOLVED 2026-09-14) |
 | K-18 | `data/hashes/SHA256SUMS.lean` was stale, and `scripts/` was untracked  (FOUND AND FIXED 2026-09-14) |
-| K-19 | Two validators exit 0 on inputs that establish nothing  (OPEN, MITIGATED, 2026-09-14) |
+| K-19 | Three validators exit 0 on inputs that establish nothing  (TWO FIXED AT SOURCE, ONE OPEN, 2026-09-14) |
 
 ---
 
@@ -1074,7 +1074,7 @@ corrected; the manifest was not relaxed and no entry was dropped.
 
 ---
 
-## K-19 — Two validators exit 0 on inputs that establish nothing  (OPEN, MITIGATED, 2026-09-14)
+## K-19 — Three validators exit 0 on inputs that establish nothing  (TWO FIXED AT SOURCE, ONE OPEN, 2026-09-14)
 
 **Status:** open as a property of the validators; mitigated at the harness
 level. Found by `scripts/negative-tests.sh`, which builds deliberately corrupted
