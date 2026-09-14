@@ -140,6 +140,14 @@ theorem eq_not_iff (a b : Bool) : (a = !b) ↔ ¬ (a = b) := by
 theorem eq_not_of_ne {a b : Bool} (h : a ≠ b) : b = !a := by
   cases a <;> cases b <;> first | rfl | exact absurd rfl h
 
+/-- `none = some _` is absurd. -/
+theorem opt_ns {α : Type} {a : α} (h : (none : Option α) = some a) : False := by
+  simp at h
+
+/-- `some _ = none` is absurd. -/
+theorem opt_sn {α : Type} {a : α} (h : some a = (none : Option α)) : False := by
+  simp at h
+
 /-! ## 1. A core-only bounded universal quantifier over a list -/
 
 /-- `allB p L` is `∀ v ∈ L, p v`, as a `Bool`. -/
@@ -362,8 +370,7 @@ theorem findColNbr_some {v : Nat} :
   induction L with
   | nil =>
     intro b h
-    have h' : (none : Option Bool) = some b := h
-    exact Option.noConfusion h'
+    exact (opt_ns (h : (none : Option Bool) = some b)).elim
   | cons u us ih =>
     intro b h
     rw [findColNbr_cons] at h
@@ -400,7 +407,7 @@ theorem findColNbr_none {v : Nat} :
     | some bw =>
       rw [hcw, nbrPick_some] at h
       by_cases hwv : adjB w v = true
-      · rw [if_pos hwv] at h; exact Option.noConfusion h
+      · rw [if_pos hwv] at h; exact (opt_sn h).elim
       · rw [if_neg hwv] at h
         cases hu with
         | head => exact absurd hadj hwv
@@ -414,8 +421,7 @@ theorem findProp_some :
   induction L with
   | nil =>
     intro v b h
-    have h' : (none : Option (Nat × Bool)) = some (v, b) := h
-    exact Option.noConfusion h'
+    exact (opt_ns (h : (none : Option (Nat × Bool)) = some (v, b))).elim
   | cons w ws ih =>
     intro v b h
     rw [findProp_cons] at h
@@ -452,12 +458,12 @@ theorem findProp_none :
     | some bw =>
       rw [hcw, propStep_some] at h
       cases hv with
-      | head => rw [hcw] at hcv; exact Option.noConfusion hcv
+      | head => rw [hcw] at hcv; exact (opt_sn hcv).elim
       | tail _ hv' => exact ih h v hv' hcv u hu hadj
     | none =>
       rw [hcw, propStep_none] at h
       cases hf : findColNbr adjB c w V with
-      | some bu => rw [hf, propPick_some] at h; exact Option.noConfusion h
+      | some bu => rw [hf, propPick_some] at h; exact (opt_sn h).elim
       | none =>
         rw [hf, propPick_none] at h
         cases hv with
@@ -470,8 +476,7 @@ theorem findUncol_some :
   induction L with
   | nil =>
     intro v h
-    have h' : (none : Option Nat) = some v := h
-    exact Option.noConfusion h'
+    exact (opt_ns (h : (none : Option Nat) = some v)).elim
   | cons w ws ih =>
     intro v h
     rw [findUncol_cons] at h
@@ -495,7 +500,7 @@ theorem findUncol_none :
     intro h v hv
     rw [findUncol_cons] at h
     cases hcw : c w with
-    | none => rw [hcw, uncolStep_none] at h; exact Option.noConfusion h
+    | none => rw [hcw, uncolStep_none] at h; exact (opt_sn h).elim
     | some bw =>
       rw [hcw, uncolStep_some] at h
       cases hv with
@@ -529,8 +534,7 @@ theorem cand_some {v : Nat} {b : Bool} (h : cand adjB V c = some (v, b)) :
     cases hu : findUncol c V with
     | none =>
       rw [hu] at h'
-      have h'' : (none : Option (Nat × Bool)) = some (v, b) := h'
-      exact Option.noConfusion h''
+      exact (opt_ns (h' : (none : Option (Nat × Bool)) = some (v, b))).elim
     | some w =>
       rw [hu] at h'
       have h'' : some (w, false) = some (v, b) := h'
@@ -544,14 +548,13 @@ theorem cand_none (h : cand adjB V c = none) : ∀ v, v ∈ V → (c v).isSome =
   cases hp : findProp adjB V c V with
   | some p =>
     rw [hp, orElseCand_some] at h'
-    exact Option.noConfusion h'
+    exact (opt_sn h').elim
   | none =>
     rw [hp, orElseCand_none] at h'
     cases hu : findUncol c V with
     | some w =>
       rw [hu] at h'
-      have h'' : some (w, false) = (none : Option (Nat × Bool)) := h'
-      exact Option.noConfusion h''
+      exact (opt_sn (h' : some ((w, false) : Nat × Bool) = none)).elim
     | none => exact findUncol_none hu
 
 end Spec
@@ -617,8 +620,8 @@ theorem ucount_zero_of_isSome {c : Nat → Option Bool} :
     have h2 : ucount c ws = 0 := ih (fun v hv => h v (List.Mem.tail _ hv))
     rw [ucount_cons]
     cases hcw : c w with
-    | none => rw [hcw] at hw; exact Option.noConfusion hw
-    | some bw => rw [hcw, h2]; rfl
+    | none => rw [hcw] at hw; exact Bool.noConfusion hw
+    | some bw => rw [h2]; rfl
 
 theorem ucount_mono {c c' : Nat → Option Bool}
     (h : ∀ w, (c w).isSome = true → (c' w).isSome = true) :
@@ -630,12 +633,12 @@ theorem ucount_mono {c c' : Nat → Option Bool}
     rw [ucount_cons, ucount_cons]
     refine Nat.add_le_add ih ?_
     cases hcw : c w with
-    | none => rw [hcw]; exact ucount1_le_one _
+    | none => exact ucount1_le_one _
     | some bw =>
       have hs : (c' w).isSome = true := h w (by rw [hcw]; rfl)
       cases hcw' : c' w with
-      | none => rw [hcw'] at hs; exact Option.noConfusion hs
-      | some b' => rw [hcw, hcw']; exact Nat.le_refl _
+      | none => rw [hcw'] at hs; exact Bool.noConfusion hs
+      | some b' => exact Nat.le_refl _
 
 theorem assign_self {c : Nat → Option Bool} {v : Nat} {b : Bool} : assign c v b v = some b := by
   show (if v = v then some b else c v) = some b
@@ -686,7 +689,7 @@ theorem ucount_step_lt {adjB : Nat → Nat → Bool} {V : List Nat} {c : Nat →
   | none =>
     have hs := cand_none hcand v hv
     rw [hcv] at hs
-    exact Option.noConfusion hs
+    exact Bool.noConfusion hs
   | some p =>
     obtain ⟨x, bx⟩ := p
     obtain ⟨hp1, hp2, _⟩ := cand_some hcand
@@ -728,8 +731,7 @@ def Consistent (adjB : Nat → Nat → Bool) (g : Nat → Bool) (c : Nat → Opt
 theorem consistent_empty (adjB : Nat → Nat → Bool) (g : Nat → Bool) :
     Consistent adjB g (fun _ => none) := by
   intro v w bv bw h _ _
-  have h' : (none : Option Bool) = some bv := h
-  exact Option.noConfusion h'
+  exact (opt_ns (h : (none : Option Bool) = some bv)).elim
 
 /-- If no uncoloured vertex of `V` has a coloured neighbour, then nothing
 reachable from an uncoloured vertex is coloured.  This is what makes seeding a
@@ -783,7 +785,7 @@ theorem consistent_step {adjB : Nat → Nat → Bool} {V : List Nat} {g : Nat �
         | inr hcl =>
           have hn : c y = none := reach_none hsym hV hcl hrvy hpn
           rw [hn] at hy
-          exact Option.noConfusion hy
+          exact (opt_ns hy).elim
     · by_cases hyv : y = v
       · -- y is new, x was already coloured
         rw [assign_other hxv] at hx
@@ -802,7 +804,7 @@ theorem consistent_step {adjB : Nat → Nat → Bool} {V : List Nat} {g : Nat �
           have hn : c x = none :=
             reach_none hsym hV hcl (reach_symm hsym hrxv) hpn
           rw [hn] at hx
-          exact Option.noConfusion hx
+          exact (opt_ns hx).elim
       · -- both endpoints were already coloured
         rw [assign_other hxv] at hx
         rw [assign_other hyv] at hy
@@ -852,10 +854,10 @@ theorem bipTest_of_proper {adjB : Nat → Nat → Bool} {V : List Nat}
     have hsi := htot i hi
     have hsk := htot k hk
     cases hci : (iter adjB V V.length (fun _ => none)) i with
-    | none => rw [hci] at hsi; exact Option.noConfusion hsi
+    | none => rw [hci] at hsi; exact Bool.noConfusion hsi
     | some bi =>
       cases hck : (iter adjB V V.length (fun _ => none)) k with
-      | none => rw [hck] at hsk; exact Option.noConfusion hsk
+      | none => rw [hck] at hsk; exact Bool.noConfusion hsk
       | some bk =>
         have hiff := hcons i k bi bk hci hck (reach_one hik)
         show ((iter adjB V V.length (fun _ => none)) i).getD false ≠
