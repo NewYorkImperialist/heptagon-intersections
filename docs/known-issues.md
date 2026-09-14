@@ -968,3 +968,120 @@ that leaves the headline number unchanged. Any future reduction should be
 accompanied by a vacuity check on the tested representative: if the base pattern
 with no additional constraints is already UNSAT, the representative is carrying
 no information.
+
+---
+
+## K-17 — `Endgame.graphShapeOK` restricts the degree sequence; is that an unchecked filter?  (RAISED AND RESOLVED 2026-09-14)
+
+**Status:** resolved — **not a defect.** Raised by the `EnumerationDomain.lean`
+agent as a possible hole in enumeration obligation (4), checked against both
+search implementations, and found to be a scope confusion rather than a gap.
+Recorded because the reasoning is not obvious and the question will recur.
+
+**The observation, which is correct.** `Endgame.graphShapeOK` — the Boolean that
+all 225 committed certificate records are checked against — demands degree
+sequence `(2,2,1,1,1,1,1)` on **both** sides (`lean/Endgame.lean:206`). But the
+enumeration *domain* is weaker: seven 7-bit masks, nine edges, minimum degree
+≥ 1 on both sides. `EnumerationDomain.degSeq_of_sum_nine` proves that seven
+positive integers summing to nine form one of exactly **two** multisets,
+`{2,2,1,1,1,1,1}` or `{3,1,1,1,1,1,1}`, and the second branch is **not
+vacuous**: `sampleM` is an explicit domain element
+(`sampleM_inDomain`) with P-degrees `[1,1,1,1,1,1,3]`, rejected by that test
+(`sampleM_fails_isDegSeq2211111`). The link is definitional, not approximate —
+`degSum_eq_edgeCount : degSum c.M = Endgame.edgeCount c := rfl`.
+
+**Why it is nevertheless not a gap.** The escalation assumed `graphShapeOK` is
+a *filter applied during the search*, so that the degree-3 branch would have
+been silently discarded. It is not. It is a *descriptive check on the 225
+survivors* — a recomputed-from-bitmasks assertion about records that already
+came out the far end. Both independent implementations **do** enumerate the
+`{3,1,1,1,1,1,1}` branch:
+
+* `independent/implementation_b/reduction.cpp:310-317` — the comment reads
+  "one 3 and six 1s, or two 2s and five 1s", and the first loop walks the
+  degree-3 case explicitly before the `(2,2,1,1,1,1,1)` double loop;
+* `python/elimination/audit_enum.py:68-69` — `rec` tries `size` in
+  `range(1, hi+1)` with `hi = min(3, budget-(rem-1))`, so a P-side of degree 3
+  is generated, and `used != FULL` at the leaf enforces Q-side coverage.
+
+So the degree-3 graphs enter the search and are **eliminated by the AKR L5 /
+AKR L7 / Černý L3 filters**, not by a degree-sequence precondition. That every
+survivor has `(2,2,1,1,1,1,1)` on both sides is an *output* of the elimination,
+reported as such throughout (`docs/computational-method.md:154-155`).
+
+**What this does and does not settle.** It settles that no branch of the degree
+multiset was skipped. It does **not** discharge obligation (4) — that every
+valid configuration survives each filter until it reaches a terminal case proved
+impossible — which remains open for *all* branches, degree-3 and
+`(2,2,1,1,1,1,1)` alike, and is unaffected by this entry. Obligation (3), that
+the implementations actually visit every element of the 13 003 620-element
+domain, is likewise untouched.
+
+**Methodological note.** This was an agent-reported finding that read as a
+serious defect and was not one. It was resolved by reading the two search
+implementations rather than by accepting the report. The Lean file's own
+comments (`EnumerationDomain.lean` §A.8) still state the stronger reading and
+should be read alongside this entry.
+
+---
+
+## K-18 — `data/hashes/SHA256SUMS.lean` was stale, and `scripts/` was untracked  (FOUND AND FIXED 2026-09-14)
+
+**Status:** fixed. Found by the first genuine **fresh-clone** run of
+`scripts/verify-all.sh`, not by any in-place check — which is precisely the
+failure mode in-place testing cannot see.
+
+Two committed defects, both fatal to a from-scratch verification:
+
+1. **Stale Lean hash manifest.** At commit `f290efe`, four of the eight entries
+   in `data/hashes/SHA256SUMS.lean` FAILED — `EndgameDefs`, `Endgame`,
+   `Lemma7Bridge`, `CernyL2Interface` — because the sources had been edited
+   after the manifest was written. It also covered only 7 of the then-10 Lean
+   sources: `GeometryDefs.lean`, `SegmentGeometry.lean` and
+   `DisjointnessGraph.lean` were unprotected by any hash. A fresh-clone full run
+   exited 1 on this and nothing else.
+2. **The verification entrypoint was not in the repository.** `scripts/` was
+   untracked, so a fresh clone contained no `verify-all.sh` at all. It had to be
+   copied in by hand for the test to run.
+
+Both are now fixed: the manifest is regenerated over all eleven Lean sources,
+and `scripts/` is committed.
+
+**Not weakened to pass.** The check was left failing until the *data* was
+corrected; the manifest was not relaxed and no entry was dropped.
+
+---
+
+## K-19 — Two validators exit 0 on inputs that establish nothing  (OPEN, MITIGATED, 2026-09-14)
+
+**Status:** open as a property of the validators; mitigated at the harness
+level. Found by `scripts/negative-tests.sh`, which builds deliberately corrupted
+copies and requires the harness to reject them.
+
+* **Vacuous certificate.** Given `{"cases": []}`,
+  `python/validation/check_final_certificate.py` prints
+  `OK: all 0 cases establish…` and **exits 0**. An empty certificate is
+  indistinguishable, by exit status, from a complete one.
+* **Self-consistent but geometrically invalid lower bound.** Translate `Q` far
+  away and recompute the stored `verified` block, and
+  `check_lower_bound.py` prints all-PASS and **exits 0** while reporting
+  `boundary intersections I: 0`. The script checks internal consistency of the
+  file it is handed; it does not check that the file describes a configuration
+  achieving 38.
+* **DRAT proof that reaches no contradiction.** Strip the trailing empty clause
+  from a real refutation and `dratcheck.py` **exits 0**, printing "proof did not
+  derive the empty clause" as text.
+
+In every case the *text* is honest and the *exit status* is not. Anything that
+consumes these scripts by exit code alone can be fooled.
+
+**Mitigation.** `scripts/verify-all.sh` does not trust exit codes: it asserts
+`cases checked : 225`, 121 distinct graphs, an absolute `I = 38` with
+`I + |E| = 49`, and for DRAT it requires the empty clause to be derived —
+with a self-test (step 5a) that runs a truncated proof through its own gate on
+every invocation, failing the whole run if the gate accepts it.
+
+**Not yet done.** The underlying scripts still exit 0 on these inputs. Fixing
+them at the source — a non-zero exit on an empty case list, on a
+`verified` block that does not attain 38, and on a proof that derives no empty
+clause — is outstanding.
