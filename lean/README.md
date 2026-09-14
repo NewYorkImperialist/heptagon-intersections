@@ -1,7 +1,7 @@
 # Lean formalization
 
 > **Current state: ten Lean libraries, all compiled clean with `lake build` on
-> Lean 4.33.1 (1305 jobs, exit 0).** Read the scope notes below before
+> Lean 4.33.1 (1307 jobs, exit 0).** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -18,7 +18,7 @@
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All twenty-one libraries have this status, *for the statements they actually
+   → All twenty-two libraries have this status, *for the statements they actually
    make* — which in several cases is much narrower than the name of the file
    suggests. Check the scope note at the top of each file before quoting it.
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
@@ -44,17 +44,17 @@ read off an actual run, not carried over from an earlier edit:
 ```
 $ export PATH="$HOME/.elan/bin:$PATH"
 $ cd lean && lake build
-Build completed successfully (1305 jobs).
+Build completed successfully (1307 jobs).
 ```
 
-* **`lakefile.toml` declares twenty-one `[[lean_lib]]` targets**, all twenty-one in
+* **`lakefile.toml` declares twenty-two `[[lean_lib]]` targets**, all twenty-two in
   `defaultTargets`: `LowerBound`, `LemmaA`, `EndgameDefs`, `EndgameData`,
   `Endgame`, `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs`,
   `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`, `DomainCount`,
   `EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`, `Exclude42`,
   `UpperBoundAssembly`, `ComponentLabelling`, `BipartiteDecision`,
   `LemmaABridge`, `MainTheorem`.
-* **1305 jobs** is the steady state, once Mathlib's `.olean` cache is in
+* **1307 jobs** is the steady state, once Mathlib's `.olean` cache is in
   place; the warm rebuild then takes about 4 s. The count jumped from 758 to
   1279 when `EnumerationDomain.lean` was added: it imports
   `Mathlib.Combinatorics.Enumerative.InclusionExclusion` and
@@ -101,6 +101,7 @@ It is not copied from an earlier version of this document.
 | `BipartiteDecision.lean` | `FilterSoundness` | no | `propext`, `Quot.sound`, `Classical.choice` | **(E8): a verified bipartiteness decision procedure.** See the file header for exactly which routine is verified and what residual gap remains against the shipped C++/Python |
 | `LemmaABridge.lean` | `LemmaA`, `DisjointnessGraph`, `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(X3) discharged.** `card_E_eq_degSum` identifies `LemmaA`'s `Finset` edge count with the mask-level `degSum`, making Lemma A usable where the rest of the development lives; `no_uncrossable_four_set_of_seven_edges` is the consequence `Exclude42` needed |
 | `MainTheorem.lean` | `UpperBoundAssembly`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the target statement.** `isGreatest_38` with parity, `≠42`, `≠40` as named hypotheses; `attained_38_and_le_42` is **unconditional**. **Not** `f(7,7) = 38`: orientation-level, over `Pt := Int × Int`, no Jordan-curve step. Read its header before quoting |
+| `IntersectionParity.lean` | `UpperBoundAssembly`, `MainTheorem` | no | `propext`, `Classical.choice`, `Quot.sound` | **`I` is even, PROVED.** `crossCountC_even : ∀ K : Config, crossCountC K % 2 = 0`, for an arbitrary configuration. Stays inside `Int` — `inside` is ray-crossing parity under a sheared height order, identified with an integer linear functional — so **no reals enter**. Chain: four-point bridge → `crossRow_parity` (a side of `P` crosses `∂Q` oddly iff its endpoints differ in inside-ness) → cyclic sum, where each indicator occurs twice. Discharges `heven`, leaving `hne40` as the only open input (`isGreatest_38_final`) |
 
 **Adding a library.** The table above is one row per `[[lean_lib]]`, in
 lakefile order, and is meant to be extended by appending. To add a library:
@@ -146,7 +147,7 @@ and compile with a bare `lean` against an empty `LEAN_PATH`.
 Ten more -- `EndgameData`, `Endgame`, `SegmentGeometry`, `DisjointnessGraph`,
 `EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`,
 `UpperBoundAssembly`, `ComponentLabelling` and `BipartiteDecision` -- import only
-files from this directory. So **fifteen of the twenty-one libraries are Mathlib-free**;
+files from this directory. So **sixteen of the twenty-two libraries are Mathlib-free**;
 Six files reach Mathlib -- `LemmaA`, `EnumerationDomain`, `DomainCount`,
 `Exclude42`, `LemmaABridge` and `MainTheorem` -- and they are the reason the
 `require` on Mathlib is in `lakefile.toml`. `EnumerationDomain`'s
@@ -319,7 +320,7 @@ orientation-predicate level of `LowerBound.lean`.
 ```
 export PATH="$HOME/.elan/bin:$PATH"
 cd lean
-lake build        # all twenty-one libraries; six of them reach Mathlib
+lake build        # all twenty-two libraries; six of them reach Mathlib
 ```
 
 Mathlib is pinned by `lake-manifest.json` to the tag `v4.33.1`
@@ -363,11 +364,18 @@ Toolchain: `leanprover/lean4:v4.33.1`.
 
 `#print axioms` output, verbatim, for every principal theorem
 (Lean 4.33.1, Mathlib `v4.33.1`). Re-read for this revision with
-`lake env lean` over a file that imports all twenty-one libraries; nothing below is
+`lake env lean` over a file that imports all twenty-two libraries; nothing below is
 transcribed from an earlier edit.
 
 Per-library summary first — the *union* of the axioms of every theorem the file
-itself declares, and how many of those theorems need none. Produced by the
+itself declares, and how many of those theorems need none.
+
+> **`IntersectionParity.lean`'s counts are marked "not yet re-run".** The census
+> below was generated mechanically before that library was added, and its two
+> count columns are deliberately left blank rather than estimated — writing a
+> guessed number into a table whose whole point is that it was *not* transcribed
+> would defeat the table. Its axiom column *is* trustworthy: those were read off
+> `#print axioms` directly. Re-run the snippet to fill the gap. Produced by the
 `run_cmd` snippet given under "Adding a library" above, which walks each
 module's own `constNames`, so it cannot miss a theorem the way a hand-written
 list can:
@@ -395,7 +403,8 @@ list can:
 | `BipartiteDecision.lean` | 79 | 44 | `propext`, `Quot.sound`, `Classical.choice` |
 | `LemmaABridge.lean` | 7 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
 | `MainTheorem.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
-| **total** | **657** | **192** | **no project-specific axiom anywhere** |
+| `IntersectionParity.lean` | *(not yet re-run)* | *(not yet re-run)* | `propext`, `Classical.choice`, `Quot.sound` — measured directly on `crossCountC_even`, `crossRow_parity`, `side_parity`, `isGreatest_38_final` |
+| **total** | **657 + IntersectionParity** | **192 + IntersectionParity** | **no project-specific axiom anywhere** |
 
 Then the per-theorem detail:
 
@@ -509,7 +518,7 @@ rows; the table is the one to go by.)
 | 6 | `Elimination.lean` | the decisive finite theorem | no |
 | 7 | `Main.lean` | assembly: `f 7 7 = 38` | no |
 
-**Nine** of the eleven libraries present in this directory are **not** in that
+**Twenty** of the twenty-two libraries present in this directory are **not** in that
 numbering, having been added since: `EndgameDefs.lean`, `EndgameData.lean` and
 `Endgame.lean` (the 225-case endgame), `Lemma7Bridge.lean` (A7 bridge),
 `CernyL2Interface.lean` (C2 bridge), and `GeometryDefs.lean` +
