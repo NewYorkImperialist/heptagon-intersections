@@ -165,7 +165,14 @@ on four unformalised prose steps, each hand-checked but none certified:
 
 1. general position of the ≤ 12 vertices is WLOG (inherited from AKR §9;
    perturbation can change `G^D`);
-2. "four distinct components" yields exactly the encoded 20-pair pattern;
+2. "four distinct components" yields exactly the encoded pair pattern.  **Corrected
+   2026-09-13:** an earlier revision of this file said "20-pair pattern"; that
+   figure is wrong.  `om_lemma7.py:224-257` builds **24** pair requirements (16
+   cross-polygon, 4 within `P`, 4 within `Q`); pairs sharing an endpoint carry no
+   expressible constraint and are dropped, leaving **24 / 23 / 23 / 22** explicit
+   crossing predicates in the `generic` / `P-adj` / `Q-adj` / `PQ-adj` variants
+   (recomputed directly from the encoder).  "20-pair pattern" therefore cannot
+   serve as the formal specification of this bridge;
 3. `generic / P-adj / Q-adj / PQ-adj` exhaust the `n = 7` cases;
 4. Lemma 7's quantification matches A7-EXT's existential `S(e)`.
 
