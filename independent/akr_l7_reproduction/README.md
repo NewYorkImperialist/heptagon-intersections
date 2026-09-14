@@ -8,7 +8,7 @@ repository. No code, data, or definition was taken from
 or any other project artefact. The only inputs are the two AKR papers in
 `references/` and published enumeration counts, cited below.
 
-**Primary source.** M. Ackerman, B. Keszegh, G. Rote, *An Almost Optimal Bound on
+**Primary source.** E. Ackerman, B. Keszegh, G. Rote, *An Almost Optimal Bound on
 the Number of Intersections of Two Simple Polygons*, Discrete & Computational
 Geometry **68** (2022) 1049–1077 — `references/akr-dcg-2022.pdf`. Section 10.2
 "Computer-Supported Proofs" is on PDF page 28. The SoCG 2020 version

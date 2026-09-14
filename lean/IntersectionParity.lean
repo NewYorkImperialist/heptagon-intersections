@@ -2,7 +2,42 @@
   IntersectionParity.lean
   =======================
 
-  WORK IN PROGRESS header -- replaced at the end.
+  I IS EVEN: the total number of properly crossing side pairs of any
+  configuration is even.
+
+  This is the last elementary input to the upper bound.  With `I <= 42` already
+  unconditional (`UpperBoundAssembly.crossCountC_le_42`), parity is what reduces
+  the problem to the two branches `I = 42` and `I = 40`; without it 39 and 41
+  would need excluding too.
+
+  THE ARGUMENT.  Two closed curves in general position cross an even number of
+  times.  It is formalised so as to stay inside the integers, introducing no
+  reals and so preserving the Mathlib-free trust base of the geometry group:
+
+    1. an `inside` predicate for a point with respect to the boundary of `Q`,
+       defined by RAY-CROSSING PARITY under a sheared height order -- the
+       lexicographic (y, then x) order, which `hlt_eq_decide` identifies with
+       the order of the integer functional `p |-> N * p.2 + p.1` once `N`
+       exceeds the x-spread, i.e. a ray tilted infinitesimally from horizontal;
+    2. a four-point bridge lemma relating the orientation predicates of two
+       segment endpoints to that parity;
+    3. the per-side lemma `crossRow_parity`: side `i` of `P` crosses the
+       boundary of `Q` an odd number of times exactly when its two endpoints
+       differ in inside-ness;
+    4. the cyclic sum: each vertex indicator occurs in exactly two consecutive
+       sides, so summing (3) around the closed polygon doubles every term.  This
+       is the same cancellation `SegmentGeometry.cycChanges_even` performs for a
+       line.
+
+  NOT THE SAME AS THE LINE PARITY ALREADY PRESENT.
+  `SegmentGeometry.metCount_even` -- a closed polygon meets a LINE an even
+  number of times -- is a different statement, and is what feeds Cerny L1's
+  consequence and hence the minimum-degree bound.  It does not give this result.
+  Conflating the two is easy; it was done once during development.
+
+  WHAT THIS CLOSES.  `heven` disappears from every downstream statement:
+  `crossCountC_le_38_final` and `isGreatest_38_final` below need only the
+  exceptional-class data and `hne40`.
 -/
 import UpperBoundAssembly
 import MainTheorem

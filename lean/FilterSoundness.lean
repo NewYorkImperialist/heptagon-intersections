@@ -235,7 +235,15 @@
   `K`'s heptagons are exceptional; it does not verify any component-labelling
   or bipartiteness algorithm; and it does not verify that the Lean definitions
   agree with the Python or C++ source.  Every one of those is listed above as
-  (E1)-(E8) or as a transcription caveat, and every one of them is still open.
+  (E1)-(E8) or as a transcription caveat.
+
+  STATUS UPDATE (2026-09-14): this sentence originally read "and every one of
+  them is still open".  That is no longer true.  (E6) is DISCHARGED by
+  `ComponentLabelling.lean` (an iff against `Conn`, so `filterB_sound'` there
+  carries no `hcmp` hypothesis at all), and (E8) is discharged in its
+  algorithmic half by `BipartiteDecision.lean`, leaving only the transcription
+  gap against the shipped C++/Python routine.  (E1)-(E5) and (E7) remain open;
+  (E5) was attempted in `CernyL2Derivation.lean` and is BLOCKED.
 -/
 import DisjointnessGraph
 import Lemma7Bridge

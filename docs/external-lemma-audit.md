@@ -107,6 +107,21 @@ The misreading question is what the rest of this document is about.
 
 ## 1. Summary table
 
+> **What "VERIFIED" means in this table, added 2026-09-14.** It means *the
+> published statement was read, its hypotheses checked one by one against the
+> project's use, and the argument judged sound*. It does **not** mean the lemma
+> was re-proved here, and it does not mean it is machine-checked. This matters
+> because a reader comparing with
+> [`verification-status.md`](verification-status.md) row 4 will see AKR §9.1
+> recorded there as an `EXTERNAL PUBLISHED LEMMA` — imported, not reproved. The
+> two are consistent: the audit judged AKR's own argument sound, and the project
+> imports it. Neither claim is that this project proved it.
+>
+> Where a lemma's *required consequence* has since been derived inside the
+> project rather than imported — Černý L1 via the parity argument in
+> `SegmentGeometry.lean` — that is recorded in `verification-status.md`, not
+> here.
+
 | Dependency | Verdict | Main reason |
 |---|---|---|
 | Černý Lemma 1 (min degree ≥ 1) | **VERIFIED** | The half of L1 the project uses ("no line meets every side of an odd polygon") is robust even for lines through vertices; the parity half, which does need vertex-avoidance, is not used. Filter is the enumeration domain and is exactly right. |

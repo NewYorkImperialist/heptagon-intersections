@@ -162,7 +162,7 @@
   "NOT_reproduced_here": [
     "COMPLETENESS of the 225-case list: the certificate and its checker establish that each listed case dies, not that the list is exhaustive. Completeness rests on the 13,003,620-graph enumeration inside the generator, which no independent implementation has repeated. See docs/known-issues.md K-02 and K-03.",
     "The 13,484,940 / 43,330 / 3,522 / 64 figures of the superseded pipeline -- archive/superseded/python/enum9.py cannot run without the missing ot7.pkl, and its downstream stages (combine.py, final.py) are absent entirely.",
-    "Implementation B in its entirety -- no source code for it exists in these materials; see docs/known-issues.md K-02.",
+    "Implementation B: SUPERSEDED NOTE (2026-09-14) -- this said no source code existed. It does: independent/implementation_b/ reproduces the reduction to the 225-triple set. It does NOT run the final avoiding-pair filter (K-20). See docs/known-issues.md K-02, K-20.",
     "The validation suite's realizable-configuration checks (3,952 random pairs; 129,812 high-intersection configurations) -- python/validation/validate.py section 1 needs the missing best_7_7_*.pkl; see docs/known-issues.md K-05.",
     "Both SHA-256 digests quoted in docs/proof-outline.md -- the original serialization format is unrecorded; see docs/known-issues.md K-07."
   ],

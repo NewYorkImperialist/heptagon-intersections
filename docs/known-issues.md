@@ -32,6 +32,7 @@ Issues are numbered `K-nn` and referenced from other documents.
 | K-19 | Three validators exit 0 on inputs that establish nothing  (TWO FIXED AT SOURCE, ONE OPEN, 2026-09-14) |
 | K-20 | Implementation B does not run the final filter, so the killing step has no second implementation  (DISCLOSURE GAP, 2026-09-14) |
 | K-21 | `audit_enum.py` applies Černý L3 unconditionally; the shipped certificate does not  (CLARIFICATION, 2026-09-14) |
+| K-22 | `hclass` is stronger than "the class data is correct", and had no non-vacuity witness  (FOUND AND ADDRESSED 2026-09-14) |
 
 *(K-20 and K-21 were written below but omitted from this index; added 2026-09-14.)*
 

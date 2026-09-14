@@ -143,8 +143,9 @@ project has twice built infrastructure it did not need.
 > bridge making Lemma A usable at the mask level; and **the target statement
 > itself** (`MainTheorem.isGreatest_38`). Twenty-one Lean libraries, 657
 > theorems, no project axiom anywhere. *(Those two figures are the count **at
-> that milestone**. The development is now at 25 libraries / 1395 jobs; the last
-> mechanical theorem census was 706 at 23 libraries and has not been re-run.)*
+> that milestone**, kept as the record of it. Re-measured 2026-09-14 after the
+> sweep: **27 libraries, 1399 jobs, 740 theorems, 212 axiom-free**, still no
+> project axiom anywhere.)*
 
 **The situation has changed shape, and the next milestone should be chosen with
 that in mind.**

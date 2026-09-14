@@ -155,7 +155,7 @@ and compile with a bare `lean` against an empty `LEAN_PATH`.
 `DisjointnessGraph`, `EnumerationComplete`, `CounterexampleCount`,
 `FilterSoundness`, `UpperBoundAssembly`, `ComponentLabelling`,
 `BipartiteDecision`, `IntersectionParity` and `AvoidingFlag` — import only files
-from this directory. So **seventeen of the twenty-six libraries are
+from this directory. So **eighteen of the twenty-six libraries are
 Mathlib-free**. **Eight** files reach Mathlib — `LemmaA`, `EnumerationDomain`,
 `DomainCount`, `Exclude42`, `LemmaABridge`, `MainTheorem`, `PointSetSemantics`
 and `CernyL2Derivation` — and they are the reason the `require` on Mathlib is in
