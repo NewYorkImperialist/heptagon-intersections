@@ -464,3 +464,78 @@ That leaves route 1 (carry a candidate partition in the DP state) as the only
 untested restructuring, and it should be weighed against §8a's finding that the
 binding constraint is **memory**, which a larger state space makes worse, not
 better.
+
+---
+
+## 8b. Chunking works — but it solves the wrong problem (2026-09-14, later)
+
+### What was measured
+
+§8a concluded the kernel enumeration was infeasible on memory grounds. That
+conclusion was drawn from a **monolithic** formulation, and §8a itself noted
+chunked formulations were never benchmarked. They have now been.
+
+Splitting the search by its first four rows gives chunks of at most **19,174
+calls** — a size the original benchmark already completed in 4 s. Measured, one
+Lean process each:
+
+| chunks | total calls | peak RSS | CPU |
+|---:|---:|---:|---:|
+| 1 | 19,174 | 1.37 GB | 22 s |
+| 8 | 153,392 | 1.86 GB | 50 s |
+| 24 | 460,176 | **1.84 GB** | 121 s |
+
+**Memory is flat.** Lean reclaims between `decide` declarations, so peak is set
+by the largest *chunk*, not the total — and 460,176 calls completed comfortably
+where the monolithic 228,061-call run had not finished at all. The 4.5 TB figure
+in §8a is an artifact of building one enormous term.
+
+### Why this does not close `hne40` — the correction
+
+Having measured that, the obvious inference is "so the enumeration is feasible
+after all". **That inference is wrong, and the error is worth recording.**
+
+Two facts kill it:
+
+1. **The counting problem has enormous sharing.** `cnt rem used budget` depends
+   only on those three numbers, not on the path taken to reach them. Memoising
+   collapses 226,668,772 naive calls to **1,925 distinct states** — a sharing
+   factor of about **117,750×**. Counting is not expensive at all once shared;
+   chunking a computation that cheap is beside the point.
+2. **Counting is already proved.** `DomainCount.domainFinset_card` establishes
+   `domainFinset.card = 13003620` in Lean, and has since earlier the same day.
+   The count was never the obstacle.
+
+**What `hne40` actually requires is different in kind.** It needs, for each of
+the 13,003,620 domain elements, that the element *fails some filter*. The filter
+predicate (`process` in `python/elimination/audit_enum.py`) takes the **whole
+graph** — all seven masks — and computes components, the L5 tests, `H`
+bipartiteness, crossing-set compatibility and Černý L2. Nothing shares between
+distinct graphs, because the graphs are distinct. So the 117,750× sharing that
+makes counting cheap **does not apply at all**, and the work is genuinely
+13,003,620 independent filter evaluations.
+
+### What is now established, and what is not
+
+* **Established:** chunking removes the *memory* wall. Any per-graph sweep can be
+  split into bounded pieces evaluated at roughly 1.9 GB peak.
+* **Not established, and never measured by anyone:** the **per-graph filter cost
+  in the kernel**. §8a said so explicitly in its own last line — "Actual
+  graph-filter evaluation is absent and is not covered by the 15-hour counting
+  estimate" — and the chunking measurement above inherits exactly the same
+  limitation. Both measured counting.
+
+### The next measurement, precisely stated
+
+Assemble an executable filter predicate in Lean over a single graph — the pieces
+largely exist (`ComponentLabelling.label`, `BipartiteDecision.hBipTest`,
+`FilterSoundness`'s `L5PairsOk` / `CompatOk` / `L2Ok`) — and measure kernel
+`decide` cost for **one** graph. Multiply by 13,003,620. That single number
+decides whether `hne40` is reachable, and it is the number neither §8a nor §8b
+produced.
+
+Rough prior, to be confirmed or destroyed by measurement: Python runs the full
+filtered pipeline over all 13,003,620 graphs in about 190 s. At the ~500×
+kernel-to-Python ratio §8a measured for arithmetic, that suggests tens of
+CPU-hours — feasible as a one-off, if the ratio holds for predicate-heavy code,
+which is exactly what is unverified.
