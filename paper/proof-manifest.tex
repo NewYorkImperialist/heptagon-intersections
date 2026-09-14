@@ -885,7 +885,10 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-None of the three files contains \texttt{sorry}, \texttt{admit}, a
+Eleven libraries are declared in \texttt{lakefile.toml} and all eleven build
+(\texttt{1279} jobs, exit $0$). Five are described below; the geometry group and
+\texttt{EnumerationDomain} follow. None of the eleven contains \texttt{sorry},
+\texttt{admit}, a
 project-specific \texttt{axiom}, \texttt{unsafe}, or \texttt{native\_decide};
 this was verified by scanning the sources with comments stripped. All
 \texttt{decide} calls are ordinary kernel reduction.
@@ -1001,6 +1004,104 @@ bits; these agree exactly when the four indices are distinct, which the
 enumeration enforces, but the bit-level identity is not proved. And it says
 nothing about {\v C}ern{\'y} Lemma 2 itself, nor about the per-class Lemma-2
 window sets, which remain fully external.
+\end{remark}
+
+\subsection*{\texttt{GeometryDefs.lean} $+$ \texttt{SegmentGeometry.lean} --- \textsf{LEAN-GEO}}
+\textbf{Imports: none} (core Lean). \textbf{Axioms:} \texttt{propext},
+\texttt{Quot.sound} --- \emph{no} \texttt{Classical.choice} across all
+$62$ theorems.
+
+The first genuinely geometric milestone: {\v C}ern{\'y} L1's required
+consequence and Lemma~A's hypothesis \texttt{h2} are \emph{derived} from a
+parity argument rather than imported. The chain is
+\texttt{cycChanges\_even} $\to$ \texttt{metCount\_even} $\to$
+\texttt{metCount\_lt\_of\_odd} $\to$ \texttt{min\_disjointness\_degree\_fin7}
+$\to$ \texttt{lemmaA\_h2\_fin7}: a closed polygonal curve meets a line an even
+number of times, so a side of $P$ cannot cross all seven sides of $Q$. The
+connection lemmas to \texttt{LowerBound}'s definitions hold by
+\texttt{rfl}, so the two developments are not merely analogous but
+definitionally identical.
+
+\subsection*{\texttt{DisjointnessGraph.lean} --- \textsf{I2a}}
+\textbf{Imports:} \texttt{GeometryDefs}, \texttt{LowerBound},
+\texttt{EndgameDefs}, \texttt{SegmentGeometry} (all Mathlib-free).
+\textbf{Axioms:} \texttt{propext}, \texttt{Quot.sound}.
+
+The geometry-to-endgame bridge. \texttt{Config} packages two simple heptagons in
+general position; \texttt{toMasks\_spec} proves that bit $j$ of mask $i$ holds
+\emph{iff} side $i$ of $P$ does not properly cross side $j$ of $Q$, and
+\texttt{min\_degree\_both\_sides} supplies minimum degree $\ge 1$ on both sides
+by \emph{application} of the general theorem, not by \texttt{decide} on the
+certificate.
+
+\begin{remark}[Why \textsf{I2a} and not \textsf{I2}]
+The interface as originally written stated \texttt{toMasks\_spec} against
+\emph{point-set} disjointness of two segments in $\mathbb{R}^2$. That is not
+statable in this development: \texttt{Pt} is $\mathbb{Z}\times\mathbb{Z}$ and
+\texttt{side}\,$P\,i$ is never defined as a set. Stating it needs Mathlib's
+\texttt{segment} and the reals, destroying the Mathlib-free trust base. The
+interface was therefore split: \textsf{I2a}, the orientation-level form proved
+here, and \textsf{I2b}, the single point-set lemma
+$\texttt{DisjointO}\;K\,i\,j \iff \operatorname{Disjoint}(\mathrm{seg}_P\,i,\mathrm{seg}_Q\,j)$,
+which is \emph{not} proved and would upgrade \textsf{I2a} to the original
+statement while touching nothing else. \texttt{Endgame.lean} consumes only the
+\emph{function} \texttt{toMasks}, never the specification, so every endgame
+theorem is unaffected by the split.
+\end{remark}
+
+\subsection*{\texttt{EnumerationDomain.lean} --- \textsf{I5a}}
+\textbf{Imports:} \texttt{DisjointnessGraph}, \texttt{Endgame}, and Mathlib
+(\texttt{BigOperators}, \texttt{Polynomial.Coeff},
+\texttt{InclusionExclusion}, \texttt{Nat.Choose.Sum}).
+\textbf{Axioms:} \texttt{propext}, \texttt{Quot.sound} throughout Part~A ---
+\emph{no} \texttt{Classical.choice}, and no Mathlib result is used in substance
+there; Part~B adds \texttt{Classical.choice} through Mathlib's \texttt{Finset}
+and \texttt{Polynomial} machinery.
+
+``Completeness of the enumeration'' is four claims, not one:
+\begin{enumerate}\itemsep0pt
+  \item a hypothetical counterexample produces a graph satisfying the search
+        conditions;
+  \item the abstract search domain has $13{,}003{,}620$ elements;
+  \item the search \emph{actually visits} every element of that domain;
+  \item every valid configuration survives each filter until it reaches a
+        terminal case proved impossible.
+\end{enumerate}
+
+\textbf{(1) is proved, in full.} \texttt{toMasks\_inDomain\_of\_crossCount\_eq\_40}
+states that for an \emph{arbitrary} \texttt{Config} --- not the certificate pair
+--- $\texttt{crossCountC}\,K = 40$ implies $\texttt{InDomain}\,(\texttt{toMasks}\,K)$:
+seven $7$-bit masks, nine edges, minimum degree $\ge 1$ on both sides. The route
+is \texttt{crossCountC\_add\_degSum} (that is, $I+|\ED|=49$ proved for
+\emph{every} configuration rather than checked on one) together with
+\textsf{I2a}'s minimum-degree result. The hypothesis $I=40$ is an \emph{input};
+why a counterexample must have exactly $40$ crossings is Lemma~A plus parity,
+argued elsewhere. Definitionally, \texttt{degSum\_eq\_edgeCount} holds by
+\texttt{rfl}, so \texttt{InDomain}'s edge clause \emph{is} the quantity the
+certificate checker recomputes.
+
+\textbf{(2) is not proved.} Both ends are: \texttt{ieAlternatingSum\_eq} gives
+the numeric identity, and \texttt{gfCoeff9\_eq\_coeff} shows the summand really
+is $[x^9]\bigl((1+x)^m-1\bigr)^7$ rather than a formula someone wrote down;
+\texttt{domain\_card\_inclusion\_exclusion} gives the inclusion--exclusion step
+over uncovered $Q$-sides. The two links between them --- that each term depends
+only on the \emph{cardinality} of the excluded set (the source of the
+$\binom{7}{j}$), and that the term equals that coefficient --- are stated in the
+file and left unproved. The only cardinality fact kernel-checked is
+$0 < |\text{domain}|$.
+
+\textbf{(3) and (4) are untouched.} Nothing in Lean inspects, extracts or
+certifies any search program. A correct domain count is not a proof that an
+implementation enumerates the right set.
+
+\begin{remark}[A degree-sequence question, raised and closed]
+\texttt{Endgame.graphShapeOK} demands degree sequence $(2,2,1,1,1,1,1)$ on both
+sides, whereas seven positive integers summing to nine also admit
+$\{3,1,1,1,1,1,1\}$; that branch is genuinely non-empty in the domain
+(\texttt{sampleM}). This looks like an unchecked filter and is not one:
+\texttt{graphShapeOK} is a \emph{descriptive} check on the $225$ survivors, not
+a search precondition, and both implementations enumerate the degree-$3$ branch,
+where it dies in the L5/L7/L3 filters. Recorded as K-17.
 \end{remark}
 
 \begin{center}
