@@ -318,3 +318,54 @@ If no such restructuring exists, the honest options are to accept
 stated goal** and should be the user's decision, not a drift — or to leave
 `hne40` as a computational result standing outside the kernel, which is what the
 project has today.
+
+---
+
+## 9. If the enumeration must be restructured — where the locality is
+
+Recorded 2026-09-14 for whoever picks this up. §8 establishes that closing
+`hne40` in the kernel by brute evaluation is at best marginal. The alternative is
+to make the search *smaller*, and the useful question is which filters are
+**local** — because a local filter can be pushed into a dynamic program over the
+seven rows, whose state space may be far smaller than 13,003,620, while a global
+one cannot.
+
+Classifying the five filters by locality:
+
+| filter | locality | can it go in a row DP? |
+|---|---|---|
+| (a) AKR L5, consecutive pairs | needs the **component partition** — global | no, not directly |
+| (b) AKR L7 ⟹ `H` bipartite | needs the component partition — global | no |
+| (c) crossing-set compatibility | **per column**: each `crossSet(q_j)` must lie in a maximal crossing set | **yes** |
+| (d) Černý L2 | windows of **4 consecutive** P-sides | yes, with 3 masks of history |
+| (e) AKR L5, avoiding pairs | needs the component partition — global | no |
+
+**The obstruction, stated plainly.** The big cut is (a): the pipeline goes
+`13,003,620 → 42,238` on AKR L5 alone, a factor of 308. But (a) fires only on
+consecutive P-sides lying in *different components*, and connectivity is a
+property of the whole graph, so it cannot be evaluated while a DP is still
+choosing rows. Applying it unconditionally would be *unsound* in the direction
+that matters — it would discard graphs the real search keeps, which is exactly
+the failure obligation (4) exists to prevent.
+
+**Two routes that might get around it, neither yet tested.**
+
+1. **Enumerate over (graph, partition) pairs.** Carry a candidate component
+   partition of the 14 vertices in the DP state, apply (a) and (b) against it,
+   and at the leaf check the partition is the one the graph actually induces.
+   Soundness is then local. The question is whether the state space
+   (partition × used-mask × budget × history) stays small enough to be worth it;
+   partitions of 14 vertices are numerous, but reachable ones after a few rows
+   are far fewer.
+2. **Lead with the local filters.** Apply (c) and (d) first, in a DP, and only
+   then evaluate (a), (b), (e) on whatever survives. This is sound in any order,
+   since all five are necessary conditions. **The cheap experiment nobody has
+   run: how many of the 13,003,620 survive (c) alone?** If that number is small,
+   the global filters never need to see 13 million graphs and the whole barrier
+   softens. If it is still millions, this route is dead. One Python run answers
+   it — see `python/elimination/audit_enum.py` for the filter, and note that
+   (c) is just "every `crossSet(q_j)` misses some element of `M_P`".
+
+**Do route 2's measurement first.** It is one script, it is decisive, and it
+costs nothing compared with either formalizing an external lemma or engineering
+a kernel enumeration.
