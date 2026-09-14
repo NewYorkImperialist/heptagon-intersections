@@ -1072,10 +1072,43 @@ came out the far end. Both independent implementations **do** enumerate the
   `range(1, hi+1)` with `hi = min(3, budget-(rem-1))`, so a P-side of degree 3
   is generated, and `used != FULL` at the leaf enforces Q-side coverage.
 
-So the degree-3 graphs enter the search and are **eliminated by the AKR L5 /
-AKR L7 / Černý L3 filters**, not by a degree-sequence precondition. That every
-survivor has `(2,2,1,1,1,1,1)` on both sides is an *output* of the elimination,
-reported as such throughout (`docs/computational-method.md:154-155`).
+So the degree-3 graphs enter the search and are eliminated by the filters, not
+by a degree-sequence precondition. That every survivor has `(2,2,1,1,1,1,1)` on
+both sides is an *output* of the elimination, reported as such throughout
+(`docs/computational-method.md:154-155`).
+
+> **CORRECTION (2026-09-14), same day.** The sentence above originally read
+> "eliminated by the AKR L5 / AKR L7 / Černý L3 filters". **That was wrong**, and
+> I found it by instrumenting the pipeline rather than by re-reading the code.
+> The degree-3 branch *survives* all three of those. Measured, restricted to
+> graphs with a degree-3 side on either side:
+>
+> | after | count |
+> |---|---|
+> | (domain, degree-3 on either side) | 4,086,600 |
+> | AKR L5, P consecutive pairs | 17,934 |
+> | AKR L5, Q consecutive pairs | 11,466 |
+> | AKR L7 (H bipartite) | 6,174 |
+> | Černý L3 | 2,646 |
+> | crossing-set compatibility | 222 |
+> | **Černý L2 (class-dependent)** | **0** |
+>
+> So the branch dies at **Černý Lemma 2**, the deepest external lemma in the
+> pipeline, and only after the class-dependent filters have been applied. It
+> does **not** die at the graph-level filters.
+>
+> **Why this matters beyond the correction.** It means the degree-sequence
+> forcing is *not* elementary: proving "the degree sequence must be
+> `(2,2,1,1,1,1,1)`" requires Černý L2 and the exceptional classification —
+> (E5) and (E7), the hardest remaining inputs — not just the combinatorial
+> filters. A roadmap entry written earlier the same day proposed that forcing as
+> a *bounded first step* toward restructuring the `I = 40` branch; that proposal
+> rested on this wrong claim and has been corrected in `roadmap.md` §8.
+
+The rest of this entry is unaffected: `graphShapeOK` really is a descriptive
+check on the 225 survivors rather than a search precondition, and the degree-3
+branch really is enumerated by both implementations. Only the claim about *where*
+it dies was wrong.
 
 **What this does and does not settle.** It settles that no branch of the degree
 multiset was skipped. It does **not** discharge obligation (4) — that every

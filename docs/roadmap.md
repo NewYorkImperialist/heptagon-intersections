@@ -247,12 +247,40 @@ survive — the repository's own phrasing is that "the structure is forced, not
 observed". If those forcings can be *proved* rather than observed, the case count
 collapses and the residual may be small enough to check directly.
 
-**Recommended next milestone: prove the structural forcings for `I = 40`** —
-starting with "the degree sequence must be `(2,2,1,1,1,1,1)` on both sides",
-which `EnumerationDomain.degSeq_of_sum_nine` already reduces to excluding the
-`{3,1,1,1,1,1,1}` branch. That is a bounded, well-posed question with a known
-answer (the branch does die in the filters — see K-17), and it is the natural
-first step of the same restructuring that worked for `UB42`.
+**Recommended next milestone: prove the structural forcings for `I = 40`.**
+
+> **Amended the same day, after measuring.** The first draft of this section
+> proposed starting with "the degree sequence must be `(2,2,1,1,1,1,1)`",
+> on the grounds that `degSeq_of_sum_nine` reduces it to excluding the
+> `{3,1,1,1,1,1,1}` branch and that the branch "dies in the L5/L7/L3 filters".
+> **That last claim was wrong** — see the correction in `known-issues.md` K-17.
+> Instrumenting the pipeline shows the degree-3 branch survives every
+> graph-level filter and dies only at the class-dependent ones:
+>
+> `4,086,600 → L5 11,466 → L7 6,174 → L3 2,646 → crossing-set 222 → Černý L2 0`
+>
+> So the degree-sequence forcing is **not** elementary and **not** a bounded
+> first step: it needs Černý L2 and the exceptional classification, i.e. (E5)
+> and (E7), the two hardest remaining inputs. Proposing it as the easy opener
+> was a mistake produced by trusting a summary instead of measuring.
+
+That amendment does not sink the strategy, but it does relocate the effort. The
+lesson from `UB42` still holds — an exhaustive sweep was replaced by a structural
+argument — but note *why* `UB42` was tractable: it consumed only Lemma A (already
+in Lean) and the class **invariants** (`|M| = 5`, maximal crossing sets of the
+form `FULL \ {m}`), which are cheap, checkable facts about the class data. It
+never needed Černý L2.
+
+So the right question is not "which forcing is easiest to state" but **"which
+forcings can be proved from the cheap class invariants alone?"** That is the
+`UB42` pattern, and it is the one worth searching for. A useful concrete
+experiment, cheap to run: for the `I = 40` domain, measure how far the
+elimination gets using *only* Lemma A plus the class invariants, with Černý L2
+and AKR L5/L7 switched off. If a large fraction dies, there is a `UB42`-style
+argument to be found. If almost nothing dies, the external lemmas are genuinely
+load-bearing and the restructuring hope should be abandoned rather than pursued.
+
+**Run that experiment before investing in any external-lemma formalization.**
 
 If no such restructuring exists, the honest options are to accept
 `native_decide` with a clearly documented trust caveat — which **changes the
