@@ -2,8 +2,22 @@
 
 ## What these are
 
-Complete, unmodified records of the LLM sessions in which this project was
-developed. They are preserved as **research provenance**.
+Records of the LLM sessions in which this project was developed, preserved as
+**research provenance**.
+
+**Two kinds, and the distinction matters when citing them.** The first
+(`2026-09-13-claude-session-01.md`) was received as a file and is byte-for-byte
+unmodified. The rest are **derived** from Claude Code's own session logs: they
+contain every user message and every assistant reply, plus a one-line record of
+each tool call, but *not* the tool output — build logs, file dumps and command
+results, which are roughly 97% of the raw bytes and merely duplicate this
+repository's own contents. Internal reasoning blocks and harness scaffolding are
+also omitted, and home-directory paths are normalised to `~`.
+
+Each derived transcript records the SHA-256 of the log it came from, and
+`scripts/extract-transcripts.py --check` re-derives them to confirm the committed
+copies still reproduce. See [`MANIFEST.md`](MANIFEST.md) for the full mapping and
+one caveat about the final, still-running session.
 
 This project was developed with extensive large-language-model assistance: the
 literature review, the formulation and proof of Lemma A, the general-position

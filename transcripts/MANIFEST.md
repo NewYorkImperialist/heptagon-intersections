@@ -1,11 +1,71 @@
 # Transcript manifest
 
-Mapping from original filenames, as received, to the names used in this
-repository. Contents are **byte-for-byte identical**; only names changed.
+Mapping from source materials to the names used in this repository.
+
+**Two kinds of transcript live here, and the difference matters.** Session 01 of
+2026-09-13 was *received* as a file and is byte-for-byte identical to what was
+received — only its name changed. Every later session is a **derived** transcript
+extracted from Claude Code's own session logs; it contains the full conversation
+but not the tool output. The section below says exactly what is kept and what is
+dropped. Do not cite a derived transcript as a verbatim record.
 
 | Original path | Current path | SHA-256 | Verified identical |
 |---|---|---|---|
 | `transcript.txt` | `claude/2026-09-13-claude-session-01.md` | `d86149490a6262478d86fa3c67af592ec57ccb96dd76cafe6a5cf4e5eedae4a1` | yes (2026-09-13) |
+
+## Sessions 02 onwards — DERIVED transcripts (added 2026-09-14)
+
+The session above was *received* as a text file and is byte-for-byte identical to
+what was received. **The sessions below are different in kind and must not be
+read as verbatim copies.**
+
+They come from Claude Code's own JSONL session logs, which total roughly **18 MB**
+— the large majority of which is tool *output*: file dumps, build logs and command
+results that simply duplicate the contents of this repository. Committing them
+verbatim would add megabytes of noise around the part that has research value.
+
+What is committed instead is a **derived transcript** containing:
+
+* every user message;
+* every assistant reply;
+* a one-line record of each tool invocation (name and description).
+
+and deliberately **omitting**:
+
+* tool result bodies;
+* the assistant's internal reasoning blocks;
+* harness scaffolding (system reminders, slash-command wrappers).
+
+Absolute paths under the user's home directory are rewritten to `~`. The
+transcripts were scanned before commit for email addresses, API keys and
+credentials: **none were found.**
+
+| Source log | Current path | Source SHA-256 | Session span (UTC) | Size |
+|---|---|---|---|---|
+| `8fe86978-e30b-426b-aae4-188ed76edd8c.jsonl` | `claude/2026-09-13-claude-session-02.md` | `4782edbc32aafe31…` | `2026-09-13T05:29:43` → `2026-09-14T20:13:17` | 394 KB |
+| `b7452178-c93e-4615-8dab-01ce916ad8a7.jsonl` | `claude/2026-09-14-claude-session-01.md` | `6b21c65632172a89…` | `2026-09-14T02:29:42` → `2026-09-14T03:23:13` | 118 KB |
+| `5df73377-5651-4588-833e-27750ad8bfea.jsonl` | `claude/2026-09-14-claude-session-02.md` | `b808bea23df720e6…` | `2026-09-14T20:16:04` → `2026-09-14T21:38:30` | 137 KB |
+
+### Reproducing them
+
+`scripts/extract-transcripts.py` regenerates these files from the source logs,
+and `--check` verifies the committed copies still reproduce exactly:
+
+```
+python3 scripts/extract-transcripts.py --check
+```
+
+Each transcript records the SHA-256 of the log it came from, so a reader can
+confirm which log produced it.
+
+### One caveat, stated because it will otherwise look like a defect
+
+The **final** session's transcript is a snapshot taken while that session was
+still running. Re-running the extractor later will produce a *longer* file for
+it, and `--check` will report a difference. That is correct behaviour, not
+corruption: the recorded source SHA-256 identifies the exact log state the
+committed snapshot was taken from. Earlier sessions are closed and reproduce
+exactly.
 
 ## Naming scheme
 
