@@ -812,3 +812,44 @@ dichotomy.
   alone, which does not preserve which pairs are consecutive — the configuration
   stabiliser has order 16 and the correct count is `8!/16 = 2520 = 3 × 840`.
 * Full detail: [`a7-independent-resolution.md`](a7-independent-resolution.md).
+
+---
+
+## K-15 — Stale `summary` block in `py_no_a7.json`  (REPORTING DEFECT, 2026-09-13)
+
+**Status:** open, cosmetic. No computed result is affected.
+
+`independent/no_a7_experiment/py_no_a7.json` holds a `cases` list that
+**concatenates two different record types**: 225 witness-bearing certificate
+records (keys `graph`, `witness`) carried over from the with-A7 run, and 2,187
+no-A7 survivor records (keys `SURVIVES`, `P_neighbourhood_bitmasks`, …).
+
+Its `summary` block mixes the two scopes:
+
+| field | value | actually describes |
+|---|---|---|
+| `cases` | 2412 | the whole list (225 + 2,187) |
+| `distinct_graphs` | 121 | the 225-record subset only |
+| `degree_sequence_distribution_P/Q` | `{[2,2,1,1,1,1,1]: 225}` | the 225-record subset only |
+| `witness_side_counts` | `{P: 225}` | the 225-record subset only |
+| `pair_kind_counts` | `{avoiding: 225}` | the 225-record subset only |
+
+A reader comparing `cases: 2412` against `distinct_graphs: 121` will reasonably
+conclude something is broken. Nothing is: recomputed directly from `cases`,
+
+* 2,187 survivor records, all with `SURVIVES = true`, on **412** distinct graphs;
+* 225 witness records on **121** distinct graphs;
+* the two graph sets are **disjoint**, and `121 + 412 = 533` — exactly the
+  post-Černý-L2 count, so the split is complementary;
+* **none** of the 412 survivor graphs is `H`-bipartite on both sides, so A7 is
+  precisely what removes them;
+* every survivor has degree sequence `(2,2,1,1,1,1,1)` on the P side.
+
+The load-bearing figures live in `pipeline_counts` and in
+`log_py_no_a7.log`, and both are correct
+(`42,238 → 6,376 → 533 → 2,412 → 2,187`).
+
+**Why not simply patched:** the file is a generated artifact and hand-editing it
+would break the correspondence with its generator. The fix belongs in the
+generator, which should recompute `summary` per record type (or emit the two
+lists under separate keys) and be re-run.

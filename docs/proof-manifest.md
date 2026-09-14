@@ -57,10 +57,16 @@ explicit construction attains 38. Therefore `f(7,7) = 38`.
 **On `I = 42`.** Černý Theorem 4 gives `f(7,7) ≤ 40`, which would make the
 `I = 42` case vacuous — but the project does **not** import it (it rests on
 Černý Lemma 3, unaudited here). The argument uses only Černý *Lemma 1*, which
-caps `I ≤ 42`, so `I = 42` must be excluded on its own: `|E| = 7` forces a
-perfect matching, giving **7** components each a matched pair, so `H` is the
-complement of `C₇` and contains a triangle, contradicting A7-EXT. Theorem 4 is
-corroboration, not an input.
+caps `I ≤ 42`, so `I = 42` must be excluded on its own. `|E| = 7` forces a
+perfect matching, so each `N(q_j)` is a singleton `{i_j}` and `q_j`'s crossing
+set is `FULL ∖ {i_j}`, of size 6. Lemma A forbids an uncrossable 4-set here (it
+would force `|E| ≥ 10 > 7`), so both polygons are exceptional; compatibility puts
+that 6-set inside a maximal crossing set, and every maximal crossing set is
+`FULL ∖ {m}` for `m ∈ M`, also of size 6. Two 6-subsets of a 7-set nest only if
+equal, so `i_j ∈ M` for all seven distinct `i_j` — giving `|M| = 7` against
+`|M| = 5`. This uses **no A7-EXT**: the older route through `H` = complement of
+`C₇` is correct but unnecessary, so A7-EXT is load-bearing at exactly one point,
+the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 
 ## Dependency summary
 
@@ -72,7 +78,7 @@ corroboration, not an input.
 | **C2-BRIDGE** | filter fires iff *exact induced* perfect matching | project inference | this project | LEAN-KERNEL-CHECKED | certifies the Lean transcription, not the Python/C++ source |
 | **A5-C** | L5 on consecutive pairs | published | AKR L5 | SOURCE-AUDITED | none known |
 | **A5-A** | L5 on avoiding pairs | published | AKR L5 | SOURCE-AUDITED; bridge LEAN-KERNEL-CHECKED | none known |
-| **A7-EXT** | under the intended reading, AKR L7 gives: adjacent `H`-vertices have disjoint status sets | published + interpretation | AKR L7 | **HUMAN REVIEW PENDING** | **principal open item** |
+| **A7-EXT** | under the intended reading, AKR L7 gives: adjacent `H`-vertices have disjoint status sets | published + interpretation | AKR L7 | **VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE** | **principal open item**; Observation 6 is false as printed (K-14) but does not reach `S(e)`; four bridges remain prose |
 | **A7-BRIDGE** | non-empty status sets + disjoint across edges ⟹ `H` bipartite | project inference | this project | LEAN-KERNEL-CHECKED | none known; conditional on A7-EXT |
 | **LA** | Lemma A + parity ⟹ `I ≤ 38` | project lemma | this project | LEAN-KERNEL-CHECKED (counting core) | geometric premises stay hypotheses |
 | **OT** | 135 order types | external dataset | Aichholzer et al. | EXTERNALLY CROSS-CHECKED (exact set equality) | none known |

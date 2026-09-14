@@ -212,7 +212,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{A7-EXT} & Under the intended reading of ``associated''/``is hooking'', AKR Lemma 7 gives: adjacent $H$-vertices have disjoint status sets
   & published theorem $+$ interpretation & \cite[Lemma 7]{AckermanKeszeghRote2022}, \cite{AckermanKeszeghRote2020}
-  & \stat{human review pending} & \textbf{principal open item}; Observation 6 unproved and false under the printed definition of ``associated'' \\
+  & \stat{very strongly corroborated} & \textbf{principal open item}; Observation 6 is unproved and \emph{false as printed} (\S\ref{sec:defects}, item 6), though the failure cannot reach $S(e)$; four bridges from the machine checks to the geometry remain prose \\
 \addlinespace
 \textsf{A7-BRIDGE} & Non-empty status sets $+$ disjoint status sets across edges $\Rightarrow$ $H$ bipartite
   & project inference & this project
@@ -260,7 +260,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{UB42} & $I=42$ is impossible
   & project inference & this project, \S\ref{sec:i42}
-  & \stat{manually checked} & inherits \textsf{A7-EXT}; \textsf{C1} gives only $I\le42$, so this branch is needed \\
+  & \stat{manually checked}; exhaustively swept & consumes \textsf{C1}, \textsf{LA}, \textsf{EX} only --- \emph{not} \textsf{A7-EXT}; \textsf{C1} gives only $I\le42$, so this branch is needed \\
 \addlinespace
 \textsf{UB40} & $I=40$ is impossible, hence $f(7,7)\le38$
   & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5-C}, \textsf{A5-A}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}, \textsf{UB42}
@@ -335,31 +335,55 @@ matching}. Its components are therefore the $7$ matched pairs: each component
 contains exactly one side of $P$ and one of $Q$. In particular no two sides of
 $P$ share a component.
 
-Hence every consecutive pair $e_i=(p_i,p_{i+1})$ is relevant, so
-$V(H)=\mathbb{Z}_7$; and for any $i,k$ with $(k-i)\bmod7\notin\{0,1,6\}$ the four
-sides $p_i,p_{i+1},p_k,p_{k+1}$ are distinct and hence lie in four distinct
-components. So $H$ is exactly the complement of the $7$-cycle: $7$ vertices and
-$14$ edges, containing the triangle $e_0e_2e_4$. A triangle is not bipartite,
-contradicting \textsf{A7-EXT} together with \textsf{A7-BRIDGE}.
+Next, both polygons are \emph{exceptional}. Lemma~\ref{lem:A} with $|S|=4$ would
+force $|\ED|\ge 7+(7-4)=10>7$, so neither $P$ nor $Q$ admits an uncrossable
+$4$-set. Hence the crossing-set data of \S\ref{sec:exc} applies to each.
+
+Now fix $j$. Since $\GD$ is a perfect matching, $N(q_j)=\{i_j\}$ is a singleton,
+so the set of sides of $P$ that $q_j$ \emph{crosses} is
+$\{0,\dots,6\}\setminus\{i_j\}$, of size $6$. Compatibility requires this
+crossing set to be contained in a maximal crossing set of $P$'s class. Every
+exceptional class has exactly five maximal crossing sets, each of size $6$ and of
+the form $\{0,\dots,6\}\setminus\{m\}$ for $m\in M_P$, with $|M_P|=5$. Two
+$6$-subsets of a $7$-set nest only if they are equal, so $i_j\in M_P$. This holds
+for every $j$, and the $i_j$ are distinct because $\GD$ is a matching, so all
+seven sides of $P$ lie in $M_P$ --- contradicting $|M_P|=5$. Hence $I\neq42$.
 
 \begin{remark}
-The shipped $|\ED|=7$ sweep reproduces this independently:
+Verified by exhaustive sweep over all $7!=5{,}040$ perfect matchings against all
+$14$ profile classes: $0$ survive. Re-run against the independent profile
+reconstruction of \S\ref{sec:impl} (whose class labels differ from the shipped
+ones by a dihedral relabelling of side indices, matched $14/14$): also $0$. The
+two invariants consumed --- $|M|=5$, and maximal crossing sets
+$=\{\textsc{full}\setminus\{m\}: m\in M\}$ --- were recomputed from the class data
+rather than read from the stored invariant block, and hold for all $14$ classes
+in both reconstructions.
+\end{remark}
+
+\begin{remark}[This branch does not depend on \textsf{A7-EXT}]\label{rem:i42noa7}
+Earlier versions of this manifest excluded $I=42$ through \textsf{A7-EXT}: a
+perfect matching makes every consecutive pair relevant and every index-non-adjacent
+pair span four distinct components, so $H$ is the complement of the $7$-cycle,
+which contains the triangle $e_0e_2e_4$ and is not bipartite. That argument is
+correct but unnecessary. The route above consumes only \textsf{C1},
+\textsf{LA} and the exceptional-class invariants \textsf{EX}, all of which are
+elementary and order-type based, so no further external lemma is imported ---
+in particular not \cite[Lemma 3]{CernyEtAl2003}, whose four-page case analysis
+this project has not audited and which an earlier draft wrongly treated as the
+only available reroute.
+
+The practical consequence is that \textsf{A7-EXT} is load-bearing at exactly
+\emph{one} point in the proof: the $I=40$ endgame. It cannot be dropped there ---
+with the filter off the pipeline ends at $2{,}187$ surviving triples on $412$
+graphs, not $0$ (\S\ref{sec:comp}).
+\end{remark}
+
+\begin{remark}
+The shipped $|\ED|=7$ sweep reproduces the older route independently:
 $5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7-EXT}). The companion
 $|\ED|=8$ sweep gives $476{,}280\to1{,}078\to0$, for $I=41$, which parity already
 excludes. Both were a by-product of the historical enumeration bug of
 Remark~\ref{rem:bug} and are corroborative rather than load-bearing.
-\end{remark}
-
-\begin{remark}[Why not route around \textsf{A7-EXT} here]
-$I=42$ could instead be excluded by \cite[Lemma 3]{CernyEtAl2003} directly --- the
-six matched partners of six consecutive sides of $P$ form precisely the
-configuration that lemma forbids --- which would avoid \textsf{A7-EXT} in this
-branch. We do not do this. Since the $I\neq40$ branch is already
-\textsf{A7-EXT}-gated and the theorem is the conjunction of the two branches, the
-conjunction is \textsf{A7-EXT}-gated either way: routing $I\neq42$ around it
-reduces the \emph{number of appearances} of the weak link without reducing the
-probability that the theorem survives. It would buy presentation at the cost of
-importing a further un-audited lemma.
 \end{remark}
 
 \subsection{\textsf{C2} --- {\v C}ern{\'y} Lemma 2}
@@ -438,8 +462,8 @@ components of $\GD$. Condition (b) is imposed directly, so an $H$-edge reproduce
 Lemma 7's hypothesis exactly.
 
 For $e\in V(H)$ let $A(e)$ be the set of pairs of consecutive sides of $Q$
-associated to $e$ \emph{in the narrow sense} --- carrying the two cross
-non-edges, i.e.\ the full conclusion of Lemma 5 --- and put
+associated to $e$ \emph{in the narrow sense} --- carrying, beyond the two edges
+of $\ED$, the \emph{cone dichotomy} of Lemma 5 --- and put
 \[
   S(e)=\{\text{hooking}: \exists\alpha\in A(e),\ I(\alpha)\in\Cone(e)\}
      \cup\{\text{hooked}: \exists\alpha\in A(e),\ I(e)\in\Cone(\alpha)\}.
@@ -447,7 +471,29 @@ non-edges, i.e.\ the full conclusion of Lemma 5 --- and put
 $S(e)\neq\emptyset$: $e\in V(H)$ is Lemma 5's hypothesis, so $A(e)\neq\emptyset$,
 and Lemma 5's dichotomy realises at least one status.
 
-\subsubsection*{\textsf{A7-EXT} --- external, \stat{human review pending}}
+\begin{remark}[Which extra conditions the narrow sense actually needs]\label{rem:narrow}
+Lemma 5 delivers, beyond the two edges $(p_i,q_j),(p_{i+1},q_{j\pm1})\in\ED$,
+both the two cross non-edges and the cone dichotomy. Only the second is a genuine
+strengthening.
+
+\emph{The cross non-edges are automatic.} If $(p_i,q_{j\pm1})\in\ED$ then
+$p_i - q_{j\pm1} - p_{i+1}$ is a path in $\GD$, so $\CC(p_i)=\CC(p_{i+1})$,
+contradicting $e\in V(H)$. This is pure connectivity; bipartiteness of $\GD$
+plays no part. Checked exhaustively over all $2^{16}$ bipartite graphs on $4+4$
+vertices: $110{,}304$ qualifying configurations, $0$ violations.
+
+\emph{The cone dichotomy is not.} Adding the non-edges does \emph{not} recover
+Observation 6: for
+$a=[(0,0),(2,0)]$, $b=[(0,0),(0,3)]$, $A=[(-1,10),(\tfrac1{10},\tfrac65)]$,
+$B=[(-1,10),(\tfrac75,-2)]$ all four edge and non-edge conditions hold with $a,b$
+consecutive, yet the axis $y=-10x$ leaves both $a$ and $b$ in $y\ge-10x$.
+
+So the narrow notion used here is \textbf{edges $+$ cone dichotomy}, the
+non-edges being free. A formalisation that instead defined it as
+``edges $+$ cross non-edges'' and then asserted Observation 6 would be unsound.
+\end{remark}
+
+\subsubsection*{\textsf{A7-EXT} --- external, \stat{very strongly corroborated}}
 
 \begin{quote}
 Under the intended interpretation of ``associated'' and ``is hooking'',
@@ -459,11 +505,22 @@ This is the one item that remains subject to external human review, for three
 reasons, in increasing order of comfort.
 \begin{enumerate}[leftmargin=*]
   \item \textsc{akr}'s Observation 6 (the Axis Property) is stated
-    \emph{without proof} in both versions, and is \emph{false} under the printed
-    definition of ``associated'', which requires only two edges of $\GD$ and not
-    the two cross non-edges. An explicit rational counterexample is recorded in
-    the project's review note. Observation 6 is used throughout Lemma 7's case
-    analysis.
+    \emph{without proof} in both versions, and is \emph{false as printed}. The
+    counterexample is not a bare four-segment picture but a pair of genuine
+    simple polygons in full general position,
+    \[
+      P=(2,0),(3,4),(-2,0);\qquad Q=(4,-4),(-3,1),(0,-1),(3,3),(2,1),
+    \]
+    verified in exact integer arithmetic (\S\ref{sec:defects}, item 6). Here
+    $q_0,q_4$ is associated to $p_0,p_1$ under the printed definition --- indeed
+    the cross non-edges hold too --- yet the axis separates nothing. Observation 6
+    is used throughout Lemma 7's case analysis.
+
+    This does \emph{not} refute \textsf{A7-EXT}. Each status is by definition one
+    disjunct of the cone dichotomy, so an associated pair failing the dichotomy
+    contributes nothing to $S(e)$ and can never participate in the hypothesis.
+    Equivalently, Lemma 7's hypothesis supplies the dichotomy exactly on the
+    pairs that matter (Remark~\ref{rem:narrow}).
   \item The conference version \cite{AckermanKeszeghRote2020} opens its proof of
     Lemma 7 by \emph{selecting} the associated pairs subject to the cone
     conditions $I(q_{i'},q_{i'\pm1})\in\Cone(p_i,p_{i+1})$, which forces the
@@ -474,8 +531,68 @@ reasons, in increasing order of comfort.
     authors' own independent computer verification of Lemma 7: $158{,}830$
     arrangements of eight lines, $840$ assignments each after symmetry, yielding
     $14$ configurations of which $13$ fail Lemma 5's hooking/hooked pattern. This
-    corroborates the \emph{statement}, not the project's interpretation.
+    corroborates the \emph{statement}. It also corroborates the
+    \emph{interpretation}: the stated ground for discarding those $13$ is that
+    ``some associated pair did not conform to the hooking/hooked pattern of
+    Lemma 5'', a sentence that is coherent only if ``associated'' already carries
+    the dichotomy.
+
+    Two of the four published numbers in \S10.2 do not reproduce, neither
+    affecting the conclusion. $158{,}830$ is a \emph{nine}-element count
+    (abstract order types on $9$ points); $x$-monotone \textsc{psla}s of $8$
+    pseudolines correspond to abstract order types on $9$ points, the ninth
+    element being the line at infinity, so a complete but redundant superset was
+    enumerated --- harmless for an impossibility claim. $840=8!/48$ quotients by
+    $\operatorname{Aut}$ of the disjointness graph alone ($\cong Q_3$, order
+    $48$), a group that does not preserve which pairs are consecutive; the
+    stabiliser of the configuration has order $16$, giving $8!/16=2520$,
+    reproduced by brute force over $S_8$. Both are fair questions for the
+    authors.
 \end{enumerate}
+
+\subsubsection*{Independent verification of \textsf{A7-EXT}}
+
+An oriented-matroid (rank-3 chirotope) encoding over the twelve segment
+endpoints makes the both-hooking and both-hooked patterns \textsc{unsat}, while
+the mixed patterns of \textsc{akr}'s Figure 6 are \textsc{sat}. Unsatisfiability
+over a \emph{superset} of realisable configurations is sound for an
+impossibility claim, so under-constraining is safe and only over-constraining
+would be fatal. The encoding was attacked on exactly that point:
+
+\begin{itemize}[leftmargin=*,nosep]
+  \item every encoded predicate was checked against the paper, and each
+    constraint is a \emph{necessary} consequence of the hypothesis;
+  \item \textbf{positive control:} \textsc{akr}'s own Figure 6 configuration,
+    reconstructed from integer line coefficients in exact rationals, satisfies
+    all $64{,}566$ clauses --- so the encoding is not vacuously over-constrained;
+  \item an independent re-encoding from scratch reproduces all $20$ verdicts;
+  \item re-solved with CaDiCaL, Glucose and MiniSat, all agreeing;
+  \item $15$ \textsc{drat} proofs verified by a from-scratch \textsc{rup}/\textsc{rat}
+    checker, itself validated on $\mathrm{PHP}(4)$ and $\mathrm{PHP}(5)$;
+  \item the chirotope axiom set validated by reproducing the published
+    enumeration counts $1,1,1,4$ for $n=3,\dots,6$ (\textsc{oeis} A006248);
+  \item coverage recomputed independently: the \textsf{generic}, \textsf{P-adj},
+    \textsf{Q-adj} and \textsf{PQ-adj} cases exhaust $n=7$, \emph{including} the
+    cyclic-distance-$2$ cases \textsc{akr}'s own described filter excludes.
+\end{itemize}
+
+Separately, a direct search for a counterexample on real heptagon pairs over
+exact integers, with simplicity and full general position enforced, examined
+${\sim}57{,}000$ admissible configurations and $306$ associated pairs on
+consecutive pairs in different components: $0$ violations.
+
+\begin{remark}[Why this is not \stat{verified independently}]\label{rem:a7gap}
+The machine checks are certificates about a chirotope encoding. Four steps
+connecting them to the geometric statement are hand-checked prose and none is
+certified: (i) general position of the $\le12$ vertices is \textsc{wlog}
+(inherited from \textsf{GP}; perturbation can change $\GD$); (ii) ``four distinct
+components'' yields exactly the encoded $20$-pair pattern; (iii) the four cases
+above exhaust $n=7$; (iv) Lemma 7's quantification matches the existential
+$S(e)$. The translation of ``segments cross'' and ``point in cone'' into
+chirotope conditions is validated by exact random testing, not by proof. And
+$S(e)\neq\emptyset$, needed alongside \textsf{A7-EXT}, rests on Lemma 5, which is
+machine-checked nowhere.
+\end{remark}
 
 \subsubsection*{\textsf{A7-BRIDGE} --- project inference, \stat{lean-kernel-checked}}
 
@@ -543,7 +660,7 @@ $p\notin S$ is disjoint from some $q_j$ --- remain explicit hypotheses,
 discharged in Lean only for the one explicit certificate pair. The
 $(\star)$ condition itself is not formalized.
 
-\subsection{Exceptional classification}
+\subsection{Exceptional classification}\label{sec:exc}
 
 All predicates used --- simplicity, crossing sets, the avoiding relation, the
 Lemma-2 windows --- are Boolean functions of the order type of the seven
@@ -637,6 +754,27 @@ triples live on exactly those same $121$ graphs: a graph may be compatible with
 several exceptional classes on either side, and $225=\sum_G |ok_P(G)|\cdot|ok_Q(G)|$
 over the $121$ surviving graphs. Every one of the $121$ graphs has degree sequence
 $(2,2,1,1,1,1,1)$ on both sides, and only $9$ of the $14$ classes occur.
+\end{remark}
+
+\begin{remark}[\textsf{A7-EXT} cannot be dropped from this branch]\label{rem:noa7}
+The filter at $42{,}238$ is the only place \textsf{A7-EXT} enters the proof
+(Remark~\ref{rem:i42noa7}), which raises the question of whether it is needed at
+all. It is. Re-running the whole pipeline with that filter switched off gives
+\[
+  13{,}003{,}620 \to 42{,}238 \to 6{,}376 \to 533 \to 2{,}412 \to \mathbf{2{,}187}
+\]
+surviving triples, on $412$ graphs --- not $0$. The structure is sharp: the $533$
+graphs surviving {\v C}ern{\'y} L2 without \textsf{A7-EXT} split as exactly
+$121$ $H$-bipartite $+$ $412$ non-bipartite; the $121$ are identical to the
+shipped certificate's graphs; and the avoiding-pair filter \textsf{A5-A} kills
+all $121$ and \emph{none} of the $412$. On the residual the two filters are
+perfectly complementary, so no reordering helps. No already-trusted ingredient
+substitutes: compatibility is already applied at full strength, and
+{\v C}ern{\'y} Lemma 3 kills $0$ of the $412$.
+
+This is evidence about the pipeline, not about \textsc{akr} Lemma 7: it shows the
+present toolkit cannot avoid \textsf{A7-EXT}, not that \textsf{A7-EXT} is
+mathematically indispensable.
 \end{remark}
 
 \begin{remark}[{\v C}ern{\'y} Lemma 3 is not a dependency]
@@ -894,7 +1032,8 @@ and the completeness of the $225$-case list is not formalized.}}
                              |
                       f(7,7) = 38   (candidate)
 
-   * A7-EXT: HUMAN REVIEW PENDING -- see the A7-EXT subsection of Section 4.  The chain is
+   * A7-EXT: VERY STRONGLY CORROBORATED, HUMAN REVIEW STILL DESIRABLE -- see the
+     A7-EXT subsection of Section 4.  The chain is
          A7-EXT  ==>  A7-BRIDGE  ==>  H bipartite
      where A7-EXT is the external reading of AKR Observation 6 / Lemma 7
      (adjacent H-vertices have disjoint status sets), and A7-BRIDGE is the
@@ -903,6 +1042,9 @@ and the completeness of the $225$-case list is not formalized.}}
      hypothesis and no AKR axiom.
      If A7-EXT fails, the H-bipartite filter is unjustified and the
      reduction from 42,238 onwards must be redone; UB40 fails.
+     A7-EXT enters at exactly one point, the I=40 endgame: the I != 42 branch
+     is routed around it through crossing-set compatibility alone, and the
+     filter cannot simply be dropped (without it 2,187 triples survive).
 \end{verbatim}
 }
 
@@ -940,15 +1082,39 @@ Listed because they calibrate how much checking this argument has had.
     exceptional objects instead of $16$, and an infeasible search.
     \emph{Repair:} the strict, vertex-avoiding form $(\star)$.
     \emph{Superseded by:} Lemma~\ref{lem:A} and Remark~\ref{rem:strict}.
+  \item \textbf{\textsc{akr} Observation 6 is false as printed} --- a defect in a
+    published paper, not in this project. Stated without proof in both versions
+    and used throughout the case analysis of Lemma 7. The counterexample is a
+    pair of genuine simple polygons,
+    \[
+      P=(2,0),(3,4),(-2,0);\qquad Q=(4,-4),(-3,1),(0,-1),(3,3),(2,1),
+    \]
+    verified in exact integer arithmetic and independently re-verified. Both are
+    simple; the eight vertices are distinct; no three of the eight are collinear;
+    no vertex of one lies on the other; no two of the eight sides are parallel;
+    $I(P,Q)=8$ is even --- every general-position condition of
+    \cite[\S3]{AckermanKeszeghRote2022} holds. $\CC(p_0)\neq\CC(p_1)$ and
+    $(p_0,q_0),(p_1,q_4)\in\ED$, so $q_0,q_4$ \emph{is} associated to $p_0,p_1$
+    under the printed definition, and both cross non-edges hold as well; yet the
+    cone dichotomy fails in both directions and the axis through the two apexes
+    leaves $a,b,A,B$ in one closed half-plane. \emph{Effect on this proof:} none.
+    A pair failing the dichotomy is neither hooking nor hooked, so it contributes
+    nothing to $S(e)$ (Remark~\ref{rem:narrow}). \emph{Effect on the
+    manifest:} its earlier gloss of the narrow notion as ``edges $+$ cross
+    non-edges'' was wrong, since those non-edges are automatic and the dichotomy
+    is what carries the content; corrected in \S\ref{sec:a7ext}.
 \end{enumerate}
 
 \section{Remaining work}
 
 \begin{enumerate}[leftmargin=*,nosep]
   \item External human review of the \textsc{akr} Observation 6 / Lemma 7
-    interpretation (\S\ref{sec:a7ext}).
-  \item Ideally, confirmation from one of the \textsc{akr} authors on the
-    intended reading of ``associated'' and ``is hooking''.
+    interpretation (\S\ref{sec:a7ext}), and in particular of the four prose
+    bridges of Remark~\ref{rem:a7gap}.
+  \item Ideally, confirmation from one of the \textsc{akr} authors: that
+    ``associated'', as used in Observation 6 and Lemma 7, carries the cone
+    dichotomy; and, separately, notice of the Observation 6 counterexample and of
+    the two \S10.2 counts that do not reproduce.
   \item Independent expert review of the overall proof.
   \item Conversion of this manifest into a readable paper.
   \item The human author learning the argument well enough to defend it.
@@ -970,10 +1136,17 @@ computer-assisted proof of $f(7,7)=38$. The novel finite reductions and the
 terminal elimination have been independently implemented, certificate checked,
 and in key places Lean-kernel verified. The principal remaining mathematical
 issue is \textsf{A7-EXT}: whether the published Observation 6 / Lemma 7 language
-licenses precisely the disjoint-status consequence the argument uses.
-Conditional on that consequence, the deduction that the auxiliary graph $H$ is
-bipartite (\textsf{A7-BRIDGE}) is formally verified in Lean. Independent expert
-review remains required before the result should be treated as established.
+licenses precisely the disjoint-status consequence the argument uses. That
+consequence has since been independently corroborated --- by proof-checked
+unsatisfiability of an oriented-matroid encoding with a verified positive
+control, and by exact-arithmetic search --- but its four bridges to the
+geometric statement remain prose, so it is recorded as \stat{very strongly
+corroborated}, not verified. The same investigation found \textsc{akr}'s
+Observation 6 to be false as printed, a defect that does not reach this argument
+(\S\ref{sec:defects}, item 6). Conditional on \textsf{A7-EXT}, the deduction that
+the auxiliary graph $H$ is bipartite (\textsf{A7-BRIDGE}) is formally verified in
+Lean. Independent expert review remains required before the result should be
+treated as established.
 }}
 \end{center}
 

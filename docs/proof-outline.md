@@ -148,12 +148,26 @@ A5 is violated.  All 225 cases are of this shape.
 
 ## Step 9  conclusion
 
-No admissible configuration survives, so I = 40 is impossible; I = 42 is
-impossible (|E| = 7 forces a perfect matching, hence 7 components, each one
-matched pair, so no two sides of P share a component; every consecutive pair is
-then relevant and every two index-non-adjacent pairs span four distinct
-components, making H the complement of C₇, which contains a triangle,
-contradicting A7); I = 41, 39 are impossible by parity.
+No admissible configuration survives, so I = 40 is impossible.
+
+I = 42 is impossible, and this branch needs **no A7**.  |E| = 7 forces a perfect
+matching, so each N(q_j) is a singleton {i_j} and the set of P-sides that q_j
+crosses is FULL ∖ {i_j}, of size 6.  Lemma A rules out an uncrossable 4-set here
+(it would force |E| ≥ 10 > 7), so both polygons are exceptional and the
+crossing-set data applies.  Compatibility requires FULL ∖ {i_j} to sit inside a
+maximal crossing set; every maximal crossing set is FULL ∖ {m} for some m ∈ M,
+also of size 6, and two 6-subsets of a 7-set nest only if equal — so i_j ∈ M.
+The i_j are distinct, so all seven P-sides lie in M, giving |M| = 7 and
+contradicting |M| = 5, which holds for all 14 exceptional classes.  Swept
+exhaustively over all 5,040 perfect matchings: 0 survive, on both the shipped and
+the independent profile reconstructions.
+
+(The older route — perfect matching ⟹ H = complement of C₇ ⟹ triangle ⟹ not
+bipartite, contradicting A7 — is correct but unnecessary.  A7 is therefore
+load-bearing at exactly one point: the I = 40 endgame, where it cannot be
+dropped — without it 2,187 triples survive on 412 graphs.)
+
+I = 41, 39 are impossible by parity.
 With the explicit 38-example, **f(7,7) = 38**. ∎
 
 ---
