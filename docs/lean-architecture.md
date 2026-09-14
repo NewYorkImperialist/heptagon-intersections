@@ -1,5 +1,35 @@
 # Lean architecture for f(7,7) = 38
 
+> **HISTORICAL DESIGN NOTE — SUPERSEDED (2026-09-14).**
+> This seven-file plan was **not followed**. The development that exists has
+> **23 libraries**, built bottom-up around explicit interfaces rather than
+> around the paper's sections. See [`../lean/README.md`](../lean/README.md) for
+> the actual architecture and
+> [`verification-status.md`](verification-status.md) row 16.
+>
+> Three divergences are worth knowing, because two of them were deliberate
+> improvements rather than drift:
+>
+> * **File 3, `Imported.lean`, was never built and should not be.** It would
+>   have introduced the five published lemmas as global **`axiom`s**. The
+>   project now refuses that: external content enters as *explicit named
+>   hypotheses* of the theorems that use it — (E1)–(E8) in
+>   `lean/FilterSoundness.lean` — so a reader can see precisely which result
+>   leans on which import, and `#print axioms` stays clean. An axiom would have
+>   hidden exactly what most needs to be visible.
+> * **Files 4–5 (`Profiles`, `Classification`) remain genuinely absent.** That
+>   is obligation (E7), the exceptional classification — a large computational
+>   obligation, not an unwritten file. A fragment of file 4 does now exist:
+>   `lean/AvoidingFlag.lean` carries the 14-class avoiding-pair table,
+>   generated from the JSON.
+> * **File 7's role is filled** by `lean/MainTheorem.lean` together with
+>   `IntersectionParity.isGreatest_38_final`.
+>
+> The difficulty estimates below were, for what it is worth, broadly wrong about
+> where the work would be: the "routine" items were routine, but the real cost
+> landed in bridging geometry to the finite model, which this plan does not
+> mention at all.
+
 Seven files, in dependency order.  Only files 1, 2, 6 contain new mathematics;
 3 is imported, 4-5 are data + reflection, 7 is assembly.
 
