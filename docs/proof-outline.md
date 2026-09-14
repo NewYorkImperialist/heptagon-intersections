@@ -76,6 +76,15 @@ Two non-collinear segments meet at most once, so crossings biject with
 intersecting side pairs; and ∂P, ∂Q are closed curves, so I is even.  Hence
 |E(G^D)| is odd.
 
+> **Both halves are kernel-checked as of 2026-09-14**, for an *arbitrary*
+> configuration and not merely for the certificate pair:
+> `EnumerationDomain.crossCountC_add_degSum` gives `I + |E| = 49`, and
+> `IntersectionParity.crossCountC_even` gives that `I` is even. The parity proof
+> stays inside `Int` arithmetic — `inside` is defined by ray-crossing parity
+> under a sheared height order — so it introduces no reals. Note this is a
+> *different* statement from `SegmentGeometry.metCount_even`, which concerns a
+> polygon meeting a **line** and is what Step 2 rests on.
+
 ## Step 2  minimum degree 1, so I ≤ 42
 
 By **C1** a line meets a simple 7-gon at most 6 times, so every side of either
@@ -167,7 +176,7 @@ bipartite, contradicting A7 — is correct but unnecessary.  A7 is therefore
 load-bearing at exactly one point: the I = 40 endgame, where it cannot be
 dropped — without it 2,187 triples survive on 412 graphs.)
 
-I = 41, 39 are impossible by parity.
+I = 41, 39 are impossible by parity (Step 1, now kernel-checked).
 With the explicit 38-example, **f(7,7) = 38**. ∎
 
 ---
