@@ -614,3 +614,70 @@ encoding of the filters (bitmask primitives rather than list-based predicates)
 could move the constant, though four orders of magnitude is a great deal to
 recover; and a mathematical restructuring that shrinks the 13,003,620 domain
 remains open, though §8a/§9 tested three such routes and two are dead.
+
+---
+
+## 8d. Re-encoding the filters: measured 7.3x. Route closed.
+
+§8c left one route to `hne40` that avoids `native_decide`: the ~1.03 s/graph cost
+was from *list-based* predicates (`mkMask`, `idx7.any`, closures, `reach`
+recomputed per vertex), so a pure `Nat` bitmask encoding might be far cheaper.
+That has now been measured.
+
+### Method
+
+A bitmask component-labelling was written with no `mkMask`, no `idx7.any`, no
+closures and no list traversal — unrolled 7-way bitwise tests, a 14-step fixed
+point on a `(P-mask, Q-mask)` pair. Preserved at
+[`results/benchmarks/fast-filter-attempt/fastlib.lean`](../results/benchmarks/fast-filter-attempt/fastlib.lean).
+
+**It was checked for correctness first**, because a fast wrong answer is not a
+speedup: on three sampled graphs it returns 172, 155, 216, matching an
+independent Python reference exactly.
+
+Both encodings were then timed on the **same 40 graphs**, doing the **same work**
+(component labelling only — the earlier 1.03 s/graph figure included
+bipartiteness as well, so comparing against it would have been unfair).
+
+### Result
+
+| encoding | 10 graphs | 40 graphs | slope |
+|---|---:|---:|---:|
+| existing, list-based `cmpP` | 11.25 s | 20.52 s | **0.309 s/graph** |
+| new, pure `Nat` bitmask | 2.13 s | 3.40 s | **0.042 s/graph** |
+
+**Speedup: 7.3x.** Real, and verified correct — but an order of magnitude short
+of what is needed.
+
+### Why that closes the route
+
+The gate in the plan was ≥50x to revive `hne40`, ~10x borderline, <5x closed.
+7.3x sits below borderline. Projecting it generously across all five filters:
+
+    1.026 s/graph / 7.3  =  0.14 s/graph
+    13,003,620 x 0.14 s  =  ~506 CPU-hours   (two filters)
+    all five filters     =  plausibly 1,000-1,500 CPU-hours
+
+A feasible one-off needs roughly 50 CPU-hours, i.e. about **75x** — and 7.3x was
+achieved on the filter most amenable to bitmask rewriting. The remaining cost is
+not an artifact of clumsy encoding; it is what kernel reduction of a nontrivial
+predicate costs, 13 million times over.
+
+### Status of the four routes to `hne40`
+
+| route | verdict |
+|---|---|
+| monolithic kernel evaluation | dead — memory (§8a) |
+| chunked kernel evaluation | memory solved, but measured the wrong problem (§8b) |
+| `UB42`-style structural argument from cheap invariants | dead — cuts 33% (§9) |
+| lead with the local filters | dead — leaves 2.8M of 13M (§9) |
+| **re-encode the filters for speed** | **dead — 7.3x, need ~75x (this section)** |
+
+**`hne40` stays outside the kernel.** With `native_decide` excluded by decision,
+that is now a settled conclusion rather than an open question, and the project's
+honest description is the one in `handoff` §9.4: a machine-checked *reduction*.
+
+What is *not* closed by this: a mathematical restructuring that shrinks the
+13,003,620-element domain itself. Three such attempts failed, but the space of
+arguments is not exhausted — that is mathematics, not engineering, and it is
+where a human expert would be worth far more than another benchmark.
