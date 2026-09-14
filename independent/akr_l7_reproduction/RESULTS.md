@@ -128,7 +128,13 @@ rows are not vacuous.
 ## 5. Bottom line
 
 * **Lemma 7 / A7-EXT is verified** by the oriented-matroid unsatisfiability
-  results in section 4, for every case of `n = 7` (see `coverage.py`).
+  results in section 4, for every case of `n = 7` — but **not** via
+  `coverage.py`, whose coverage argument is wrong and superseded (K-16). The
+  case exhaustion now rests on `coverage25/`, which solves all **25** labelled
+  `(P-type × Q-type)` combinations with no symmetry reduction, `both-hooking`
+  and `both-hooked` UNSAT in all 25, with 110 DRAT refutations and 15 models
+  re-verified. **The `PQ-adj` rows in section 4 above are vacuous** and should
+  not be read as evidence.
 * **No counterexample was found** by the straight-line searches either,
   consistent with that.
 * The straight-line searches are incomplete and are known to miss at least

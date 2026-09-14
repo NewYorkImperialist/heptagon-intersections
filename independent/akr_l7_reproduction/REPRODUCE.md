@@ -9,11 +9,19 @@ cd independent/akr_l7_reproduction
 
 Exit status: **0** = every check passed; **1** = something failed or an input is
 missing; **2** = every executed check passed but the run was *partial* because
-the z3 cross-check was deliberately skipped (`REPRO_SKIP_Z3=1`). The script never
-skips a step silently. Full wall time on the reference machine (Apple silicon,
-CPython 3.14): **5 min 3 s**, dominated by the 15 DRAT re-checks (~171 s).
+the solver cross-check was deliberately skipped (`REPRO_SKIP_Z3=1`). The script
+never skips a step silently. Full wall time on the reference machine (Apple
+silicon, CPython 3.14): **7 min 15 s** — the 15 DRAT re-checks (~171 s) plus the
+125 DRAT/model re-checks of the coverage replacement (~150 s, parallel).
 
-Logs of the last run are written to `evidence/logs/`.
+> **Coverage is step 10, not step 9.** `coverage.py` (step 9) is kept only as a
+> reproducible historical record; its orbit argument is refuted
+> (`docs/known-issues.md` **K-16**) and the representative it justifies is
+> vacuous. n = 7 coverage is established by `coverage25/run_coverage25.sh`
+> (step 10). If step 10 cannot run, `reproduce.sh` **fails**; it never reports a
+> complete A7 reproduction without it. See §6.
+
+Logs of the last run are written to `evidence/logs/` and `coverage25/logs/`.
 
 ---
 
@@ -23,7 +31,7 @@ Logs of the last run are written to `evidence/logs/`.
 |---|---|---|
 | CPython 3.9+ | everything | 3.14.7 — present |
 | `z3` (`pip install z3-solver`) | step 6 only (independent re-solve of all 20 instances, export of models for the 5 SAT ones) | **present, 5.1.0** |
-| `python-sat` (`pip install python-sat`) | **not needed** to check anything; only needed to *re-derive* DRAT proofs via `evidence/tools/gen_all_proofs.py` | **ABSENT** |
+| `python-sat` (`pip install python-sat`) | **not needed** to check anything; only needed to *re-derive* DRAT proofs (`evidence/tools/gen_all_proofs.py`, `coverage25/solve_all.py`) | **ABSENT from the system interpreter**; installed into the isolated venv `coverage25/.venv` (gitignored), which was used once to derive the 110 coverage-replacement certificates |
 | a SAT solver binary (cadical / kissat / glucose / minisat / lingeling) | nothing in this pipeline | **ABSENT** |
 
 The important consequence: **the DRAT certificates can be re-checked here with
@@ -118,7 +126,12 @@ n = 7 cases (§6).
    against `RESULTS.md` §4. Any disagreement is a hard failure.
 7. **Positive control, `evidence/tools/verify_fig6.py`** — see §8.
 8. **`evidence/tools/certificate.py`** — the Observation 6 counterexample.
-9. **`coverage.py`** — the n = 7 case-coverage argument (§6).
+9. **`coverage.py`** — **HISTORICAL ONLY, not load-bearing.** Reproduces the
+   original, refuted coverage argument verbatim so the record can be
+   re-derived. The step prints a banner saying so (§6).
+10. **`coverage25/run_coverage25.sh`** — **LOAD-BEARING.** The K-16
+   replacement: all 25 labelled `(P-type × Q-type)` combinations, no symmetry
+   reduction, 125 instances, each with a re-checked certificate (§6).
 
 ## 5. Tracked vs. gitignored vs. temporary
 
@@ -147,9 +160,25 @@ n = 7 cases (§6).
 > ```
 > Until those lines exist, `git status` will show the 19 MB of CNFs as
 > untracked. Nothing else in this directory should be ignored.
+>
+> `coverage25/` carries its own `coverage25/.gitignore` covering `.venv/`,
+> `cnf/` and `__pycache__/`, so no root-level rule is required for it.
 
-* **Temporary**: nothing outside `evidence/logs/` and `evidence/cnf/` is
-  written by a run.
+### `coverage25/` (the K-16 replacement)
+
+* **Tracked** (~1.4 MB): `coverage25/*.py`, `run_coverage25.sh`,
+  `results.json`, `CNF_SHA256SUMS.txt`, `ARTIFACT_SHA256SUMS.txt`,
+  `drat/` (110 refutations, ~600 KB), `models/` (15), `logs/`.
+* **Gitignored**: `coverage25/cnf/` (81 MB — an exact, deterministic function of
+  the two tracked sources `pq_types.py` and `evidence/tools/indep_om.py`,
+  rebuilt and hash-checked in ~8 s by `gen_cnf.py --write`),
+  `coverage25/.venv/` (the isolated python-sat environment used once to derive
+  the certificates; nothing tracked depends on it), `__pycache__/`.
+* The 110 `.drat` files **are** committed, for the same reason as the original
+  15: they cannot be re-derived without a SAT solver, and they are small.
+
+* **Temporary**: nothing outside `evidence/logs/`, `evidence/cnf/`,
+  `coverage25/logs/` and `coverage25/cnf/` is written by a run.
 
 ## 6. Case coverage for n = 7
 
@@ -166,22 +195,164 @@ n = 7 cases (§6).
 > `both-hooking` and `both-hooked` — is vacuously UNSAT. The geometrically
 > feasible PQ orbit was never solved here.
 >
-> Coverage was re-established separately by enumerating all **25**
-> `(P-type × Q-type)` combinations with no symmetry reduction: `both-hooking`
-> and `both-hooked` UNSAT in all 25. See `docs/known-issues.md` **K-16** and
-> `docs/a7-specification.md`. The DRAT verifications in §3 are unaffected — they
-> certify exactly the formulas they name.
+> Coverage is re-established by the enumeration described below, which is now
+> **executable and certificate-backed** in `coverage25/` (it was previously only
+> prose in `docs/known-issues.md` **K-16**). The DRAT verifications in §3 are
+> unaffected — they certify exactly the formulas they name.
 
-`coverage.py` (already in the repo; re-run as step 9) reproduces the **original,
-now-superseded** exhaustiveness argument. For n = 7 the two consecutive P-pairs are separated by
-d = (j-i) mod 7 in {2,3,4,5}; d = 3 and d = 4 give no endpoint coincidence
-(`generic`), while d = 2 and d = 5 give exactly one (`P-adj`, up to the
-a<->b / a'<->b' symmetry). The same analysis applies on the Q side, and the
-four possible Q-adjacencies form a **single orbit** under the order-16
-automorphism group of the configuration, so the one `Q-adj` representative
-covers all of them. `PQ-adj` is the simultaneous case. Reproduced verbatim in
-this run; output in `evidence/logs/coverage.txt`. **The last step of that
-argument does not hold — see the correction above.**
+### 6.1 What `coverage.py` (step 9) is, and is not
+
+`coverage.py` is retained and is still re-run, **as a historical record only**.
+Step 9 prints a banner saying so and the step name contains
+`HISTORICAL / SUPERSEDED, NOT load-bearing`. Its reproducible part is correct:
+for n = 7 the two consecutive P-pairs are separated by d = (j-i) mod 7 in
+{2,3,4,5}; d = 3 and d = 4 give no endpoint coincidence, d = 2 and d = 5 give
+exactly one. Its **last step is wrong**: the four Q-adjacencies do form a single
+orbit *in isolation*, but the combined types do not, so one representative does
+not suffice. Output in `evidence/logs/coverage.txt`.
+
+### 6.2 The replacement: `coverage25/` (step 10, LOAD-BEARING)
+
+```sh
+cd independent/akr_l7_reproduction/coverage25
+./run_coverage25.sh          # ~3 min; steps 1-4 need only the stdlib
+```
+
+| file | what it does | needs a solver? |
+|---|---|---|
+| `pq_types.py` | the 25 labelled combinations and the generalised model builder | no |
+| `completeness.py` | proves the 25-list is complete for n = 7 by exhaustive exact enumeration over Z_7 | no |
+| `gen_cnf.py` | regenerates the 125 DIMACS CNFs and checks SHA-256 | no |
+| `verify_all.py` | re-checks all 125 certificates (110 DRAT + 15 models) | **no** |
+| `resolve_check.py` | optional independent-solver cross-check of the 125 verdicts | yes (z3 and/or python-sat) |
+| `solve_all.py` | derives the certificates in the first place | yes (python-sat) |
+
+**No symmetry reduction is used anywhere in `coverage25/`.** That is the point:
+a symmetry reduction is what failed.
+
+### 6.3 The type list, and why it is complete
+
+Write the vertices of P as `V(k) = p_k ∧ p_{k+1}`, so `p_k = [V(k-1), V(k)]`,
+and likewise `W(k)` for Q. Lemma 7 involves two consecutive-side pairs of P at
+apex positions `u`, `u2`, two of Q at `w`, `w2`, and the four E_D edges, which
+match each P-pair *onto* a Q-pair. Because the four P-sides must be distinct
+(they lie in four distinct components of G_D), `d_P = (u2-u) mod 7 ∈ {2,3,4,5}`,
+and likewise `d_Q`.
+
+The six P-endpoints are `a2 = V(u-1)`, `v1 = V(u)`, `b2 = V(u+1)`,
+`ap2 = V(u2-1)`, `v2 = V(u2)`, `bp2 = V(u2+1)`. Solving the coincidence
+equations exactly in Z_7:
+
+| coincidence | condition | admissible `d` |
+|---|---|---|
+| `a2 = ap2` | `u-1 ≡ u2-1` | d = 0 — **impossible** |
+| `b2 = bp2` | `u+1 ≡ u2+1` | d = 0 — **impossible** |
+| `a2 = bp2` | `u-1 ≡ u2+1` | **d = 5** |
+| `b2 = ap2` | `u+1 ≡ u2-1` | **d = 2** |
+
+and every coincidence involving an apex (`v1`, `v2`) forces d ∈ {0,1,6}, all
+excluded. Hence: **an apex never coincides with anything; the only possible
+coincidences are far-endpoint-to-far-endpoint; and at most one can hold**
+(d cannot be both 2 and 5). So each of P and Q contributes one of five types —
+`none` plus four named adjacencies — giving **5 × 5 = 25**.
+
+The *names* `a, b, a', b'` are not geometry: choosing which pair is unprimed and
+which side of each pair is `a` is free (8 ways), and each choice forces the
+Q-names through E_D. `completeness.py` enumerates all
+`7·4 × 7·4 × 8 (E_D matchings) × 8 (labellings) = 50176` cases, verifies the
+three claims above with **zero** violations, and finds that all **25** labelled
+combined types occur. It then re-derives the defect for the record: under the
+order-16 automorphism group the four Q-adjacencies form **1** orbit in
+isolation (what `coverage.py` computed) but the combined types form **5**.
+
+*Assumption*, inherited from AKR §9.1 and already relied on by the existing
+encoder: P and Q are in general position, in particular they share no vertex.
+That is what makes the P- and Q-coincidence data independent, hence a product.
+
+### 6.4 Results — all 25 combinations, all five statuses
+
+Every verdict below is backed by a certificate re-checked by
+`coverage25/verify_all.py`: a DRAT refutation for `UNSAT`, an explicit model
+for `SAT`. `pts` is the number of distinct points after identification.
+
+| P-type | Q-type | pts | `none` | `mixed-1` | `mixed-2` | `both-hooking` | `both-hooked` | note |
+|---|---|---|---|---|---|---|---|---|
+| `none` | `none` | 12 | SAT | SAT | SAT | **UNSAT** | **UNSAT** | = legacy `generic` |
+| `none` | `A-Ap` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `none` | `A-Bp` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `none` | `B-Ap` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | = legacy `Q-adj` |
+| `none` | `B-Bp` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `a-ap` | `none` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `a-ap` | `A-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `a-ap` | `A-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `a-ap` | `B-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `a-ap` | `B-Bp` | 10 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `a-bp` | `none` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `a-bp` | `A-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `a-bp` | `A-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `a-bp` | `B-Ap` | 10 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `a-bp` | `B-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `b-ap` | `none` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | = legacy `P-adj` |
+| `b-ap` | `A-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `b-ap` | `A-Bp` | 10 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `b-ap` | `B-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** = legacy `PQ-adj` |
+| `b-ap` | `B-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `b-bp` | `none` | 11 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `b-bp` | `A-Ap` | 10 | SAT | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** |  |
+| `b-bp` | `A-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `b-bp` | `B-Ap` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+| `b-bp` | `B-Bp` | 10 | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **UNSAT** | **VACUOUS** |
+
+**`both-hooking` and `both-hooked` are UNSAT in all 25 combinations.** That is
+the Lemma 7 statement, now covering every case the n = 7 claim needs.
+
+### 6.5 Vacuous combinations — read this before using the table
+
+A combination whose `none` row is UNSAT has an **infeasible base pattern**:
+status `none` imposes no status constraint at all, so *every* other verdict in
+that row is vacuously UNSAT and carries no information about hooking. 12 of the
+25 are vacuous, and they are listed as such by `verify_all.py` and in
+`coverage25/logs/verify_all.json`.
+
+**The old `PQ-adj` representative is one of the 12.** Its non-vacuous
+counterparts — the combinations that actually had to be solved and never had
+been — are the four
+
+`Pa-ap/QB-Bp`, `Pa-bp/QB-Ap`, `Pb-ap/QA-Bp`, `Pb-bp/QA-Ap`
+
+which are exactly the `XOR = (1,1)` orbit named in K-16. All four are `SAT` for
+`none` (so the base pattern is genuinely realisable at the oriented-matroid
+level, with a machine-checked model) and `UNSAT` for `both-hooking` and
+`both-hooked`, each with a re-verified DRAT refutation. **This is the
+substantive new content of the fix.**
+
+Note that "vacuous" is not itself a defect: an UNSAT `none` row is a real
+result (that labelled type admits no configuration with the required
+intersection pattern at all). The defect was testing *only* such a
+representative while believing it stood for the others.
+
+### 6.6 Certificates and provenance
+
+* The CNFs are produced by the **same** encoder as the committed 20,
+  `evidence/tools/indep_om.py`, called with a generalised identification map.
+  Four of the 25 combinations coincide with the four legacy variants
+  (`generic`, `P-adj`, `Q-adj`, `PQ-adj`); `gen_cnf.py` asserts that those
+  **20/20 instances are byte-identical** to the hashes already committed in
+  `evidence/SHA256SUMS.txt`. That ties the 105 new formulas to the existing
+  audit trail rather than to a fresh re-implementation.
+* 110 UNSAT instances, **110 DRAT certificates**, all re-checked by
+  `evidence/tools/dratcheck.py` — the same from-scratch checker that step 3
+  validates in both directions (pigeonhole positives *and* four negative
+  controls). **95 of the 110 are new**; the other 15 correspond to the legacy
+  instances. There are **no solver-only verdicts**: every one of the 125
+  instances has a checkable certificate.
+* `verify_all.py` re-derives each CNF from source and refuses to check a
+  certificate whose formula SHA-256 does not match, so every certificate is
+  bound to its exact formula.
+* Three solvers (cadical153, glucose42, lingeling) agreed on all 125 when the
+  certificates were derived; `resolve_check.py` re-confirms the 125 verdicts
+  with z3 and/or python-sat, and exits non-zero if no solver is available
+  rather than skipping silently.
 
 ## 7. Validating the checker (this is the load-bearing part)
 
@@ -270,9 +441,13 @@ instead of failing obscurely. No recovered file was edited.
 
 ## 11. Known gaps
 
-* **The DRAT proofs cannot be regenerated in this environment** — that needs
-  `python-sat` (or a solver binary with `--proof`). They are recovered
-  artifacts, re-checked but not re-derived. This is why they are committed.
+* **The original 15 DRAT proofs cannot be regenerated by the system
+  interpreter** — that needs `python-sat` (or a solver binary with `--proof`).
+  They are recovered artifacts, re-checked but not re-derived. This is why they
+  are committed. The 110 proofs under `coverage25/drat/` *were* derived here,
+  by `coverage25/solve_all.py` running in the isolated venv
+  `coverage25/.venv` (python-sat 1.9.dev15, lingeling); they are committed for
+  the same reason, since that venv is not tracked.
 * `evidence/tools/om_global2.py`, `realize8.py` and `hunt_global.py` are
   recovered and hashed for completeness but are **not** run by `reproduce.sh`:
   the first two need a real SAT solver, and `hunt_global.py` is a randomised
@@ -280,4 +455,10 @@ instead of failing obscurely. No recovered file was edited.
 * The `sat` rows remain statements about oriented matroids, not claims of
   straight-line realisability — as `RESULTS.md` §4 already notes. The one
   exception is `generic/mixed-1`, which §8 shows *is* realisable by the actual
-  Fig. 6 coordinates.
+  Fig. 6 coordinates. The same caveat applies to the 15 `sat` rows of §6.4: they
+  show the base pattern is non-vacuous *as an oriented matroid*, which is
+  exactly what is needed to rule out a vacuous refutation, and nothing more.
+* `RESULTS.md` and `README.md` in this directory still describe only the
+  original four variants and the superseded coverage argument. They were not
+  edited here (they are outside this task's ownership); §6 of this file and
+  `coverage25/` are authoritative for coverage.

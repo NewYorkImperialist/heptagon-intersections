@@ -1,0 +1,8 @@
+python : 3.14.7 on macOS-15.6.1-arm64-arm-64bit-Mach-O
+z3     : PRESENT
+pysat  : ABSENT (only needed to RE-DERIVE the DRAT proofs)
+cross-check interpreter: /Users/jaydenlin/dev/lean/heptagon-intersections/independent/akr_l7_reproduction/coverage25/.venv/bin/python
+venv pysat: 1.9.dev15
+NOTE: the 110 DRAT certificates under drat/ were derived once by
+      solve_all.py in the isolated venv coverage25/.venv (gitignored).
+      Re-CHECKING them (verify_all.py) needs only the standard library.

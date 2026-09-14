@@ -522,7 +522,7 @@ certificate's convenience fields as claims rather than input. Note the last line
 independent/akr_l7_reproduction/reproduce.sh
 ```
 
-Observed: **8 min 20 s**, exit 0, `ALL CHECKS PASSED`. Requires `python3` and
+Observed: exit 0, `ALL CHECKS PASSED`. Since 2026-09-14 it also runs the **load-bearing step 10**, the K-16 replacement coverage (`coverage25/`), which adds a few minutes; the run fails if that step is missing, non-executable, exits non-zero, or does not print its success line. Requires `python3` and
 the `z3` Python package (`pip install z3-solver`); without `z3` you can run
 `REPRO_SKIP_Z3=1 independent/akr_l7_reproduction/reproduce.sh`, which is honest
 about the gap and exits `2` (PARTIAL), never `0`.
@@ -552,7 +552,7 @@ Observation 6 counterexample of §5; and the `n = 7` case coverage.
 > `z3` output of this very run, and status `none` imposes no constraints, so
 > every `PQ-adj` verdict is vacuously UNSAT). The correction is stated in
 > `independent/akr_l7_reproduction/REPRODUCE.md` §6 and in `known-issues.md`
-> K-16, but the harness does not say it. The replacement — all 25
+> K-16. The replacement — all 25
 > `(P-type × Q-type)` combinations with no symmetry reduction — is **not
 > re-run here**, and its script is not in the repository (§6.3).
 
@@ -803,14 +803,16 @@ errors that survived review:**
   into four orbits, and the one tested was *vacuous* (status `none` imposes no
   constraints, and the base pattern was already UNSAT, so every verdict for that
   orbit was vacuously UNSAT). **This gap had been endorsed as sound by an
-  earlier hostile review.** Reported closed by enumerating all 25
-  (P-type x Q-type) combinations with no symmetry reduction — **but as of
-  2026-09-14 that closure is prose only.** The 25-case script was run in a
-  scratch directory and is not recoverable, and none of the 15 committed DRAT
-  certificates corresponds to those formulas. The honest status is: *the
-  defect is confirmed and the fix is described but not shipped.*
-  Reconstruction is in progress; until it lands, `reproduce.sh` still runs the
-  superseded `coverage.py` and must not be read as establishing exhaustive
+  earlier hostile review.** **Closed, with certificates, on 2026-09-14** by
+  `independent/akr_l7_reproduction/coverage25/`: all **25** labelled
+  (P-type x Q-type) combinations solved with no symmetry reduction,
+  `both-hooking` and `both-hooked` UNSAT in all 25, backed by **110 DRAT
+  refutations and 15 explicit models, 125/125 re-verified** against CNFs
+  re-derived from source and matched by SHA-256. The 25-figure is itself derived
+  in exact Z_7 arithmetic (50,176 labelled cases, 0 violations), so it is exact
+  rather than a superset. **12 of the 25 are vacuous and the tooling says so** --
+  including the legacy `PQ-adj` case, which is the original defect: the one
+  combination previously tested was a vacuous one.py` and must not be read as establishing exhaustive
   coverage.
 
 The pattern is clear and worth stating for its own sake: *symmetry reductions
@@ -1006,8 +1008,10 @@ is formalized — so the Lean claims are narrower than their file names suggest.
    §2.6, independently of any code (§6.1).
 3. **One hour:** recompute the stored `avoiding` flags from the 14-class profile
    table (§6.4). Smallest real gap in the Lean development.
-4. **One hour:** rewrite and re-run the 25-case symmetry-free enumeration
-   (§6.3), which is currently prose only.
+4. **One hour:** re-run the 25-case symmetry-free enumeration and re-check its
+   certificates yourself — `coverage25/verify_all.py`, stdlib-only, ~3 min, no
+   solver and no trust in ours (§6.3). Better still, re-derive the 25-figure
+   independently from `coverage25/completeness.py`'s argument.
 5. **An afternoon, highest value of all:** read
    [`a7-specification.md`](a7-specification.md) §§4–6 and tell the project
    whether the narrow reading of "associated" is what AKR's published text

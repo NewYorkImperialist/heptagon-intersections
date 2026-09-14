@@ -1,0 +1,9 @@
+# Isolated virtualenv used only to generate the DRAT certificates (python-sat).
+# Nothing tracked depends on it: verify_all.py needs only the stdlib.
+.venv/
+__pycache__/
+# The 125 DIMACS CNFs (~81 MB) are an exact, deterministic function of
+# pq_types.py + ../evidence/tools/indep_om.py, both tracked, and are checked
+# against CNF_SHA256SUMS.txt on every run.  Regenerate with:
+#     python3 gen_cnf.py --write
+cnf/

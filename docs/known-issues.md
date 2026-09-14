@@ -967,29 +967,75 @@ with no symmetry reduction: `both-hooking` and `both-hooked` reported **UNSAT in
 all 25**, and `none` SAT in exactly one Q-type per P-type — the `XOR = (1,1)`
 one, which would independently confirm the corrected orbit analysis.
 
-> **STATUS CORRECTION (2026-09-14).** That closure is currently **prose only**.
-> The 25-case script was run in a session scratchpad and is **not recoverable** —
-> I searched, and no surviving file enumerates `(P-type × Q-type)` combinations.
-> So the repository does **not** currently contain executable evidence for the
-> replacement, and none of the 15 committed DRAT certificates corresponds to
-> those formulas.
->
-> Until the reconstruction lands, the honest status of K-16 is: **the defect is
-> confirmed and the fix is described but not shipped.** `reproduce.sh` still runs
-> the superseded `coverage.py` and must not be read as establishing exhaustive
-> coverage. Reconstruction is in progress under
-> `independent/akr_l7_reproduction/coverage25/`; the "25" figure itself is being
-> re-derived rather than assumed.
+> **STATUS CORRECTION (2026-09-14), now superseded — kept for the record.** For
+> part of 2026-09-14 that closure was **prose only**: the 25-case script had been
+> run in a session scratchpad and was not recoverable, no committed DRAT
+> certificate corresponded to those formulas, and the honest status was "the
+> defect is confirmed and the fix is described but not shipped."
 
-### Why this matters beyond the fix
+### CLOSED, WITH CERTIFICATES (2026-09-14)
 
-It is the second time a *symmetry reduction* has hidden a hole in this project
-(the first was the representative-labelling artifact of K-11/D2). Symmetry
-arguments compress the search and are correspondingly easy to get wrong in a way
-that leaves the headline number unchanged. Any future reduction should be
-accompanied by a vacuity check on the tested representative: if the base pattern
-with no additional constraints is already UNSAT, the representative is carrying
-no information.
+The replacement is now **shipped and machine-checked**, under
+`independent/akr_l7_reproduction/coverage25/`. Verified by the coordinator by
+re-running it, not accepted from a report:
+
+* **The figure 25 is exact, not a superset.** `completeness.py` derives the type
+  list from scratch in exact `Z_7` arithmetic with **no symmetry reduction and
+  no orbit argument**. Writing `V(k) = p_k ∧ p_{k+1}`, the two P-adjacency pairs
+  sit at `u` and `u2` with `d = (u2 − u) mod 7 ∈ {2,3,4,5}` (`d = 0` is the same
+  pair; `d = 1, 6` share a side, contradicting four distinct components). Solving
+  the coincidence equations: an **apex** never coincides with anything (every
+  apex coincidence forces `d ∈ {0,1,6}`, all excluded), only far-endpoint pairs
+  can coincide (`a2 = bp2` at `d = 5`, `b2 = ap2` at `d = 2`), and at most one
+  can hold. Hence five types per polygon and `5 × 5 = 25` combined. An exhaustive
+  sweep of **50,176** labelled cases reports **0** violations of all three claims
+  and finds all 25 realisable. Re-run independently: `realisable \ solved = 0`.
+* **All 25 combinations are solved separately.** `both-hooking` and
+  `both-hooked` are **UNSAT in all 25**.
+* **125 instances, 125 certificates, zero solver-only verdicts.** 110 UNSAT
+  instances carry DRAT refutations (**110/110 re-verified** by the existing
+  `evidence/tools/dratcheck.py`) and 15 SAT instances carry explicit models
+  checked clause by clause. Each certificate is bound to its formula by SHA-256:
+  `verify_all.py` re-derives every CNF from source and refuses to check a
+  certificate whose formula hash does not match. **Coordinator re-ran
+  `verify_all.py` end to end: 125 verified, 160 s.**
+* **The 20 legacy-twin CNFs are asserted byte-identical** to the hashes already
+  in `evidence/SHA256SUMS.txt`, so the new encoder is not a different encoder.
+
+**The orbit structure, now demonstrated rather than argued.** `completeness.py`
+reproduces `coverage.py`'s computation and confirms the four Q-adjacencies form
+**1** orbit *in isolation* — `coverage.py` was correct as far as it went. The
+**combined** `(P-type, Q-type)` types form **5** orbits under the same group.
+The previously-untested orbit
+`{Pa-ap/QB-Bp, Pa-bp/QB-Ap, Pb-ap/QA-Bp, Pb-bp/QA-Ap}` is exactly the `XOR=(1,1)`
+orbit named in the original diagnosis, and it is the substantive new content:
+each of its four members has `none` **SAT** (so the base pattern is genuinely
+feasible at the oriented-matroid level) with `both-hooking`/`both-hooked` UNSAT.
+
+**12 of the 25 are VACUOUS and the tooling says so.** Their `none` instance is
+UNSAT, so the base pattern is infeasible and their other verdicts carry no
+information — including `Pb-ap/QB-Ap`, **the legacy `PQ-adj` case**, which is the
+original defect: the one combination previously tested was one of the vacuous
+ones.
+
+**A separate, serious defect was found and fixed in the harness itself.**
+`reproduce.sh`'s `step()` helper and four inline steps used
+`if cmd | tee log; then` with no `pipefail`. A pipeline's exit status is the last
+command's — `tee`'s — which is always 0, so **every failing step would have
+printed PASS** while the failure text scrolled past in the log. Now read from
+`${PIPESTATUS[0]}`. Confirmed independently:
+`if false | tee /dev/null; then echo PASS; fi` prints `PASS`. This had nothing to
+do with K-16 and would have masked any future regression in the A7 reproduction.
+
+`coverage.py` is retained and still re-run, but **demoted to
+`HISTORICAL / SUPERSEDED, NOT load-bearing`** with a printed banner. The new
+load-bearing step 10 fails the whole run if `run_coverage25.sh` is missing,
+non-executable, exits non-zero, or does not print its success line — and the
+step-10 log is deleted first so a **stale log cannot satisfy the grep**.
+
+**Caveat carried forward (not new).** The SAT rows are oriented-matroid
+statements, not straight-line realisability claims. They establish non-vacuity of
+the base pattern, which is what is needed here and nothing more.
 
 ---
 

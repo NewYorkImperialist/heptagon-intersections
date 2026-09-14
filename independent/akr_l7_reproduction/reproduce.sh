@@ -5,9 +5,15 @@
 #
 # Runs every check that is runnable in this environment.  Any missing input or
 # failing check aborts the whole run with a specific message.  Nothing is
-# skipped silently: the one optional step (the z3 cross-check) must be opted out
-# of explicitly with REPRO_SKIP_Z3=1, and that opt-out is reported loudly and
-# makes the run exit with status 2 (PARTIAL), never 0.
+# skipped silently: the one optional step (the solver cross-check) must be
+# opted out of explicitly with REPRO_SKIP_Z3=1, and that opt-out is reported
+# loudly and makes the run exit with status 2 (PARTIAL), never 0.
+#
+# COVERAGE.  Step 9 (coverage.py) is HISTORICAL ONLY: its orbit argument is
+# refuted -- docs/known-issues.md K-16.  n = 7 coverage is established by
+# step 10, coverage25/run_coverage25.sh, which enumerates all 25 labelled
+# (P-type x Q-type) combinations with no symmetry reduction.  A run that cannot
+# execute step 10 FAILS; it never reports a complete A7 reproduction.
 #
 # See REPRODUCE.md for prerequisites and for what each step establishes.
 set -u
@@ -26,10 +32,15 @@ step() {  # step <name> <logfile> <command...>
   local name="$1"; shift
   local log="$1"; shift
   banner "STEP: $name"
-  if "$@" 2>&1 | tee "$LOG/$log"; then
+  # NB: the exit status of a pipeline is that of its LAST element, so the
+  # status must be read out of PIPESTATUS[0]; using the pipeline's own status
+  # would silently report PASS for every failing step (it would be tee's).
+  "$@" 2>&1 | tee "$LOG/$log"
+  local rc=${PIPESTATUS[0]}
+  if [ "$rc" = "0" ]; then
     printf -- '--- PASS: %s\n' "$name"
   else
-    printf -- '*** FAIL: %s  (full output in evidence/logs/%s)\n' "$name" "$log"
+    printf -- '*** FAIL: %s (exit %s; full output in evidence/logs/%s)\n' "$name" "$rc" "$log"
     FAILED+=("$name")
   fi
 }
@@ -80,7 +91,8 @@ elif ! "$PY" -c "import z3" >/dev/null 2>&1; then
   printf '***   to record the gap explicitly.\n'
   FAILED+=("z3 cross-check (z3 missing)")
 else
-  if "$PY" "$E/z3_crosscheck.py" 2>&1 | tee "$LOG/z3_crosscheck.txt"; then
+  "$PY" "$E/z3_crosscheck.py" 2>&1 | tee "$LOG/z3_crosscheck.txt"
+  if [ "${PIPESTATUS[0]}" = "0" ]; then
     printf -- '--- PASS: z3 cross-check\n'
   else
     printf -- '*** FAIL: z3 cross-check\n'; FAILED+=("z3 cross-check")
@@ -89,7 +101,8 @@ fi
 
 # 7. Positive control: AKR's own Fig. 6 configuration satisfies the real clause set.
 banner "STEP: positive control - AKR Fig. 6 vs the actual clauses"
-if ( cd "$E/tools" && PYTHONPATH="$E/shims:$E/tools" "$PY" verify_fig6.py ) 2>&1 | tee "$LOG/verify_fig6.txt"; then
+( cd "$E/tools" && PYTHONPATH="$E/shims:$E/tools" "$PY" verify_fig6.py ) 2>&1 | tee "$LOG/verify_fig6.txt"
+if [ "${PIPESTATUS[0]}" = "0" ]; then
   if grep -q "VIOLATED by the real configuration: 0" "$LOG/verify_fig6.txt" \
      && grep -q "mismatches: 0" "$LOG/verify_fig6.txt"; then
     printf -- '--- PASS: Fig. 6 realises the pattern and satisfies every clause of generic/mixed-1\n'
@@ -103,7 +116,8 @@ fi
 
 # 8. The Observation 6 counterexample.
 banner "STEP: Observation 6 counterexample certificate"
-if "$PY" "$E/tools/certificate.py" 2>&1 | tee "$LOG/certificate.txt"; then
+"$PY" "$E/tools/certificate.py" 2>&1 | tee "$LOG/certificate.txt"
+if [ "${PIPESTATUS[0]}" = "0" ]; then
   if grep -q "AXIS PROPERTY HOLDS: False" "$LOG/certificate.txt" \
      && grep -q "P simple: True    Q simple: True" "$LOG/certificate.txt"; then
     printf -- '--- PASS: exhibits two simple polygons in general position where the Axis Property fails\n'
@@ -115,17 +129,58 @@ else
   printf -- '*** FAIL: certificate.py errored\n'; FAILED+=("Observation 6 certificate")
 fi
 
-# 9. Case coverage for n = 7.
-banner "STEP: case coverage (generic / P-adj / Q-adj / PQ-adj exhaust n = 7)"
-if ( cd "$ROOT" && "$PY" coverage.py ) 2>&1 | tee "$LOG/coverage.txt"; then
+# 9. HISTORICAL ONLY: the superseded coverage argument.
+#    coverage.py is kept so the record is reproducible, NOT because it
+#    establishes anything.  Its last step is WRONG -- see docs/known-issues.md
+#    K-16 and REPRODUCE.md section 6.  Coverage is established by step 10.
+banner "STEP: coverage.py -- HISTORICAL / SUPERSEDED, NOT load-bearing"
+printf 'This step reproduces the ORIGINAL coverage argument only so that the\n'
+printf 'record can be re-derived.  Its conclusion -- that one Q-adj representative\n'
+printf 'covers all four Q-adjacencies -- is WRONG in combination with a\n'
+printf 'P-adjacency (docs/known-issues.md K-16), and the representative it\n'
+printf 'justifies (PQ-adj) is VACUOUS: PQ-adj/none is UNSAT.\n'
+printf 'Coverage is established by STEP 10 below, not here.\n\n'
+( cd "$ROOT" && "$PY" coverage.py ) 2>&1 | tee "$LOG/coverage.txt"
+if [ "${PIPESTATUS[0]}" = "0" ]; then
   if grep -q "=> 1 orbit(s)" "$LOG/coverage.txt"; then
-    printf -- '--- PASS: coverage argument reproduced\n'
+    printf -- '--- PASS: the historical (superseded) output was reproduced verbatim\n'
   else
     printf -- '*** FAIL: coverage.py output did not contain the expected orbit count\n'
-    FAILED+=("coverage")
+    FAILED+=("coverage.py (historical)")
   fi
 else
-  printf -- '*** FAIL: coverage.py errored\n'; FAILED+=("coverage")
+  printf -- '*** FAIL: coverage.py errored\n'; FAILED+=("coverage.py (historical)")
+fi
+
+# 10. LOAD-BEARING: the K-16 replacement.  All 25 labelled (P-type x Q-type)
+#     combinations, no symmetry reduction, 125 instances, every UNSAT one backed
+#     by a DRAT proof that is re-checked here by the same from-scratch checker
+#     validated in step 3.  Roughly 3 minutes with python-sat available for the
+#     solver cross-check, ~10 minutes if only z3 is.
+banner "STEP: K-16 REPLACEMENT -- 25-combination coverage (LOAD-BEARING)"
+# Delete any previous log first, so that a stale one from an earlier run can
+# never satisfy the grep below.
+rm -f "$LOG/coverage25.txt"
+if [ ! -x "$ROOT/coverage25/run_coverage25.sh" ]; then
+  printf -- '*** FAIL: coverage25/run_coverage25.sh is missing or not executable.\n'
+  printf -- '***   Without it this run does NOT establish A7 coverage; the only\n'
+  printf -- '***   coverage argument left would be the refuted one in step 9.\n'
+  FAILED+=("coverage25 (missing)")
+else
+  "$ROOT/coverage25/run_coverage25.sh" 2>&1 | tee "$LOG/coverage25.txt"
+  C25=${PIPESTATUS[0]}
+  if [ "$C25" = "0" ]; then
+    printf -- '--- PASS: 25/25 combinations, both-hooking and both-hooked UNSAT in all\n'
+  elif [ "$C25" = "2" ]; then
+    printf -- '*** PARTIAL: coverage25 passed but its solver cross-check was skipped.\n'
+    PARTIAL=1
+  else
+    printf -- '*** FAIL: coverage25 (exit %s)\n' "$C25"; FAILED+=("coverage25")
+  fi
+fi
+if ! grep -q "K-16 REPLACEMENT COVERAGE ESTABLISHED" "$LOG/coverage25.txt" 2>/dev/null; then
+  printf -- '*** FAIL: coverage25 did not report K-16 REPLACEMENT COVERAGE ESTABLISHED.\n'
+  FAILED+=("coverage25 (no coverage claim)")
 fi
 
 banner "SUMMARY"
@@ -136,8 +191,13 @@ if [ ${#FAILED[@]} -ne 0 ]; then
   exit 1
 fi
 if [ "$PARTIAL" = "1" ]; then
-  printf 'All executed steps passed, but the run was PARTIAL (z3 cross-check skipped).\n'
-  printf 'Logs: evidence/logs/\n'
+  printf 'All executed steps passed, but the run was PARTIAL: an independent-solver\n'
+  printf 'cross-check was skipped (step 6 and/or the one inside step 10).  Every\n'
+  printf 'verdict is still backed by a re-checked certificate; what is missing is\n'
+  printf 'only the second opinion from a solver.\n'
+  printf '  n=7 COVERAGE (step 10) was still established: 25/25 combinations,\n'
+  printf '  125/125 certificate-checked, both-hooking and both-hooked UNSAT in all.\n'
+  printf 'Logs: evidence/logs/  and  coverage25/logs/\n'
   exit 2
 fi
 printf 'ALL CHECKS PASSED.\n'
@@ -145,6 +205,12 @@ printf '  20/20 CNFs regenerated byte-identically from indep_om.py\n'
 printf '  15/15 DRAT refutations re-verified by a from-scratch checker\n'
 printf '   5/5  satisfiable instances confirmed by explicit, solver-free model checks\n'
 printf '   4/4  pigeonhole positives and 4/4 negative controls behaved correctly\n'
-printf '  Fig. 6 positive control, Observation 6 certificate and n=7 coverage reproduced\n'
-printf 'Logs: evidence/logs/\n'
+printf '  Fig. 6 positive control and Observation 6 certificate reproduced\n'
+printf '  n=7 COVERAGE (the K-16 replacement, step 10):\n'
+printf '   25/25 labelled (P-type x Q-type) combinations, no symmetry reduction\n'
+printf '  125/125 instances certificate-checked (110 DRAT refutations + 15 models)\n'
+printf '   25/25 combinations have both-hooking AND both-hooked UNSAT\n'
+printf '   12/25 combinations are VACUOUS and are reported as such; the\n'
+printf '         superseded PQ-adj representative of step 9 was one of them\n'
+printf 'Logs: evidence/logs/  and  coverage25/logs/\n'
 exit 0

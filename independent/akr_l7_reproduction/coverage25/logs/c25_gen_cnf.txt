@@ -1,0 +1,129 @@
+Pnone_Qnone_none                   vars=220  clauses=64542  5224c51d4d092024  legacy=generic_none BYTE-IDENTICAL
+Pnone_Qnone_mixed-1                vars=220  clauses=64566  c63b2408a991b20e  legacy=generic_mixed-1 BYTE-IDENTICAL
+Pnone_Qnone_mixed-2                vars=220  clauses=64566  e124f66057b07a71  legacy=generic_mixed-2 BYTE-IDENTICAL
+Pnone_Qnone_both-hooking           vars=220  clauses=64566  afb87ba9118fb212  legacy=generic_both-hooking BYTE-IDENTICAL
+Pnone_Qnone_both-hooked            vars=220  clauses=64566  241ff8193c810521  legacy=generic_both-hooked BYTE-IDENTICAL
+Pnone_QA-Ap_none                   vars=165  clauses=37808  6f1fccd0c248bed6  
+Pnone_QA-Ap_mixed-1                vars=165  clauses=37832  d3301f81f027bb3c  
+Pnone_QA-Ap_mixed-2                vars=165  clauses=37832  c3dc29af80334709  
+Pnone_QA-Ap_both-hooking           vars=165  clauses=37832  844e158334c2c3d4  
+Pnone_QA-Ap_both-hooked            vars=165  clauses=37832  24a75c311e6c6c3d  
+Pnone_QA-Bp_none                   vars=165  clauses=37808  9f2d0ec0422c11ae  
+Pnone_QA-Bp_mixed-1                vars=165  clauses=37832  da21f7f0a3886118  
+Pnone_QA-Bp_mixed-2                vars=165  clauses=37832  d1a5cbce241630a8  
+Pnone_QA-Bp_both-hooking           vars=165  clauses=37832  d39558ac07fdae38  
+Pnone_QA-Bp_both-hooked            vars=165  clauses=37832  dd58dfd2cdd6a869  
+Pnone_QB-Ap_none                   vars=165  clauses=37808  98c4975f8e683767  legacy=Q-adj_none BYTE-IDENTICAL
+Pnone_QB-Ap_mixed-1                vars=165  clauses=37832  1f32473b9e0362e2  legacy=Q-adj_mixed-1 BYTE-IDENTICAL
+Pnone_QB-Ap_mixed-2                vars=165  clauses=37832  eca2414cab9c6cff  legacy=Q-adj_mixed-2 BYTE-IDENTICAL
+Pnone_QB-Ap_both-hooking           vars=165  clauses=37832  d1c735cf8a1c7968  legacy=Q-adj_both-hooking BYTE-IDENTICAL
+Pnone_QB-Ap_both-hooked            vars=165  clauses=37832  79c7ffa7a674225d  legacy=Q-adj_both-hooked BYTE-IDENTICAL
+Pnone_QB-Bp_none                   vars=165  clauses=37808  f41435ecc185a565  
+Pnone_QB-Bp_mixed-1                vars=165  clauses=37832  08fc3d6733e1ff96  
+Pnone_QB-Bp_mixed-2                vars=165  clauses=37832  e807b36214e6a651  
+Pnone_QB-Bp_both-hooking           vars=165  clauses=37832  ef1842ea19ae1665  
+Pnone_QB-Bp_both-hooked            vars=165  clauses=37832  78d5474a6268caf5  
+Pa-ap_Qnone_none                   vars=165  clauses=37808  ebc60fe6c3e05ea9  
+Pa-ap_Qnone_mixed-1                vars=165  clauses=37832  640f50766db9dfcc  
+Pa-ap_Qnone_mixed-2                vars=165  clauses=37832  834801cfc7561271  
+Pa-ap_Qnone_both-hooking           vars=165  clauses=37832  1e2a961143b3b2bd  
+Pa-ap_Qnone_both-hooked            vars=165  clauses=37832  ec0420b7896c2288  
+Pa-ap_QA-Ap_none                   vars=120  clauses=20764  002161b4d84c95cf  
+Pa-ap_QA-Ap_mixed-1                vars=120  clauses=20788  b6ac919a22327d5c  
+Pa-ap_QA-Ap_mixed-2                vars=120  clauses=20788  b5b03b3b276acce1  
+Pa-ap_QA-Ap_both-hooking           vars=120  clauses=20788  d3fff6c6cd00cefd  
+Pa-ap_QA-Ap_both-hooked            vars=120  clauses=20788  2220ad6cbbf90314  
+Pa-ap_QA-Bp_none                   vars=120  clauses=20764  6c23811d0f9ffe99  
+Pa-ap_QA-Bp_mixed-1                vars=120  clauses=20788  21f6876b87476d95  
+Pa-ap_QA-Bp_mixed-2                vars=120  clauses=20788  9bb741d020723e87  
+Pa-ap_QA-Bp_both-hooking           vars=120  clauses=20788  0fef735b672cce1f  
+Pa-ap_QA-Bp_both-hooked            vars=120  clauses=20788  70973b9012ca1e92  
+Pa-ap_QB-Ap_none                   vars=120  clauses=20764  186d8de9d81b278c  
+Pa-ap_QB-Ap_mixed-1                vars=120  clauses=20788  98cf6191ca33c68b  
+Pa-ap_QB-Ap_mixed-2                vars=120  clauses=20788  1f8666afbc8b3178  
+Pa-ap_QB-Ap_both-hooking           vars=120  clauses=20788  4ad4d4d1b13e78ad  
+Pa-ap_QB-Ap_both-hooked            vars=120  clauses=20788  030ee1f8bbd9863d  
+Pa-ap_QB-Bp_none                   vars=120  clauses=20764  7d3b944d82e6f001  
+Pa-ap_QB-Bp_mixed-1                vars=120  clauses=20788  a833fb2e8c886851  
+Pa-ap_QB-Bp_mixed-2                vars=120  clauses=20788  ba0490019a87247b  
+Pa-ap_QB-Bp_both-hooking           vars=120  clauses=20788  365c3bc5546ac1ef  
+Pa-ap_QB-Bp_both-hooked            vars=120  clauses=20788  319c912e25f400b6  
+Pa-bp_Qnone_none                   vars=165  clauses=37808  598183b4417da016  
+Pa-bp_Qnone_mixed-1                vars=165  clauses=37832  a1f9b851e9826f07  
+Pa-bp_Qnone_mixed-2                vars=165  clauses=37832  232f249af3b0ca66  
+Pa-bp_Qnone_both-hooking           vars=165  clauses=37832  b3ca348a29b33917  
+Pa-bp_Qnone_both-hooked            vars=165  clauses=37832  dc2e1b7110637ab6  
+Pa-bp_QA-Ap_none                   vars=120  clauses=20764  d68479ec25343a65  
+Pa-bp_QA-Ap_mixed-1                vars=120  clauses=20788  1c78671f52ed8a40  
+Pa-bp_QA-Ap_mixed-2                vars=120  clauses=20788  d83f7a72b60d4f0d  
+Pa-bp_QA-Ap_both-hooking           vars=120  clauses=20788  7786dbef3c530f63  
+Pa-bp_QA-Ap_both-hooked            vars=120  clauses=20788  4d378c4d8bc0d2a3  
+Pa-bp_QA-Bp_none                   vars=120  clauses=20764  4b229cc50a735f5b  
+Pa-bp_QA-Bp_mixed-1                vars=120  clauses=20788  4fdbc4c34ec6e473  
+Pa-bp_QA-Bp_mixed-2                vars=120  clauses=20788  7f31b7da3fa68405  
+Pa-bp_QA-Bp_both-hooking           vars=120  clauses=20788  bfbad71a122d8be7  
+Pa-bp_QA-Bp_both-hooked            vars=120  clauses=20788  f630fdf259103082  
+Pa-bp_QB-Ap_none                   vars=120  clauses=20764  2381e4b53d10c0ee  
+Pa-bp_QB-Ap_mixed-1                vars=120  clauses=20788  0a0e4b98683eb6df  
+Pa-bp_QB-Ap_mixed-2                vars=120  clauses=20788  875052a81abf17e9  
+Pa-bp_QB-Ap_both-hooking           vars=120  clauses=20788  0051bf334adc8f5f  
+Pa-bp_QB-Ap_both-hooked            vars=120  clauses=20788  8b0bb46efd5fc6f3  
+Pa-bp_QB-Bp_none                   vars=120  clauses=20764  f7783819a19f9b40  
+Pa-bp_QB-Bp_mixed-1                vars=120  clauses=20788  46e552d9e4178225  
+Pa-bp_QB-Bp_mixed-2                vars=120  clauses=20788  dc5eea156aeaaab9  
+Pa-bp_QB-Bp_both-hooking           vars=120  clauses=20788  a5d88089dd91d5cb  
+Pa-bp_QB-Bp_both-hooked            vars=120  clauses=20788  d9a2ff05eb33c44f  
+Pb-ap_Qnone_none                   vars=165  clauses=37808  e73ef4cd4b83238f  legacy=P-adj_none BYTE-IDENTICAL
+Pb-ap_Qnone_mixed-1                vars=165  clauses=37832  a2bbf8ef746a120f  legacy=P-adj_mixed-1 BYTE-IDENTICAL
+Pb-ap_Qnone_mixed-2                vars=165  clauses=37832  091114d8b15b3c19  legacy=P-adj_mixed-2 BYTE-IDENTICAL
+Pb-ap_Qnone_both-hooking           vars=165  clauses=37832  9ba8a3d87df52e17  legacy=P-adj_both-hooking BYTE-IDENTICAL
+Pb-ap_Qnone_both-hooked            vars=165  clauses=37832  f3268af46f276642  legacy=P-adj_both-hooked BYTE-IDENTICAL
+Pb-ap_QA-Ap_none                   vars=120  clauses=20764  ffa9de54e1b02cb4  
+Pb-ap_QA-Ap_mixed-1                vars=120  clauses=20788  68ad15e5eed94f46  
+Pb-ap_QA-Ap_mixed-2                vars=120  clauses=20788  9b18f3d4435597dc  
+Pb-ap_QA-Ap_both-hooking           vars=120  clauses=20788  1008fdc1d3ff5ced  
+Pb-ap_QA-Ap_both-hooked            vars=120  clauses=20788  8bab6c55b1ef304c  
+Pb-ap_QA-Bp_none                   vars=120  clauses=20764  9aed6ce166683d06  
+Pb-ap_QA-Bp_mixed-1                vars=120  clauses=20788  9af4a0db89bde6df  
+Pb-ap_QA-Bp_mixed-2                vars=120  clauses=20788  33eede6442544ae4  
+Pb-ap_QA-Bp_both-hooking           vars=120  clauses=20788  b4c9bf255c793b1f  
+Pb-ap_QA-Bp_both-hooked            vars=120  clauses=20788  5c72963d9055ec78  
+Pb-ap_QB-Ap_none                   vars=120  clauses=20764  28153d2430124b01  legacy=PQ-adj_none BYTE-IDENTICAL
+Pb-ap_QB-Ap_mixed-1                vars=120  clauses=20788  a083c0961deaeff1  legacy=PQ-adj_mixed-1 BYTE-IDENTICAL
+Pb-ap_QB-Ap_mixed-2                vars=120  clauses=20788  05b26c08ffa8b0f7  legacy=PQ-adj_mixed-2 BYTE-IDENTICAL
+Pb-ap_QB-Ap_both-hooking           vars=120  clauses=20788  0bb4f6ba98097327  legacy=PQ-adj_both-hooking BYTE-IDENTICAL
+Pb-ap_QB-Ap_both-hooked            vars=120  clauses=20788  febfdba99449c99d  legacy=PQ-adj_both-hooked BYTE-IDENTICAL
+Pb-ap_QB-Bp_none                   vars=120  clauses=20764  5909e335e04b4b16  
+Pb-ap_QB-Bp_mixed-1                vars=120  clauses=20788  08c85b0959374aa1  
+Pb-ap_QB-Bp_mixed-2                vars=120  clauses=20788  0d035074164eef01  
+Pb-ap_QB-Bp_both-hooking           vars=120  clauses=20788  609e4ee7ca7b9e75  
+Pb-ap_QB-Bp_both-hooked            vars=120  clauses=20788  27717c7f73de9d5f  
+Pb-bp_Qnone_none                   vars=165  clauses=37808  6f17861c0dc0788e  
+Pb-bp_Qnone_mixed-1                vars=165  clauses=37832  09ccb24c2f3a0de3  
+Pb-bp_Qnone_mixed-2                vars=165  clauses=37832  b6d507b7e0a863cd  
+Pb-bp_Qnone_both-hooking           vars=165  clauses=37832  d63585a7e2b7e110  
+Pb-bp_Qnone_both-hooked            vars=165  clauses=37832  273e79335e1abe9d  
+Pb-bp_QA-Ap_none                   vars=120  clauses=20764  e6ec37da3a0bb6a7  
+Pb-bp_QA-Ap_mixed-1                vars=120  clauses=20788  eb96b94092628090  
+Pb-bp_QA-Ap_mixed-2                vars=120  clauses=20788  37df60daa80a8755  
+Pb-bp_QA-Ap_both-hooking           vars=120  clauses=20788  070fef6825ddaa1c  
+Pb-bp_QA-Ap_both-hooked            vars=120  clauses=20788  8ed67d42c45237c5  
+Pb-bp_QA-Bp_none                   vars=120  clauses=20764  de69d1282a9b8203  
+Pb-bp_QA-Bp_mixed-1                vars=120  clauses=20788  e8eabaa799338b8a  
+Pb-bp_QA-Bp_mixed-2                vars=120  clauses=20788  00a6274f0b78527e  
+Pb-bp_QA-Bp_both-hooking           vars=120  clauses=20788  aab62b90d8f2045c  
+Pb-bp_QA-Bp_both-hooked            vars=120  clauses=20788  0f3b16211d4e988b  
+Pb-bp_QB-Ap_none                   vars=120  clauses=20764  0329731da06440aa  
+Pb-bp_QB-Ap_mixed-1                vars=120  clauses=20788  506f4615717b4980  
+Pb-bp_QB-Ap_mixed-2                vars=120  clauses=20788  9357af4798a3566a  
+Pb-bp_QB-Ap_both-hooking           vars=120  clauses=20788  743ecba058ab4664  
+Pb-bp_QB-Ap_both-hooked            vars=120  clauses=20788  d7ed457998c2e4ed  
+Pb-bp_QB-Bp_none                   vars=120  clauses=20764  8d94d8bdeefe7dc4  
+Pb-bp_QB-Bp_mixed-1                vars=120  clauses=20788  668109ae709c8ac8  
+Pb-bp_QB-Bp_mixed-2                vars=120  clauses=20788  6848ca8f45c1ad0a  
+Pb-bp_QB-Bp_both-hooking           vars=120  clauses=20788  8fb20a287a98d06f  
+Pb-bp_QB-Bp_both-hooked            vars=120  clauses=20788  35523ddc63d9874e  
+
+OK: 125 CNFs generated deterministically
+    20/20 legacy-twin instances byte-identical to the committed CNFs
+    125/125 match CNF_SHA256SUMS.txt

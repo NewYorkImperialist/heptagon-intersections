@@ -1,0 +1,31 @@
+P-types (5): none, a-ap, a-bp, b-ap, b-bp
+Q-types (5): none, A-Ap, A-Bp, B-Ap, B-Bp
+combinations: 5 x 5 = 25
+statuses (5): none, mixed-1, mixed-2, both-hooking, both-hooked
+instances:    125
+
+  Pnone  Qnone   points=12  legacy=generic
+  Pnone  QA-Ap   points=11  legacy=-
+  Pnone  QA-Bp   points=11  legacy=-
+  Pnone  QB-Ap   points=11  legacy=Q-adj
+  Pnone  QB-Bp   points=11  legacy=-
+  Pa-ap  Qnone   points=11  legacy=-
+  Pa-ap  QA-Ap   points=10  legacy=-
+  Pa-ap  QA-Bp   points=10  legacy=-
+  Pa-ap  QB-Ap   points=10  legacy=-
+  Pa-ap  QB-Bp   points=10  legacy=-
+  Pa-bp  Qnone   points=11  legacy=-
+  Pa-bp  QA-Ap   points=10  legacy=-
+  Pa-bp  QA-Bp   points=10  legacy=-
+  Pa-bp  QB-Ap   points=10  legacy=-
+  Pa-bp  QB-Bp   points=10  legacy=-
+  Pb-ap  Qnone   points=11  legacy=P-adj
+  Pb-ap  QA-Ap   points=10  legacy=-
+  Pb-ap  QA-Bp   points=10  legacy=-
+  Pb-ap  QB-Ap   points=10  legacy=PQ-adj
+  Pb-ap  QB-Bp   points=10  legacy=-
+  Pb-bp  Qnone   points=11  legacy=-
+  Pb-bp  QA-Ap   points=10  legacy=-
+  Pb-bp  QA-Bp   points=10  legacy=-
+  Pb-bp  QB-Ap   points=10  legacy=-
+  Pb-bp  QB-Bp   points=10  legacy=-

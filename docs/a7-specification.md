@@ -536,7 +536,32 @@ none : sat in 9, unsat in 16 — in particular exactly one Q-type per P-type
        is satisfiable, the one with XOR = (1,1), confirming the orbit analysis
 ```
 
-so the conclusion is unaffected and the coverage gap is closed. The case list
+so the conclusion is unaffected and the coverage gap is closed.
+
+> **SUPERSEDED BY A SHIPPED, CERTIFICATE-BACKED RUN (2026-09-14).** The
+> "Closure" paragraph above was produced in a session scratchpad and the script
+> was **not recoverable**; for a period the repository contained no executable
+> evidence for it. It has now been reconstructed and shipped as
+> `independent/akr_l7_reproduction/coverage25/`, and **two numbers above are
+> wrong**:
+>
+> * **`none` is SAT in 13 combinations and UNSAT in 12**, not "sat in 9, unsat
+>   in 16". The 13 are: `Pnone/Qnone`; the 8 combinations where exactly one side
+>   is `none`; and the 4 both-adjacent combinations with `XOR = (1,1)` — which is
+>   precisely what the same paragraph's own orbit claim predicts, so the
+>   9/16 figures were simply a miscount.
+> * The **combined** types form **5** orbits in total, and among the 16
+>   both-adjacent types only **3** (`XOR = (0,0)`, `{(0,1),(1,0)}` merged, and
+>   `XOR = (1,1)`) — not the four asserted earlier, because the group also swaps
+>   the two pairs.
+>
+> What is **unchanged** is the conclusion and the load-bearing claim:
+> `both-hooking` and `both-hooked` are **UNSAT in all 25**, now backed by 110
+> DRAT refutations and 15 explicit models, **125/125 re-verified** against CNFs
+> re-derived from source and matched by SHA-256. The 25-figure is also no longer
+> prose: `coverage25/completeness.py` derives it in exact ℤ₇ arithmetic over
+> 50,176 labelled cases with **0** violations and no symmetry reduction.
+> See `known-issues.md` K-16. The case list
 itself is a finite index-arithmetic proof (§9.4 table: at most one coincidence in
 `P` and at most one in `Q`, since two would force `4 ≡ 0 mod 7`), hence the
 *proved in prose* label; each individual verdict is machine-checked.

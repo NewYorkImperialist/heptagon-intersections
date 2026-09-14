@@ -1,0 +1,180 @@
+verifying 125 instances with 8 worker(s); checker = evidence/tools/dratcheck.py
+
+Pnone_Qnone_none                   SAT   model  VERIFIED               
+Pnone_Qnone_mixed-1                SAT   model  VERIFIED               
+Pnone_Qnone_mixed-2                SAT   model  VERIFIED               
+Pnone_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=663
+Pnone_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=606
+Pnone_QA-Ap_none                   SAT   model  VERIFIED               
+Pnone_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=462
+Pnone_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=521
+Pnone_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=547
+Pnone_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=440
+Pnone_QA-Bp_none                   SAT   model  VERIFIED               
+Pnone_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=412
+Pnone_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=408
+Pnone_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=377
+Pnone_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=395
+Pnone_QB-Ap_none                   SAT   model  VERIFIED               
+Pnone_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=441
+Pnone_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=382
+Pnone_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=503
+Pnone_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=290
+Pnone_QB-Bp_none                   SAT   model  VERIFIED               
+Pnone_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=476
+Pnone_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=451
+Pnone_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=481
+Pnone_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=375
+Pa-ap_Qnone_none                   SAT   model  VERIFIED               
+Pa-ap_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=355
+Pa-ap_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=471
+Pa-ap_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=469
+Pa-ap_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=408
+Pa-ap_QA-Ap_none                   UNSAT drat   VERIFIED               steps=339
+Pa-ap_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=275
+Pa-ap_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=347
+Pa-ap_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=270
+Pa-ap_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-ap_QA-Bp_none                   UNSAT drat   VERIFIED               steps=253
+Pa-ap_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=192
+Pa-ap_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=323
+Pa-ap_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=275
+Pa-ap_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=259
+Pa-ap_QB-Ap_none                   UNSAT drat   VERIFIED               steps=190
+Pa-ap_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=209
+Pa-ap_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=291
+Pa-ap_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=233
+Pa-ap_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=190
+Pa-ap_QB-Bp_none                   SAT   model  VERIFIED               
+Pa-ap_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=303
+Pa-ap_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=360
+Pa-ap_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=282
+Pa-ap_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=252
+Pa-bp_Qnone_none                   SAT   model  VERIFIED               
+Pa-bp_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=376
+Pa-bp_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=354
+Pa-bp_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=396
+Pa-bp_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-bp_QA-Ap_none                   UNSAT drat   VERIFIED               steps=253
+Pa-bp_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=192
+Pa-bp_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=323
+Pa-bp_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=275
+Pa-bp_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=259
+Pa-bp_QA-Bp_none                   UNSAT drat   VERIFIED               steps=339
+Pa-bp_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=275
+Pa-bp_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=372
+Pa-bp_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=270
+Pa-bp_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-bp_QB-Ap_none                   SAT   model  VERIFIED               
+Pa-bp_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=303
+Pa-bp_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=344
+Pa-bp_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=282
+Pa-bp_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=291
+Pa-bp_QB-Bp_none                   UNSAT drat   VERIFIED               steps=192
+Pa-bp_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=209
+Pa-bp_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=291
+Pa-bp_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=233
+Pa-bp_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=190
+Pb-ap_Qnone_none                   SAT   model  VERIFIED               
+Pb-ap_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=396
+Pb-ap_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=371
+Pb-ap_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=389
+Pb-ap_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=418
+Pb-ap_QA-Ap_none                   UNSAT drat   VERIFIED               steps=209
+Pb-ap_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=226
+Pb-ap_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=285
+Pb-ap_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=260
+Pb-ap_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=187
+Pb-ap_QA-Bp_none                   SAT   model  VERIFIED               
+Pb-ap_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=339
+Pb-ap_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=304
+Pb-ap_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=394
+Pb-ap_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=320
+Pb-ap_QB-Ap_none                   UNSAT drat   VERIFIED               steps=329
+Pb-ap_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=283
+Pb-ap_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=348
+Pb-ap_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=280
+Pb-ap_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=272
+Pb-ap_QB-Bp_none                   UNSAT drat   VERIFIED               steps=276
+Pb-ap_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=229
+Pb-ap_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=361
+Pb-ap_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=392
+Pb-ap_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=244
+Pb-bp_Qnone_none                   SAT   model  VERIFIED               
+Pb-bp_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=403
+Pb-bp_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=382
+Pb-bp_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=404
+Pb-bp_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=544
+Pb-bp_QA-Ap_none                   SAT   model  VERIFIED               
+Pb-bp_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=339
+Pb-bp_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=304
+Pb-bp_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=394
+Pb-bp_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=320
+Pb-bp_QA-Bp_none                   UNSAT drat   VERIFIED               steps=236
+Pb-bp_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=226
+Pb-bp_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=285
+Pb-bp_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=239
+Pb-bp_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=187
+Pb-bp_QB-Ap_none                   UNSAT drat   VERIFIED               steps=277
+Pb-bp_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=229
+Pb-bp_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=361
+Pb-bp_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=392
+Pb-bp_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=238
+Pb-bp_QB-Bp_none                   UNSAT drat   VERIFIED               steps=378
+Pb-bp_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=283
+Pb-bp_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=279
+Pb-bp_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=352
+Pb-bp_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=272
+
+==========================================================================
+PER-COMBINATION TABLE  (all verdicts below are CERTIFICATE-VERIFIED)
+==========================================================================
+P-type Q-type none   mixed-1  mixed-2  both-hooking  both-hooked  note
+none   none   SAT    SAT      SAT      UNSAT         UNSAT        legacy=generic
+none   A-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+none   A-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+none   B-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        legacy=Q-adj
+none   B-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-ap   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-ap   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   B-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-bp   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-bp   B-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-ap   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        legacy=P-adj
+b-ap   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-ap   A-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-ap   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS legacy=PQ-adj
+b-ap   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-bp   A-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-bp   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+
+125 instances verified: 110 DRAT refutations, 15 models
+combinations: 25   non-vacuous: 13   VACUOUS: 12
+   VACUOUS  Pa-ap  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-ap  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-ap  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+both-hooking AND both-hooked UNSAT in all 25 combinations: True
+wall time: 157.4s
+
+OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
+    Every one of the 25 labelled (P-type x Q-type) combinations has
+    both-hooking and both-hooked refuted by a DRAT proof that was
+    re-checked here, against a CNF re-derived from source and matched
+    by SHA-256.

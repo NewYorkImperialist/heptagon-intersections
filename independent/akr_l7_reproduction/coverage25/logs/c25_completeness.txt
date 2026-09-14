@@ -1,0 +1,54 @@
+==========================================================================
+COMPLETENESS OF THE 25-COMBINATION TYPE LIST FOR n = 7
+==========================================================================
+
+Step 1 -- which (u2-u) mod 7 are admissible
+   d = 0 : excluded  d=0: the two pairs coincide
+   d = 1 : excluded  the two pairs share a side (p_u+1)
+   d = 2 : ADMISSIBLE OK
+   d = 3 : ADMISSIBLE OK
+   d = 4 : ADMISSIBLE OK
+   d = 5 : ADMISSIBLE OK
+   d = 6 : excluded  the two pairs share a side (p_u)
+
+Step 2 -- the far-far coincidence conditions, solved exactly in Z_7
+   a2 = V(u-1), b2 = V(u+1), ap2 = V(u2-1), bp2 = V(u2+1)   [unprimed = pair(u)]
+   a2 = ap2   <=>  u-1 = u2-1   <=>  d = [0]   -> admissible d: NONE
+   b2 = bp2   <=>  u+1 = u2+1   <=>  d = [0]   -> admissible d: NONE
+   a2 = bp2   <=>  u-1 = u2+1   <=>  d = [5]   -> admissible d: [5]
+   b2 = ap2   <=>  u+1 = u2-1   <=>  d = [2]   -> admissible d: [2]
+   => for a FIXED labelling only d=2 (b2=ap2) and d=5 (a2=bp2) occur,
+      and never both, since d cannot be 2 and 5 at once.
+      Relabelling (which side is 'a') moves the coincidence among all
+      four named pairs, so all five P-types are labelled-realisable.
+
+Step 3 -- exhaustive enumeration over (u,d_P,w,d_Q,phi,labelling)
+   cases enumerated: 50176
+   (C1) apex coincidences        : 0
+   (C2) non-far-far coincidences : 0
+   (C3) simultaneous coincidences: 0
+   P-type occurrences: none=25088, a-ap=6272, a-bp=6272, b-ap=6272, b-bp=6272
+   Q-type occurrences: none=25088, A-Ap=6272, A-Bp=6272, B-Ap=6272, B-Bp=6272
+
+Step 4 -- every realisable combined type is in the solved 25-list
+   distinct realisable combined types : 25
+   solved combinations                : 25
+   realisable \ solved                : 0   <-- COVERAGE COMPLETE
+   solved but not realisable          : 0 
+   (solving unrealisable combinations is harmless: the list is a
+    SUPERSET of what a counterexample can produce.)
+
+Step 5 -- diagnostic: why 25 and not 4 (this is the K-16 defect)
+   Q-adjacencies in ISOLATION under the order-16 group: 1 orbit(s)
+       [('A', 'Ap'), ('A', 'Bp'), ('Ap', 'B'), ('B', 'Bp')]
+   => coverage.py's claim, and it is correct AS FAR AS IT GOES.
+   COMBINED (P-type,Q-type) under the SAME group: 5 orbit(s)
+       ['Pnone/Qnone']
+       ['Pa-ap/Qnone', 'Pa-bp/Qnone', 'Pb-ap/Qnone', 'Pb-bp/Qnone', 'Pnone/QA-Ap', 'Pnone/QA-Bp', 'Pnone/QB-Ap', 'Pnone/QB-Bp']
+       ['Pa-ap/QA-Ap', 'Pa-bp/QA-Bp', 'Pb-ap/QB-Ap', 'Pb-bp/QB-Bp']
+       ['Pa-ap/QA-Bp', 'Pa-ap/QB-Ap', 'Pa-bp/QA-Ap', 'Pa-bp/QB-Bp', 'Pb-ap/QA-Ap', 'Pb-ap/QB-Bp', 'Pb-bp/QA-Bp', 'Pb-bp/QB-Ap']
+       ['Pa-ap/QB-Bp', 'Pa-bp/QB-Ap', 'Pb-ap/QA-Bp', 'Pb-bp/QA-Ap']
+   => a single representative does NOT suffice.  No reduction is used
+      below: all 25 are solved separately.
+
+RESULT: the 25-combination list is COMPLETE for n = 7.

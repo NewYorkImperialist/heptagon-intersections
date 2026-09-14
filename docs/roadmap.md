@@ -117,40 +117,47 @@ project has twice built infrastructure it did not need.
 
 ## 5. Recommended next milestone — one, bounded
 
-> **The previous milestone in this slot — formalize the disjointness graph and
-> discharge `I2` — was completed on 2026-09-14** as `lean/DisjointnessGraph.lean`
-> (`toMasks`, `toMasks_spec`, `min_degree_both_sides`, applied rather than
-> `decide`d), and `lean/EnumerationDomain.lean` then used it to close enumeration
-> obligation (1). See the note on the interface split below.
+> **Completed 2026-09-14, in one overnight run:** the `I2` milestone
+> (`DisjointnessGraph.lean`), then enumeration obligations **(1)**
+> (`EnumerationDomain.lean`), **(2)** (`DomainCount.lean` —
+> `domainFinset.card = 13003620`) and **(3)** (`EnumerationComplete.lean` —
+> `enumerate_complete`, by induction on the recursion depth, with
+> `enumerate_sound` pinning the enumeration exactly). `CounterexampleCount.lean`
+> joins (1) and (2): a counterexample is one of exactly 13,003,620 mask
+> functions. The previous entry in this slot proposed (3) as the next milestone
+> and predicted the induction would be the tractable route; it was.
 
-**Next: enumeration obligation (3) — prove that the search visits every element
-of the domain.**
+**Next: enumeration obligation (4) — that every valid configuration survives
+each filter down to a terminal case proved impossible.**
 
-This is now the single largest gap, and it is more tractable than it sounds.
-The naive reading — evaluate 13,003,620 elements in the kernel — is infeasible
-and `native_decide` is banned. But obligation (3) does not require evaluation.
-The search is a recursion (`python/elimination/audit_enum.py`, `rec`); transcribe
-it into Lean as a total function and prove
+This is now the **sole remaining enumeration gap**, and the only one of the four
+obligations untouched by Lean. The filters, in pipeline order, are AKR L5
+(consecutive pairs), AKR L7 ⟹ `H` bipartite, crossing-set compatibility,
+Černý L2 (class-dependent), and AKR L5 (avoiding pairs). Each needs the same
+shape of result: *if a valid configuration induces this graph, the filter does
+not discard it.*
 
-    ∀ M, InDomain M → M is produced by the enumeration
+Two of the five already have a Lean-side foothold, which is why this is bounded
+rather than open-ended:
+* `Endgame.akr5Conclusion_iff_adjacent` already kernel-checks the L5 filter as an
+  **iff**, so it is provably neither a weakening nor a strengthening of the
+  lemma's conclusion;
+* `CernyL2Interface.lean` certifies the L2 filter fires *iff* an exact induced
+  perfect matching exists.
 
-by **induction on the recursion depth**, with a strengthened invariant relating
-the prefix already chosen to the suffix still to be chosen. That is a theorem
-about a Lean function, not a computation. The pruning step
-`hi = min(3, budget-(rem-1))` must be modelled exactly as written and then
-proved harmless, rather than quietly dropped.
+The gap is that neither is connected to a `Config`. `DisjointnessGraph.lean` now
+supplies exactly that connection for the graph itself, so the missing step is
+per-filter soundness against the geometry, not new infrastructure.
 
-Completeness is the direction that matters: it is what makes the search's
-*negative* result meaningful. Soundness is a nice-to-have.
-
-Why this one:
-* obligations (1) and (2)'s ends are done, so (3) is the next link in the chain;
-* it is the item with the worst defect track record (Risk 1);
-* it needs no new geometry and no reals.
+Note what obligation (4) is **not**: it is not the claim that the 225 surviving
+cases die — `Endgame.lean` already proves that, and the certificate checker
+re-proves it independently. It is the claim that nothing was dropped on the way
+down. K-17 is a worked example of the distinction: a filter question that looked
+like a gap in (4) and turned out not to be one.
 
 Explicitly **not** recommended next: a Lean SAT checker (large, and A7 is
-corroborated); the full classification; point-set semantics (needs ℝ²,
-orthogonal — see the `I2b` note).
+corroborated with certificates since K-16's closure); the full classification;
+point-set semantics (needs ℝ², orthogonal — see the `I2b` note).
 
 ### The `I2`/`I2a`/`I2b` split, recorded
 

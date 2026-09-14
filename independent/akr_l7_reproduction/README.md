@@ -426,6 +426,19 @@ it is the one place where a wrong answer was produced and then detected.
   hashes, so **any third-party SAT solver can re-check these results**; an
   `unsat` here is re-verifiable without trusting this code at all.
 
+> **SUPERSEDED (2026-09-14) — see `coverage25/` and `REPRODUCE.md` §6.**
+> The orbit step below is **wrong**, and is kept only as the record of what was
+> claimed. It is valid for a `Q`-adjacency *in isolation* — that much is
+> reconfirmed by `coverage25/completeness.py` — but **not** in combination with a
+> `P`-adjacency: the relabelling generators act in tandem, so the combined
+> `(P-type, Q-type)` classes split into **5** orbits, not 1. Worse, the single
+> `PQ-adj` representative actually tested is **vacuous** (its `none` instance is
+> UNSAT, so every verdict for it carried no information). The four-variant split
+> `generic / P-adj / Q-adj / PQ-adj` therefore does **not** exhaust `n = 7`.
+> The replacement solves **all 25** labelled combinations with no symmetry
+> reduction — `both-hooking` and `both-hooked` UNSAT in all 25, backed by 110
+> DRAT refutations and 15 models, all re-verified. See `known-issues.md` K-16.
+
 **Variants and completeness of the case split.** `coverage.py` enumerates, for
 `n = 7`, every value of `d = (j−i) mod 7 ∈ {2,3,4,5}` (the two pairs must share
 no side) and computes which of the six P-endpoints coincide:
@@ -441,6 +454,9 @@ and checks that the four possible adjacencies between the two associated pairs o
 `Q` (`A–A'`, `A–B'`, `B–A'`, `B–B'`) form a **single orbit** under the order-16
 automorphism group, so one representative suffices. Hence
 `generic`, `P-adj`, `Q-adj`, `PQ-adj` **exhaust all cases for `n = 7`**.
+
+**That last sentence is false.** See the banner above; the exhaustive
+replacement is `coverage25/`.
 
 ### 6.3 `realize_search.py`, `om_realize.py` — failed realisability engines
 
@@ -490,7 +506,10 @@ From `runs/log_om_lemma7.txt` / `om_lemma7_results.json` / `cnf/INDEX.txt`:
   project's use of Lemma 7 on `H`-edges at cyclic distance 2 and 5 is safe — in
   fact more than safe, since the premise is unrealisable there. **§3.3's gap in
   AKR's coverage does not translate into a gap in the project's argument.**
-* **`PQ-adj` is `unsat` outright**: the doubly-adjacent configuration cannot
+* **`PQ-adj` is `unsat` outright** — but this row is **VACUOUS**: its `none`
+  instance is UNSAT, so the base pattern is itself infeasible and no verdict for
+  it carries information (K-16). Superseded by `coverage25/`. Originally read as:
+  the doubly-adjacent configuration cannot
   occur at all.
 * The `sat` rows are *not* claims of geometric realisability — a satisfiable
   oriented matroid need not be realisable. Only the `unsat` rows carry

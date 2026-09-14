@@ -92,3 +92,65 @@ its own DRAT gate on every run; the underlying scripts are still unfixed.
 recursion, *not* kernel evaluation of 13M elements.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
+
+---
+
+## 2026-09-14, overnight — enumeration obligations (2) and (3) closed (`e7d9aa8`)
+
+**14 Lean libraries, 1290 jobs, exit 0.** Forbidden-token scan clean across all
+14 with comments stripped. Every axiom claim re-checked by me, not accepted from
+an agent report.
+
+| obligation | before tonight | now |
+|---|---|---|
+| (1) counterexample lands in the domain | prose | **kernel-checked** |
+| (2) domain has 13,003,620 elements | computation | **kernel-checked** |
+| (3) the search visits every domain element | nothing | **kernel-checked** (of the Lean transcription) |
+| (4) every valid config survives each filter | nothing | **still nothing** |
+
+* **(2)** — `DomainCount.lean` proves `domainFinset.card = 13003620`. The
+  `C(7,j)` *falls out* of regrouping rather than being asserted, because
+  `term_eq` shows each term is `gfCoeff9 (7 − |t|)`, manifestly a function of
+  `|t|` alone. I verified the statement is the unweakened target against the
+  original `domainFinset` and that `EnumerationDomain.lean` was untouched.
+* **(3)** — `EnumerationComplete.lean` proves
+  `∀ M, InDomain M → maskList M ∈ enumerate` for arbitrary `M`, by induction on
+  the recursion depth. **Nothing evaluates the 13-million-element output.** The
+  prune is modelled exactly and proved harmless; `enumerate_sound` gives the
+  converse, so the enumeration is pinned *exactly* — completeness cannot be
+  satisfied by an over-large list. I checked the Python-to-Lean transcription
+  line by line myself: `rem = 7 − i` carries `min(3, budget−(rem−1))` across
+  exactly, and Nat truncation agrees with Python's empty range at the boundary.
+* **Capstone** — `CounterexampleCount.lean`: a counterexample is one of exactly
+  13,003,620 mask functions, with `cert_not_mem_domainFinset` guarding vacuity.
+
+**The honest limit on (3):** it is a theorem about the *Lean* function. There is
+no extraction. The link to the Python and C++ searches is side-by-side reading
+plus three byte-identical small-case diffs — strong, but not certified.
+
+**K-16 closed, with certificates.** The A7 25-case coverage reconstruction
+shipped under `independent/akr_l7_reproduction/coverage25/`. Verified by me by
+re-running, not from the report: `verify_all.py` re-checks **125/125** instances
+(110 DRAT + 15 models) in 160 s against CNFs re-derived from source and
+SHA-256-matched; `both-hooking` and `both-hooked` are **UNSAT in all 25**.
+`completeness.py` derives the 25 from scratch in exact ℤ₇ arithmetic with no
+symmetry reduction — 50,176 labelled cases, **0** violations — so 25 is *exact*,
+not a superset. It also reproduces `coverage.py`'s 1-orbit result *in isolation*
+while showing **5** orbits combined, which is K-16's defect made concrete. 12 of
+the 25 are vacuous and the tooling says so, including the legacy `PQ-adj` case —
+the original defect was that the one combination tested was a vacuous one.
+
+**A separate serious defect, found in the harness itself.** `reproduce.sh` used
+`if cmd | tee log; then` with no `pipefail`, so the status read was `tee`'s and
+**every failing step would have printed PASS.** Confirmed independently:
+`if false | tee /dev/null; then echo PASS; fi` prints `PASS`. Now reads
+`${PIPESTATUS[0]}`. Nothing to do with K-16; it would have masked any future
+regression.
+
+**K-19, two of three fixed at source**: the certificate checker no longer exits 0
+on an empty case list, and the lower-bound checker now asserts `I = 38`
+absolutely rather than against the file's own `verified` block.
+
+**Next milestone: obligation (4)** — the sole remaining enumeration gap.
+
+Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
