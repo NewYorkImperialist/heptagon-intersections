@@ -214,7 +214,19 @@ search over **13,003,620** graphs. The question is whether it can.
 Caveats, stated because the numbers are doing real work here: this is one
 machine; another job was competing for CPU during the second measurement; and
 `decide` cost is dominated by term construction, which grows worse than linearly
-as the lists get longer. The measurement should be read as an order of
+as the lists get longer.
+
+**And memory may bind before time does.** The measurements above were taken on a
+machine with **8 GB of RAM and 8 cores**, and during this session the OS killed
+two benchmark jobs outright for memory pressure — the invalid fold benchmark,
+which explored a far larger tree than the real search and ballooned accordingly.
+That is a warning worth heeding rather than an anecdote: kernel `decide`
+materialises proof terms, and a 13,003,620-leaf evaluation does not obviously fit
+in 8 GB regardless of how long one is willing to wait. Any serious attempt at
+route (1) of §8's conclusion should measure **peak RSS** as a function of problem
+size alongside wall time, and should expect memory, not time, to be the binding
+constraint. A machine with substantially more RAM may be a precondition for
+answering the question at all. The measurement should be read as an order of
 magnitude and a *lower bound*, not a precise figure. It is not close enough to
 feasible for those caveats to change the conclusion.
 
