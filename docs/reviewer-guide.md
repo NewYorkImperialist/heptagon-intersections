@@ -339,10 +339,16 @@ weight sits:
 |---|---|
 | `I + \|E\| = 49` | **kernel-checked for every configuration** |
 | `δ(G^D) ≥ 1`, hence `\|E\| ≥ 7`, hence **`I ≤ 42`** | **kernel-checked, unconditional** |
-| `I` is even | **hypothesis** — elementary, not proved here |
+| `I` is even | **kernel-checked** (`lean/IntersectionParity.lean`) |
 | `I ≠ 42` | **kernel-checked** (`lean/Exclude42.lean`), modulo the class invariant |
-| `I ≠ 40` | **the entire enumeration** — where the risk lives |
+| `I ≠ 40` | **the entire enumeration** — the one open input, and where the risk lives |
 | ⟹ `I ≤ 38` | **kernel-checked** |
+
+**As of 2026-09-14 exactly one line of that table is open.** The best current
+statement is `IntersectionParity.isGreatest_38_final`, which needs the
+exceptional-class data — shared with the enumeration branch, so not an extra
+thing to believe — and `I ≠ 40`. If you want to spend your time where it
+matters, spend it on that row; everything above it is machine-checked.
 
 Two remarks a reviewer should weigh.
 
@@ -358,10 +364,13 @@ Second, **`I ≤ 42` is what reduces the problem to two branches.** Since `I` is
 even, the only values left above 38 are 42 and 40. That is why the entire
 difficulty concentrates in `I = 40`, and why §6.1 is ordered the way it is.
 
-Note also that "I is even" is *not* supplied by the parity machinery already in
-the geometry group. `metCount_even` there is about a polygon meeting a **line**;
-total-intersection parity between two closed curves is a different statement and
-is currently assumed.
+Note that "I is even" is a genuinely different statement from the parity
+machinery that was already in the geometry group: `metCount_even` there is about
+a polygon meeting a **line**, which is what feeds the minimum-degree step.
+Total-intersection parity between two closed curves is now proved separately in
+`lean/IntersectionParity.lean`, and — worth knowing if you are checking the trust
+base — it stays inside `Int` arithmetic, with `inside` defined by ray-crossing
+parity under a sheared height order. No reals are introduced anywhere.
 
 ### 3.2 One black box has since been replaced by a proof
 
