@@ -940,10 +940,24 @@ Confirmed independently by the main agent from the committed
 the orbit structure for a Q-adjacency alone and did not test the combination.
 That endorsement should not be relied on.
 
-**Closed** by enumerating all **25** `(P-type × Q-type)` combinations with no
-symmetry reduction: `both-hooking` and `both-hooked` are **UNSAT in all 25**, and
-`none` is SAT in exactly one Q-type per P-type — precisely the `XOR = (1,1)` one,
-which independently confirms the corrected orbit analysis.
+**Reported closed** by enumerating all **25** `(P-type × Q-type)` combinations
+with no symmetry reduction: `both-hooking` and `both-hooked` reported **UNSAT in
+all 25**, and `none` SAT in exactly one Q-type per P-type — the `XOR = (1,1)`
+one, which would independently confirm the corrected orbit analysis.
+
+> **STATUS CORRECTION (2026-09-14).** That closure is currently **prose only**.
+> The 25-case script was run in a session scratchpad and is **not recoverable** —
+> I searched, and no surviving file enumerates `(P-type × Q-type)` combinations.
+> So the repository does **not** currently contain executable evidence for the
+> replacement, and none of the 15 committed DRAT certificates corresponds to
+> those formulas.
+>
+> Until the reconstruction lands, the honest status of K-16 is: **the defect is
+> confirmed and the fix is described but not shipped.** `reproduce.sh` still runs
+> the superseded `coverage.py` and must not be read as establishing exhaustive
+> coverage. Reconstruction is in progress under
+> `independent/akr_l7_reproduction/coverage25/`; the "25" figure itself is being
+> re-derived rather than assumed.
 
 ### Why this matters beyond the fix
 
