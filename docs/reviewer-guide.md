@@ -329,6 +329,40 @@ five.
 Two things *not* imported, on purpose: Černý's Theorem 4 (`f(7,7) ≤ 40`), and
 anything from the withdrawn Günther preprint.
 
+### 3.1a The upper-bound chain, and exactly which links are machine-checked
+
+Added 2026-09-14. The whole upper bound is this chain, and it is now a Lean
+theorem (`lean/UpperBoundAssembly.lean`), so you can see at a glance where the
+weight sits:
+
+| step | status |
+|---|---|
+| `I + \|E\| = 49` | **kernel-checked for every configuration** |
+| `δ(G^D) ≥ 1`, hence `\|E\| ≥ 7`, hence **`I ≤ 42`** | **kernel-checked, unconditional** |
+| `I` is even | **hypothesis** — elementary, not proved here |
+| `I ≠ 42` | **kernel-checked** (`lean/Exclude42.lean`), modulo the class invariant |
+| `I ≠ 40` | **the entire enumeration** — where the risk lives |
+| ⟹ `I ≤ 38` | **kernel-checked** |
+
+Two remarks a reviewer should weigh.
+
+First, `I ≤ 42` being unconditional is worth pausing on: it is this project's use
+of **C1**, but it is *not imported*. The minimum-degree fact it rests on is
+**derived here** from a parity argument (a closed polygon meets a line an even
+number of times, so a side cannot cross all seven sides of the other polygon),
+in `lean/SegmentGeometry.lean`. So C1 appears in the table above as a published
+black box, but the consequence this proof actually needs does not depend on
+trusting it.
+
+Second, **`I ≤ 42` is what reduces the problem to two branches.** Since `I` is
+even, the only values left above 38 are 42 and 40. That is why the entire
+difficulty concentrates in `I = 40`, and why §6.1 is ordered the way it is.
+
+Note also that "I is even" is *not* supplied by the parity machinery already in
+the geometry group. `metCount_even` there is about a polygon meeting a **line**;
+total-intersection parity between two closed curves is a different statement and
+is currently assumed.
+
 ### 3.2 One black box has since been replaced by a proof
 
 **Černý L1's required consequence is now proved in Lean** (2026-09-14,
