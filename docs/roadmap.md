@@ -61,6 +61,28 @@ the mislabelled 13,484,940 count (K-01), the representative-labelling artifact
 symmetry or bookkeeping errors that survived review.** Nothing currently
 certifies that the 225-case list is complete; `Endgame.lean` explicitly does not.
 
+**Decomposed, 2026-09-14.** "Completeness of the enumeration" is four claims,
+and conflating them has been a recurring source of confusion:
+
+1. a counterexample produces a graph satisfying the search conditions;
+2. the abstract domain has 13,003,620 elements;
+3. the search actually visits every element of that domain;
+4. every valid configuration survives each filter to a terminal case proved
+   impossible.
+
+`lean/EnumerationDomain.lean` closes **(1)** in full, for an arbitrary
+configuration rather than the certificate pair, with no `Classical.choice` and
+no Mathlib result used in substance. For **(2)** it proves both ends and neither
+of the two links between them. **(3) and (4) remain the gap** — nothing in Lean
+inspects, extracts or certifies any search program, and a correct domain count
+is not a proof that an implementation enumerates the right set.
+
+A fourth candidate defect in this area was raised and **closed** on 2026-09-14
+(K-17): `graphShapeOK`'s degree-sequence requirement looked like an unchecked
+filter hiding the `{3,1,1,1,1,1,1}` branch, but it is a descriptive check on the
+survivors, and both implementations do enumerate that branch. Worth recording
+because the track record above makes such reports easy to believe too quickly.
+
 **Risk 2 — the geometry-to-model bridges for A7 (H).** Four prose steps between
 the DRAT certificates and the geometric statement. Now precisely specified in
 `docs/a7-specification.md`, which is what makes them attackable.
@@ -95,21 +117,63 @@ project has twice built infrastructure it did not need.
 
 ## 5. Recommended next milestone — one, bounded
 
-**Formalize the disjointness graph and its component structure over the
-orientation predicates, and discharge interface `I2`.**
+> **The previous milestone in this slot — formalize the disjointness graph and
+> discharge `I2` — was completed on 2026-09-14** as `lean/DisjointnessGraph.lean`
+> (`toMasks`, `toMasks_spec`, `min_degree_both_sides`, applied rather than
+> `decide`d), and `lean/EnumerationDomain.lean` then used it to close enumeration
+> obligation (1). See the note on the interface split below.
+
+**Next: enumeration obligation (3) — prove that the search visits every element
+of the domain.**
+
+This is now the single largest gap, and it is more tractable than it sounds.
+The naive reading — evaluate 13,003,620 elements in the kernel — is infeasible
+and `native_decide` is banned. But obligation (3) does not require evaluation.
+The search is a recursion (`python/elimination/audit_enum.py`, `rec`); transcribe
+it into Lean as a total function and prove
+
+    ∀ M, InDomain M → M is produced by the enumeration
+
+by **induction on the recursion depth**, with a strengthened invariant relating
+the prefix already chosen to the suffix still to be chosen. That is a theorem
+about a Lean function, not a computation. The pruning step
+`hi = min(3, budget-(rem-1))` must be modelled exactly as written and then
+proved harmless, rather than quietly dropped.
+
+Completeness is the direction that matters: it is what makes the search's
+*negative* result meaningful. Soundness is a nice-to-have.
 
 Why this one:
-* it is the single prerequisite shared by `I3`, `I4` and `I5` — nothing else in
-  the endgame can be connected to geometry without it;
-* it is Mathlib-free and finite, like the milestone just completed;
-* it converts `Endgame.lean` from a theorem about a file into a theorem about a
-  configuration, which is the change that most improves the trust story;
-* it is bounded: `toMasks` plus `toMasks_spec`, no classification, no
-  enumeration.
+* obligations (1) and (2)'s ends are done, so (3) is the next link in the chain;
+* it is the item with the worst defect track record (Risk 1);
+* it needs no new geometry and no reals.
 
 Explicitly **not** recommended next: a Lean SAT checker (large, and A7 is
-corroborated); the full classification (needs `I5`, the largest piece); point-set
-semantics (needs ℝ², orthogonal).
+corroborated); the full classification; point-set semantics (needs ℝ²,
+orthogonal — see the `I2b` note).
+
+### The `I2`/`I2a`/`I2b` split, recorded
+
+`I2` as originally written stated `toMasks_spec` against **point-set**
+disjointness of two segments. That is not statable in this development: `Pt` is
+`Int × Int` and `side P i` is never defined as a set anywhere in the repository.
+Stating it requires Mathlib's `segment`/`Convex` and the reals, which would
+destroy the Mathlib-free trust base the geometry group exists to have — so the
+milestone as documented was **not bounded**, its last line silently requiring
+real analysis. It is therefore split:
+
+* **`I2a`** — the orientation-level form, against
+  `DisjointO K i j := ¬ ProperCross …`. **Proved** (`DisjointnessGraph.lean`),
+  core Lean, no Mathlib, no reals.
+* **`I2b`** — the single isolated lemma
+  `DisjointO K i j ↔ Disjoint (segP K i) (segQ K j)`, needing ℝ² and Mathlib.
+  **Not proved.** When proved it upgrades `I2a` to the interface as originally
+  written, touching nothing else.
+
+The split costs nothing downstream because `Endgame.lean` never consumes
+`toMasks_spec`: every one of its theorems is parametric in `M : Nat → Nat`. It
+needs a *function*, not a specification, so the statement form of the spec is a
+free design choice.
 
 ## 6. On estimates
 
