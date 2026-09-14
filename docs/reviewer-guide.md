@@ -881,14 +881,30 @@ reading anything in this repository:
    case proved impossible.
 
 A correct domain count is **not** a proof that an implementation enumerates the
-right set. As of 2026-09-14, `lean/EnumerationDomain.lean` kernel-checks (1) in
-full — for an *arbitrary* configuration, not the certificate pair: 40 properly
-crossing side pairs forces the mask function into the domain, with axioms
-`propext, Quot.sound` and no `Classical.choice`. For (2) it proves both *ends*
-(the numeric identity, and the inclusion-exclusion step) but **not** their
-composition; the only cardinality fact kernel-checked is that the domain is
-non-empty. **(3) and (4) are untouched by anything in Lean** — nothing there
-inspects, extracts or certifies any search program. That is the gap.
+right set. As of the end of 2026-09-14 the position is:
+
+| # | obligation | status |
+|---|---|---|
+| 1 | counterexample lands in the searched domain | **proved** (`EnumerationDomain`), for an *arbitrary* configuration |
+| 2 | the domain has 13,003,620 elements | **proved** (`DomainCount.domainFinset_card`) |
+| 3 | the search visits every domain element | **proved** (`EnumerationComplete.enumerate_complete`) |
+| 4 | every valid configuration survives each filter | **stated** filter by filter; (E6) closed, (E8) half, (E1)–(E5)/(E7) open |
+
+Two caveats a reviewer should weigh, because they are where the remaining risk
+actually sits.
+
+**On (3): it is a theorem about the *Lean* function.** `enumerate` is
+`audit_enum.py`'s `rec` transcribed by hand as a total Lean function, and
+`enumerate_sound` pins it exactly (so completeness cannot be satisfied by an
+over-large list). But there is **no extraction**: that the Lean `enumRec` *is*
+the Python `rec` rests on side-by-side reading plus three byte-identical
+small-case diffs. Strong, not certified.
+
+**On (4): the remaining inputs are other people's theorems.** (E1)–(E5) and (E7)
+are Černý L2, AKR L5, AKR L7, the order-type crossing fact and the exceptional
+classification. Closing them means formalizing published papers, not more bridge
+work — and note (E5) and (E7) are load-bearing in a way that surprised us; see
+the K-17 correction below.
 
 One question here was raised and closed on 2026-09-14, recorded as **K-17**, and
 is worth knowing so you do not re-raise it: `Endgame.graphShapeOK` demands degree
@@ -896,8 +912,20 @@ sequence `(2,2,1,1,1,1,1)` on both sides, while the domain also admits
 `{3,1,1,1,1,1,1}` — and that branch is genuinely non-empty. This looks like an
 unchecked filter and is not one. `graphShapeOK` is a *descriptive* check on the
 225 survivors, not a search precondition, and both implementations do enumerate
-the degree-3 branch (`reduction.cpp:310-317`, `audit_enum.py:68-69`), where it
-dies in the L5/L7/L3 filters.
+the degree-3 branch (`reduction.cpp:310-317`, `audit_enum.py:68-69`).
+
+**Where that branch actually dies is worth knowing, and our first answer was
+wrong.** K-17 originally said it dies in the L5/L7/L3 filters. Instrumenting the
+pipeline shows it survives *every* graph-level filter:
+
+`4,086,600 → L5 11,466 → L7 6,174 → Černý L3 2,646 → crossing-set 222 → Černý L2 0`
+
+So the degree-3 branch is killed by **Černý Lemma 2**, the deepest external
+lemma, and only after the class-dependent filters run. The consequence is that
+"the degree sequence must be `(2,2,1,1,1,1,1)`" is **not** an elementary fact:
+proving it needs (E5) and (E7), the two hardest remaining inputs. Any plan that
+treats the degree-sequence forcing as a cheap first step — ours did, briefly — is
+resting on a false premise.
 
 **Where to spend your time:** re-derive `13,003,620` from the inclusion–exclusion
 formula in §2.6 (a five-minute exercise); then either write your own filter
