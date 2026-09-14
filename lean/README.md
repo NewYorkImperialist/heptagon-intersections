@@ -1,7 +1,7 @@
 # Lean formalization
 
 > **Current state: ten Lean libraries, all compiled clean with `lake build` on
-> Lean 4.33.1 (1279 jobs, exit 0).** Read the scope notes below before
+> Lean 4.33.1 (1290 jobs, exit 0).** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -18,7 +18,7 @@
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All eleven libraries have this status, *for the statements they actually
+   → All fourteen libraries have this status, *for the statements they actually
    make* — which in several cases is much narrower than the name of the file
    suggests. Check the scope note at the top of each file before quoting it.
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
@@ -44,14 +44,14 @@ read off an actual run, not carried over from an earlier edit:
 ```
 $ export PATH="$HOME/.elan/bin:$PATH"
 $ cd lean && lake build
-Build completed successfully (1279 jobs).
+Build completed successfully (1290 jobs).
 ```
 
-* **`lakefile.toml` declares eleven `[[lean_lib]]` targets**, all eleven in
+* **`lakefile.toml` declares fourteen `[[lean_lib]]` targets**, all fourteen in
   `defaultTargets`: `LowerBound`, `LemmaA`, `EndgameDefs`, `EndgameData`,
   `Endgame`, `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs`,
   `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`.
-* **1279 jobs** is the steady state, once Mathlib's `.olean` cache is in
+* **1290 jobs** is the steady state, once Mathlib's `.olean` cache is in
   place; the warm rebuild then takes about 4 s. The count jumped from 758 to
   1279 when `EnumerationDomain.lean` was added: it imports
   `Mathlib.Combinatorics.Enumerative.InclusionExclusion` and
@@ -88,6 +88,9 @@ It is not copied from an earlier version of this document.
 | `SegmentGeometry.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (14 of its 51 theorems need none) | **the first geometric milestone.** A parity argument about sign alternations round a cycle ⟹ a vertex-avoiding line cannot meet every side of an odd cycle; hence Černý L1's required consequence (min disjointness degree ≥ 1) and **Lemma A's hypothesis `h2`**, *derived* rather than assumed |
 | `DisjointnessGraph.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs`, `SegmentGeometry` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (8 of its 46 theorems need none) | **the geometry→endgame bridge.** `Config` (two simple heptagons in general position) and `toMasks : Config → (Nat → Nat)` with `toMasks_spec`, i.e. interface item **I1** and **I2 at the orientation level**. Bit `j` of mask `i` holds iff side `i` of `P` does not properly cross side `j` of `Q`. The point-set form of I2 needs ℝ² and is *not* proved here |
 | `EnumerationDomain.lean` | `DisjointnessGraph`, `Endgame`, **Mathlib** (`BigOperators`, `Polynomial.Coeff`, `InclusionExclusion`, `Nat.Choose.Sum`) | no | `propext`, `Quot.sound` on all of Part A — **no `Classical.choice`**; Part B adds `Classical.choice` via Mathlib `Finset`/`Polynomial` | **enumeration obligations (1) and (2), partially.** Part A proves that any `Config` with 40 properly crossing side pairs has `toMasks K` in the abstract search domain (`InDomain`: 7-bit masks, 9 edges, min degree ≥ 1 both sides) — obligation (1), complete and Mathlib-free in substance. Part B proves the numeric identity `Σⱼ(−1)ʲC(7,j)[x⁹](((1+x)^{7−j}−1)⁷) = 13003620` and the inclusion–exclusion step, but **not** that these compose into the domain's cardinality; only `0 < domainFinset.card` is proved as a cardinality fact. Obligations (3) and (4) are untouched |
+| `DomainCount.lean` | `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (2), CLOSED.** `domainFinset_card : domainFinset.card = 13003620`. Supplies the two steps `EnumerationDomain`'s Part B left open: `term_eq` (each inclusion–exclusion term is `gfCoeff9 (7 − |t|)`, so it depends only on `|t|` and the `C(7,j)` falls out rather than being asserted) and `coeff_pow_eq_card` (that term is `[x⁹]` of the row generating function, itself `(1+X)^(7−|t|) − 1` by a bijection onto non-empty subsets) |
+| `EnumerationComplete.lean` | `EnumerationDomain` | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (3), CLOSED for the Lean transcription.** `audit_enum.py`'s `rec` as a *total* function `enumRec` (structural on `rem = 7 − i`, no `partial`), with `enumerate_complete : ∀ M, InDomain M → maskList M ∈ enumerate` by induction on recursion depth — **nothing evaluates the 13,003,620-element output**. The prune `min 3 (budget − rem)` is modelled exactly and proved harmless. `enumerate_sound` gives the converse, so `enumerate` enumerates `InDomain` *exactly*. **Not** an extraction: that `enumRec` is the Python `rec` rests on reading plus three byte-identical small-case diffs |
+| `CounterexampleCount.lean` | `DomainCount` | no | `propext`, `Classical.choice`, `Quot.sound` | **the capstone joining (1) and (2).** `counterexample_confined`: `domainFinset.card = 13003620` **and** every `Config` with 40 crossings has `maskFnOf K ∈ domainFinset`. `cert_not_mem_domainFinset` guards non-vacuity — the 38-crossing certificate pair is *outside* the domain. Says nothing about (3) or (4) |
 
 **Adding a library.** The table above is one row per `[[lean_lib]]`, in
 lakefile order, and is meant to be extended by appending. To add a library:
@@ -131,7 +134,7 @@ Reading the import column: **five** files — `LowerBound`, `EndgameDefs`,
 `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs` — import *nothing at all*
 and compile with a bare `lean` against an empty `LEAN_PATH`.
 `EndgameData`, `Endgame`, `SegmentGeometry` and `DisjointnessGraph` import only
-files from this directory. So **nine of the eleven libraries are Mathlib-free**;
+files from this directory. So **nine of the fourteen libraries are Mathlib-free**;
 `LemmaA.lean` and `EnumerationDomain.lean` reach Mathlib, and they are the
 reason the `require` on Mathlib is in `lakefile.toml`. `EnumerationDomain`'s
 Part A uses no Mathlib result in substance (its axiom set is `propext`,

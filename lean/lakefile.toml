@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount"]
 
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
@@ -68,3 +68,27 @@ name = "DisjointnessGraph"
 # last.  Part A is Mathlib-free in substance; Part B is why Mathlib is imported.
 [[lean_lib]]
 name = "EnumerationDomain"
+
+# Enumeration obligation (2), CLOSED: DomainCount.lean proves
+#     EnumerationDomain.domainFinset.card = 13003620
+# by supplying the two steps EnumerationDomain.lean's PART B leaves open --
+# that the t-th inclusion-exclusion term depends only on #t, and that for
+# #t = j it is [x^9] (((1+x)^(7-j) - 1)^7).  Imports EnumerationDomain, so it
+# must come last.
+[[lean_lib]]
+name = "DomainCount"
+
+# Obligation (3) of enumeration completeness: the search recursion of
+# python/elimination/audit_enum.py, transcribed as a Lean function, together
+# with a proof by induction on the recursion depth that it VISITS every element
+# of EnumerationDomain.InDomain (and, conversely, nothing else).  Imports
+# EnumerationDomain, so it must come last.  Nothing here evaluates the
+# 13 003 620-element output: the theorem is about the function.
+[[lean_lib]]
+name = "EnumerationComplete"
+
+# The capstone joining obligations (1) and (2): a hypothetical counterexample to
+# f(7,7) = 38 is one of exactly 13 003 620 mask functions.  Imports DomainCount,
+# so it must come last of all.  Says NOTHING about obligations (3) and (4).
+[[lean_lib]]
+name = "CounterexampleCount"
