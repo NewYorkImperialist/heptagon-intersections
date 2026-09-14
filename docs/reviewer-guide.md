@@ -1048,7 +1048,10 @@ is formalized — so the Lean claims are narrower than their file names suggest.
 1. **Ten minutes:** verify §5 by hand. Four determinants. It is a published
    erratum either way.
 2. **One hour:** re-derive `13,003,620` from the inclusion–exclusion formula of
-   §2.6, independently of any code (§6.1).
+   §2.6, independently of any code (§6.1). Still worth your time as an
+   *independent* check — but note that since 2026-09-14 Lean also proves it:
+   `DomainCount.domainFinset_card : domainFinset.card = 13003620`, where the
+   `C(7,j)` falls out of regrouping rather than being asserted.
 3. ~~**One hour:** recompute the stored `avoiding` flags from the 14-class
    profile table (§6.4).~~ **Done 2026-09-14** — `lean/AvoidingFlag.lean` proves
    by `decide` that all 225 stored flags *equal* the class-table predicate (an
