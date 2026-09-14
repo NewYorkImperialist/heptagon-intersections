@@ -222,6 +222,10 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & project lemma & this project
   & \stat{lean-kernel-checked} (counting core) & geometric premises $h_1,h_2$ remain hypotheses \\
 \addlinespace
+\textsf{PAR} & $I$ is even for every configuration in general position
+  & project lemma & this project, \S\ref{sec:par}
+  & \stat{lean-kernel-checked} & none; proved outright 2026-09-14 \\
+\addlinespace
 \textsf{OT} & There are exactly $135$ order types of $7$ points
   & external dataset cross-check & \cite{AichholzerAurenhammerKrasser2002,OrderTypeDatabase}
   & \stat{externally cross-checked} (exact set equality) & none known \\
@@ -321,6 +325,45 @@ polygon. The single consequence used is
   \delta(\GD)\ \ge\ 1 .
 \]
 Together with $|\ED|=49-I$ this also gives $I\le42$.
+
+\subsection{Parity: $I$ is even}\label{sec:par}
+
+\textbf{Role.} With $I\le42$ from \textsf{C1}, parity is what reduces the upper
+bound to the two branches $I=42$ and $I=40$. Without it, $39$ and $41$ would
+also need excluding.
+
+\textbf{Status.} \stat{lean-kernel-checked} as of 2026-09-14
+(\texttt{IntersectionParity.crossCountC\_even}), for an \emph{arbitrary}
+configuration rather than the certificate pair. It was previously carried as an
+assumption. The three standard axioms only.
+
+\textbf{The argument.} Two closed curves in general position cross an even
+number of times. Formalised so as to stay inside $\mathbb{Z}$, introducing no
+reals and so preserving the Mathlib-free trust base of the geometry group:
+
+\begin{enumerate}\itemsep0pt
+  \item an $\mathrm{inside}$ predicate for a point with respect to $\partial Q$,
+        defined by \emph{ray-crossing parity} under a sheared height order --- the
+        lexicographic $(y,x)$ order, which \texttt{hlt\_eq\_decide} identifies
+        with the order of the integer functional $p\mapsto N p_2+p_1$ once $N$
+        exceeds the $x$-spread, i.e.\ a ray obtained from the horizontal by an
+        infinitesimal tilt;
+  \item a four-point bridge lemma relating the orientation predicates of the two
+        segment endpoints to that parity;
+  \item the per-side lemma \texttt{crossRow\_parity}: side $i$ of $P$ crosses
+        $\partial Q$ an odd number of times exactly when its two endpoints differ
+        in inside-ness;
+  \item the cyclic sum: each vertex indicator occurs in exactly two consecutive
+        sides, so summing (3) around the closed polygon doubles every term. This
+        is the same cancellation \texttt{SegmentGeometry.cycChanges\_even}
+        performs for a line.
+\end{enumerate}
+
+\begin{remark}[Not the same as the line parity already present]
+\texttt{SegmentGeometry.metCount\_even} --- a closed polygon meets a \emph{line}
+an even number of times --- is a different statement, and is what feeds
+\textsf{C1} and hence $\delta(\GD)\ge1$. It does not give \textsf{PAR}.
+\end{remark}
 
 \subsection{Excluding $I=42$}\label{sec:i42}
 
