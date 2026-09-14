@@ -1,6 +1,6 @@
 # AI-assisted research disclosure
 
-**Last updated:** 2026-09-13
+**Last updated:** 2026-09-14
 
 > The authoritative, and more complete, AI-use disclosure is now the one on the
 > title page of [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)
@@ -18,6 +18,26 @@ by Claude.
 
 This disclosure exists so that a reader can calibrate how much independent human
 checking stands behind each claim. The answer, at present, is: very little.
+
+> **Update, 2026-09-14.** The Lean formalization roughly tripled on this date —
+> from 9 libraries to 23, and from a few dozen theorems to 706 — and **all of
+> that work was also AI-performed**, by Claude coordinating a set of subagents
+> and, for part of it, OpenAI's Codex. The same applies to the measurements that
+> now underpin `roadmap.md` §8a (kernel feasibility) and to the corrections
+> recorded in `known-issues.md` K-17 through K-21.
+>
+> Two things are worth a reader's attention here rather than being buried:
+>
+> * Several of the day's findings were **corrections of the AI's own earlier
+>   claims** — a wrong statement about where the degree-3 branch dies (K-17), an
+>   overstated feasibility conclusion, an invalid benchmark, and a Lean file
+>   committed unbuilt and unregistered. These were caught by re-measuring rather
+>   than by review, which is the failure mode this disclosure exists to flag.
+> * **Independent human verification is still none.** Nothing on 2026-09-14
+>   changed that, and no amount of further formalization substitutes for it.
+>   More machine-checked theorems make the *claims* sharper and the gaps more
+>   precisely located; they do not supply the outside judgement the project
+>   still lacks.
 
 ## What the models did
 
