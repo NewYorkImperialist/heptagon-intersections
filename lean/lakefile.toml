@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity"]
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
 [[require]]
@@ -155,3 +155,8 @@ name = "LemmaABridge"
 # hypotheses.  Imports UpperBoundAssembly, so it comes last.
 [[lean_lib]]
 name = "MainTheorem"
+
+# "I is even" -- the last elementary hypothesis of the upper bound.  Imports
+# UpperBoundAssembly, so it comes after it.
+[[lean_lib]]
+name = "IntersectionParity"
