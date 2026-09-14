@@ -398,7 +398,8 @@ those four sides of $Q$ \emph{exactly} a perfect matching
 The geometric hypothesis depends only on the order type and is tabulated per
 exceptional class as the \emph{Lemma-2 windows}. The word \emph{exactly} is
 load-bearing: a block containing a perfect matching \emph{plus} an extra edge is
-not forbidden, and the implementation was checked not to reject such blocks.
+not the forbidden pattern \emph{for that block}. (It does not follow that the
+graph survives the filter --- another block may still trigger it.)
 
 \subsection{\textsf{A5} --- AKR Lemma 5}
 
@@ -954,7 +955,11 @@ JSON, whose hash is embedded in the generated header.
 \subsection*{\texttt{Lemma7Bridge.lean} --- \textsf{A7-BRIDGE}}
 \textbf{Imports: none.} Core Lean; builds standalone with an empty
 \texttt{LEAN\_PATH}. \textbf{Axioms: none at all} --- every theorem reports
-\emph{does not depend on any axioms}, not even \texttt{propext}.
+\emph{does not depend on any axioms}, not even \texttt{propext}. One documented
+exception, added 2026-09-14: the classical corollary
+\texttt{disjoint\_statuses\_imply\_bipartite\_classical}, which removes the
+decidability hypothesis, depends on \texttt{Classical.choice}. That hypothesis is
+a formalisation convenience, \emph{not} a mathematical or geometric assumption.
 
 Formalises only the implication of \S\ref{sec:a7ext}. The two hypotheses are
 \texttt{hne}~:~$\forall e,\exists s,\ S\,e\,s$ and
@@ -976,14 +981,16 @@ Observation.
 \textbf{Imports: none.} \textbf{Axioms:} the three standard ones; the pure
 \texttt{decide} facts are \texttt{propext}-only.
 
-Proves \texttt{l2FiresB\_iff}: the implemented filter fires iff an \emph{exact
+Proves \texttt{l2FiresB\_iff}: the \emph{Lean transcription} of the filter fires iff an \emph{exact
 induced} perfect matching exists, the single clause
 $\mathrm{Edge}\,(s_t)\,(q_u)\leftrightarrow t=u$ carrying both halves --- all four
 matching edges present, all twelve cross pairs absent. The decisive fixtures:
-a matching plus an extra edge \emph{inside} the $4$-block does \textbf{not} fire,
-while a matching plus an edge \emph{outside} the block \textbf{still} fires, so
-the predicate is certified to be about the induced subgraph rather than about
-degrees.
+a matching plus an extra edge \emph{inside} the $4$-block is no longer the
+forbidden pattern \emph{for that block}, while a matching plus an edge
+\emph{outside} the block \textbf{still} fires --- so the predicate is certified to
+be about the induced subgraph rather than about degrees. Note the first is a
+per-fixture fact: an extra edge does not in general stop the filter firing, since
+\emph{another} block can still be an exact induced matching.
 
 \begin{remark}[Limits of \textsf{C2-BRIDGE}]
 It certifies the Lean transcription of the filter, \emph{not} the Python/C++

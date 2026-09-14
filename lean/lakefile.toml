@@ -29,13 +29,15 @@ name = "Endgame"
 #
 # Lemma7Bridge.lean formalises ONLY the project's inference
 #     nonempty status sets  +  disjoint status sets across edges  =>  H bipartite.
-# AKR Lemma 7 itself is NOT assumed, axiomatised, or even named in it: the
+# AKR Lemma 7 itself is NOT assumed, axiomatised, or STATED in it (the name
+# does occur in the prose comments): the
 # disjointness condition is an explicit hypothesis of every theorem.
 [[lean_lib]]
 name = "Lemma7Bridge"
 
-# CernyL2Interface.lean formalises ONLY the code-to-mathematics bridge for the
-# Cerny L2 filter predicate (exact induced perfect matching).  It does NOT
-# formalise Cerny Lemma 2 itself.
+# CernyL2Interface.lean formalises ONLY the LEAN TRANSCRIPTION of the Cerny L2
+# filter predicate (exact induced perfect matching).  It does NOT formalise
+# Cerny Lemma 2 itself, and it is not a proof that the Python or C++ source
+# implements that predicate -- there is no extraction and no cross-check.
 [[lean_lib]]
 name = "CernyL2Interface"

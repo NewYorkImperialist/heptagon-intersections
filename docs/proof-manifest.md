@@ -128,7 +128,7 @@ Strict is the correct reading: Lemma A is only ever instantiated at the lines
 | `LowerBound.lean` | **none** (core Lean) | `propext` | 38 crossings; simplicity; general position; counted over provably all 49 pairs |
 | `LemmaA.lean` | Mathlib | `propext`, `Classical.choice`, `Quot.sound` | counting + parity ⟹ `I ≤ 38`, as an implication; non-vacuity |
 | `Endgame.lean` | **none** (core Lean) | `propext`, `Quot.sound` | all 225 fail AKR-L5; components recomputed in-kernel; `AKR5Conclusion ↔ AKR5Adjacent` (axiom-free) |
-| `Lemma7Bridge.lean` | **none** (core Lean) | **none at all** | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
+| `Lemma7Bridge.lean` | **none** (core Lean) | **none at all** (except the classical corollary, which uses `Classical.choice`) | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
 | `CernyL2Interface.lean` | **none** (core Lean) | `propext`, `Classical.choice`, `Quot.sound` | filter fires **iff** exact induced perfect matching; extra edge inside the block ⟹ no fire, outside ⟹ still fires |
 
 No `sorry`, `admit`, project `axiom`, `unsafe`, or `native_decide` in any file.

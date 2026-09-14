@@ -377,7 +377,7 @@ a clean `rm -rf .lake/build`.
 | `lean/EndgameDefs.lean` | **none (core Lean)** | none | none | `propext`, `Quot.sound` |
 | `lean/EndgameData.lean` | **none (core Lean)** | none | none | — (generated data) |
 | `lean/Endgame.lean` | **none (core Lean)** | none | none | `propext`, `Quot.sound` |
-| `lean/Lemma7Bridge.lean` | **none (core Lean)** | none | none | **none at all** |
+| `lean/Lemma7Bridge.lean` | **none (core Lean)** | none | none | **none at all** (except the classical corollary, which uses `Classical.choice`) |
 | `lean/CernyL2Interface.lean` | **none (core Lean)** | none | none | `propext`, `Classical.choice`, `Quot.sound` |
 
 `lake build` → 752 jobs, exit 0. Six of the seven import nothing whatsoever;
@@ -913,3 +913,44 @@ Also corrected: an earlier session note called `py_no_a7.json` a *committed*
 artifact. It is not — it is git-ignored (`.gitignore:96`) and untracked. The
 remedy is unchanged (fix the generator, re-run), but the file was never in the
 history.
+
+---
+
+## K-16 — The A7 encoder's PQ-adjacency coverage argument was wrong  (FOUND AND CLOSED 2026-09-14)
+
+**Status:** closed. The conclusion was unaffected; the *coverage argument* was not.
+
+`independent/akr_l7_reproduction/coverage.py` argued that the four
+Q-adjacency cases form a single orbit under the order-16 symmetry group, so that
+testing one representative suffices. That is valid for a Q-adjacency **in
+isolation**. It is **not** valid in combination with a P-adjacency: the
+relabelling generators act in tandem (`a↔b` forces `A↔B`), so the combined PQ
+types split into **four** orbits, indexed by the XOR of the P-bits with the
+Q-bits. `om_lemma7.py` tests only orbit `(0,0)`.
+
+**That orbit is vacuous.** Status `none` imposes no status constraints at all
+(`om_lemma7.py:277`, `"none": []`), and the committed results record
+`PQ-adj/none` as **UNSAT**. So the PQ-adj *base pattern* is itself infeasible,
+and every PQ-adj verdict — including `both-hooking` and `both-hooked` — was
+vacuously UNSAT. The geometrically feasible PQ orbit had never been solved.
+Confirmed independently by the main agent from the committed
+`om_lemma7_results.json` and the encoder source.
+
+**This gap was endorsed as sound by the earlier hostile review**, which checked
+the orbit structure for a Q-adjacency alone and did not test the combination.
+That endorsement should not be relied on.
+
+**Closed** by enumerating all **25** `(P-type × Q-type)` combinations with no
+symmetry reduction: `both-hooking` and `both-hooked` are **UNSAT in all 25**, and
+`none` is SAT in exactly one Q-type per P-type — precisely the `XOR = (1,1)` one,
+which independently confirms the corrected orbit analysis.
+
+### Why this matters beyond the fix
+
+It is the second time a *symmetry reduction* has hidden a hole in this project
+(the first was the representative-labelling artifact of K-11/D2). Symmetry
+arguments compress the search and are correspondingly easy to get wrong in a way
+that leaves the headline number unchanged. Any future reduction should be
+accompanied by a vacuity check on the tested representative: if the base pattern
+with no additional constraints is already UNSAT, the representative is carrying
+no information.

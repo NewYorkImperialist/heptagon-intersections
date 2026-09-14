@@ -92,7 +92,7 @@ combinatorial filters are the least secure steps in the argument — see
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. **Seven files, all compiling** (`lake build`, 752 jobs); six import nothing but core Lean. See `lean/README.md`. |
+| `lean/` | Formalization. **Seven files, all compiling** (`lake build`, 752 jobs); four import literally nothing, two import only in-directory, one uses Mathlib. See `lean/README.md`. |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
 | `independent/` | Implementation B: an independent C++ reimplementation of the finite reduction, written from a written specification. |
@@ -125,7 +125,7 @@ full table. In brief:
 | External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified |
 | Reproduced by a second implementation | the finite graph/profile reduction, exact 225-triple set match (C++, different enumeration) |
 | Needs independent reproduction | the order-type enumeration and exceptional classification; the upper bound as a whole |
-| Not present at all | Implementation B; six of seven planned Lean files |
+| Not present at all | Implementation B; six of the eight planned Lean files |
 
 ## Reproducibility
 
