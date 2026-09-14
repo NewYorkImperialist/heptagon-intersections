@@ -222,10 +222,41 @@ Note also (found the hard way) that `#eval` here runs the **IR interpreter**, no
 the kernel, because the project does not set `precompileModules`. `#eval` timings
 say nothing about kernel cost in either direction.
 
-### The conclusion
+### The conclusion, and a correction to it
 
-**`hne40` cannot be closed by kernel-evaluating the search.** Not "would be
-slow" — not feasible as a build step, by orders of magnitude.
+**`hne40` cannot be closed by kernel-evaluating the search *as currently
+written*.** Not "would be slow" — not feasible as a build step.
+
+> **CORRECTION, same day, and it matters.** The sentence above originally read
+> "cannot be closed by kernel-evaluating the search", full stop. That was
+> stronger than my evidence supports, for two reasons I found by trying to
+> benchmark the alternative:
+>
+> 1. **`enumRec` returns `List (List Nat)`.** The depth-3 measurement above is
+>    therefore dominated by *building 5,670 list terms*, not by the arithmetic.
+>    A **counting** formulation that accumulates a `Nat` and never materialises
+>    the 13,003,620 outputs is a different computation with a different cost, and
+>    it has **not** been properly benchmarked.
+> 2. **My attempt to benchmark one was invalid.** I wrote a fold version that
+>    iterates all 128 masks at each of the seven levels, omitting the real
+>    algorithm's size-indexed `SUBS` iteration and its
+>    `hi = min(3, budget-(rem-1))` prune. That explores a vastly larger tree than
+>    `rec` does — so much so that **Python could not finish it either**. It
+>    measured a much worse algorithm and is evidence about nothing.
+>
+> For calibration in the other direction: the real Python `rec`, *with the full
+> filter pipeline*, sweeps all 13,003,620 graphs in about **190 seconds**. If
+> kernel reduction were the ~500× slower than Python that the trivial-work
+> measurement suggests, a well-engineered fold version would be on the order of
+> **a day**, not weeks — expensive and absurd as a build step, but not obviously
+> impossible as a one-off.
+>
+> **So the honest position is: the barrier is real, and its magnitude is not
+> established.** My own estimates in this section span orders of magnitude. A
+> careful benchmark of a *properly engineered* counting formulation — size-indexed
+> mask iteration, the real prune, `Nat` accumulator, no list construction — is a
+> concrete, bounded next experiment, and it should be run before anyone concludes
+> either that the goal is reachable or that it is not.
 
 ### The way forward, and there is a good one
 
