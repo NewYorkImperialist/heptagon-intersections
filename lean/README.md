@@ -1,7 +1,7 @@
 # Lean formalization
 
 > **Current state: ten Lean libraries, all compiled clean with `lake build` on
-> Lean 4.33.1 (1290 jobs, exit 0).** Read the scope notes below before
+> Lean 4.33.1 (1305 jobs, exit 0).** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -18,7 +18,7 @@
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All fourteen libraries have this status, *for the statements they actually
+   → All twenty-one libraries have this status, *for the statements they actually
    make* — which in several cases is much narrower than the name of the file
    suggests. Check the scope note at the top of each file before quoting it.
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
@@ -44,14 +44,17 @@ read off an actual run, not carried over from an earlier edit:
 ```
 $ export PATH="$HOME/.elan/bin:$PATH"
 $ cd lean && lake build
-Build completed successfully (1290 jobs).
+Build completed successfully (1305 jobs).
 ```
 
-* **`lakefile.toml` declares fourteen `[[lean_lib]]` targets**, all fourteen in
+* **`lakefile.toml` declares twenty-one `[[lean_lib]]` targets**, all twenty-one in
   `defaultTargets`: `LowerBound`, `LemmaA`, `EndgameDefs`, `EndgameData`,
   `Endgame`, `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs`,
-  `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`.
-* **1290 jobs** is the steady state, once Mathlib's `.olean` cache is in
+  `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`, `DomainCount`,
+  `EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`, `Exclude42`,
+  `UpperBoundAssembly`, `ComponentLabelling`, `BipartiteDecision`,
+  `LemmaABridge`, `MainTheorem`.
+* **1305 jobs** is the steady state, once Mathlib's `.olean` cache is in
   place; the warm rebuild then takes about 4 s. The count jumped from 758 to
   1279 when `EnumerationDomain.lean` was added: it imports
   `Mathlib.Combinatorics.Enumerative.InclusionExclusion` and
@@ -91,6 +94,13 @@ It is not copied from an earlier version of this document.
 | `DomainCount.lean` | `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (2), CLOSED.** `domainFinset_card : domainFinset.card = 13003620`. Supplies the two steps `EnumerationDomain`'s Part B left open: `term_eq` (each inclusion–exclusion term is `gfCoeff9 (7 − |t|)`, so it depends only on `|t|` and the `C(7,j)` falls out rather than being asserted) and `coeff_pow_eq_card` (that term is `[x⁹]` of the row generating function, itself `(1+X)^(7−|t|) − 1` by a bijection onto non-empty subsets) |
 | `EnumerationComplete.lean` | `EnumerationDomain` | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (3), CLOSED for the Lean transcription.** `audit_enum.py`'s `rec` as a *total* function `enumRec` (structural on `rem = 7 − i`, no `partial`), with `enumerate_complete : ∀ M, InDomain M → maskList M ∈ enumerate` by induction on recursion depth — **nothing evaluates the 13,003,620-element output**. The prune `min 3 (budget − rem)` is modelled exactly and proved harmless. `enumerate_sound` gives the converse, so `enumerate` enumerates `InDomain` *exactly*. **Not** an extraction: that `enumRec` is the Python `rec` rests on reading plus three byte-identical small-case diffs |
 | `CounterexampleCount.lean` | `DomainCount` | no | `propext`, `Classical.choice`, `Quot.sound` | **the capstone joining (1) and (2).** `counterexample_confined`: `domainFinset.card = 13003620` **and** every `Config` with 40 crossings has `maskFnOf K ∈ domainFinset`. `cert_not_mem_domainFinset` guards non-vacuity — the 38-crossing certificate pair is *outside* the domain. Says nothing about (3) or (4) |
+| `FilterSoundness.lean` | `DisjointnessGraph`, `Lemma7Bridge`, `CernyL2Interface` | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (4), STATED filter by filter and partially proved — NOT closed.** The two genuinely new bridges are axiom-free: `akr5ConclusionG_iff` (AKR L5's conclusion read off the geometry ⟺ the mask-level predicate) and `geoWindowMatching_iff` (the same for Černý L2). External content enters as explicit hypotheses (E1)–(E8), never as axioms |
+| `Exclude42.lean` | `FilterSoundness`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **UB42, formalized.** `not_crossCount_42`: a `Config` with `crossCountC K = 42` gives `False`. `I + \|E\| = 49` and min-degree are *discharged*, not assumed. Remaining: (X1) the class invariant, (X2) = (E4). (X3) is discharged by `LemmaABridge` |
+| `UpperBoundAssembly.lean` | `Exclude42` | no | `propext`, `Classical.choice`, `Quot.sound` | **the upper-bound skeleton.** `crossCountC_le_42` is **unconditional** (`propext`, `Quot.sound` only) — every configuration has `I ≤ 42`, which is what reduces the problem to the two branches 42 and 40. `crossCountC_le_38_of_enumeration` discharges the 42 branch, leaving parity and the enumeration |
+| `ComponentLabelling.lean` | `FilterSoundness` | no | `propext`, `Classical.choice`, `Quot.sound` | **(E6) discharged, both directions.** `label_eq_iff : label M u = label M v ↔ Conn M u v`, against `EndgameDefs.Conn` itself. Structural `Nat`-fuel closure, no `partial`; **fuel sufficiency is proved**. `filterB_sound'` consequently has *no* `hcmp` hypothesis — the case that needed the iff |
+| `BipartiteDecision.lean` | `FilterSoundness` | no | `propext`, `Quot.sound`, `Classical.choice` | **(E8): a verified bipartiteness decision procedure.** See the file header for exactly which routine is verified and what residual gap remains against the shipped C++/Python |
+| `LemmaABridge.lean` | `LemmaA`, `DisjointnessGraph`, `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(X3) discharged.** `card_E_eq_degSum` identifies `LemmaA`'s `Finset` edge count with the mask-level `degSum`, making Lemma A usable where the rest of the development lives; `no_uncrossable_four_set_of_seven_edges` is the consequence `Exclude42` needed |
+| `MainTheorem.lean` | `UpperBoundAssembly`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the target statement.** `isGreatest_38` with parity, `≠42`, `≠40` as named hypotheses; `attained_38_and_le_42` is **unconditional**. **Not** `f(7,7) = 38`: orientation-level, over `Pt := Int × Int`, no Jordan-curve step. Read its header before quoting |
 
 **Adding a library.** The table above is one row per `[[lean_lib]]`, in
 lakefile order, and is meant to be extended by appending. To add a library:
@@ -133,15 +143,18 @@ run_cmd do
 Reading the import column: **five** files — `LowerBound`, `EndgameDefs`,
 `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs` — import *nothing at all*
 and compile with a bare `lean` against an empty `LEAN_PATH`.
-`EndgameData`, `Endgame`, `SegmentGeometry` and `DisjointnessGraph` import only
-files from this directory. So **nine of the fourteen libraries are Mathlib-free**;
-`LemmaA.lean` and `EnumerationDomain.lean` reach Mathlib, and they are the
-reason the `require` on Mathlib is in `lakefile.toml`. `EnumerationDomain`'s
+Ten more -- `EndgameData`, `Endgame`, `SegmentGeometry`, `DisjointnessGraph`,
+`EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`,
+`UpperBoundAssembly`, `ComponentLabelling` and `BipartiteDecision` -- import only
+files from this directory. So **fifteen of the twenty-one libraries are Mathlib-free**;
+Six files reach Mathlib -- `LemmaA`, `EnumerationDomain`, `DomainCount`,
+`Exclude42`, `LemmaABridge` and `MainTheorem` -- and they are the reason the
+`require` on Mathlib is in `lakefile.toml`. `EnumerationDomain`'s
 Part A uses no Mathlib result in substance (its axiom set is `propext`,
 `Quot.sound`); Part B's `Finset`/`Polynomial` reasoning is why the import is
 there.
 
-Reading the `autoImplicit` column: **seven** files set
+Reading the `autoImplicit` column: **seventeen** files set
 `set_option autoImplicit false` — `LemmaA.lean`, `Lemma7Bridge.lean`,
 `CernyL2Interface.lean`, `GeometryDefs.lean`, `SegmentGeometry.lean` and
 `DisjointnessGraph.lean` and `EnumerationDomain.lean`. The
@@ -306,7 +319,7 @@ orientation-predicate level of `LowerBound.lean`.
 ```
 export PATH="$HOME/.elan/bin:$PATH"
 cd lean
-lake build        # all eleven libraries; Mathlib needed by LemmaA and EnumerationDomain
+lake build        # all twenty-one libraries; six of them reach Mathlib
 ```
 
 Mathlib is pinned by `lake-manifest.json` to the tag `v4.33.1`
@@ -350,7 +363,7 @@ Toolchain: `leanprover/lean4:v4.33.1`.
 
 `#print axioms` output, verbatim, for every principal theorem
 (Lean 4.33.1, Mathlib `v4.33.1`). Re-read for this revision with
-`lake env lean` over a file that imports all eleven libraries; nothing below is
+`lake env lean` over a file that imports all twenty-one libraries; nothing below is
 transcribed from an earlier edit.
 
 Per-library summary first — the *union* of the axioms of every theorem the file
@@ -362,15 +375,27 @@ list can:
 | library | theorems declared | axiom-free | union of axioms |
 |---|---|---|---|
 | `LowerBound.lean` | 20 | 2 | `propext` |
-| `LemmaA.lean` | 14 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
-| `EndgameDefs.lean` | 14 | 4 | `propext`, `Quot.sound` |
+| `LemmaA.lean` | 17 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `EndgameDefs.lean` | 38 | 25 | `propext`, `Quot.sound` |
 | `EndgameData.lean` | 0 | — | *(declares no theorem)* |
-| `Endgame.lean` | 21 | 5 | `propext`, `Quot.sound` |
-| `Lemma7Bridge.lean` | 19 | 18 | `propext`, `Classical.choice`, `Quot.sound` |
-| `CernyL2Interface.lean` | 19 | 0 | `propext`, `Quot.sound`, `Classical.choice` |
-| `GeometryDefs.lean` | 11 | 1 | `propext`, `Quot.sound` |
-| `SegmentGeometry.lean` | 51 | 14 | `propext`, `Quot.sound` |
-| `DisjointnessGraph.lean` | 46 | 8 | `propext`, `Quot.sound` |
+| `Endgame.lean` | 24 | 5 | `propext`, `Quot.sound` |
+| `Lemma7Bridge.lean` | 26 | 25 | `propext`, `Classical.choice`, `Quot.sound` |
+| `CernyL2Interface.lean` | 25 | 6 | `propext`, `Quot.sound`, `Classical.choice` |
+| `GeometryDefs.lean` | 22 | 11 | `propext`, `Quot.sound` |
+| `SegmentGeometry.lean` | 59 | 21 | `propext`, `Quot.sound` |
+| `DisjointnessGraph.lean` | 58 | 8 | `propext`, `Quot.sound` |
+| `EnumerationDomain.lean` | 53 | 7 | `propext`, `Quot.sound`, `Classical.choice` |
+| `DomainCount.lean` | 24 | 1 | `propext`, `Classical.choice`, `Quot.sound` |
+| `EnumerationComplete.lean` | 34 | 6 | `propext`, `Classical.choice`, `Quot.sound` |
+| `CounterexampleCount.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `FilterSoundness.lean` | 66 | 15 | `propext`, `Classical.choice`, `Quot.sound` |
+| `Exclude42.lean` | 21 | 1 | `propext`, `Classical.choice`, `Quot.sound` |
+| `UpperBoundAssembly.lean` | 10 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `ComponentLabelling.lean` | 64 | 15 | `propext`, `Classical.choice`, `Quot.sound` |
+| `BipartiteDecision.lean` | 79 | 44 | `propext`, `Quot.sound`, `Classical.choice` |
+| `LemmaABridge.lean` | 7 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `MainTheorem.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| **total** | **657** | **192** | **no project-specific axiom anywhere** |
 
 Then the per-theorem detail:
 
@@ -453,7 +478,7 @@ Then the per-theorem detail:
 Only the three standard Lean axioms appear; no project-specific `axiom` is
 declared anywhere. **No file in the geometry group reaches `Classical.choice`**
 — `GeometryDefs.lean`, `SegmentGeometry.lean` and `DisjointnessGraph.lean`
-together declare 108 theorems, and the union over all 108, not just the ones
+together declare 139 theorems, and the union over all 139, not just the ones
 tabulated above, is `{propext, Quot.sound}`. The whole geometry group stays
 strictly inside core Lean's trust base.
 
