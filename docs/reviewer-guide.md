@@ -400,11 +400,15 @@ restatement.
 > `axiom`, and none uses `sorry`, `native_decide` or `unsafe` — so nothing is
 > assumed on the project's say-so inside Lean.
 
-All Lean sources build (`lake build`, exit 0 — observed while writing this; see
-§4.4). Only `LemmaA.lean` reaches Mathlib; five files import literally nothing
-and compile against an empty `LEAN_PATH`. (The file count is live — the
-authoritative per-claim record is
-[`verification-status.md`](verification-status.md) row 15.)
+All Lean sources build (`lake build`, exit 0 — **23 libraries, 1309 jobs, 706
+theorems, 210 of them depending on no axioms at all**). Six files reach Mathlib;
+five import literally nothing and compile against an empty `LEAN_PATH`. The
+geometry group (`GeometryDefs`, `SegmentGeometry`, `DisjointnessGraph`, 139
+theorems) never reaches `Classical.choice`. (Counts are live — the authoritative
+per-claim record is [`verification-status.md`](verification-status.md) row 15,
+and the per-library axiom census in
+[`../lean/README.md`](../lean/README.md) is regenerated mechanically rather than
+transcribed.)
 
 | what | file | scope limit |
 |---|---|---|
@@ -415,11 +419,32 @@ authoritative per-claim record is
 | `AKR5Conclusion ↔ AKR5Adjacent` — published conclusion ⟺ implemented predicate | `EndgameDefs.lean` | axiom-free |
 | non-empty + pairwise-disjoint status sets ⟹ `H` bipartite | `Lemma7Bridge.lean` | AKR L7 is an explicit **hypothesis**, never an axiom |
 | the Lean transcription of the Černý-L2 filter fires ⟺ an exact induced perfect matching exists | `CernyL2Interface.lean` | certifies the *Lean transcription*, not the Python/C++ source |
+| **`I ≤ 42` for every configuration**, unconditionally | `UpperBoundAssembly.lean` | this is Černý L1's consequence, *derived* not imported; `propext`/`Quot.sound` only |
+| **`I` is even** for every configuration | `IntersectionParity.lean` | stays in `Int`; `inside` by ray-crossing parity, no reals |
+| **`I ≠ 42`** | `Exclude42.lean` | modulo the class invariants (X1)/(X2) |
+| a counterexample lands in the searched domain (obligation 1) | `EnumerationDomain.lean` | arbitrary configuration; `I = 40` is an *input*, not a consequence |
+| the domain has exactly **13,003,620** elements (obligation 2) | `DomainCount.lean` | the `C(7,j)` falls out of regrouping, not asserted |
+| the search **visits every** domain element (obligation 3) | `EnumerationComplete.lean` | about the *Lean* transcription; **no extraction** |
+| the component labelling is correct, both directions (E6) | `ComponentLabelling.lean` | an iff against `Conn`; fuel sufficiency proved |
+| a verified bipartiteness decision procedure (E8, algorithmic half) | `BipartiteDecision.lean` | not the shipped C++/Python routine |
+| all 225 stored `avoiding` flags equal the class-table predicate (I3) | `AvoidingFlag.lean` | flag/table gap only; the geometric half is open |
+| the target statement itself | `MainTheorem.lean` | **not** `f(7,7) = 38` — see below |
 
-**`f(7,7) = 38` is not a Lean theorem.** Five planned files do not exist at all:
-the model of a configuration (`Model.lean`), the published lemmas as declared
-imports (`Imported.lean`), the profile table (`Profiles.lean`), the
-classification (`Classification.lean`), and the assembly (`Main.lean`).
+**`f(7,7) = 38` is still not a Lean theorem, and the gap is specific.** What
+*is* proved is `IntersectionParity.isGreatest_38_final`: 38 is the greatest
+attained crossing count, given the exceptional-class data and `I ≠ 40`. Three
+things separate that from the real-plane statement:
+
+1. **`I ≠ 40`** — the 13,003,620-graph enumeration. See §6.1; and note
+   `roadmap.md` §8a, which measures why this cannot currently be closed inside
+   the kernel (memory, not time).
+2. **The external lemmas** — Černý L2, AKR L5, AKR L7, the order-type crossing
+   fact, and the exceptional classification, which enter as explicit named
+   hypotheses (E1)–(E5), (E7) rather than as axioms.
+3. **The real plane** — everything is orientation-level over `Pt := Int × Int`.
+   "Simple" means the `Simple7` orientation conditions, *not* "the closed curve
+   is a Jordan curve", and the general-position reduction is AKR §9.1. Neither
+   step is formalized.
 
 ### 3.4 Proved here, prose + computation only
 
