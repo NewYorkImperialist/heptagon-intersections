@@ -21,6 +21,18 @@ Geometry **68** (2022) 1049–1077 — `references/akr-dcg-2022.pdf`. Section 10
 
 **Positive.**
 
+> **CORRECTION (hostile review, 2026-09-13).** Item 1 below is **wrong in its
+> conclusion**. The non-edge argument is correct, but the risk item must stay
+> OPEN: a counterexample to Observation 6 was subsequently built inside genuine
+> simple polygons under full general position (triangle `(2,0),(3,4),(-2,0)` and
+> pentagon `(4,-4),(-3,1),(0,-1),(3,3),(2,1)`), in which all four edge/non-edge
+> conditions hold and the Axis Property still fails. The essential ingredient is
+> the **cone dichotomy**, not the non-edges. Item 5 is also **overstated**:
+> `158830` is a mislabeling with no consequence for AKR's result, not a
+> mathematical error. The stated reason for item 1 — "because `G^D` is
+> bipartite" — is wrong; it follows from connectivity alone. See
+> [`../../docs/a7-independent-resolution.md`](../../docs/a7-independent-resolution.md).
+
 1. **The "broad vs narrow associated" worry is vacuous.** Wherever "associated"
    is defined at all (`CC(p_i) ≠ CC(p_{i+1})`), the two cross non-edges of
    Lemma 5 are *automatic*, because `G^D` is bipartite. Broad-associated ⟹

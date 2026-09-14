@@ -9,6 +9,8 @@ project's status conservatively and are maintained going forward:
 |---|---|
 | [`verification-status.md`](verification-status.md) | **Authoritative.** Trust status of every claim. Overrides every other document and every transcript. |
 | [`known-issues.md`](known-issues.md) | Every open gap and unresolved question, numbered `K-01`…`K-13`. |
+| [`a7-independent-resolution.md`](a7-independent-resolution.md) | **The A7-EXT resolution attempt** and its verdict (`VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE`). Includes the counterexample showing AKR Observation 6 is false as printed. Read with `a7-independent-proof.md`. |
+| [`a7-independent-proof.md`](a7-independent-proof.md) | Direct from-scratch proof attempt: Observation 6′ proved; Lemma 7 reconstruction partial (three of twelve terminal cases). Carries two corrections from hostile review. |
 | [`akr-l7-human-review.md`](akr-l7-human-review.md) | **The one open mathematical review item**, written to be read standalone by a combinatorial geometer in ~3 pages. Start here if you are reviewing the mathematics rather than the code. |
 | [`external-lemma-audit.md`](external-lemma-audit.md) | Full hypothesis-by-hypothesis audit of every external lemma against the published papers. |
 | [`computational-method.md`](computational-method.md) | Method summary and the reproduction guide, with what does and does not run. |

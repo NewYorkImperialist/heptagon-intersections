@@ -297,6 +297,39 @@ corroboration of the lemma, not a substitute for checking the logical bridge in
 
 ## F. Draft question for the authors
 
+> **SUPERSEDED 2026-09-13 — re-point before use.** The letter below was drafted
+> on the premise that the two cross **non-edges** of Lemma 5 are the missing
+> ingredient in the definition of "associated". That premise is **wrong**: the
+> non-edges are automatic whenever "associated" is defined at all, since
+> `(p_i,q_{j±1}) ∈ E^D` would put `p_i` and `p_{i+1}` in one component. The
+> essential ingredient is the **cone dichotomy**.
+>
+> Worse, Observation 6 is not merely unproven but **false as printed**, and this
+> is now demonstrable inside genuine simple polygons under full general position:
+>
+> ```
+> P (triangle) = (2,0), (3,4), (-2,0)
+> Q (pentagon) = (4,-4), (-3,1), (0,-1), (3,3), (2,1)
+> ```
+> Here `CC(p_0) ≠ CC(p_1)`; `q_0,q_4` is associated to `p_0,p_1` under the
+> printed definition; both cross non-edges also hold; the cone dichotomy fails
+> both ways; and the axis leaves all four sides in one closed half-plane. Every
+> AKR §3 general-position condition holds and `I(P,Q) = 8` is even.
+>
+> A rewritten letter should therefore (i) lead with this counterexample as a
+> probable **erratum** in Observation 6, (ii) ask whether the intended hypothesis
+> carries the cone dichotomy, and (iii) note that §10.2's own phrase "did not
+> conform to the hooking/hooked pattern of Lemma 5" suggests the narrow reading
+> was used in the computer check while the broad one was printed. It should also
+> record that A7-EXT itself appears unaffected, since a "neither" pair
+> contributes no status to `S(e)`. See
+> [`a7-independent-resolution.md`](a7-independent-resolution.md).
+>
+> The original text is retained below unedited, as the record of what was
+> believed before the counterexample was found.
+
+
+
 *Not sent. Narrow by design: it asks about one definitional reading, not for a
 review of this project.*
 

@@ -22,7 +22,7 @@ scratchpad (`work/geo.py`, `work/obs6.py`, `work/obs6b.py`, `work/quad.py`,
 | 1 | Formulate Observation 6′ (Axis Property restricted to Associated_L5) | **PROVED** (statement given in §3) |
 | 2 | Prove Observation 6′ from planar geometry | **PROVED** (§4; all four cases enumerated; no circularity) |
 | 2b | *(unplanned, needed)* Normalization Lemma used silently by AKR in Lemma 7 | **PROVED** (§6.3) — AKR give no proof of this |
-| 3 | Reconstruct the part of Lemma 7 needed for `S(e) ∩ S(e′) = ∅` | **PARTIAL** — the *reduction* is fully rigorous (§6.1–6.6); of the 12 terminal cases I close **case 5 in full** by a new parity argument (§6.7) and identify precisely where the remaining 11 published arguments are figure-reading rather than proof (§6.8). Obstruction named in §6.9. |
+| 3 | Reconstruct the part of Lemma 7 needed for `S(e) ∩ S(e′) = ∅` | **PARTIAL** — the *reduction* is fully rigorous (§6.1–6.6); of the 12 terminal cases I close **cases 7 and 9** (one argument, 9 being 7 under a symmetry) and **case 5 except one branch** (`a'×B ∈ G4`, see §6.7); nine remain open and identify precisely where the remaining 11 published arguments are figure-reading rather than proof (§6.8). Obstruction named in §6.9. |
 | 4 | Scope: arbitrary polygons vs. local configuration | **RESOLVED** (§7): both Observation 6′ and Lemma 7 are *purely local* statements; no global polygon property is used beyond what produces the local hypotheses. |
 | — | Does A7-EXT follow? | **Conditionally.** A7-EXT follows from Lemma 7 with no existential-quantifier loss (§8). Observation 6′ repairs the *known* hole (Observation 6 is false as printed). It does **not** by itself certify the remaining 11 cases of Lemma 7's own case analysis. |
 
@@ -32,8 +32,15 @@ scratchpad (`work/geo.py`, `work/obs6.py`, `work/obs6b.py`, `work/quad.py`,
    under "two edges **plus** the two cross non-edges". I give an explicit rational
    counterexample (§2.3) in which *all four* edge/non-edge conditions of Lemma 5 hold,
    `a,b` are genuinely **consecutive**, and the Axis Property still fails. Hence the
-   cone dichotomy of Lemma 5 is **indispensable**, not decorative. Any formalisation that
-   defines `Associated_L5` as "edges + cross non-edges" will still be unsound.
+   cone dichotomy of Lemma 5 is **indispensable**, not decorative.
+
+   > **Correction (hostile review, 2026-09-13).** The original wording here —
+   > "any formalisation that defines `Associated_L5` as edges + cross non-edges
+   > will still be unsound" — is **overstated**. It is unsound only for a
+   > formalisation that asserts Observation 6 for *all* associated pairs. Since
+   > `S(e) ⊆ {hooking, hooked}` and each status *is* a disjunct of the dichotomy,
+   > a "neither" pair contributes nothing to `S(e)` and cannot reach A7-EXT. See
+   > [`a7-independent-resolution.md`](a7-independent-resolution.md) §4.
 2. With the dichotomy included, Observation 6′ is true and has a short, complete proof
    (§4). The proof does **not** use the two `E^D` edges at all — only the two cross
    non-edges and the dichotomy.
@@ -192,6 +199,12 @@ axis separates A from B : FALSE
 
 The axis is the line `y = −10x`; both `a` and `b` lie in the closed half-plane
 `y ≥ −10x`, so it separates nothing.  Here `v = (−1,10)` is in **quadrant II**.
+
+> **Correction (hostile review).** The explicit Fig.-5c witness given later in this
+> document violates general position (two collinear triples among its vertices).
+> Its conclusion — that hooking and hooked are not exclusive — is correct; genuine
+> general-position witnesses exist, e.g. all six associated pairs in
+> `data/lower_bound/lower_bound_38.json` have status "both".
 
 A second counterexample with `a,b` *avoiding*:
 

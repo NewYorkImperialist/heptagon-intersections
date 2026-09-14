@@ -757,3 +757,58 @@ against **external published data** rather than against this project's own code.
 What this does **not** touch: the reading of Černý L2 and AKR L5/L7 (K-09).
 The auditor was attempting to fetch the Černý paper to check Lemma 2's exact
 statement when it hit a session rate limit; that verification remains **open**.
+
+---
+
+## K-14 — AKR Observation 6 is false as printed  (ERRATUM IN A PUBLISHED PAPER, 2026-09-13)
+
+**Status:** established, with an explicit counterexample. Does **not** invalidate
+this project; see below.
+
+AKR's Observation 6 (the Axis Property), stated without proof in both the SoCG
+and DCG versions, is **false** under the paper's own printed definition of
+"associated". Demonstrated inside a genuine pair of simple polygons:
+
+```
+P (triangle) = (2,0), (3,4), (-2,0)
+Q (pentagon) = (4,-4), (-3,1), (0,-1), (3,3), (2,1)
+```
+
+Verified in exact integer arithmetic, independently by the hostile reviewer and
+by the main agent: both polygons simple; all eight vertices distinct; **no three
+of the eight combined vertices collinear**; **no vertex of one polygon on the
+other**; **no two of the eight sides parallel**; `I(P,Q) = 8`, even. So every
+general-position condition of AKR §3 holds.
+
+`CC(p_0) ≠ CC(p_1)`, and `(p_0,q_0), (p_1,q_4) ∈ E^D`, so `q_0,q_4` **is
+associated** to `p_0,p_1` under the printed definition — and both cross non-edges
+hold as well. Yet `I(A,B) ∉ Cone(a,b)` and `I(a,b) ∉ Cone(A,B)`, so the pair is
+**neither** hooking nor hooked, and the axis through the two apexes leaves all
+four sides in one closed half-plane. **Observation 6 fails.**
+
+### Why this does not reach the project
+
+`S(e) ⊆ {hooking, hooked}`, and each status **is** a disjunct of the cone
+dichotomy. A pair for which the dichotomy fails contributes **nothing** to
+`S(e)`, so it can never participate in A7-EXT. The correct definition of
+`Associated_L5` is **edges + cone dichotomy**; the cross non-edges are automatic
+(a consequence of connectivity, not of `G^D` being bipartite) and therefore
+redundant.
+
+Corroboration that AKR use the narrow reading in practice: §10.2 discards 13 of
+14 configurations because *"some associated pair did not conform to the
+hooking/hooked pattern of Lemma 5"* — coherent only if "associated" carries the
+dichotomy.
+
+### Consequences
+
+* The author letter in `akr-l7-human-review.md` is **superseded** and must be
+  re-pointed from the non-edges to the dichotomy, leading with this
+  counterexample.
+* Two further discrepancies in AKR §10.2, both reproduced here: `158830` is a
+  **nine**-element count (benign — x-monotone PSLAs of 8 pseudolines correspond
+  to abstract order types on 9 points, so a complete but redundant superset was
+  enumerated); and `840 = 8!/48` quotients by `Aut` of the disjointness graph
+  alone, which does not preserve which pairs are consecutive — the configuration
+  stabiliser has order 16 and the correct count is `8!/16 = 2520 = 3 × 840`.
+* Full detail: [`a7-independent-resolution.md`](a7-independent-resolution.md).
