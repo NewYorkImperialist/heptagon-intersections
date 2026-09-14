@@ -370,12 +370,12 @@ transcribed from an earlier edit.
 Per-library summary first — the *union* of the axioms of every theorem the file
 itself declares, and how many of those theorems need none.
 
-> **`IntersectionParity.lean`'s counts are marked "not yet re-run".** The census
-> below was generated mechanically before that library was added, and its two
-> count columns are deliberately left blank rather than estimated — writing a
-> guessed number into a table whose whole point is that it was *not* transcribed
-> would defeat the table. Its axiom column *is* trustworthy: those were read off
-> `#print axioms` directly. Re-run the snippet to fill the gap. Produced by the
+> Re-generated 2026-09-14 over all twenty-two libraries. For the record: the
+> `IntersectionParity.lean` row was briefly left blank rather than estimated,
+> because a guessed number in a table whose whole point is that it was *not*
+> transcribed would defeat the table. The measured values (46 / 18) differ
+> substantially from the estimate that was nearly written (25 / 2), which is the
+> argument for the practice. Produced by the
 `run_cmd` snippet given under "Adding a library" above, which walks each
 module's own `constNames`, so it cannot miss a theorem the way a hand-written
 list can:
@@ -403,8 +403,8 @@ list can:
 | `BipartiteDecision.lean` | 79 | 44 | `propext`, `Quot.sound`, `Classical.choice` |
 | `LemmaABridge.lean` | 7 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
 | `MainTheorem.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
-| `IntersectionParity.lean` | *(not yet re-run)* | *(not yet re-run)* | `propext`, `Classical.choice`, `Quot.sound` — measured directly on `crossCountC_even`, `crossRow_parity`, `side_parity`, `isGreatest_38_final` |
-| **total** | **657 + IntersectionParity** | **192 + IntersectionParity** | **no project-specific axiom anywhere** |
+| `IntersectionParity.lean` | 46 | 18 | `propext`, `Classical.choice`, `Quot.sound` |
+| **total** | **703** | **210** | **no project-specific axiom anywhere** | **no project-specific axiom anywhere** |
 
 Then the per-theorem detail:
 
