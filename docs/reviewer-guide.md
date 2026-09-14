@@ -941,6 +941,13 @@ The bipartiteness deduction needs **two** things, not one: `A7-EXT` (adjacent
 The second is a separate dependency with **no independent verification of any
 kind**, and it is machine-checked nowhere.
 
+> **Still true, but now localized (2026-09-14).** `S(e) ≠ ∅` is no longer buried
+> in prose: it is an explicit named hypothesis `hne` of
+> `FilterSoundness.filterB_sound` — part of what that file calls (E3) — so you
+> can see exactly which theorem consumes it and that nothing else does. A
+> hypothesis is not a check, and this remains unproved; the improvement is
+> legibility, not verification.
+
 It requires AKR Lemma 5's existence clause **and** its cone dichotomy **for the
 same witness pair**. The existence clause alone is not enough — a broadly
 associated pair may be neither hooking nor hooked, which is exactly what §5
