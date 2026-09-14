@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics", "CernyL2Derivation"]
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
 [[require]]
@@ -166,3 +166,6 @@ name = "AvoidingFlag"
 
 [[lean_lib]]
 name = "PointSetSemantics"
+
+[[lean_lib]]
+name = "CernyL2Derivation"

@@ -551,3 +551,66 @@ filtered pipeline over all 13,003,620 graphs in about 190 s. At the ~500×
 kernel-to-Python ratio §8a measured for arithmetic, that suggests tens of
 CPU-hours — feasible as a one-off, if the ratio holds for predicate-heavy code,
 which is exactly what is unverified.
+
+---
+
+## 8c. The decisive measurement: per-graph filter cost. `hne40` is out of reach.
+
+§8b identified the one number that would settle `hne40` and noted nobody had
+produced it — neither §8a nor §8b, both of which measured *counting*. It has now
+been measured.
+
+### Method
+
+`ComponentLabelling.cmpP` (component labelling) and `BipartiteDecision.hBipTest`
+(the `H`-bipartiteness test) are both executable and `decide`-able. For each of a
+set of distinct sampled domain graphs, the kernel was asked to decide
+
+    (hBipTest (cmpP g) || !hBipTest (cmpP g)) = true
+
+— a tautology, so no Python reference value is needed, but one that still forces
+full kernel evaluation of the filter, since `Bool.or b (not b)` cannot reduce
+without `b`.
+
+### Result
+
+| graphs | user CPU | peak RSS |
+|---:|---:|---:|
+| 1 | 4.17 s | 0.65 GB |
+| 10 | 11.89 s | 1.18 GB |
+| 40 | 42.68 s | 1.39 GB |
+
+The 10→40 slope gives **≈ 1.03 CPU-seconds per graph**.
+
+    13,003,620 graphs  x  1.03 s  =  ~3,700 CPU-hours  =  ~154 days
+
+**And that is only two of the five filters.** It excludes AKR L5 on consecutive
+pairs, crossing-set compatibility, and Černý L2 — the last of which is where the
+degree-3 branch actually dies (K-17).
+
+### What this settles
+
+**`hne40` cannot be closed inside the kernel**, and the obstacle is **time**, not
+memory. Memory was solved: peak RSS stayed at ~1.4 GB throughout, and §8b showed
+chunking bounds it for any per-graph sweep. It is the per-graph cost that kills
+it, by roughly four orders of magnitude.
+
+It also destroys the prior §8a and §8b both leaned on. Python runs the *full*
+five-filter pipeline over all 13,003,620 graphs in about **190 seconds**
+(1.5e-5 s/graph). The kernel needs ~1.03 s/graph for *two* filters. That is a
+ratio near **70,000×**, not the ~500× measured for plain arithmetic. Predicate-
+heavy code is far worse in the kernel than arithmetic, which is exactly the
+uncertainty §8a flagged and did not resolve.
+
+### Consequence for the stated goal
+
+With `native_decide` excluded by decision, **`hne40` stays outside the kernel.**
+The honest description of the project is unchanged and is the one in
+`handoff` §8.12 and §9.4: a machine-checked *reduction* of `f(7,7) ≤ 38` to one
+finite computation plus the published lemmas its filters rely on.
+
+Routes not closed by this, for completeness: a fundamentally cheaper Lean
+encoding of the filters (bitmask primitives rather than list-based predicates)
+could move the constant, though four orders of magnitude is a great deal to
+recover; and a mathematical restructuring that shrinks the 13,003,620 domain
+remains open, though §8a/§9 tested three such routes and two are dead.
