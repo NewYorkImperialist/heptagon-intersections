@@ -1014,6 +1014,34 @@ Principal theorems:
 The Lean data file is generated deterministically from the committed certificate
 JSON, whose hash is embedded in the generated header.
 
+\begin{remark}[The \texttt{avoiding} flag is no longer trusted --- \textsf{I3}]
+\texttt{Case.avoiding} is a Boolean copied out of the certificate JSON field
+\texttt{witness.pair\_kind}. Until 2026-09-14 Lean simply \emph{trusted} it, and
+\texttt{Endgame.lean}'s own caution notes recorded that a record carrying a wrong
+flag would satisfy every theorem in the file.
+
+\texttt{AvoidingFlag.lean} closes that. \texttt{all\_225\_avoiding\_flags\_eq}
+proves, by \texttt{decide} over all $225$ records, that the stored flag
+\emph{equals} $(\texttt{pairI},\texttt{pairJ}) \in
+\texttt{avoidingPairs}(\texttt{classUsed})$ --- an \emph{equality}, so the
+\texttt{false} case is checked too, not the weaker implication that would leave a
+spuriously-\texttt{false} flag unexamined. The $14$-class table is \emph{generated
+from} \texttt{exceptional\_profiles\_14.json}, and was verified to match it
+class by class. Axioms: \texttt{propext}, \texttt{Quot.sound}.
+
+What this removes is the flag as an \emph{independent} failure mode. What it does
+\emph{not} do is ground the flag in geometry: the correctness and completeness of
+the exceptional classification (\textsf{EX}), the correspondence between a
+record's class indices and an actual polygon, and a geometric definition of
+``avoiding'' --- of which this development has none --- all remain open.
+
+Two supporting facts, recomputed from the committed Lean data rather than from
+the pipeline that produced it: \texttt{classUsed} $=$ \texttt{classP} in all
+$225$ records, so the avoiding pair is always drawn from the $P$-side class; and
+only $9$ of the $14$ classes ever occur, covering exactly $81 = 9\times 9$
+distinct class pairs.
+\end{remark}
+
 \subsection*{\texttt{Lemma7Bridge.lean} --- \textsf{A7-BRIDGE}}
 \textbf{Imports: none.} Core Lean; builds standalone with an empty
 \texttt{LEAN\_PATH}. \textbf{Axioms: none at all} --- every theorem reports
