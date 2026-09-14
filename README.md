@@ -92,7 +92,7 @@ combinatorial filters are the least secure steps in the argument — see
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. **Seven files, all compiling** (`lake build`, 752 jobs); four import literally nothing, two import only in-directory, one uses Mathlib. See `lean/README.md`. |
+| `lean/` | Formalization. **23 libraries, all compiling** (`lake build`, 1309 jobs, exit 0): 706 theorems, 210 of them depending on no axioms at all, and **no project-specific `axiom` anywhere**. Five files import literally nothing; six reach Mathlib. See `lean/README.md`. |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
 | `independent/` | Implementation B: an independent C++ reimplementation of the finite reduction, written from a written specification. |
@@ -117,15 +117,18 @@ full table. In brief:
 
 | | |
 |---|---|
-| Verified in Lean | 38-crossing construction; Lemma A counting + parity; all 225 endgame cases; the AKR-L5 bridge as an `iff` |
+| Verified in Lean, **unconditionally, for every configuration** | `I + \|E\| = 49`; minimum degree ≥ 1 (*derived* from a parity proof, not imported); **`I ≤ 42`**; **`I` is even**; the 38-crossing construction |
+| Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** |
+| Verified in Lean (enumeration obligations) | a counterexample lands in the searched domain; the domain has **13,003,620** elements; the search visits every element of it *(of the Lean transcription — there is no extraction)* |
+| Verified in Lean (interfaces) | all 225 endgame cases; the AKR-L5 bridge as an `iff`; the component labelling (both directions); a bipartiteness decision procedure; the 225 stored `avoiding` flags against the class table |
+| **The one open input** | **`I ≠ 40`** — the 13,003,620-graph enumeration. `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: **memory, not time** |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
-| Manually checked (prose only) | parity |
 | Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR §9.1) |
 | **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — see [`docs/akr-l7-human-review.md`](docs/akr-l7-human-review.md) |
-| External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified |
-| Reproduced by a second implementation | the finite graph/profile reduction, exact 225-triple set match (C++, different enumeration) |
+| External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified. In Lean they enter as **explicit named hypotheses**, never as axioms |
+| Reproduced by a second implementation | the finite graph/profile reduction down to the 225-triple set, exact match (C++, different enumeration). **It does not run the final avoiding-pair filter** — that step has certificate and Lean independence but no second implementation (K-20) |
 | Needs independent reproduction | the order-type enumeration and exceptional classification; the upper bound as a whole |
-| Not present at all | Implementation B; six of the eight planned Lean files |
+| Not formalized at all | the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int` |
 
 ## Reproducibility
 
