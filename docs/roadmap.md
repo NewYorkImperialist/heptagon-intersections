@@ -483,12 +483,24 @@ Lean process each:
 |---:|---:|---:|---:|
 | 1 | 19,174 | 1.37 GB | 22 s |
 | 8 | 153,392 | 1.86 GB | 50 s |
-| 24 | 460,176 | **1.84 GB** | 121 s |
+| 24 | 460,176 | 1.84 GB | 121 s |
+| 100 | 1,917,400 | **2.23 GB** | 424 s |
 
-**Memory is flat.** Lean reclaims between `decide` declarations, so peak is set
-by the largest *chunk*, not the total — and 460,176 calls completed comfortably
-where the monolithic 228,061-call run had not finished at all. The 4.5 TB figure
-in §8a is an artifact of building one enormous term.
+**Memory is bounded, though not perfectly flat.** It creeps from 1.84 GB at 24
+chunks to 2.23 GB at 100 — plausibly environment accumulation across
+declarations — but it is nowhere near proportional to the work: 1,917,400 calls
+in 2.23 GB, where the monolithic slope of ~22.5 KB/call would predict about
+43 GB. Lean reclaims most memory between `decide` declarations, so peak tracks
+the largest *chunk* plus slow drift, not the total. And 460,176 calls completed
+comfortably where the monolithic 228,061-call run had not finished at all. The
+4.5 TB figure in §8a is an artifact of building one enormous term.
+
+(If the drift matters at full scale it is trivially removed by splitting across
+several files or processes, at the cost of one Lean startup each — ~0.14 s,
+measured in §8a's baseline row.)
+
+CPU tracks the counting rate §8a measured: 424 s for 1,917,400 calls is
+2.21e-4 s/call, against §8a's fitted 2.385e-4.
 
 ### Why this does not close `hne40` — the correction
 
