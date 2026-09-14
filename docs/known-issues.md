@@ -853,3 +853,63 @@ The load-bearing figures live in `pipeline_counts` and in
 would break the correspondence with its generator. The fix belongs in the
 generator, which should recompute `summary` per record type (or emit the two
 lists under separate keys) and be re-run.
+
+
+**Resolution (2026-09-13): fixed and regenerated.** The historical description
+above is preserved. The reporting defect was in
+`independent/no_a7_experiment/certificate_a7opt.py`: its summary selected only
+nested `graph` records while reporting the length of the entire mixed list.
+It now emits `summary.all`, `summary.eliminated`, and `summary.surviving`, each
+with its own case count, distinct-graph count, degree distributions, and class
+coverage. Witness-side and pair-kind counts appear only under `eliminated`.
+Console summaries use those same explicit scopes.
+
+The generator's docstring and emitted metadata now identify the actual script,
+distinguish elimination witnesses from `SURVIVES=true` records, and explicitly
+report A7 OFF for this run. The external-lemma list includes AKR L7 only when
+that filter is enabled, and `profile_source` identifies the actual input,
+`exc_det.pkl` in the working directory.
+
+Regenerated from `independent/no_a7_experiment/`, using the existing
+`exc_det.pkl` (14 profiles), with:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 certificate_a7opt.py --no-a7 --edges 9 --out py_no_a7.json
+```
+
+Verification from the regenerated records passed all expected checks:
+
+* **2,412 cases = 225 eliminated + 2,187 surviving.**
+* **121 eliminated graphs + 412 surviving graphs**, intersection **0**, union
+  **533**, equal to `pipeline_counts.graphs_after_Cerny_L2`.
+* Both P and Q degree distributions contain only `[2, 2, 1, 1, 1, 1, 1]`;
+  their totals are **2,412 each** for all cases, **225 each** for eliminated
+  cases, and **2,187 each** for surviving cases. All distributions and class
+  coverage were independently recomputed from their records.
+* Eliminated witness statistics are **P: 225** and **avoiding: 225**.
+* `pipeline_counts` is unchanged: **13003620, 42238, 42238, 6376, 533,
+  2412, 2187**; A7 is OFF and `after_Cerny_L3` remains `null`.
+* Case content and ordering are unchanged, including a **byte-identical
+  serialized cases section**. Because the JSON is Git-ignored, the original
+  generator from commit `2f60c05` was rerun into memory for comparison; its
+  complete output reproduced the original SHA-256 recorded in `run_full.log`,
+  `f28f1b5bf52846e03abe0cb726ded88753771c3f6828236c276cae3c4971a8f4`.
+  The regenerated cases and pipeline counts equal that verified baseline.
+
+No mathematical predicates or case construction changed. The existing run log
+was preserved; the JSON was written only by rerunning the generator.
+
+**Provenance note.** The first pass at this fix also compressed the generator's
+docstring, dropping the `audit_enum.py` slice table, the statement that
+`python/elimination/make_final_certificate.py` is read-only and unmodified, the
+`--with-l3` faithfulness cross-check, and the emitted pointer to the independent
+checker `check_final_certificate.py`. Those were restored and the K-15 history
+folded in beside K-03, then the JSON was regenerated so its `_comment` carries
+the checker pointer and the completeness caveat again. This project keeps
+provenance in the artifact that depends on it; a reporting fix is not a licence
+to shorten it.
+
+Also corrected: an earlier session note called `py_no_a7.json` a *committed*
+artifact. It is not — it is git-ignored (`.gitignore:96`) and untracked. The
+remedy is unchanged (fix the generator, re-run), but the file was never in the
+history.

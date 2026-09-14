@@ -2,29 +2,9 @@
 """
 certificate_a7opt.py -- NO-A7 EXPERIMENT (subagent E).
 
-VERBATIM COPY of python/elimination/make_final_certificate.py (which is
-READ-ONLY and was not modified), with exactly ONE behavioural change: a new
-`--no-a7` flag that switches OFF the AKR Lemma 7 (H bipartite) filter.  The
-default is A7 ON, i.e. byte-identical behaviour to the original.
-
-Because this file still exec-s slices of the project's own audit_enum.py, every
-mathematical predicate that runs here -- including the final avoiding-pair AKR
-Lemma 5 filter -- is Implementation A's ORIGINAL code.  Nothing is
-reimplemented, weakened, or replaced.
-
-Original docstring follows.
-----------------------------------------------------------------------------
-make_final_certificate.py  --  CERTIFICATE GENERATOR for the final elimination.
-
-Added 2026-09-13 to close issue K-03: the claimed "225 (class-pair, graph)
-combinations" endgame had no shipped certificate and no shipped script.
-
-WHAT THIS IS
-------------
-This is the ORIGINAL SEARCH, instrumented to emit a certificate.  It is NOT an
-independent check.  The independent check is `check_final_certificate.py`,
-which reads only the emitted JSON plus the canonical profile data and shares no
-code with this file.
+COPY of python/elimination/make_final_certificate.py (which is READ-ONLY and
+was NOT modified), with one behavioural change: a `--no-a7` flag that switches
+OFF the AKR Lemma 7 (H bipartite) filter.  The default is A7 ON.
 
 PROVENANCE OF THE MATHEMATICS
 -----------------------------
@@ -40,21 +20,43 @@ by exec-ing slices of `audit_enum.py`'s own source text:
 (The exec-a-slice-of-a-sibling-script idiom is the project's own: `audit_pairs.py`
 reuses `audit_enum.py`'s helpers exactly this way.)
 
-NOTHING mathematical is reimplemented here.  What this file adds is:
-  * a `process` function that records which filters fired, so that Cerny
-    Lemma 3 can be switched OFF (it is off by default -- see --with-l3);
-  * bookkeeping to emit every (classP, classQ, graph) combination reaching the
-    final avoiding-pair filter, together with the witness that kills it.
+NOTHING mathematical is reimplemented, weakened, or replaced here.  What this
+file adds is a `process` function recording which filters fired (so Cerny
+Lemma 3 can be switched off -- it is OFF by default, see --with-l3), and
+bookkeeping to emit every (classP, classQ, graph) combination reaching the
+final avoiding-pair filter.
 
 The original `audit_enum.py` applies L3 unconditionally and was NOT modified.
 Faithfulness of this driver is cross-checked by `--with-l3`, which must
 reproduce audit_enum.py's published counts exactly.
 
-Usage:
-    python3 make_final_certificate.py [--with-l3] [--out FILE]
+This is the ORIGINAL SEARCH instrumented to emit a certificate.  It is NOT an
+independent check.  The independent check is `check_final_certificate.py`,
+which reads only the emitted JSON plus the canonical profile data and shares
+no code with this file.
 
-Requires `exc_det.pkl` in the current working directory (see
-docs/computational-method.md) and PYTHONPATH pointing at python/core.
+HISTORY
+-------
+The certificate emission was added 2026-09-13 to close issue K-03 (the endgame
+had no shipped certificate and no shipped script).  The scoped-summary output
+below was added 2026-09-13 to close issue K-15: a single `summary` block
+previously reported `cases` over ALL records while every other field described
+only the eliminated subset, so a reader saw 2,412 cases alongside 121 distinct
+graphs.  Case records themselves were never affected.
+
+OUTPUT
+------
+Every combination reaching the final AKR Lemma 5 avoiding-pair filter is
+recorded: eliminated cases carry an explicit witness; surviving cases carry
+SURVIVES=true.  Summaries are emitted under three EXPLICIT scopes -- `all`,
+`eliminated`, `surviving` -- and witness statistics appear only under
+`eliminated`.
+
+Usage (from a directory containing exc_det.pkl):
+    python3 certificate_a7opt.py [--no-a7] [--edges 9] [--with-l3] [--out FILE]
+
+Requires exc_det.pkl (see docs/computational-method.md). The project's
+python/core is added to the import path below.
 """
 import argparse
 import json
@@ -270,38 +272,67 @@ print(f"  (classP, classQ, graph) combinations reaching the final filter: "
 survived = [c for c in cases if c.get("SURVIVES")]
 print(f"  combinations SURVIVING the final filter : {len(survived)}")
 
-distinct_graphs = sorted({tuple(c["graph"]["P_neighbourhood_bitmasks"])
-                          for c in cases if "graph" in c})
-dsP = Counter(tuple(c["graph"]["degree_sequence_P"]) for c in cases if "graph" in c)
-dsQ = Counter(tuple(c["graph"]["degree_sequence_Q"]) for c in cases if "graph" in c)
+eliminated = [c for c in cases if "witness" in c]
+
+
+def summarize(records):
+    """Summarize one explicit scope without changing its case records."""
+    graphs = [c["graph"] if "graph" in c else c for c in records]
+    result = {
+        "cases": len(records),
+        "distinct_graphs": len({tuple(g["P_neighbourhood_bitmasks"]) for g in graphs}),
+    }
+    for side in ("P", "Q"):
+        distribution = Counter(tuple(g[f"degree_sequence_{side}"]) for g in graphs)
+        result[f"degree_sequence_distribution_{side}"] = {
+            str(list(k)): v for k, v in sorted(distribution.items())
+        }
+        result[f"classes_{side}_represented"] = sorted({c[f"class_{side}"] for c in records})
+    return result
+
+
+summary = {
+    "all": summarize(cases),
+    "eliminated": summarize(eliminated),
+    "surviving": summarize(survived),
+}
+summary["eliminated"]["witness_side_counts"] = dict(
+    Counter(c["witness"]["side"] for c in eliminated))
+summary["eliminated"]["pair_kind_counts"] = dict(
+    Counter(c["witness"]["pair_kind"] for c in eliminated))
 
 cert = {
     "_comment": [
-        "Certificate for the final elimination step of the f(7,7) <= 38 argument.",
-        "Each entry is one (classP, classQ, graph) combination that reached the",
-        "final filter, together with an explicit witness showing it is killed by",
-        "the neighbour-adjacency consequence of AKR Lemma 5.",
-        "GENERATED BY THE ORIGINAL SEARCH (make_final_certificate.py).",
+        "Results for combinations reaching the final AKR Lemma 5 avoiding-pair filter.",
+        "Eliminated records carry an explicit elimination witness; surviving records",
+        "carry SURVIVES=true and do not assert elimination.",
+        "Generated by independent/no_a7_experiment/certificate_a7opt.py using the",
+        "original audit_enum.py predicates; this is not an independent check.",
+        "AKR Lemma 7 H-bipartite filter: " + ("OFF." if args.no_a7 else "ON."),
+        "Summary scopes are all cases, eliminated cases, and surviving cases;",
+        "witness statistics appear only under the eliminated scope.",
         "Verify with the independent checker check_final_certificate.py, which",
         "shares no code with the generator and reads only this file plus",
         "data/exceptional_profiles/exceptional_profiles_14.json.",
-        "This certificate establishes that each listed combination dies.  It does",
-        "NOT and cannot establish that the list is COMPLETE -- completeness rests",
-        "on the exhaustive enumeration, not on the certificate.",
+        "This certificate establishes that each listed ELIMINATED combination",
+        "dies.  It does NOT and cannot establish that the list is COMPLETE --",
+        "completeness rests on the exhaustive enumeration, not on the certificate.",
     ],
     "generated": "2026-09-13",
-    "generator": "python/elimination/make_final_certificate.py",
+    "generator": "independent/no_a7_experiment/certificate_a7opt.py",
     "filters_active": {
         "AKR_Lemma_5_consecutive_pairs": True,
         "AKR_Lemma_7_H_bipartite": (not args.no_a7),
         "Cerny_Lemma_3": bool(args.with_l3),
         "crossing_set_compatibility": True,
         "Cerny_Lemma_2": True,
-        "AKR_Lemma_5_avoiding_pairs": "the final filter, certified below",
+        "AKR_Lemma_5_avoiding_pairs": "final filter; witnesses only for eliminated cases",
     },
     "external_lemmas_relied_on": (
-        ["Cerny L1", "Cerny L2", "Cerny L3", "AKR L5", "AKR L7"] if args.with_l3
-        else ["Cerny L1", "Cerny L2", "AKR L5", "AKR L7"]
+        ["Cerny L1", "Cerny L2"]
+        + (["Cerny L3"] if args.with_l3 else [])
+        + ["AKR L5"]
+        + ([] if args.no_a7 else ["AKR L7"])
     ),
     "pipeline_counts": {
         "graphs_E9_mindeg1": counts["graphs"],
@@ -313,24 +344,14 @@ cert = {
         "combinations_reaching_final_filter": combos_reaching_final,
         "combinations_surviving_final_filter": len(survived),
     },
-    "summary": {
-        "cases": len(cases),
-        "distinct_graphs": len(distinct_graphs),
-        "degree_sequence_distribution_P": {str(list(k)): v for k, v in sorted(dsP.items())},
-        "degree_sequence_distribution_Q": {str(list(k)): v for k, v in sorted(dsQ.items())},
-        "classes_P_represented": sorted({c["class_P"] for c in cases}),
-        "classes_Q_represented": sorted({c["class_Q"] for c in cases}),
-        "witness_side_counts": dict(Counter(c["witness"]["side"] for c in cases if "witness" in c)),
-        "pair_kind_counts": dict(Counter(c["witness"]["pair_kind"] for c in cases if "witness" in c)),
-    },
-    "profile_source": "data/exceptional_profiles/exceptional_profiles_14.json",
+    "summary": summary,
+    "profile_source": "exc_det.pkl (current working directory)",
     "cases": cases,
 }
 
 with open(args.out, "w") as fh:
     json.dump(cert, fh, indent=1, sort_keys=False)
-print(f"\nwrote {args.out}: {len(cases)} cases on {len(distinct_graphs)} distinct graphs")
-print(f"  degree sequences P: {dict(dsP)}")
-print(f"  degree sequences Q: {dict(dsQ)}")
-print(f"  classes P: {sorted({c['class_P'] for c in cases})}")
-print(f"  classes Q: {sorted({c['class_Q'] for c in cases})}")
+print(f"\nwrote {args.out}: {summary['all']['cases']} cases on "
+      f"{summary['all']['distinct_graphs']} distinct graphs")
+for scope, stats in summary.items():
+    print(f"  {scope}: {json.dumps(stats, sort_keys=True)}")

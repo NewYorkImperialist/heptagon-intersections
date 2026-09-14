@@ -9,8 +9,7 @@ loaded 14 exceptional class profiles from exc_det.pkl
   (classP, classQ, graph) combinations reaching the final filter: 2412
   combinations SURVIVING the final filter : 2187
 
-wrote py_no_a7.json: 2412 cases on 121 distinct graphs
-  degree sequences P: {(2, 2, 1, 1, 1, 1, 1): 225}
-  degree sequences Q: {(2, 2, 1, 1, 1, 1, 1): 225}
-  classes P: [1, 2, 3, 4, 9, 10, 11, 12, 13]
-  classes Q: [1, 2, 3, 4, 9, 10, 11, 12, 13]
+wrote py_no_a7.json: 2412 cases on 533 distinct graphs
+  all: {"cases": 2412, "classes_P_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "classes_Q_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "degree_sequence_distribution_P": {"[2, 2, 1, 1, 1, 1, 1]": 2412}, "degree_sequence_distribution_Q": {"[2, 2, 1, 1, 1, 1, 1]": 2412}, "distinct_graphs": 533}
+  eliminated: {"cases": 225, "classes_P_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "classes_Q_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "degree_sequence_distribution_P": {"[2, 2, 1, 1, 1, 1, 1]": 225}, "degree_sequence_distribution_Q": {"[2, 2, 1, 1, 1, 1, 1]": 225}, "distinct_graphs": 121, "pair_kind_counts": {"avoiding": 225}, "witness_side_counts": {"P": 225}}
+  surviving: {"cases": 2187, "classes_P_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "classes_Q_represented": [1, 2, 3, 4, 9, 10, 11, 12, 13], "degree_sequence_distribution_P": {"[2, 2, 1, 1, 1, 1, 1]": 2187}, "degree_sequence_distribution_Q": {"[2, 2, 1, 1, 1, 1, 1]": 2187}, "distinct_graphs": 412}
