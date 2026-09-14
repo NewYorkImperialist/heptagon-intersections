@@ -1,5 +1,40 @@
 # Referee audit of the claimed proof that f(7,7) = 38
 
+> **HISTORICAL DOCUMENT — mid-project self-audit. Banner added 2026-09-14; the
+> body below is unedited.**
+>
+> This is the project's own adversarial self-audit, written mid-research. It is
+> preserved as a research record, not as a current status statement. The
+> authoritative status is [`verification-status.md`](verification-status.md),
+> which wins wherever this file conflicts with it.
+>
+> Three things below have since been overtaken, and are listed here rather than
+> repaired in place:
+>
+> * **"Assumptions that remain", item 2** restates the project's own
+>   general-position perturbation argument ("a vertex-on-side incidence perturbs
+>   to 0 or 2 crossings, and the direction giving 2 can be chosen"). That
+>   argument was later found **INCORRECT** in the cone-containment sub-case and
+>   removed from the active proof, which now cites AKR §9.1 instead. See
+>   `known-issues.md` K-10 and `proof-outline.md` Step 0.
+> * **"Assumptions that remain", item 3** says the result is "Not mitigated by
+>   an independent reimplementation". A C++ second implementation
+>   (`independent/implementation_b/`) was written later and reproduces the
+>   reduction down to the 225 triples exactly — but it does **not** run the final
+>   avoiding-pair filter, so the `225 → 0` step still has no second
+>   implementation. See `known-issues.md` K-02 and K-20.
+> * **The correctness evidence quoted in item 3** — 340,335 predicate
+>   cross-checks and 129,812 realizable configurations — **cannot be re-run**:
+>   the required data files and scripts are absent (`known-issues.md` K-04,
+>   K-05).
+>
+> The closing line, "The claim **f(7,7) = 38** survives the audit", is a
+> statement about *this audit*, not about the repository's position. The
+> repository's position is and remains: a **candidate** computer-assisted proof.
+> `f(7,7) = 38` is not a Lean theorem, and no person outside this AI-assisted
+> process has verified any part of it.
+
+
 Two defects found.  Neither is fatal; both are corrected below.  One unproven
 assumption is intrinsic and is stated explicitly.
 

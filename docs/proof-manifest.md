@@ -1,6 +1,6 @@
 # A Proof Dependency Manifest for a Candidate Computer-Assisted Proof of `f(7,7) = 38`
 
-**Jayden Lin** — Northeastern University · 13 September 2026
+**Jayden Lin** — Northeastern University · 14 September 2026
 
 ## Disclosure of generative-AI use
 
@@ -29,13 +29,46 @@ institution's generative-AI policy; that must be assessed separately.
 
 > **The authoritative version of this document is
 > [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)** (compiled:
-> `paper/proof-manifest.pdf`). This Markdown file is a convenience mirror; where
-> the two differ, the LaTeX file is correct.
+> `paper/proof-manifest.pdf`, 23 pages). This Markdown file is a convenience
+> mirror; where the two differ, the LaTeX file is correct.
 
 > **Status.** This describes a *candidate* computer-assisted proof. All currently
 > known computational components have been independently checked or formally
 > verified, but the interpretation of AKR Observation 6 / Lemma 7 remains subject
-> to external human review. The result should not be treated as established.
+> to external human review. **`f(7,7) = 38` is not a Lean theorem**: the
+> strongest formalised statement still carries two hypotheses. The result should
+> not be treated as established.
+
+## What is a Lean theorem today, and what is not
+
+Twenty-five Lean libraries is enough to create a false impression of coverage.
+The strongest statement in the development is
+
+```lean
+theorem IntersectionParity.isGreatest_38_final
+    (hclass : ∀ K : Config, ∃ mcs MP, MP.card = 5 ∧ …)   -- X1 + X2
+    (hne40  : ∀ K : Config, crossCountC K ≠ 40)          -- UB40
+    : IsGreatest MainTheorem.attained 38
+```
+
+and neither hypothesis is proved anywhere:
+
+* `hclass` is the exceptional-class invariant together with the order-type
+  crossing fact (**X1** and **X2**, i.e. **EX** and **E4**), asserted for *every*
+  configuration. Its satisfiability is not established, and no non-vacuity
+  witness is supplied.
+* `hne40` is `I ≠ 40`, i.e. the whole 13,003,620-graph enumeration (**UB40**). It
+  is **out of reach of the Lean kernel** — five routes tested, all dead.
+
+Two further gaps sit outside the statement. `Config` is *orientation-level* over
+`Pt := Int × Int`: "simple" is a conjunction of integer orientation predicates,
+not "the closed polygonal curve is a Jordan curve". And the reduction to general
+position is **GP** (AKR §9.1), cited and not formalized.
+
+**Unconditional for an arbitrary `Config`:** `I + |E| = 49`; `δ(G^D) ≥ 1`;
+`I ≤ 42`; `I` even; 38 attained. So the answer lies in `{38, 40, 42}` with no
+hypotheses at all (`attained_38_and_le_42`, `attained_mem_three`). Adding
+`hclass` removes 42 (`Exclude42.not_crossCount_42`). Only 40 resists.
 
 ## The reductio in one line
 
@@ -51,8 +84,8 @@ I = 40  ⟹  |E^D| = 9                         [ I + |E^D| = 49 ]
         ⟹  ⊥
 ```
 
-Hence `I ≠ 40`; with `I ≤ 42` (C1), `I ≠ 42`, and `I` even, `I ≤ 38`; and the
-explicit construction attains 38. Therefore `f(7,7) = 38`.
+Hence `I ≠ 40`; with `I ≤ 42` (C1), `I ≠ 42` (UB42), and `I` even, `I ≤ 38`; and
+the explicit construction attains 38. Therefore `f(7,7) = 38`.
 
 **On `I = 42`.** Černý Theorem 4 gives `f(7,7) ≤ 40`, which would make the
 `I = 42` case vacuous — but the project does **not** import it (it rests on
@@ -78,19 +111,24 @@ the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 | **C2-BRIDGE** | filter fires iff *exact induced* perfect matching | project inference | this project | LEAN-KERNEL-CHECKED | certifies the Lean transcription, not the Python/C++ source |
 | **A5-C** | L5 on consecutive pairs | published | AKR L5 | SOURCE-AUDITED | none known |
 | **A5-A** | L5 on avoiding pairs | published | AKR L5 | SOURCE-AUDITED; bridge LEAN-KERNEL-CHECKED | none known |
-| **A7-EXT** | under the intended reading, AKR L7 gives: adjacent `H`-vertices have disjoint status sets | published + interpretation | AKR L7 | **VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE** | **principal open item**; Observation 6 is false as printed (K-14) but does not reach `S(e)`; four bridges remain prose |
+| **A7-EXT** | under the intended reading, AKR L7 gives: adjacent `H`-vertices have disjoint status sets | published + interpretation | AKR L7 | **VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE** | **principal open item**; Observation 6 is false as printed (K-14) but does not reach `S(e)`; four bridges remain the project's own reasoning |
 | **A7-BRIDGE** | non-empty status sets + disjoint across edges ⟹ `H` bipartite | project inference | this project | LEAN-KERNEL-CHECKED | none known; conditional on A7-EXT |
-| **LA** | Lemma A + parity ⟹ `I ≤ 38` | project lemma | this project | LEAN-KERNEL-CHECKED (counting core) | geometric premises stay hypotheses |
+| **LA** | Lemma A + parity ⟹ `I ≤ 38` | project lemma | this project | LEAN-KERNEL-CHECKED (counting core) | `h2` now *derived* (LEAN-GEO); `h1` and `(★)` stay hypotheses |
+| **PAR** | `I` is even, every configuration | project lemma | this project | LEAN-KERNEL-CHECKED (2026-09-14) | none; was an assumption until then |
 | **OT** | 135 order types | external dataset | Aichholzer et al. | EXTERNALLY CROSS-CHECKED (exact set equality) | none known |
-| **EX** | 6,342 simple → 16 exceptional → 14 classes | enumeration | this project | INDEPENDENTLY REIMPLEMENTED; 6,342 externally cross-checked | none known |
-| **GR** | 13,003,620 candidate graphs | enumeration | this project | INDEPENDENTLY REIMPLEMENTED + closed form | none known |
-| **COMP** | pipeline → 121 graphs / 225 triples | enumeration | this project | INDEPENDENTLY REIMPLEMENTED (exact set match) | inherits **A7-EXT** |
+| **EX** | 6,342 simple → 16 exceptional → 14 classes | enumeration | this project | INDEPENDENTLY REIMPLEMENTED; 6,342 externally cross-checked | not formalized; this is (E7)/(X1) |
+| **GR** | 13,003,620 candidate graphs | enumeration | this project | INDEPENDENTLY REIMPLEMENTED + closed form + LEAN (`DomainCount`) | none known |
+| **COMP** | pipeline → 121 graphs / 225 triples | enumeration | this project | INDEPENDENTLY REIMPLEMENTED (exact set match, filters (a)–(d)) | inherits **A7-EXT**; K-20 |
 | **CERT** | each of the 225 violates AKR L5 | certificate | this project | CERTIFICATE-CHECKED | completeness not certified |
-| **LEAN-LB** | 38 crossings, simple, general position | Lean | `lean/LowerBound.lean` | LEAN-KERNEL-CHECKED | simplicity is orientation-level |
+| **LEAN-LB** | 38 crossings, simple, general position | Lean | `lean/LowerBound.lean` | LEAN-KERNEL-CHECKED | orientation-level; no Jordan-curve step |
 | **LEAN-LA** | counting + parity core | Lean | `lean/LemmaA.lean` | LEAN-KERNEL-CHECKED | an implication |
 | **LEAN-END** | all 225 fail L5; `iff` bridge | Lean | `lean/Endgame.lean` | LEAN-KERNEL-CHECKED | completeness not formalized |
-| **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | none known |
-| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5-C, A5-A, A7-EXT, A7-BRIDGE, LA, COMP | conditional on **A7-EXT** | **fails if A7-EXT fails** |
+| **LEAN-GEO** | polygon meets a line evenly ⟹ `δ(G^D) ≥ 1` and Lemma A's `h2` | Lean | `lean/SegmentGeometry.lean` | LEAN-KERNEL-CHECKED | Mathlib-free; orientation level |
+| **LEAN-I2** | the mask bit means point-set disjointness in ℝ² | Lean | `DisjointnessGraph` + `PointSetSemantics` | LEAN-KERNEL-CHECKED | I2a + I2b; the only step that reaches ℝ |
+| **LEAN-MAIN** | 38 is the greatest attained crossing count over `Config` | Lean | `MainTheorem`, `IntersectionParity` | proved *from* `hclass` and `hne40` | **not a proof of `f(7,7) = 38`** |
+| **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | orientation-level simplicity |
+| **UB42** | `I = 42` impossible | project inference | this project | LEAN-KERNEL-CHECKED given X1, X2 (`Exclude42`); also swept exhaustively | consumes C1, LA, EX only — **not** A7-EXT |
+| **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5-C, A5-A, A7-EXT, A7-BRIDGE, LA, COMP | NOT FORMALIZED; conditional on **A7-EXT** | **fails if A7-EXT fails**; carried in Lean as the bare hypothesis `hne40`, which is out of kernel reach |
 
 ## Filter pipeline
 
@@ -101,12 +139,30 @@ the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 | 24,990 | crossing-set compatibility | elementary | Python, C++ |
 | 2,300 | Černý L2, class-dependent | C2 | Python, C++ |
 | 121 | *(change of counted object)* | — | — |
-| 225 | AKR L5, avoiding | A5-A | Python, C++, certificate, Lean |
+| 225 | AKR L5, avoiding | A5-A | Python, certificate, Lean |
 | 0 | — | — | — |
 
 **`121 → 225` is not a filter.** Counts up to 121 are *graphs*; 225 counts
 *triples* `(class_P, class_Q, G)` on those same 121 graphs, since a graph may be
 compatible with several classes on either side.
+
+**The final step has no second implementation (K-20).** Implementation B
+deliberately does not implement the avoiding-pair AKR L5 filter
+(`reduction.cpp:20`, `SPEC.md` §6, `"final_avoiding_pair_filter_applied": false`).
+So the step that actually refutes — `225 → 0` — has *certificate* and *Lean*
+independence but no second implementation; "two implementations agree" covers
+filters (a)–(d) only.
+
+**Intermediate counts are artifacts (K-11).** 2,300 and 121 depend on which
+representative labelling of each exceptional class the pipeline carries; a
+superseded pipeline reported 3,522 and 64 at those stages. Only the terminal
+emptiness is labelling-invariant, and it was re-derived per ordered class pair
+(196 pairs × 3 labellings, 0 survivors in every case).
+
+**A7-EXT cannot be dropped.** With that filter off and everything else identical
+the pipeline ends at **2,187** surviving triples on **412** graphs, not 0. The
+533 graphs surviving Černý L2 without A7 split as exactly 121 H-bipartite + 412
+non-bipartite; the avoiding-pair filter kills all 121 and none of the 412.
 
 **Černý Lemma 3 is not a dependency.** Running the pipeline with and without it
 gives an identical set of 225 terminal triples.
@@ -123,19 +179,89 @@ Strict is the correct reading: Lemma A is only ever instantiated at the lines
 
 ## Lean trust boundary
 
-| File | Imports | Axioms | Proves |
-|---|---|---|---|
-| `LowerBound.lean` | **none** (core Lean) | `propext` | 38 crossings; simplicity; general position; counted over provably all 49 pairs |
-| `LemmaA.lean` | Mathlib | `propext`, `Classical.choice`, `Quot.sound` | counting + parity ⟹ `I ≤ 38`, as an implication; non-vacuity |
-| `Endgame.lean` | **none** (core Lean) | `propext`, `Quot.sound` | all 225 fail AKR-L5; components recomputed in-kernel; `AKR5Conclusion ↔ AKR5Adjacent` (axiom-free) |
-| `Lemma7Bridge.lean` | **none** (core Lean) | **none at all** (except the classical corollary, which uses `Classical.choice`) | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
-| `CernyL2Interface.lean` | **none** (core Lean) | `propext`, `Classical.choice`, `Quot.sound` | filter fires **iff** exact induced perfect matching; extra edge inside the block ⟹ no fire, outside ⟹ still fires |
+Lean 4.33.1, Mathlib `v4.33.1` (`0df444a3`). **Twenty-five libraries, 1,395 jobs,
+exit 0**, re-verified 2026-09-14. No `sorry`, `admit`, project-specific `axiom`,
+`unsafe`, `partial` or `native_decide` in any file (verified by scanning with
+comments stripped). All `decide` calls are ordinary kernel reduction.
 
-No `sorry`, `admit`, project `axiom`, `unsafe`, or `native_decide` in any file.
+Thirteen of the twenty-five are Mathlib-free, and five import literally nothing
+(`LowerBound`, `GeometryDefs`, `EndgameDefs`, `Lemma7Bridge`,
+`CernyL2Interface`). Exactly one library — `PointSetSemantics` — reaches ℝ.
+
+| Layer | Libraries | What it gives |
+|---|---|---|
+| certificate & elementary geometry | `LowerBound`, `GeometryDefs`, `SegmentGeometry`, `LemmaA`, `LemmaABridge` | 38 crossings over provably all 49 pairs; `δ(G^D) ≥ 1` and Lemma A's `h2` from parity; the counting core; X3 |
+| geometry → combinatorics | `DisjointnessGraph`, `PointSetSemantics` | I1, I2a; I2b (mask bit = point-set disjointness in ℝ²) |
+| stored endgame | `EndgameDefs`, `EndgameData`, `Endgame`, `AvoidingFlag` | all 225 cases fail AKR-L5; components recomputed in-kernel; the `avoiding` flag *equals* the class table (I3, flag half) |
+| filter transcriptions | `Lemma7Bridge`, `CernyL2Interface`, `FilterSoundness`, `ComponentLabelling`, `BipartiteDecision`, `CernyL2Derivation` | A7-BRIDGE; C2-BRIDGE; E1–E8 as named hypotheses; E6 and E8a discharged; E5 attempted and blocked |
+| enumeration obligations | `EnumerationDomain`, `DomainCount`, `EnumerationComplete`, `CounterexampleCount` | obligations (1), (2), (3) proved; a counterexample is one of exactly 13,003,620 mask functions |
+| upper-bound assembly | `Exclude42`, `UpperBoundAssembly`, `MainTheorem`, `IntersectionParity` | `I ≤ 42` unconditional; `I ≠ 42` from X1, X2; PAR; the final statement |
+
+### The eight external inputs of the filter pipeline
+
+`FilterSoundness.lean` proves each filter's soundness obligation as an
+implication from explicitly *named* hypotheses. It declares no `axiom`, so
+`#print axioms` stays clean and a reader can see which import carries which
+theorem.
+
+| ID | External input | Status |
+|---|---|---|
+| **E1** | AKR L5, consecutive pairs | open |
+| **E2** | AKR L5, avoiding pairs + the stored `AV` list really is avoiding | open |
+| **E3** | AKR L7 in the project's form (= **A7-EXT**) | open |
+| **E4** | the order-type fact behind filter (c) (= **X2**) | open |
+| **E5** | Černý L2: no window carries an exact induced perfect matching | open; **attempted and blocked** (`CernyL2Derivation.lean`) |
+| **E6** | correctness of the component labelling | **discharged** (`ComponentLabelling.lean`, iff, both directions) |
+| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object |
+| **E8a** | bipartiteness decided by a correct algorithm | **discharged** (`BipartiteDecision.lean`, iff, both directions) |
+| **E8b** | the *shipped programs'* routine is such an algorithm | open (transcription) |
+
+Six of eight open, plus E8b. Interfaces **I1**, **I2a**, **I2b** are supplied;
+**I3** is closed on the flag half and open on the geometric half; **I4** (AKR L5
+as an imported statement) and **I5** (`ProfileOf` and completeness of the
+225-case list) do not exist. **X1** and **X2** remain hypotheses; **X3** was
+discharged 2026-09-14 by `LemmaABridge.lean`.
+
+**Transcription, not extraction.** The Lean filter definitions were written *by
+hand* from `python/elimination/audit_enum.py` and
+`independent/implementation_b/reduction.cpp`. Where a theorem says "the filter",
+read "the Lean transcription of the filter". This is one systematic gap, not
+several, and it applies to C2-BRIDGE, to E8, to obligation (3), and to every
+filter-soundness statement.
+
+### `hne40` is out of reach of the kernel
+
+`native_decide` is excluded throughout (it adds `Lean.ofReduceBool`). With
+ordinary kernel reduction, five routes were measured and all are dead:
+
+1. **Monolithic evaluation** — 226,668,772 recursive calls; ≈15 CPU-hours by
+   linear fit, but 20–25 KB peak RSS per call → 4.5–5.8 TB against 8 GB. Counting
+   only, no filters.
+2. **Chunked evaluation** — holds memory near 2 GB, retiring the 4.5 TB figure as
+   a term-construction artifact, but measures the wrong problem: counting
+   memoises 226,668,772 states into 1,925 (≈117,750× sharing) and was *already*
+   proved by `DomainCount`. Filters consume the whole graph, so none of that
+   sharing applies.
+3. **Per-graph filter cost** — the decisive measurement: ≈1.03 CPU-s per graph for
+   two of the five filters ⇒ ≈3,700 CPU-hours (≈154 days). Kernel-to-Python ratio
+   ≈70,000×, not the ≈500× one assumes from arithmetic.
+4. **Re-encoding the filters** — `Nat` bitmask arithmetic with a 14-step fixed
+   point: 0.309 → 0.042 CPU-s per graph, a **7.3× speedup**, against the ~75×
+   needed. Closed against a gate fixed in advance.
+5. **Structural shortcuts** — a UB42-style argument from cheap invariants cuts
+   ~33%; leading with the DP-able local filters still leaves 2,783,508 of the 13
+   million for some class pair.
+
+Not settled by this: a *mathematical* restructuring that shrinks the
+13,003,620-element domain. That is mathematics, not engineering, and nobody has
+one.
 
 > Key finite and combinatorial components are formally verified in Lean; the
 > published geometric lemmas remain external dependencies. `f(7,7) = 38` is
-> **not** a Lean theorem.
+> **not** a Lean theorem — the strongest formalised statement carries `hclass`
+> and `hne40` — the completeness of the 225-case list is not formalized, six of
+> the eight external inputs E1–E8 are open, and every filter statement is about a
+> hand-written Lean transcription rather than about the shipped programs.
 >
 > In particular: Lean verifies the project's *implication* A7-BRIDGE, **not**
 > AKR's geometric theorem. The chain is
@@ -145,21 +271,31 @@ No `sorry`, `admit`, project `axiom`, `unsafe`, or `native_decide` in any file.
 
 | Defect | Affected the theorem? | Superseded by |
 |---|---|---|
-| 13,484,940 enumeration bug (`|E| ∈ {7,8,9}`) | No — a superset was searched | corrected enumeration + closed form |
+| 13,484,940 enumeration bug (`\|E\| ∈ {7,8,9}`) | No — a superset was searched | corrected enumeration + closed form |
 | Raw component-ID comparison in a checker | No — checker bug | relabelling-invariant comparison |
 | Lean `Odd` / `autoImplicit` vacuity | No — file had never compiled | `LemmaA.lean` with `autoImplicit false` |
 | Step 0 perturbation argument | No — AKR §9.1 gives the statement | **GP** (citation) |
 | Strict vs loose exceptional condition | Would have been severe if implemented | strict form `(★)` |
+| **AKR Observation 6 is false as printed** (a defect in a published paper) | No — a pair failing the cone dichotomy contributes nothing to `S(e)` | the narrow reading, corrected in the A7-EXT section |
+| **The A7 encoder's coverage argument was wrong** — the combined PQ types split into four orbits, only one was solved, and that one was vacuous. An earlier hostile review had endorsed the orbit argument as sound | Conclusion survived; the *evidence* for it did not | all 25 combined types solved with no symmetry reduction; 125 certificates (110 DRAT + 15 models), hash-bound to their formulas |
+| **Intermediate pipeline counts are labelling-dependent artifacts** | No — terminal emptiness is labelling-invariant | per-ordered-pair re-derivation: 196 pairs × 3 labellings, 0 survivors |
 
 ## Remaining work
 
-1. External human review of AKR Observation 6 / Lemma 7 — see
+1. **External human review of A7-EXT**, and in particular of the four bridges
+   from the machine checks to the geometric statement — see
    [`akr-l7-human-review.md`](akr-l7-human-review.md).
-2. Ideally, confirmation from an AKR author.
-3. Independent expert review of the overall proof.
-4. Convert this manifest into a readable paper.
-5. The human author learning the argument well enough to defend it.
-6. Further Lean formalization only where it improves the trust boundary.
+2. **Independent expert review of the overall proof.** Every mechanism this
+   project has is a mechanism against *implementation* error; none is a check on
+   whether the argument is the right argument.
+3. **Confirmation from an AKR author**, ideally.
+4. **The classification (E7 / X1)** — the largest unformalized object, the
+   content of `hclass`, and the most plausible next formalization target.
+5. Convert this manifest into a readable paper.
+6. The human author learning the argument well enough to defend it.
+7. Further Lean formalization only where it improves the trust boundary — and
+   *not* another attempt at `hne40` by kernel computation, which is settled
+   negative.
 
 Formalizing all of Černý or all of AKR is **not** required by this architecture.
 
@@ -172,5 +308,15 @@ Formalizing all of Černý or all of AKR is **not** required by this architectur
 > **A7-EXT**: whether the published Observation 6 / Lemma 7 language
 > licenses precisely the disjoint-status consequence the argument uses.
 > Conditional on that consequence, the deduction that `H` is bipartite
-> (**A7-BRIDGE**) is formally verified in Lean. Independent expert review remains
-> required before the result should be treated as established.
+> (**A7-BRIDGE**) is formally verified in Lean.
+>
+> Two things should be said plainly alongside that. First, `f(7,7) = 38` is
+> **not** a Lean theorem and will not become one by further computation:
+> `isGreatest_38_final` still carries `hclass` and `hne40`, and `hne40` is out of
+> the kernel's reach by roughly 75× even after the fastest re-encoding measured.
+> Second, the mechanisms used here — reimplementation, certificates with
+> standalone checkers, Lean-kernel verification — are all mechanisms against
+> *implementation* error, and the defect list above shows they work. None of them
+> is a check on whether the argument is the right argument. Independent expert
+> review is therefore the binding constraint, and it remains required before the
+> result should be treated as established.

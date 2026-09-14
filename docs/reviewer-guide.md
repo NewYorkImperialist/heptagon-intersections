@@ -400,9 +400,13 @@ restatement.
 > `axiom`, and none uses `sorry`, `native_decide` or `unsafe` — so nothing is
 > assumed on the project's say-so inside Lean.
 
-All Lean sources build (`lake build`, exit 0 — **23 libraries, 1309 jobs, 706
-theorems, 210 of them depending on no axioms at all**). Six files reach Mathlib;
-five import literally nothing and compile against an empty `LEAN_PATH`. The
+All Lean sources build (`lake build`, exit 0 — **25 libraries, 1395 jobs**,
+re-verified 2026-09-14). Eight libraries import Mathlib directly; **five import
+literally nothing** (`LowerBound`, `EndgameDefs`, `Lemma7Bridge`,
+`CernyL2Interface`, `GeometryDefs`) and compile against an empty `LEAN_PATH`.
+The last *mechanical* theorem census was taken at 23 libraries — 706 theorems,
+210 of them depending on no axioms at all — and has not been re-run at 25, so
+that pair of numbers is a floor rather than a current count. The
 geometry group (`GeometryDefs`, `SegmentGeometry`, `DisjointnessGraph`, 139
 theorems) never reaches `Classical.choice`. (Counts are live — the authoritative
 per-claim record is [`verification-status.md`](verification-status.md) row 15,
@@ -436,8 +440,12 @@ attained crossing count, given the exceptional-class data and `I ≠ 40`. Three
 things separate that from the real-plane statement:
 
 1. **`I ≠ 40`** — the 13,003,620-graph enumeration. See §6.1; and note
-   `roadmap.md` §8a, which measures why this cannot currently be closed inside
-   the kernel (memory, not time).
+   `roadmap.md` §8a–§8d, which measure why this **cannot** be closed inside the
+   kernel. Five routes were tested and all are dead; the binding constraint is
+   **per-graph filter evaluation time** (~1.03 CPU-s/graph for two of the five
+   filters, i.e. ~3,700 CPU-hours), not memory — memory was solved by chunking
+   (§8b). *(Corrected 2026-09-14: this sentence said "memory, not time" and
+   cited only §8a, which §8c explicitly reversed.)*
 2. **The external lemmas** — Černý L2, AKR L5, AKR L7, the order-type crossing
    fact, and the exceptional classification, which enter as explicit named
    hypotheses (E1)–(E5), (E7) rather than as axioms.
@@ -448,10 +456,14 @@ things separate that from the real-plane statement:
 
 ### 3.4 Proved here, prose + computation only
 
-Lemma A itself; the exceptional classification; the 13,003,620-graph
-enumeration and the filter pipeline; the `I = 42` exclusion; the reading of AKR
-Lemma 7 as "the graph `H` is bipartite"; the extension of AKR Lemma 5 to
-avoiding pairs via an order-type predicate.
+Lemma A's *geometric* premises (`h1` in particular); the exceptional
+classification; the 13,003,620-graph enumeration and the filter pipeline; the
+reading of AKR Lemma 7 as "the graph `H` is bipartite"; the extension of AKR
+Lemma 5 to avoiding pairs via an order-type predicate.
+
+*(Corrected 2026-09-14: this list also contained "the `I = 42` exclusion", which
+contradicted the §3.3 table immediately above — `I ≠ 42` is kernel-checked in
+`Exclude42.lean`, modulo the class invariants (X1)/(X2).)*
 
 ### 3.5 The one contested import
 

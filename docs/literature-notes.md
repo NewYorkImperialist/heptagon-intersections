@@ -1,6 +1,6 @@
 # Literature notes
 
-**Last updated:** 2026-09-13
+**Last updated:** 2026-09-14
 
 Extracted and consolidated from `archive/superseded/REPORT.md` §1–2 and the
 session transcript.
@@ -86,6 +86,17 @@ The project imports these as black boxes: statements and applicability were
 checked by the author, **internal proofs were not re-verified**. See
 `verification-status.md` rows 8–11 and `known-issues.md` K-09.
 
+**The load-bearing count is four, not five:** Černý L1, Černý L2, AKR L5 and
+AKR L7. Černý L3 is listed below for completeness but is not used by the shipped
+result (K-06).
+
+Two of the four have since had their *required consequence* proved inside this
+project rather than imported, which is a strictly different thing from
+formalizing the papers: Černý L1's consequence `δ(G^D) ≥ 1` is kernel-checked in
+`lean/SegmentGeometry.lean` (`verification-status.md` row 21), and AKR L5's
+deduction to the form the search uses is kernel-checked as an `iff` in
+`lean/Endgame.lean` (row 8). The lemmas themselves remain external.
+
 * **(C-L1)** *Černý et al., Lemma 1.* A line meets a simple `k`-gon an even
   number of times, hence at most `k−1` times for odd `k`. Used for: minimum
   degree 1 in the disjointness graph, and the second edge family in Lemma A.
@@ -94,9 +105,17 @@ checked by the author, **internal proofs were not re-verified**. See
   of 4 segments has disjointness graph on those 4 sides equal to a perfect
   matching. **Load-bearing**: dropping it leaves survivors.
 * **(C-L3)** *Černý et al., Lemma 3.* The same for 6 consecutive sides and 6
-  segments, with no geometric hypothesis. The project claims this lemma is
-  **not needed** — but the code supporting that claim is absent, so the
-  conservative dependency count remains five. See `known-issues.md` K-06.
+  segments, with no geometric hypothesis. **Not needed.** *(Corrected
+  2026-09-14: this entry used to say "the code supporting that claim is absent,
+  so the conservative dependency count remains five". That was already out of
+  date when written down — K-06 was resolved on 2026-09-13.)* The pipeline was
+  run with and without L3 and both give `2,300 → 121 → 225 → 0` with certificates
+  identical case for case; the 15,288 graphs L3 removes are all removed by
+  crossing-set compatibility anyway. The shipped certificate records
+  `"Cerny_Lemma_3": false` and lists **four** external lemmas. See
+  `known-issues.md` K-06 and K-21, and `verification-status.md` row 11. Note
+  that `python/elimination/audit_enum.py` still applies L3 unconditionally, so
+  its intermediate counts differ from the certificate's (K-21).
 * **(A-L5)** *AKR, Lemma 5.* If two sides of `P` that are *consecutive or
   avoiding* lie in different components of the disjointness graph, there are two
   consecutive sides `q_i, q_{i±1}` of `Q` with `(p_a,q_i),(p_b,q_{i±1}) ∈ E` and
@@ -114,7 +133,14 @@ translation is the least secure step in the argument.
 * **Lemma A**, the counting lemma driving the whole reduction.
 * The **exhaustive classification of exceptional heptagons** (16 labelled, 14
   classes).
-* The **general-position reduction**, proved rather than assumed.
+* ~~The **general-position reduction**, proved rather than assumed.~~
+  **RETRACTED 2026-09-14.** This was an overclaim and is the most serious error
+  found in this file. The project's own general-position argument was found
+  **INCORRECT** in the cone-containment sub-case and has been removed from the
+  active proof; the reduction is now **imported** from Ackerman–Keszegh–Rote
+  §9.1, not proved here. See `known-issues.md` K-10, `proof-outline.md` Step 0,
+  and `verification-status.md` row 4. The retraction is left visible rather than
+  deleted, per this repository's house style.
 * The **`H` bipartite** reformulation of AKR Lemma 7, and the extension of
   AKR Lemma 5 to avoiding pairs via a chirotope predicate.
 * The **finite elimination** of `I = 40`.

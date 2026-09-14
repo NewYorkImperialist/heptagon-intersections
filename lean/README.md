@@ -1,7 +1,7 @@
 # Lean formalization
 
-> **Current state: ten Lean libraries, all compiled clean with `lake build` on
-> Lean 4.33.1 (1309 jobs, exit 0).** Read the scope notes below before
+> **Current state: twenty-five Lean libraries, all compiled clean with `lake build`
+> on Lean 4.33.1 (1397 jobs, exit 0).** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -10,15 +10,17 @@
 > required consequence and Lemma A's hypothesis `h2` instead of assuming them,
 > plus the bridge that turns a configuration of two heptagons into the
 > bitmasks the endgame files consume.
-> Still *not* kernel-checked: the full `f(7,7) = 38` theorem, the passage from
-> orientation predicates to point-set statements in ℝ², and anything about
-> polygons in the endgame files.
+> Still *not* kernel-checked: the full `f(7,7) = 38` theorem, the Jordan-curve
+> step, AKR §9.1's general-position reduction, and anything about polygons in
+> the endgame files. The main theorem chain is entirely orientation-level over
+> `Pt := Int × Int`; the one library that reaches ℝ² (`PointSetSemantics.lean`,
+> interface I2b) is not imported by it.
 
 ## The three statuses that must never be conflated
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All twenty-three libraries have this status, *for the statements they actually
+   → All twenty-six libraries have this status, *for the statements they actually
    make* — which in several cases is much narrower than the name of the file
    suggests. Check the scope note at the top of each file before quoting it.
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
@@ -38,23 +40,24 @@ input as an explicit hypothesis; `CernyL2Interface.lean` certifies a Lean
 
 ## What is here
 
-**Updated 2026-09-14.** Ten Lean libraries build. The build numbers below were
-read off an actual run, not carried over from an earlier edit:
+**Updated 2026-09-14.** Twenty-five Lean libraries build. The build numbers below
+were read off an actual run, not carried over from an earlier edit:
 
 ```
 $ export PATH="$HOME/.elan/bin:$PATH"
 $ cd lean && lake build
-Build completed successfully (1309 jobs).
+Build completed successfully (1397 jobs).
 ```
 
-* **`lakefile.toml` declares twenty-three `[[lean_lib]]` targets**, all twenty-three in
+* **`lakefile.toml` declares twenty-five `[[lean_lib]]` targets**, all twenty-five in
   `defaultTargets`: `LowerBound`, `LemmaA`, `EndgameDefs`, `EndgameData`,
   `Endgame`, `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs`,
   `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`, `DomainCount`,
   `EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`, `Exclude42`,
   `UpperBoundAssembly`, `ComponentLabelling`, `BipartiteDecision`,
-  `LemmaABridge`, `MainTheorem`.
-* **1309 jobs** is the steady state, once Mathlib's `.olean` cache is in
+  `LemmaABridge`, `MainTheorem`, `IntersectionParity`, `AvoidingFlag`,
+  `PointSetSemantics`, `CernyL2Derivation`.
+* **1397 jobs** is the steady state, once Mathlib's `.olean` cache is in
   place; the warm rebuild then takes about 4 s. The count jumped from 758 to
   1279 when `EnumerationDomain.lean` was added: it imports
   `Mathlib.Combinatorics.Enumerative.InclusionExclusion` and
@@ -82,27 +85,30 @@ It is not copied from an earlier version of this document.
 |---|---|---|---|---|
 | `LowerBound.lean` | **none** | no | `propext` (2 of its 20 theorems need none) | 38 crossings; simplicity; general position; counted over provably all 49 pairs |
 | `LemmaA.lean` | 4 × Mathlib + `LowerBound` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | counting + parity ⟹ `I ≤ 38`, as an implication; non-vacuity |
-| `EndgameDefs.lean` | **none** | no | `propext`, `Quot.sound` (4 of 14 need none) | bitmasks, `Conn`, separator lemmas; `akr5Conclusion_iff_adjacent`, `conn_symm`, `conn_trans`, `conn_mem_sep` are axiom-free |
+| `EndgameDefs.lean` | **none** | no | `propext`, `Quot.sound` (25 of its 38 theorems need none) | bitmasks, `Conn`, separator lemmas; `akr5Conclusion_iff_adjacent`, `conn_symm`, `conn_trans`, `conn_mem_sep` are axiom-free |
 | `EndgameData.lean` | `EndgameDefs` | no | — (generated data; declares no theorem) | the 225 records, transcribed by `gen_endgame_data.py` |
-| `Endgame.lean` | `EndgameData` | no | `propext`, `Quot.sound` (5 of 21 need none) | properties of the **stored certificate**: component separation recomputed in-kernel, and failure of the AKR-L5 conclusion. **Not a statement about polygons** |
-| `Lemma7Bridge.lean` | **none** | **yes** | **none at all** for 18 of its 19 theorems; the 19th is the deliberate classical corollary (`propext`, `Classical.choice`, `Quot.sound`) | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
+| `Endgame.lean` | `EndgameData` | no | `propext`, `Quot.sound` (5 of its 24 theorems need none) | properties of the **stored certificate**: component separation recomputed in-kernel, and failure of the AKR-L5 conclusion. **Not a statement about polygons** |
+| `Lemma7Bridge.lean` | **none** | **yes** | **none at all** for 25 of its 26 theorems; the 26th is the deliberate classical corollary (`propext`, `Classical.choice`, `Quot.sound`) | non-empty + disjoint status sets ⟹ `H` bipartite; both-status vertices *proved* isolated. AKR L7 is a **hypothesis**, never an axiom |
 | `CernyL2Interface.lean` | **none** | **yes** | `propext`, `Classical.choice`, `Quot.sound` | the **Lean transcription** of the Černý-L2 filter fires **iff** an exact induced perfect matching exists |
-| `GeometryDefs.lean` | **none** | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (1 of its 11 theorems needs none) | points, the orientation determinant, `ProperCross`, lines and their `eval`/`side`, the strict `Separates` vs. loose `MeetsClosed` distinction, cyclic vertex/side indexing, `metCount`. Definitions only agree *on the nose* with `LowerBound`/`EndgameDefs` |
-| `SegmentGeometry.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (14 of its 51 theorems need none) | **the first geometric milestone.** A parity argument about sign alternations round a cycle ⟹ a vertex-avoiding line cannot meet every side of an odd cycle; hence Černý L1's required consequence (min disjointness degree ≥ 1) and **Lemma A's hypothesis `h2`**, *derived* rather than assumed |
-| `DisjointnessGraph.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs`, `SegmentGeometry` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (8 of its 46 theorems need none) | **the geometry→endgame bridge.** `Config` (two simple heptagons in general position) and `toMasks : Config → (Nat → Nat)` with `toMasks_spec`, i.e. interface item **I1** and **I2 at the orientation level**. Bit `j` of mask `i` holds iff side `i` of `P` does not properly cross side `j` of `Q`. The point-set form of I2 needs ℝ² and is *not* proved here |
-| `EnumerationDomain.lean` | `DisjointnessGraph`, `Endgame`, **Mathlib** (`BigOperators`, `Polynomial.Coeff`, `InclusionExclusion`, `Nat.Choose.Sum`) | no | `propext`, `Quot.sound` on all of Part A — **no `Classical.choice`**; Part B adds `Classical.choice` via Mathlib `Finset`/`Polynomial` | **enumeration obligations (1) and (2), partially.** Part A proves that any `Config` with 40 properly crossing side pairs has `toMasks K` in the abstract search domain (`InDomain`: 7-bit masks, 9 edges, min degree ≥ 1 both sides) — obligation (1), complete and Mathlib-free in substance. Part B proves the numeric identity `Σⱼ(−1)ʲC(7,j)[x⁹](((1+x)^{7−j}−1)⁷) = 13003620` and the inclusion–exclusion step, but **not** that these compose into the domain's cardinality; only `0 < domainFinset.card` is proved as a cardinality fact. Obligations (3) and (4) are untouched |
-| `DomainCount.lean` | `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (2), CLOSED.** `domainFinset_card : domainFinset.card = 13003620`. Supplies the two steps `EnumerationDomain`'s Part B left open: `term_eq` (each inclusion–exclusion term is `gfCoeff9 (7 − |t|)`, so it depends only on `|t|` and the `C(7,j)` falls out rather than being asserted) and `coeff_pow_eq_card` (that term is `[x⁹]` of the row generating function, itself `(1+X)^(7−|t|) − 1` by a bijection onto non-empty subsets) |
-| `EnumerationComplete.lean` | `EnumerationDomain` | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (3), CLOSED for the Lean transcription.** `audit_enum.py`'s `rec` as a *total* function `enumRec` (structural on `rem = 7 − i`, no `partial`), with `enumerate_complete : ∀ M, InDomain M → maskList M ∈ enumerate` by induction on recursion depth — **nothing evaluates the 13,003,620-element output**. The prune `min 3 (budget − rem)` is modelled exactly and proved harmless. `enumerate_sound` gives the converse, so `enumerate` enumerates `InDomain` *exactly*. **Not** an extraction: that `enumRec` is the Python `rec` rests on reading plus three byte-identical small-case diffs |
-| `CounterexampleCount.lean` | `DomainCount` | no | `propext`, `Classical.choice`, `Quot.sound` | **the capstone joining (1) and (2).** `counterexample_confined`: `domainFinset.card = 13003620` **and** every `Config` with 40 crossings has `maskFnOf K ∈ domainFinset`. `cert_not_mem_domainFinset` guards non-vacuity — the 38-crossing certificate pair is *outside* the domain. Says nothing about (3) or (4) |
-| `FilterSoundness.lean` | `DisjointnessGraph`, `Lemma7Bridge`, `CernyL2Interface` | no | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (4), STATED filter by filter and partially proved — NOT closed.** The two genuinely new bridges are axiom-free: `akr5ConclusionG_iff` (AKR L5's conclusion read off the geometry ⟺ the mask-level predicate) and `geoWindowMatching_iff` (the same for Černý L2). External content enters as explicit hypotheses (E1)–(E8), never as axioms |
-| `Exclude42.lean` | `FilterSoundness`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **UB42, formalized.** `not_crossCount_42`: a `Config` with `crossCountC K = 42` gives `False`. `I + \|E\| = 49` and min-degree are *discharged*, not assumed. Remaining: (X1) the class invariant, (X2) = (E4). (X3) is discharged by `LemmaABridge` |
-| `UpperBoundAssembly.lean` | `Exclude42` | no | `propext`, `Classical.choice`, `Quot.sound` | **the upper-bound skeleton.** `crossCountC_le_42` is **unconditional** (`propext`, `Quot.sound` only) — every configuration has `I ≤ 42`, which is what reduces the problem to the two branches 42 and 40. `crossCountC_le_38_of_enumeration` discharges the 42 branch, leaving parity and the enumeration |
-| `ComponentLabelling.lean` | `FilterSoundness` | no | `propext`, `Classical.choice`, `Quot.sound` | **(E6) discharged, both directions.** `label_eq_iff : label M u = label M v ↔ Conn M u v`, against `EndgameDefs.Conn` itself. Structural `Nat`-fuel closure, no `partial`; **fuel sufficiency is proved**. `filterB_sound'` consequently has *no* `hcmp` hypothesis — the case that needed the iff |
-| `BipartiteDecision.lean` | `FilterSoundness` | no | `propext`, `Quot.sound`, `Classical.choice` | **(E8): a verified bipartiteness decision procedure.** See the file header for exactly which routine is verified and what residual gap remains against the shipped C++/Python |
-| `LemmaABridge.lean` | `LemmaA`, `DisjointnessGraph`, `EnumerationDomain`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(X3) discharged.** `card_E_eq_degSum` identifies `LemmaA`'s `Finset` edge count with the mask-level `degSum`, making Lemma A usable where the rest of the development lives; `no_uncrossable_four_set_of_seven_edges` is the consequence `Exclude42` needed |
-| `MainTheorem.lean` | `UpperBoundAssembly`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the target statement.** `isGreatest_38` with parity, `≠42`, `≠40` as named hypotheses; `attained_38_and_le_42` is **unconditional**. **Not** `f(7,7) = 38`: orientation-level, over `Pt := Int × Int`, no Jordan-curve step. Read its header before quoting |
-| `IntersectionParity.lean` | `UpperBoundAssembly`, `MainTheorem` | no | `propext`, `Classical.choice`, `Quot.sound` | **`I` is even, PROVED.** `crossCountC_even : ∀ K : Config, crossCountC K % 2 = 0`, for an arbitrary configuration. Stays inside `Int` — `inside` is ray-crossing parity under a sheared height order, identified with an integer linear functional — so **no reals enter**. Chain: four-point bridge → `crossRow_parity` (a side of `P` crosses `∂Q` oddly iff its endpoints differ in inside-ness) → cyclic sum, where each indicator occurs twice. Discharges `heven`, leaving `hne40` as the only open input (`isGreatest_38_final`) |
+| `GeometryDefs.lean` | **none** | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (11 of its 22 theorems need none) | points, the orientation determinant, `ProperCross`, lines and their `eval`/`side`, the strict `Separates` vs. loose `MeetsClosed` distinction, cyclic vertex/side indexing, `metCount`. Definitions only agree *on the nose* with `LowerBound`/`EndgameDefs` |
+| `SegmentGeometry.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (21 of its 59 theorems need none) | **the first geometric milestone.** A parity argument about sign alternations round a cycle ⟹ a vertex-avoiding line cannot meet every side of an odd cycle; hence Černý L1's required consequence (min disjointness degree ≥ 1) and **Lemma A's hypothesis `h2`**, *derived* rather than assumed |
+| `DisjointnessGraph.lean` | `GeometryDefs`, `LowerBound`, `EndgameDefs`, `SegmentGeometry` (all Mathlib-free) | **yes** | `propext`, `Quot.sound` — **no `Classical.choice`** (8 of its 58 theorems need none) | **the geometry→endgame bridge.** `Config` (two simple heptagons in general position) and `toMasks : Config → (Nat → Nat)` with `toMasks_spec`, i.e. interface item **I1** and **I2 at the orientation level**. Bit `j` of mask `i` holds iff side `i` of `P` does not properly cross side `j` of `Q`. The point-set form of I2 needs ℝ² and is *not* proved here |
+| `EnumerationDomain.lean` | `DisjointnessGraph`, `Endgame`, **Mathlib** (`BigOperators`, `Polynomial.Coeff`, `InclusionExclusion`, `Nat.Choose.Sum`) | **yes** | `propext`, `Quot.sound` on all of Part A — **no `Classical.choice`**; Part B adds `Classical.choice` via Mathlib `Finset`/`Polynomial` | **enumeration obligations (1) and (2), partially.** Part A proves that any `Config` with 40 properly crossing side pairs has `toMasks K` in the abstract search domain (`InDomain`: 7-bit masks, 9 edges, min degree ≥ 1 both sides) — obligation (1), complete and Mathlib-free in substance. Part B proves the numeric identity `Σⱼ(−1)ʲC(7,j)[x⁹](((1+x)^{7−j}−1)⁷) = 13003620` and the inclusion–exclusion step, but **not** that these compose into the domain's cardinality; only `0 < domainFinset.card` is proved as a cardinality fact. Obligations (3) and (4) are untouched |
+| `DomainCount.lean` | `EnumerationDomain`, **Mathlib** | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (2), CLOSED.** `domainFinset_card : domainFinset.card = 13003620`. Supplies the two steps `EnumerationDomain`'s Part B left open: `term_eq` (each inclusion–exclusion term is `gfCoeff9 (7 − |t|)`, so it depends only on `|t|` and the `C(7,j)` falls out rather than being asserted) and `coeff_pow_eq_card` (that term is `[x⁹]` of the row generating function, itself `(1+X)^(7−|t|) − 1` by a bijection onto non-empty subsets) |
+| `EnumerationComplete.lean` | `EnumerationDomain` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (3), CLOSED for the Lean transcription.** `audit_enum.py`'s `rec` as a *total* function `enumRec` (structural on `rem = 7 − i`, no `partial`), with `enumerate_complete : ∀ M, InDomain M → maskList M ∈ enumerate` by induction on recursion depth — **nothing evaluates the 13,003,620-element output**. The prune `min 3 (budget − rem)` is modelled exactly and proved harmless. `enumerate_sound` gives the converse, so `enumerate` enumerates `InDomain` *exactly*. **Not** an extraction: that `enumRec` is the Python `rec` rests on reading plus three byte-identical small-case diffs |
+| `CounterexampleCount.lean` | `DomainCount` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **the capstone joining (1) and (2).** `counterexample_confined`: `domainFinset.card = 13003620` **and** every `Config` with 40 crossings has `maskFnOf K ∈ domainFinset`. `cert_not_mem_domainFinset` guards non-vacuity — the 38-crossing certificate pair is *outside* the domain. Says nothing about (3) or (4) |
+| `FilterSoundness.lean` | `DisjointnessGraph`, `Lemma7Bridge`, `CernyL2Interface` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **enumeration obligation (4), STATED filter by filter and partially proved — NOT closed.** The two genuinely new bridges are axiom-free: `akr5ConclusionG_iff` (AKR L5's conclusion read off the geometry ⟺ the mask-level predicate) and `geoWindowMatching_iff` (the same for Černý L2). External content enters as explicit hypotheses (E1)–(E8), never as axioms |
+| `Exclude42.lean` | `EnumerationDomain`, `FilterSoundness`, **Mathlib** (`Tactic.IntervalCases`, `Data.Finset.Card`) | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **UB42, formalized.** `not_crossCount_42`: a `Config` with `crossCountC K = 42` gives `False`. `I + \|E\| = 49` and min-degree are *discharged*, not assumed. Remaining: (X1) the class invariant, (X2) = (E4). (X3) is discharged by `LemmaABridge` |
+| `UpperBoundAssembly.lean` | `EnumerationDomain`, `Exclude42` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **the upper-bound skeleton.** `crossCountC_le_42` is **unconditional** (`propext`, `Quot.sound` only) — every configuration has `I ≤ 42`, which is what reduces the problem to the two branches 42 and 40. `crossCountC_le_38_of_enumeration` discharges the 42 branch, leaving parity and the enumeration |
+| `ComponentLabelling.lean` | `FilterSoundness` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **(E6) discharged, both directions.** `label_eq_iff : label M u = label M v ↔ Conn M u v`, against `EndgameDefs.Conn` itself. Structural `Nat`-fuel closure, no `partial`; **fuel sufficiency is proved**. `filterB_sound'` consequently has *no* `hcmp` hypothesis — the case that needed the iff |
+| `BipartiteDecision.lean` | `FilterSoundness` | **yes** | `propext`, `Quot.sound`, `Classical.choice` | **(E8): a verified bipartiteness decision procedure.** See the file header for exactly which routine is verified and what residual gap remains against the shipped C++/Python |
+| `LemmaABridge.lean` | `LemmaA`, `DisjointnessGraph`, `EnumerationDomain`, **Mathlib** | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **(X3) discharged.** `card_E_eq_degSum` identifies `LemmaA`'s `Finset` edge count with the mask-level `degSum`, making Lemma A usable where the rest of the development lives; `no_uncrossable_four_set_of_seven_edges` is the consequence `Exclude42` needed |
+| `MainTheorem.lean` | `UpperBoundAssembly`, **Mathlib** | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **the target statement.** `isGreatest_38` with parity, `≠42`, `≠40` as named hypotheses; `attained_38_and_le_42` is **unconditional**. **Not** `f(7,7) = 38`: orientation-level, over `Pt := Int × Int`, no Jordan-curve step. Read its header before quoting |
+| `IntersectionParity.lean` | `UpperBoundAssembly`, `MainTheorem` | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **`I` is even, PROVED.** `crossCountC_even : ∀ K : Config, crossCountC K % 2 = 0`, for an arbitrary configuration. Stays inside `Int` — `inside` is ray-crossing parity under a sheared height order, identified with an integer linear functional — so **no reals enter**. Chain: four-point bridge → `crossRow_parity` (a side of `P` crosses `∂Q` oddly iff its endpoints differ in inside-ness) → cyclic sum, where each indicator occurs twice. Discharges `heven`, leaving `hne40` as the only open input (`isGreatest_38_final`) |
 | `AvoidingFlag.lean` | `Endgame` | no | `propext`, `Quot.sound` | **interface I3, closed.** `all_225_avoiding_flags_eq` proves by `decide` that every one of the 225 stored `avoiding` flags **equals** `(pairI, pairJ) ∈ avoidingPairs classUsed` — an equality, so the `false` case is checked too. The class table is *generated from* `exceptional_profiles_14.json`. Removes the stored flag as an independent failure mode; does **not** touch the geometric half (the classification (E7), or what "avoiding" means about polygons) |
+| `PointSetSemantics.lean` | `DisjointnessGraph`, **Mathlib** (`Analysis.Convex.Segment`, `Data.Real.Basic`, tactics) | **yes** | `propext`, `Classical.choice`, `Quot.sound` (1 of its 17 theorems needs none) | **interface I2b, proved in both directions.** Embeds `Pt := Int × Int` into `ℝ × ℝ` coordinatewise and proves `disjointO_iff_disjoint` — the orientation predicate "no proper crossing" holds **iff** the two *closed real* side segments are disjoint point sets — then composes it with I2a as `toMasks_pointSet_spec`. Non-vacuity is `decide`-checked on the certificate pair in both directions. This is the only library that uses ℝ. **It is not imported by `MainTheorem.lean`**, so the main chain is still orientation-level; what it removes is the *possibility* that the orientation reading and the point-set reading differ for integer segments |
+| `PolygonSimple.lean` | `PointSetSemantics`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the heptagon is a simple closed curve in ℝ².** `simple_closed_polygon` gives the *exact* intersection of any two distinct sides as a set equality: the shared vertex when they are cyclically adjacent, `∅` otherwise. Builds on I2b. **Does NOT prove the Jordan curve theorem** — no separation of the plane into interior and exterior is claimed |
+| `CernyL2Derivation.lean` | `FilterSoundness`, **Mathlib** (`Tactic.Ring`) | **yes** | `propext`, `Classical.choice`, `Quot.sound` (1 of its 12 theorems needs none) | **an attempt at (E5) that does NOT discharge it.** The unresolved step is isolated as an explicit predicate `CollisionObstruction`, and the conclusion is conditional on it. What *is* proved: the integer affine identity behind the triangle half-plane argument, that a triangle's interior preserves a strict half-plane, and that simplicity excludes adjacent-side proper crossings. `localFixture` is a `decide`-checked concrete obstruction showing why testing each selected segment separately cannot finish the argument — it satisfies every local condition and is deliberately **not** a `Config`. Read the file header before quoting this file |
 
 **Adding a library.** The table above is one row per `[[lean_lib]]`, in
 lakefile order, and is meant to be extended by appending. To add a library:
@@ -111,8 +117,8 @@ append one row here, append its principal theorems to the axiom table below,
 and re-read the job count from `lake build` — do not adjust it by hand. Keep
 the columns in the same order; nothing else in this file needs to move.
 
-If `lakefile.toml` declares more libraries than the ten listed above, **this
-section is the stale one, not the lakefile**. Regenerate the count and the
+If `lakefile.toml` declares more libraries than the twenty-five listed above,
+**this section is the stale one, not the lakefile**. Regenerate the count and the
 axiom column mechanically rather than by editing prose:
 
 ```
@@ -145,22 +151,23 @@ run_cmd do
 Reading the import column: **five** files — `LowerBound`, `EndgameDefs`,
 `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs` — import *nothing at all*
 and compile with a bare `lean` against an empty `LEAN_PATH`.
-Ten more -- `EndgameData`, `Endgame`, `SegmentGeometry`, `DisjointnessGraph`,
-`EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`,
-`UpperBoundAssembly`, `ComponentLabelling` and `BipartiteDecision` -- import only
-files from this directory. So **seventeen of the twenty-three libraries are Mathlib-free**;
-Six files reach Mathlib -- `LemmaA`, `EnumerationDomain`, `DomainCount`,
-`Exclude42`, `LemmaABridge` and `MainTheorem` -- and they are the reason the
-`require` on Mathlib is in `lakefile.toml`. `EnumerationDomain`'s
+**Twelve** more — `EndgameData`, `Endgame`, `SegmentGeometry`,
+`DisjointnessGraph`, `EnumerationComplete`, `CounterexampleCount`,
+`FilterSoundness`, `UpperBoundAssembly`, `ComponentLabelling`,
+`BipartiteDecision`, `IntersectionParity` and `AvoidingFlag` — import only files
+from this directory. So **seventeen of the twenty-six libraries are
+Mathlib-free**. **Eight** files reach Mathlib — `LemmaA`, `EnumerationDomain`,
+`DomainCount`, `Exclude42`, `LemmaABridge`, `MainTheorem`, `PointSetSemantics`
+and `CernyL2Derivation` — and they are the reason the `require` on Mathlib is in
+`lakefile.toml`. `PointSetSemantics` is the only one that uses `ℝ`. `EnumerationDomain`'s
 Part A uses no Mathlib result in substance (its axiom set is `propext`,
 `Quot.sound`); Part B's `Finset`/`Polynomial` reasoning is why the import is
 there.
 
-Reading the `autoImplicit` column: **seventeen** files set
-`set_option autoImplicit false` — `LemmaA.lean`, `Lemma7Bridge.lean`,
-`CernyL2Interface.lean`, `GeometryDefs.lean`, `SegmentGeometry.lean` and
-`DisjointnessGraph.lean` and `EnumerationDomain.lean`. The
-other four (`LowerBound`, `EndgameDefs`, `EndgameData`, `Endgame`) do **not**;
+Reading the `autoImplicit` column: **twenty** files set
+`set_option autoImplicit false` — every declared library except the five listed
+next. The other **five** (`LowerBound`, `EndgameDefs`, `EndgameData`, `Endgame`,
+`AvoidingFlag`) do **not**;
 they rely on all binders being explicitly bound, which is easy to satisfy
 because they are written entirely in terms of `Nat` literals and concrete
 structures, but the guard that caught the earlier `Odd` defect in `LemmaA.lean`
@@ -169,7 +176,7 @@ is not switched on in them. `Endgame.lean` additionally sets
 library sets any option.
 
 No `sorry`, `admit`, project `axiom`, `unsafe`, `native_decide` or `partial` in
-any of the ten declared libraries (verified by scanning with comments stripped;
+any of the twenty-five declared libraries (verified by scanning with comments stripped;
 `scripts/verify-all.sh` re-runs that scan on every build, because `lake build`
 exits 0 on a `sorry` — it is only a warning).
 `f(7,7) = 38` is **not** a Lean theorem.
@@ -321,16 +328,21 @@ orientation-predicate level of `LowerBound.lean`.
 ```
 export PATH="$HOME/.elan/bin:$PATH"
 cd lean
-lake build        # all twenty-three libraries; six of them reach Mathlib
+lake build        # all twenty-six libraries; eight of them reach Mathlib
 ```
 
 Mathlib is pinned by `lake-manifest.json` to the tag `v4.33.1`
 (rev `0df444a360eaa60ab8c11dca51a86af692955474`) and comes with prebuilt
 `.olean` files, so no Mathlib source compilation is needed.
 
-**From a clean clone, measured.** A first `lake build` on a machine that has
-never seen this Mathlib revision needs no extra command — plain `lake build`
-clones the dependency packages and fetches their caches — but it is not cheap:
+**From a clean clone, measured — but STALE.** The figures in the table below
+were taken before `EnumerationDomain.lean` and the fourteen libraries after it
+were wired in, when the build reported 758 warm jobs rather than the current
+**1395**. They have not been re-measured; treat them as a lower bound on the
+cold cost, not as current numbers. The shape of the finding still holds: a first
+`lake build` on a machine that has never seen this Mathlib revision needs no
+extra command — plain `lake build` clones the dependency packages and fetches
+their caches — but it is not cheap:
 
 | | cold (`git clone` into an empty directory, no `.lake`) | warm (`.lake` already populated) |
 |---|---|---|
@@ -338,12 +350,12 @@ clones the dependency packages and fetches their caches — but it is not cheap:
 | jobs reported | **766** | **758** |
 | bytes left in `lean/.lake` | **1.4 GB** | same |
 
-Measured 2026-09-14 on Apple silicon, macOS 24.6 (Darwin 24.6.0), Lean 4.33.1,
+Measured on Apple silicon, macOS 24.6 (Darwin 24.6.0), Lean 4.33.1,
 over a home connection, by cloning this repository into an empty directory and
 running `lake build` there. The cold run reports 8 jobs more than the warm one:
 those are the dependency packages being materialised, not extra project work.
-Almost all of the 5 minutes is download and unpack, not elaboration; the ten
-project libraries themselves account for well under a minute of it.
+Almost all of the 5 minutes is download and unpack, not elaboration; the
+twenty-five project libraries themselves account for well under a minute of it.
 
 The job count is not a stable identifier — re-read it rather than trusting this
 table if the two disagree.
@@ -365,13 +377,13 @@ Toolchain: `leanprover/lean4:v4.33.1`.
 
 `#print axioms` output, verbatim, for every principal theorem
 (Lean 4.33.1, Mathlib `v4.33.1`). Re-read for this revision with
-`lake env lean` over a file that imports all twenty-three libraries; nothing below is
+`lake env lean` over a file that imports all twenty-six libraries; nothing below is
 transcribed from an earlier edit.
 
 Per-library summary first — the *union* of the axioms of every theorem the file
 itself declares, and how many of those theorems need none.
 
-> Re-generated 2026-09-14 over all twenty-three libraries. For the record: the
+> Re-generated 2026-09-14 over all twenty-six libraries. For the record: the
 > `IntersectionParity.lean` row was briefly left blank rather than estimated,
 > because a guessed number in a table whose whole point is that it was *not*
 > transcribed would defeat the table. The measured values (46 / 18) differ
@@ -406,7 +418,9 @@ list can:
 | `MainTheorem.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
 | `IntersectionParity.lean` | 46 | 18 | `propext`, `Classical.choice`, `Quot.sound` |
 | `AvoidingFlag.lean` | 3 | 0 | `propext`, `Quot.sound` |
-| **total** | **706** | **210** | **no project-specific axiom anywhere** | **no project-specific axiom anywhere** |
+| `PointSetSemantics.lean` | 17 | 1 | `propext`, `Classical.choice`, `Quot.sound` |
+| `CernyL2Derivation.lean` | 12 | 1 | `propext`, `Quot.sound`, `Classical.choice` |
+| **total** | **740** | **212** | **no project-specific axiom anywhere** |
 
 Then the per-theorem detail:
 
@@ -520,17 +534,23 @@ rows; the table is the one to go by.)
 | 6 | `Elimination.lean` | the decisive finite theorem | no |
 | 7 | `Main.lean` | assembly: `f 7 7 = 38` | no |
 
-**Twenty** of the twenty-three libraries present in this directory are **not** in that
-numbering, having been added since: `EndgameDefs.lean`, `EndgameData.lean` and
-`Endgame.lean` (the 225-case endgame), `Lemma7Bridge.lean` (A7 bridge),
-`CernyL2Interface.lean` (C2 bridge), and `GeometryDefs.lean` +
-`SegmentGeometry.lean` + `DisjointnessGraph.lean` (the geometry group), and
-`EnumerationDomain.lean` (enumeration obligations (1) and (2)). They are
-bridges, finite checks and now some genuine geometry — not steps of the plan
-above, and none of them replaces files 3–7.
+**Twenty-three** of the twenty-six libraries present in this directory are
+**not** in that numbering, having been added since: `EndgameDefs.lean`,
+`EndgameData.lean` and `Endgame.lean` (the 225-case endgame),
+`Lemma7Bridge.lean` (A7 bridge), `CernyL2Interface.lean` (C2 bridge),
+`GeometryDefs.lean` + `SegmentGeometry.lean` + `DisjointnessGraph.lean` +
+`PointSetSemantics.lean` (the geometry group), `EnumerationDomain.lean` +
+`DomainCount.lean` + `EnumerationComplete.lean` + `CounterexampleCount.lean`
+(the enumeration obligations), `FilterSoundness.lean` +
+`ComponentLabelling.lean` + `BipartiteDecision.lean` + `CernyL2Derivation.lean`
+(filter soundness and its discharged inputs), `Exclude42.lean` +
+`UpperBoundAssembly.lean` + `LemmaABridge.lean` + `MainTheorem.lean` +
+`IntersectionParity.lean` (the upper-bound skeleton) and `AvoidingFlag.lean`
+(interface I3). They are bridges, finite checks and now some genuine geometry —
+not steps of the plan above, and none of them replaces files 3–7.
 
-Three qualifications on that, so the ten-vs-eight bookkeeping is not read as
-progress it is not:
+Three qualifications on that, so the twenty-five-vs-eight bookkeeping is not
+read as progress it is not:
 
 * `SegmentGeometry.lean` **does** discharge two things files 2–7 would otherwise
   have had to assume — Černý L1's required consequence and Lemma A's `h2` — but
@@ -654,7 +674,7 @@ not a claim about it. File names follow `../docs/lean-architecture.md`.
 |---|---|---|
 | I1 | `Config`: a type of pairs of simple 7-gons in general position, at the orientation-predicate level of `LowerBound.lean` | **supplied** by `DisjointnessGraph.lean` (`Config`, with `simple7_Pv`/`simple7_Qv` exhibiting `LowerBound.P_simple`/`Q_simple` as instances) |
 | I2a | `toMasks : Config → (Nat → Nat)` **and** `toMasks_spec` at the **orientation level**: bit `j` of mask `i` holds iff side `i` of `P` does not properly cross side `j` of `Q` | **supplied** by `DisjointnessGraph.lean` (`toMasks`, `toMasks_spec`, `toMasksQ_spec`) |
-| I2b | the same specification with *point-set* disjointness of the two closed sides in place of "no proper crossing". Needs real coordinates, `segment`, `Convex` — i.e. Mathlib — and would pull the endgame group out of its Mathlib-free trust base | **absent**, and deliberately not attempted in `DisjointnessGraph.lean` |
+| I2b | the same specification with *point-set* disjointness of the two closed sides in place of "no proper crossing". Needs real coordinates, `segment`, `Convex` — i.e. Mathlib — and so cannot live in the Mathlib-free endgame group | **supplied**, in a separate library: `PointSetSemantics.lean` proves `disjointO_iff_disjoint` (both directions) and `toMasks_pointSet_spec`, keeping `DisjointnessGraph.lean` itself Mathlib-free. It is **not** imported by `MainTheorem.lean`, so the main chain remains orientation-level; I2b is available, not yet used |
 | I3 | `Avoiding : Config → Nat → Nat → Prop` (the order-type notion) **and** `avoiding_of_flag : ProfileOf K = c → c.avoiding = true → Avoiding K c.pairI c.pairJ`. This is exactly the gap left by the stored flag; it cannot be proved *from* the flag and must be re-derived from the exceptional class of `K` | `Classification.lean` + `Profiles.lean` (absent) |
 | I4 | AKR Lemma 5 as an imported statement, honestly flagged as an `axiom` or proved: `akr5 : (CycAdj a b ∨ Avoiding K a b) → ¬ Conn (toMasks K) (P a) (P b) → AKR5Conclusion (toMasks K) a b` | `Imported.lean` (absent) |
 | I5 | `ProfileOf : Config → Case` **and** `profile_complete : Survives K → ∃ c ∈ certificates, ProfileOf K = c`, plus invariance under the dihedral relabelling used to canonicalise. The formalised counterpart of the 13,003,620-graph enumeration, and by far the largest missing piece | `Elimination.lean` (absent) |

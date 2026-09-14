@@ -20,11 +20,13 @@ This disclosure exists so that a reader can calibrate how much independent human
 checking stands behind each claim. The answer, at present, is: very little.
 
 > **Update, 2026-09-14.** The Lean formalization roughly tripled on this date —
-> from 9 libraries to 23, and from a few dozen theorems to 706 — and **all of
-> that work was also AI-performed**, by Claude coordinating a set of subagents
-> and, for part of it, OpenAI's Codex. The same applies to the measurements that
-> now underpin `roadmap.md` §8a (kernel feasibility) and to the corrections
-> recorded in `known-issues.md` K-17 through K-21.
+> from 9 libraries to **25** (`lake build`, 1395 jobs, exit 0), and from a few
+> dozen theorems to at least 706 (the last mechanical census was taken at 23
+> libraries and has not been re-run) — and **all of that work was also
+> AI-performed**, by Claude coordinating a set of subagents and, for part of it,
+> OpenAI's Codex. The same applies to the measurements that now underpin
+> `roadmap.md` §8a–§8d (kernel feasibility, concluded **negative**) and to the
+> corrections recorded in `known-issues.md` K-17 through K-21.
 >
 > Two things are worth a reader's attention here rather than being buried:
 >
@@ -52,10 +54,13 @@ checking stands behind each claim. The answer, at present, is: very little.
 * running the enumerations and the elimination pipeline;
 * conducting an adversarial self-audit that found two real defects in its own
   earlier work (see `known-issues.md` K-01 and K-11);
-* writing **every** Lean file in this repository — `LowerBound.lean`,
-  `LemmaA.lean`, `EndgameDefs.lean`, `EndgameData.lean`, `Endgame.lean`,
-  `Lemma7Bridge.lean` and `CernyL2Interface.lean` — and designing the Lean
-  architecture;
+* writing **every** Lean file in this repository — all 25 libraries, of which
+  the first seven were `LowerBound.lean`, `LemmaA.lean`, `EndgameDefs.lean`,
+  `EndgameData.lean`, `Endgame.lean`, `Lemma7Bridge.lean` and
+  `CernyL2Interface.lean` — and designing the Lean architecture;
+  *(updated 2026-09-14: this list was written when it was exhaustive and was left
+  standing after eighteen more libraries were added; `lean/lakefile.toml` is the
+  current list)*;
 * auditing the cited papers against their published text;
 * organizing this repository and writing the documentation in `docs/`.
 
@@ -96,8 +101,17 @@ and would hide exactly the kind of error a referee needs to look for.
 Two implementations of the elimination were reportedly written and reportedly
 agreed on an identical survivor-set hash. Both were written by the same model,
 in the same language, in the same session, from the same reading of the same
-papers. (One of them is not even present in these materials — see
+papers. (Neither of *those two* is fully present in these materials — see
 `known-issues.md` K-02.)
+
+*(Clarified 2026-09-14. A **different** second implementation was written later
+and is present: `independent/implementation_b/`, in C++, from a written spec,
+with a different algorithm for every filter. It reproduces the reduction down to
+the exact 225-triple set. Two caveats keep this from being the independence the
+paragraph above asks for: the same model wrote it, having already read
+Implementation A; and it does **not** run the final avoiding-pair filter, so the
+`225 → 0` step — the step that actually refutes — still has no second
+implementation. See K-02 and K-20.)*
 
 Such agreement is evidence against a *transcription* error. It is **not**
 evidence against a *conceptual* error, because both implementations inherit any

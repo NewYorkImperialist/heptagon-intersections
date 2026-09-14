@@ -3,15 +3,25 @@
 **Author:** Subagent A (independent re-derivation). All statements below were derived
 directly from the primary sources
 
-* `references/akr-dcg-2022.pdf` — Ackerman, Keszegh, Rote, *The Number of Crossings in
-  Multigraphs / The number of intersections between two simple polygons*, Discrete &
+* `references/akr-dcg-2022.pdf` — Ackerman, Keszegh, Rote, *An almost optimal bound on
+  the number of intersections of two simple polygons*, Discrete &
   Computational Geometry **68** (2022) 1049–1077 ("AKR-DCG"),
+  *(title corrected 2026-09-14: this line previously gave "The Number of Crossings in
+  Multigraphs / The number of intersections between two simple polygons", neither of
+  which is the paper's title. `references/README.md` is authoritative.)*,
 * `references/akr-socg-2020.pdf` — the SoCG 2020 version ("AKR-SoCG"),
 
 and **not** from any prose summary in this repository.  Every geometric claim below was
 additionally stress-tested with exact rational arithmetic; the scripts live in the session
 scratchpad (`work/geo.py`, `work/obs6.py`, `work/obs6b.py`, `work/quad.py`,
 `work/norm.py`, `work/ce.py`, `work/search3.py`).
+
+> **These scripts are NOT in this repository** (noted 2026-09-14). There is no `work/`
+> directory. Every figure in this document that cites one of them — including the whole
+> of the §9 falsification table — is therefore **not reproducible here**, by the same
+> standard the project applied to itself in `known-issues.md` K-16, where a
+> scratchpad-only result was held to be unshipped until it was committed. Treat these
+> as reported, not as evidence.
 
 ---
 
@@ -926,4 +936,9 @@ argument; the Repair Lemma (§6.1) uses only the component argument.
    (§7), and bridge to `G^D` separately.
 4. Do not assume "hooking and hooked are mutually exclusive" — it is false (§4.7).
 5. If Lemma 7 is to be formalised rather than assumed, budget for AKR's own gaps (§6.8,
-   §6.9): only cases 5, 7, 9 have complete arguments as of this document.
+   §6.9): only cases **7 and 9** have complete arguments as of this document; case 5 is
+   proved **up to one residual sub-case** that §6.7 states was not closed.
+   *(Corrected 2026-09-14: this line read "only cases 5, 7, 9 have complete arguments",
+   which contradicted §6.8's own summary — "2 are fully proved here (7 and its symmetric
+   9), 1 is proved up to one residual sub-case (5)" — and §6.7's explicit "I did not
+   close it".)*

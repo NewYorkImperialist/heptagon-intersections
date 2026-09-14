@@ -2,7 +2,9 @@
 
 > **HISTORICAL DESIGN NOTE — SUPERSEDED (2026-09-14).**
 > This seven-file plan was **not followed**. The development that exists has
-> **23 libraries**, built bottom-up around explicit interfaces rather than
+> **25 libraries** (`lake build`, 1395 jobs, exit 0, re-verified 2026-09-14;
+> this banner previously said 23), built bottom-up around explicit interfaces
+> rather than
 > around the paper's sections. See [`../lean/README.md`](../lean/README.md) for
 > the actual architecture and
 > [`verification-status.md`](verification-status.md) row 16.

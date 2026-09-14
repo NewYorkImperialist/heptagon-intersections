@@ -14,8 +14,13 @@ the bottom of `../.gitignore`.
 | `exceptional_profiles/exceptional_profiles_14.json` | regenerable certificate | Yes — same, ~12 s total. |
 | `certificates/final_elimination_225.json` | **certificate** | Yes — `make_final_certificate.py`, ~3 min. |
 | `certificates/final_elimination_225_with_cernyL3.json` | control | Yes — same, `--with-l3`. |
-| `hashes/SHA256SUMS` | manifest | Yes — see below. |
-| `hashes/SHA256SUMS.tools` | manifest for the generator/checker scripts | Yes. |
+| `hashes/SHA256SUMS` | manifest for the five JSON files above | Yes — see below. |
+| `hashes/SHA256SUMS.tools` | manifest for the generator/checker scripts (4 files) | Yes. |
+| `hashes/SHA256SUMS.lean` | manifest for the Lean sources (28 files: 25 libraries + `lakefile.toml` + `lean-toolchain` + `gen_endgame_data.py`) | Yes. |
+| `hashes/SHA256SUMS.implementation_b` | manifest for Implementation B (7 files) | Yes. |
+| `hashes/SHA256SUMS.order_type_audit` | manifest for the order-type audit (8 files) | Yes. |
+
+All five manifests are checked by `scripts/verify-all.sh` step 4.
 
 Rebuilding the certificates takes about 3 minutes each (they contain the whole
 13,003,620-graph enumeration); everything else here rebuilds in seconds. The
@@ -50,6 +55,13 @@ A **superset** of the realizable order types: only the necessary
 Grassmann–Plücker and Radon sign conditions are imposed. That is sound for an
 exclusion theorem and is all the proof uses. The count matches the published
 Aichholzer–Aurenhammer–Krasser figure, which is corroboration of the enumeration.
+
+Since 2026-09-13 there is more than corroboration: `independent/order_type_audit/`
+compared these 135 chirotopes against the TU Graz order-type database
+(`otypes07.b08`) and found **exact set equality** up to relabelling and
+reflection, 0 in either difference. So the superset argument is sound but turns
+out to be unnecessary here — the sets coincide. See
+`../docs/verification-status.md` row 6.
 
 ### `exceptional_profiles/exceptional_profiles_14.json`
 
@@ -122,12 +134,16 @@ verbatim under version control anyway, and a digest would add nothing.
 
 Not present, and not reconstructible from the shipped code:
 
-* the 9,702-survivor set in serialized form;
-* the **225** final (class-pair, graph) combinations — the most valuable missing
-  artifact, since each is a two-line check a referee could confirm by hand
-  (K-03);
+* the 9,702-survivor set in serialized form (K-07);
 * `ot7.pkl`, the 135 random point realizations (K-04);
 * `best_7_7_*.pkl`, the 38-crossing search output (K-05).
+
+> **Corrected.** This list used to name "the 225 final (class-pair, graph)
+> combinations" as the most valuable missing artifact. They are no longer
+> missing: `certificates/final_elimination_225.json` above *is* that list, with
+> a per-case witness, and `python/validation/check_final_certificate.py`
+> re-checks every case. What K-03 still leaves open is **completeness** of the
+> list, not its existence.
 
 ## A note on pickles
 

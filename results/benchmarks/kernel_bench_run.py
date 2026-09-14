@@ -1,7 +1,18 @@
-import pathlib, subprocess, time, resource, json
+import pathlib, subprocess, time, resource, json, os, shutil, tempfile
 from functools import lru_cache
-P=pathlib.Path('/private/tmp/heptagon-kernel-bench')
-LEAN='/Users/jaydenlin/.elan/toolchains/leanprover--lean4---v4.33.1/bin/lean'
+
+# Portability: the original run hard-coded one machine's scratch directory and
+# one machine's elan toolchain path, so this script would not run anywhere else.
+# Both are now resolved at runtime, with the same defaults as the recorded run.
+P = pathlib.Path(os.environ.get('HEPTAGON_BENCH_DIR')
+                 or os.path.join(tempfile.gettempdir(), 'heptagon-kernel-bench'))
+LEAN = (os.environ.get('HEPTAGON_LEAN')
+        or shutil.which('lean')
+        or os.path.expanduser(
+            '~/.elan/toolchains/leanprover--lean4---v4.33.1/bin/lean'))
+if not os.path.exists(LEAN):
+    raise SystemExit(
+        f"lean not found at {LEAN!r}; put it on PATH or set HEPTAGON_LEAN")
 def reference(n,w,b):
     subs={s:[m for m in range(1,1<<w) if m.bit_count()==s] for s in range(1,4)}
     @lru_cache(None)

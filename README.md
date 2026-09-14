@@ -44,8 +44,12 @@ Two halves, with very different levels of support:
   heptagons with 38 crossings, verifiable in under a second with no external
   lemma and no enumeration.
 * **`f(7,7) ≤ 38`** — candidate. A finite case analysis that reproduces exactly,
-  but is conditional on external lemmas and has only ever been run from a single
-  Python codebase written in one LLM-assisted session.
+  but is conditional on external lemmas. Its Python source was written in one
+  LLM-assisted session; the finite graph/profile reduction down to the 225
+  (class-pair, graph) triples has since been reproduced by a separately written
+  C++ implementation, but the **final avoiding-pair filter has not** been run by
+  any second implementation (K-20), and no step has been checked by a human
+  outside the AI-assisted development process.
 
 ## High-level proof idea
 
@@ -75,8 +79,7 @@ Two halves, with very different levels of support:
 7. **Formalization and reproduction** are ongoing, and incomplete.
 
 **New in this work:** Lemma A; the exceptional classification; the
-the "`H` is bipartite"
-reformulation of AKR Lemma 7; the extension of AKR Lemma 5 to avoiding pairs;
+"`H` is bipartite" reformulation of AKR Lemma 7; the extension of AKR Lemma 5 to avoiding pairs;
 the final elimination.
 
 **External, imported as black boxes:** Černý et al. Lemmas 1 and 2, and AKR
@@ -92,12 +95,16 @@ combinatorial filters are the least secure steps in the argument — see
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. **23 libraries, all compiling** (`lake build`, 1309 jobs, exit 0): 706 theorems, 210 of them depending on no axioms at all, and **no project-specific `axiom` anywhere**. Five files import literally nothing; six reach Mathlib. See `lean/README.md`. |
+| `lean/` | Formalization. **25 libraries, all compiling** (`lake build`, 1395 jobs, exit 0): 735 theorems, 212 of them depending on no axioms at all, and **no project-specific `axiom` anywhere**. Five files import literally nothing; eight reach Mathlib. See [`lean/README.md`](lean/README.md). |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
-| `results/` | Reproduction logs, filter counts, validation output from the 2026-09-13 run. |
-| `independent/` | Implementation B: an independent C++ reimplementation of the finite reduction, written from a written specification. |
+| `results/` | Reproduction logs, filter counts and validation output from the 2026-09-13 run, plus the 2026-09-14 kernel-enumeration benchmark. See [`results/README.md`](results/README.md). |
+| `independent/` | Separately written re-derivations, each in its own subdirectory: `implementation_b/` (a C++ reimplementation of the finite reduction, written from a written specification), `order_type_audit/` (an order-type/exceptional-classification audit against external data), `akr_l7_reproduction/` (the SAT/DRAT investigation of AKR Observation 6 / Lemma 7), `no_a7_experiment/` (what the pipeline gives with the A7 filter removed). See [`independent/README.md`](independent/README.md). |
 | `transcripts/` | Unmodified LLM session transcripts, kept as provenance. |
 | `archive/superseded/` | The earlier pipeline, including a file with a documented defect. Preserved, not deleted. Do not cite. |
+| `paper/` | `proof-manifest.tex`/`.pdf` — the claim-by-claim manifest of what is and is not established, and its bibliography. |
+| `scripts/` | `verify-all.sh` (the single end-to-end verification entry point), `negative-tests.sh`, `extract-transcripts.py`. |
+| `references/` | Notes on the cited papers, identified by DOI and SHA-256. The PDFs themselves are **not** redistributed. |
+| `PROGRESS.md` | Append-only working log of the formalization effort. Not a status document — `docs/verification-status.md` is. |
 
 Key documents:
 
@@ -125,15 +132,30 @@ full table. In brief:
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR §9.1) |
 | **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — see [`docs/akr-l7-human-review.md`](docs/akr-l7-human-review.md) |
-| External published lemmas | Černý L1–L3, AKR L5, L7 — statements checked, proofs not re-verified. In Lean they enter as **explicit named hypotheses**, never as axioms |
+| External published lemmas | Černý L1, L2 and AKR L5, L7 — statements checked, proofs not re-verified. (Černý L3 was audited too, then shown redundant — K-06 — so it is not a dependency.) In Lean they enter as **explicit named hypotheses**, never as axioms |
 | Reproduced by a second implementation | the finite graph/profile reduction down to the 225-triple set, exact match (C++, different enumeration). **It does not run the final avoiding-pair filter** — that step has certificate and Lean independence but no second implementation (K-20) |
-| Needs independent reproduction | the order-type enumeration and exceptional classification; the upper bound as a whole |
+| Independently reimplemented and externally cross-checked | the 135 order types (**exact set equality** with the TU Graz `otypes07.b08` database) and the exceptional classification (14/14 on every profile field), by `independent/order_type_audit/` — a fresh audit that does not import `chiro.py`/`geom.py` |
+| Needs independent reproduction | the final avoiding-pair elimination (K-20); the reading of the external lemmas, which every implementation here shares; the upper bound as a whole |
 | Not formalized at all | the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int` |
 
 ## Reproducibility
 
 No third-party packages are required — the standard library only. There is
 deliberately no `requirements.txt`, because there are no versions to pin.
+
+**Everything at once** — `scripts/verify-all.sh` is the single verification
+entry point. It runs the Lean build, both certificate checkers, all five
+SHA-256 manifests, the A7 DRAT evidence and Implementation B, asserting on each
+tool's *output* rather than its exit status, and reports one of four distinct
+outcomes (see the header of the script). It needs `lake`, `python3`, `shasum`
+and a C++17 compiler; a missing tool is reported, never silently skipped.
+
+```bash
+bash scripts/verify-all.sh            # everything; COMPLETE SUCCESS = exit 0
+bash scripts/verify-all.sh --quick    # sub-minute subset; always PARTIAL (exit 2)
+```
+
+The individual checks below are the useful entry points if you only want one.
 
 **Quickest meaningful check (under a second)** — the lower bound, standalone,
 independent of every external lemma:

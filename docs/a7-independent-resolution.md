@@ -2,8 +2,51 @@
 
 **Date:** 2026-09-13 · **Status assigned:** `VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE`
 
-This records a focused, adversarial attack on the project's one unresolved
-mathematical dependency. Five independent lines of attack were run, then a
+> **ONE LEG OF THE EVIDENCE BELOW WAS FOUND WRONG AND REPLACED — read this
+> first. Banner added 2026-09-14; the body below is otherwise unedited.**
+>
+> The **case-coverage** argument recorded below is **refuted**. This document
+> asserts that `generic / P-adj / Q-adj / PQ-adj` exhaust the `n = 7` cases (see
+> the coverage bullet in §5 and item 3 of §8). `known-issues.md` **K-16**
+> establishes that the combined PQ types split into **four** orbits, that
+> `om_lemma7.py` tested only orbit `(0,0)`, and that **that orbit is vacuous** —
+> so every `PQ-adj` verdict, including `both-hooking` and `both-hooked`, was
+> vacuously UNSAT. K-16 also records that **this gap was endorsed as sound by
+> the earlier hostile review**, so §4's adjudication should not be relied on for
+> this point.
+>
+> **It has been re-established by a different route**, and the status label above
+> still stands: `independent/akr_l7_reproduction/coverage25/` solves all **25**
+> (P-type × Q-type) combinations with **no symmetry reduction**, `both-hooking`
+> and `both-hooked` UNSAT in all 25, with **110 DRAT refutations and 15 explicit
+> models — 125/125 re-verified**, and reports the **12 vacuous** combinations as
+> such. The 25 is *derived* from exact ℤ₇ index arithmetic, not assumed. The
+> superseded `coverage.py` is retained but demoted to non-load-bearing. See
+> `verification-status.md` row 9a.
+>
+> Consequently the counts in §5 — "**15 DRAT proofs**" and "all **20** verdicts"
+> — are the pre-K-16 figures. The shipped state is 125 instances over 25
+> combinations.
+>
+> One further caution on §5: the "mixed (Fig. 6) patterns are **SAT**" claim
+> holds in the `generic` variant only — `RESULTS.md` §4 shows `mixed-1`/`mixed-2`
+> unsat in `P-adj`, `Q-adj` and `PQ-adj`, and marks the `PQ-adj` rows vacuous.
+>
+> On the **CaDiCaL / Glucose / MiniSat** bullet: CaDiCaL and Glucose *are*
+> reproducible — `coverage25/resolve_check.py` runs both (as `cadical153` and
+> `glucose42` via PySAT) and its log
+> `coverage25/logs/c25_resolve_check.txt` records both agreeing on all 125
+> instances. **MiniSat does not appear anywhere in the committed tooling**, and
+> the `evidence/` phase this section describes is z3-based, so the specific
+> three-solver claim as written is not reproducible as stated.
+
+This records a focused, adversarial attack on A7-EXT, the project's one
+remaining **human-review** item. *(Wording corrected 2026-09-14: this sentence
+read "the project's one unresolved mathematical dependency", which overstates.
+AKR §9.1's general-position reduction is imported and not reproved, Černý L1/L2
+and AKR L5 are audited-only, the exceptional classification (E7) is unformalized,
+and `f(7,7) = 38` is not a Lean theorem — the strongest Lean statement still
+carries `hclass` and `hne40`. See `verification-status.md`.)* Five independent lines of attack were run, then a
 hostile review adjudicated them. The main agent independently re-verified every
 load-bearing computation reported below.
 

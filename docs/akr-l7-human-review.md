@@ -1,8 +1,55 @@
 # AKR Observation 6 / Lemma 7 and the bipartiteness of *H* — note for external review
 
+> **PARTLY SUPERSEDED — read this before §§B–D and §G. Banner added
+> 2026-09-14; the body below is unedited.**
+>
+> This document carries a `SUPERSEDED 2026-09-13` notice, but it is **buried in
+> §F**, roughly three-quarters of the way down. A reader who stops before §F gets
+> the superseded framing as current. The supersession is not confined to §F:
+>
+> * **The repair is the cone dichotomy, not the cross non-edges.** §B.2 and §G
+>   present "demand the two cross non-edges" as what fixes Observation 6. §F's own
+>   banner calls that premise **wrong** — the non-edges are *automatic* whenever
+>   "associated" is defined at all. See `known-issues.md` K-14.
+> * **§C's definition of `A(e)` omits the dichotomy, and is therefore unsound as
+>   a specification.** §C defines `A(e)` by the two edges and two non-edges and
+>   calls that "the full conclusion of Lemma 5". It is not: Lemma 5 also concludes
+>   `I(p_a,p_b) ∈ Cone(q_i,q_{i±1})` or `I(q_i,q_{i±1}) ∈ Cone(p_a,p_b)`.
+>   `a7-independent-proof.md` §2.3 shows that omitting the dichotomy is **unsound**
+>   and says explicitly: "Do not define it as (E1)∧(E2)∧(N1)∧(N2)". Accordingly the
+>   two-line proof of `S(e) ≠ ∅` in §C does **not** go through as written — the
+>   dichotomy does not follow from membership in `A(e)` as §C defines it.
+> * **§D's dismissal of the counterexample no longer holds.** §D argues the
+>   counterexample "does not touch the project's use" because the project's `A(e)`
+>   is the narrow set. The counterexample in `a7-independent-resolution.md` and
+>   K-14 *satisfies the cross non-edges*, so it **is** in `A(e)` as §C defines it.
+>   Only the dichotomy-carrying definition escapes it.
+> * **"Observation 6 remains unproved in general" (§E, §G) understates it.**
+>   Observation 6 is **false as printed** (K-14) — as this document itself says in
+>   §B. And Observation 6′, the dichotomy-carrying repair, *is* proved in prose in
+>   `a7-independent-proof.md` §4.
+> * **The AKR §10.2 figures quoted in §E are uncorrected.** "158,830 arrangements
+>   of eight lines" and "840 assignments after symmetry reduction" are both
+>   corrected in `a7-independent-resolution.md` §7 and K-14: 158,830 is a
+>   *nine*-element count, and the correct assignment count is 8!/16 = **2520**,
+>   which is what `independent/akr_l7_reproduction/RESULTS.md` uses.
+>
+> **The open question itself is unchanged**, and so is the status
+> `VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE`
+> (`verification-status.md` row 9a): whether the published text licenses the
+> disjoint-status consequence. Read this file **with**
+> [`a7-independent-resolution.md`](a7-independent-resolution.md) and
+> [`a7-independent-proof.md`](a7-independent-proof.md), which carry the corrected
+> definition and the counterexample.
+
 **Purpose.** This is the one remaining mathematical review item in a candidate
-computer-assisted proof that *f*(7,7) = 38. It is self-contained: no other file in
-this repository, and no code, needs to be read to judge it.
+computer-assisted proof that *f*(7,7) = 38.
+
+*(Corrected 2026-09-14: this paragraph continued "It is self-contained: no other
+file in this repository, and no code, needs to be read to judge it." That is no
+longer true — §F's banner itself directs the reader elsewhere, and the corrected
+definition of "associated" and the load-bearing counterexample both live in
+`a7-independent-resolution.md`.)*
 
 **Sources.** [AKR-J] = Ackerman, Keszegh, Rote, *An almost optimal bound on the
 number of intersections of two simple polygons*, Discrete Comput. Geom. **68**

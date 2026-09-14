@@ -10,6 +10,17 @@ intersection points, and 38 is attained.  Hence f(7,7) = 38.
 > bipartite (Step 7). See [`akr-l7-human-review.md`](akr-l7-human-review.md) and
 > [`verification-status.md`](verification-status.md). Do not read the word
 > "Theorem" below as a settled result.
+>
+> **Three further limits, so "one review item" is not read as "one gap"
+> (2026-09-14).** (i) `f(7,7) = 38` is **not** a Lean theorem: the strongest Lean
+> statement, `IntersectionParity.isGreatest_38_final`, still carries the
+> exceptional-class data and `hne40` (the 13,003,620-graph enumeration), and
+> `hne40` is a **settled negative** for the kernel — five routes tested, all dead
+> (`roadmap.md` §8a–§8d). (ii) The published lemmas are **imported**, not
+> reproved; Step 0's reduction is AKR §9.1, not a project result. (iii) The Lean
+> development is entirely at the **orientation level** over `Pt := Int × Int`;
+> the Jordan-curve step is not formalized. **Independent human verification:
+> none.**
 
 External results used (statements checked against the papers in
 [`external-lemma-audit.md`](external-lemma-audit.md); their internal proofs are
@@ -194,4 +205,18 @@ With the explicit 38-example, **f(7,7) = 38**. ∎
 | SHA-256 of sorted survivor set | `451cd2893234813952946fc2c92671853827035be337003451bdd7cea631d467` |
 | SHA-256 of the 14-class profile table | `dabf1fb12de23a81a8285da306d9cccd16287758fe4a547d658bdf23627f09a5` |
 | combinations reaching the last filter | 225, on 121 graphs, all (2,2,1⁵)/(2,2,1⁵) |
-| final survivors | 0, over all 196 ordered class pairs, under 3 representative labellings, in 2 independent implementations |
+| final survivors | 0, over all 196 ordered class pairs, under 3 representative labellings, in 2 independent implementations † |
+
+> † **This cell is not supported and is left visible rather than silently
+> corrected (marker added 2026-09-14).** The second implementation it refers to
+> is **not in these materials** (`known-issues.md` K-02). A *different* C++
+> implementation was written later and is present
+> (`independent/implementation_b/`), but it deliberately does **not** run the
+> final avoiding-pair AKR L5 filter — i.e. the `225 → 0` step this row is about
+> (K-20). That step is instead covered by the committed certificate, an
+> independent checker sharing no code with the generator, and `lean/Endgame.lean`,
+> which kernel-checks each of the 225 cases. What is **not** covered by a second
+> implementation is exactly this row's claim.
+>
+> The two SHA-256 digests above also refer to an unrecorded serialization and
+> **cannot be checked** (`known-issues.md` K-07).

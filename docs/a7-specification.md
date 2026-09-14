@@ -1,7 +1,15 @@
 # A7 — exact specification and geometry-to-encoding audit
 
-**Date:** 2026-09-13 · **Scope:** the one unresolved mathematical dependency of the
-`f(7,7) = 38` candidate proof.
+**Date:** 2026-09-13, with corrections inserted 2026-09-14 (§9.7 and below) ·
+**Scope:** A7-EXT, the one remaining **human-review** item of the `f(7,7) = 38`
+candidate proof.
+
+*(Scope line corrected 2026-09-14: it read "the one unresolved mathematical
+dependency", which this file's own §12 contradicts by listing four residual items
+R1–R4. AKR §9.1's general-position reduction is imported and not reproved, the
+exceptional classification (E7) is unformalized, `known-issues.md` K-04, K-05,
+K-07, K-12 and K-19 are open, and the strongest Lean theorem still carries
+`hclass` and `hne40`.)*
 
 This file does two things and nothing else.
 
@@ -266,7 +274,7 @@ For `n = 7` some one of these 24 pairs may share an endpoint (§9.5); such a pai
 carries no expressible constraint and is dropped, leaving **24 / 23 / 23 / 22**
 explicit crossing predicates in the `generic` / `P-adj` / `Q-adj` / `PQ-adj`
 variants. (Recomputed from `om_lemma7.py` for this audit; independently
-cross-checked by `evidence/tools/verify_fig6.py`, which reports
+cross-checked by `independent/akr_l7_reproduction/evidence/tools/verify_fig6.py`, which reports
 `pattern conditions checked: 24` on the straight-line Fig. 6 witness.)
 
 > The figure **"20-pair pattern"** appearing in earlier revisions of
@@ -517,6 +525,8 @@ type as a bit pair (`a/b` → 0/1, `ap/bp` → 0/1, and likewise `A/B`, `Ap/Bp`)
 orbit invariant of a *combined* type is the XOR of the `P`-bits with the `Q`-bits.
 There are therefore **four** orbits of combined `PQ` types, and `om_lemma7.py`'s
 `PQ-adj` tests only the orbit `XOR = (0,0)`. The other three were untested.
+*(⚠ "four orbits" is corrected to **three** among the 16 both-adjacent types, and
+5 overall, in the SUPERSEDED note below. Marker inserted 2026-09-14.)*
 
 Worse for non-vacuity: `PQ-adj / none` is **UNSAT**, i.e. the single combined case
 the repo does test is a *vacuous* instance — its base pattern is already
@@ -524,7 +534,11 @@ unsatisfiable, so all four of its status rows carry no information beyond it. Th
 geometrically feasible `PQ` orbit (`XOR = (1,1)`, e.g. `b2 = ap2` together with
 `A2 = Bp2`) is the one that was **not** in the file.
 
-**Closure (done for this audit).** I enumerated all **25** combinations
+**Closure (done for this audit).** *(⚠ Two figures in the code block below are
+**wrong** — `none : sat in 9, unsat in 16`, and the "four orbits" claim above.
+Both are corrected in the SUPERSEDED note immediately following. Marker inserted
+2026-09-14 because the corrections previously appeared only after the false
+figures.)* I enumerated all **25** combinations
 (`P`-type ∈ {none, `a2=ap2`, `a2=bp2`, `b2=ap2`, `b2=bp2`} × `Q`-type ∈ {none,
 `A2=Ap2`, `A2=Bp2`, `B2=Ap2`, `B2=Bp2`}) **with no symmetry reduction at all**, and
 solved all five status queries in each. Result:
@@ -561,15 +575,23 @@ so the conclusion is unaffected and the coverage gap is closed.
 > re-derived from source and matched by SHA-256. The 25-figure is also no longer
 > prose: `coverage25/completeness.py` derives it in exact ℤ₇ arithmetic over
 > 50,176 labelled cases with **0** violations and no symmetry reduction.
-> See `known-issues.md` K-16. The case list
-itself is a finite index-arithmetic proof (§9.4 table: at most one coincidence in
-`P` and at most one in `Q`, since two would force `4 ≡ 0 mod 7`), hence the
-*proved in prose* label; each individual verdict is machine-checked.
+> See `known-issues.md` K-16.
+
+The case list itself is a finite index-arithmetic proof (§9.4 table: at most one
+coincidence in `P` and at most one in `Q`, since two would force `4 ≡ 0 mod 7`),
+hence the *proved in prose* label; each individual verdict is machine-checked.
+*(Blockquote boundary repaired 2026-09-14: this sentence began inside the
+superseded note and lost its `>` prefix mid-sentence, so it rendered as two
+fragments.)*
 
 *Reproduction.* Take `om_lemma7.build` and replace the hard-coded `ident` with a
 parameter ranging over the 25 pairs above; keep everything else identical. The
 script used is in the session scratchpad as `audit/variants25.py`; it imports
 `om_lemma7` unchanged and re-derives `want`, so it exercises the same predicates.
+**`audit/variants25.py` is not in this repository** (noted 2026-09-14); the
+shipped, certificate-backed replacement is
+`independent/akr_l7_reproduction/coverage25/`, and it is what
+`verification-status.md` row 9a relies on.
 
 *Over-constraint check.* None found; the enumeration widened the case list rather
 than narrowing it.
@@ -614,7 +636,13 @@ sides of `Q`, `E^D`-matched to `(a,b)`, and the status. It does **not** demand
 | `IN_CONE` open vs `Cone` closed | boundary case excluded by GP2 (cross-polygon apexes). **Safe.** |
 | adjacency identifications | shared endpoint is forced to be the far–far vertex. **Safe.** |
 | dropping endpoint-sharing pairs | under-constraint. **Safe.** |
-| variant list | was **incomplete** for combined `PQ` (§9.7) — a *coverage* defect, i.e. under-coverage, not over-constraint. Closed: all 25 cases UNSAT. |
+| variant list | was **incomplete** for combined `PQ` (§9.7) — a *coverage* defect, i.e. under-coverage, not over-constraint. Closed: **`both-hooking` and `both-hooked` are UNSAT in all 25** combinations. |
+
+*(Corrected 2026-09-14: this row read "Closed: all 25 cases UNSAT", which is false
+and contradicts §9.7 and the shipped log. Of the 125 queries in
+`coverage25/logs/c25_resolve_check.txt`, **15 are SAT** — the `none` and `mixed`
+base patterns, which are supposed to be satisfiable and serve as positive
+controls. What is UNSAT in all 25 is the two hooking statuses.)*
 
 **No over-constraint was found.** Two independent robustness checks, re-run for this
 audit, agree:
@@ -629,7 +657,7 @@ audit, agree:
   The same shape holds for `generic / both-hooked`.
 
 **Non-vacuity.** The positive control is genuine but narrow. Re-run for this audit:
-`evidence/tools/verify_fig6.py` reconstructs AKR's Fig. 6 from integer line
+`independent/akr_l7_reproduction/evidence/tools/verify_fig6.py` reconstructs AKR's Fig. 6 from integer line
 coefficients in exact rationals, checks all **24** pattern conditions
 (`mismatches: 0`), reads off `hooking1 = True, hooked2 = True` (the mixed pattern),
 and verifies that the resulting 12-point order type **satisfies all 64 566 clauses**
@@ -642,7 +670,7 @@ base pattern is UNSAT. This is a non-vacuity gap, not a soundness gap.
 **Verdict re-run.** All 20 verdicts of `om_lemma7.py` reproduce exactly
 (`generic/none`, `generic/mixed-1`, `generic/mixed-2`, `P-adj/none`, `Q-adj/none`
 `sat`; the other 15 `unsat`), as do the 15 DRAT-verified UNSATs recorded in
-`evidence/logs/drat_results.txt`.
+`independent/akr_l7_reproduction/evidence/logs/drat_results.txt`.
 
 ---
 
@@ -717,9 +745,9 @@ Q (pentagon) = (4,−4), (−3,1), (0,−1), (3,3), (2,1)
 | # | item | why it is still open |
 |---|---|---|
 | **R1** | **`S(e) ≠ ∅`**, i.e. AKR Lemma 5 clause **(L5c)** | Imported from AKR §4 (Proposition 4 + the `G_0` walk). It is a **global** statement about all of `Q` and the parity of `n`; no oriented-matroid or local argument in this repository bears on it, and nothing machine-checks it. **This is the sharpest residual dependency of A7.** |
-| **R2** | AKR's own proof of **Lemma 7** | `a7-independent-proof.md` §6.8: of the twelve terminal cases, 2 are fully proved there (7, 9), 1 is proved up to one sub-case (5), and the remaining 9 rest on figure-level reasoning (§6.9 names the obstruction: the extents of the frame sides beyond their forced crossings are free parameters). The OM certificates supersede this for the finite question, so R2 is a defect in the *published* proof rather than a live dependency — *provided* one accepts the OM route. |
+| **R2** | AKR's own proof of **Lemma 7** | `a7-independent-proof.md` §6.8: of the twelve terminal cases, 2 are fully proved there (7, 9), 1 is proved up to one sub-case (5), 1 has its crux proved but a missing lemma (4, and by symmetry 8, 12), and the remainder rest on figure-level reasoning — §6.9 counts **eight** of the twelve as figure-driven. §6.9 names the obstruction: the extents of the frame sides beyond their forced crossings are free parameters. *(Corrected 2026-09-14: this cell said "the remaining 9 rest on figure-level reasoning", collapsing a distinction the source document draws and disagreeing with its own "eight" figure.)* The OM certificates supersede this for the finite question, so R2 is a defect in the *published* proof rather than a live dependency — *provided* one accepts the OM route. |
 | **R3** | AKR §9 (**GP0/GP1 as WLOG**) | External to this audit. Not re-derived here; used identically by any consumer of AKR's theorem. |
-| **R4** | Non-vacuity of the **adjacency variants** | No straight-line (or even OM-realisable) witness is exhibited for any `P-adj` / `Q-adj` / `PQ-adj` base pattern. Soundness is unaffected (all constraints are necessary), but the "the encoding is not vacuous" evidence covers `generic` only. |
+| **R4** | Non-vacuity of the **adjacency variants** | No **straight-line** witness is exhibited for any `P-adj` / `Q-adj` / `PQ-adj` base pattern. *(Corrected 2026-09-14: this read "(or even OM-realisable)", which the repository refutes — `evidence/models/` ships `P-adj_none.model` and `Q-adj_none.model`, and `coverage25/models/` ships SAT models for four both-adjacent `none` patterns. Only the **stretchability** half of R4 stands: an OM model is not a straight-line realisation.)* Soundness is unaffected (all constraints are necessary), but the "the encoding is not vacuous" evidence covers `generic` only. |
 
 Items **1–3** of `a7-independent-resolution.md` §8's list of four prose bridges are
 discharged by this document (general position: §8; four components ⟹ the 24-pair
@@ -824,6 +852,12 @@ burying the lede in it would weaken the letter.
 All of the following were re-run for this audit, from copies in the session
 scratchpad so that no repository file was modified.
 
+> **Paths corrected 2026-09-14.** The commands below are written as bare
+> filenames, but none of them resolves from the repository root. They all live
+> under `independent/akr_l7_reproduction/`, so run them from there:
+> `cd independent/akr_l7_reproduction`. The `evidence/...` paths are likewise
+> relative to that directory.
+
 ```
 python3 om_lemma7.py          # 20 verdicts: 5 sat, 15 unsat — reproduced exactly
 python3 validate_encoding.py  # 237600 GP, 29700 acyclicity, 89100 CROSS,
@@ -839,13 +873,18 @@ PYTHONPATH=evidence/shims python3 evidence/tools/verify_fig6.py
                               # 0 of 64566 clauses violated
 ```
 
-Two computations were written for this audit and are not in the repository:
+Two computations were written for this audit and were not in the repository:
 
 * the exact re-verification of the K-14 triangle/pentagon counterexample (§11)
   — simplicity, GP0–GP3, `E^D`, components, both cone tests, and the axis side
-  signs, in `fractions.Fraction`/integers;
-* the 25-case symmetry-free enumeration of §9.7.
+  signs, in `fractions.Fraction`/integers. **Still not in the repository.**
+* ~~the 25-case symmetry-free enumeration of §9.7.~~
+  **NO LONGER TRUE — corrected 2026-09-14.** This bullet contradicted §9.7's own
+  correction block, which records that the enumeration was reconstructed and
+  **shipped** as `independent/akr_l7_reproduction/coverage25/` (`completeness.py`,
+  `cnf/`, `drat/`, `models/`, `logs/`). The scratchpad script named in §9.7 as
+  `audit/variants25.py` does **not** exist in the repository; `coverage25/` is the
+  shipped replacement and is what `verification-status.md` row 9a relies on.
 
-Both are short and are described precisely enough above to be rewritten from
-scratch; neither is required for any claim in the repository, and §9.7's
-enumeration only widens the case list.
+The first is short and is described precisely enough above to be rewritten from
+scratch; it is not required for any claim in the repository.

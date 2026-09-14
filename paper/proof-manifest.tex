@@ -28,12 +28,13 @@
 \newcommand{\ED}{E^{D}}
 \newcommand{\Cone}{\operatorname{Cone}}
 \newcommand{\CC}{\operatorname{CC}}
+\newcommand{\stat}[1]{\footnotesize\textsc{#1}}
 
 \title{A Proof Dependency Manifest for a Candidate\\
 Computer-Assisted Proof of $f(7,7)=38$}
 \author{Jayden Lin\\
 \small Northeastern University}
-\date{13 September 2026}
+\date{14 September 2026}
 
 \begin{document}
 \maketitle
@@ -53,7 +54,9 @@ quickly.
 \emph{candidate} computer-assisted proof. All currently known computational
 components have been independently checked or formally verified, but the
 interpretation of \textsc{akr} Observation~6 / Lemma~7 remains subject to
-external human review. The result should not be treated as established.}}
+external human review. \textbf{$f(7,7)=38$ is not a Lean theorem}: the
+strongest formalised statement still carries two hypotheses
+(\S\ref{sec:leanmain}). The result should not be treated as established.}}
 \end{center}
 
 \section*{Disclosure of generative-AI use}
@@ -97,6 +100,11 @@ simple polygons with $m$ and $n$ sides in general position.
 $f(7,7)=38$.
 \end{theorem}
 
+The problem is due to \cite{DillencourtMountSaalfeld1993}, who asked for
+$f(m,n)$ in general and settled the even cases. The odd--odd cases have resisted;
+a 2012 preprint claiming $f(n,n)$ for odd $n$ \cite{Gunther2012} was withdrawn by
+its author as faulty and is not relied on here.
+
 Three facts frame the problem.
 
 \begin{enumerate}[leftmargin=*]
@@ -129,6 +137,55 @@ Three facts frame the problem.
 We do \emph{not} claim Theorem~\ref{thm:main} is established. We claim that no
 computational gap is currently known, and that the remaining risk is
 concentrated in one identified place (\textsf{A7-EXT}, \S\ref{sec:a7ext}).
+
+\subsection{What is a Lean theorem today, and what is not}\label{sec:leanmain}
+
+The Lean development (\S\ref{sec:lean}) is large enough that a reader can
+mistake its coverage for coverage of Theorem~\ref{thm:main}. It is not. The
+strongest statement it contains is
+
+{\footnotesize\begin{verbatim}
+theorem IntersectionParity.isGreatest_38_final
+    (hclass : forall K : Config, exists mcs MP, MP.card = 5 /\ ... ) --  X1 + X2
+    (hne40  : forall K : Config, crossCountC K <> 40)                --  UB40
+    : IsGreatest MainTheorem.attained 38
+\end{verbatim}}
+
+\noindent
+and it still carries those \emph{two hypotheses}. Neither is proved anywhere in
+the development:
+\begin{itemize}[leftmargin=*,nosep]
+  \item \texttt{hclass} is the exceptional-class invariant together with the
+    order-type crossing fact --- \textsf{X1} and \textsf{X2} of
+    \S\ref{sec:lean}, i.e.\ \textsf{EX} and \textsf{E4} --- asserted for
+    \emph{every} configuration;
+  \item \texttt{hne40} is $I\neq40$, that is the entire $13{,}003{,}620$-graph
+    enumeration, \textsf{UB40}. It is \textbf{not} reachable by the Lean kernel
+    on this architecture; five routes were tried and all are dead
+    (\S\ref{sec:hne40}).
+\end{itemize}
+
+Two further gaps sit outside the theorem statement and are not visible in it.
+\texttt{Config} is an \emph{orientation-level} object over
+$\texttt{Pt}:=\mathbb{Z}\times\mathbb{Z}$: ``simple'' means a conjunction of
+integer orientation predicates, not ``the closed polygonal curve is a Jordan
+curve''. And the reduction from arbitrary position to general position is
+\textsf{GP}, \textsc{akr} \S9.1, which is cited and not formalised. So even with
+both hypotheses discharged, the theorem would read ``$38$ is the maximum
+crossing count over integer-coordinate, orientation-level heptagon
+configurations'', and two further external steps would be needed to reach
+$f(7,7)=38$.
+
+What \emph{is} unconditional, for an arbitrary \texttt{Config}, is the
+following, and it is worth stating because it is a genuine bracket:
+\[
+  I+|\ED| = 49, \qquad \delta(\GD)\ge1, \qquad I\le42, \qquad I \text{ even},
+  \qquad 38 \in \text{attained},
+\]
+so the answer lies in $\{38,40,42\}$ with no hypotheses at all
+(\texttt{MainTheorem.attained\_38\_and\_le\_42},
+\texttt{attained\_mem\_three}). Adding \texttt{hclass} removes $42$
+(\texttt{Exclude42.not\_crossCount\_42}). Only $40$ resists.
 
 \section{One-page proof flow}\label{sec:flow}
 
@@ -172,7 +229,6 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 
 \section{Dependency table}\label{sec:table}
 
-\newcommand{\stat}[1]{\footnotesize\textsc{#1}}
 {\footnotesize\setlength{\tabcolsep}{3pt}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.3cm}>{\raggedright\arraybackslash}p{3.5cm}>{\raggedright\arraybackslash}p{1.8cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.4cm}>{\raggedright\arraybackslash}p{2.8cm}@{}}
 \toprule
@@ -220,7 +276,7 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{LA} & Lemma A: an uncrossable $4$-set forces $|\ED|\ge10$, parity gives $\ge11$, so $I\le38$
   & project lemma & this project
-  & \stat{lean-kernel-checked} (counting core) & geometric premises $h_1,h_2$ remain hypotheses \\
+  & \stat{lean-kernel-checked} (counting core) & $h_2$ is now \emph{derived} (\textsf{LEAN-GEO}); $h_1$ and $(\star)$ remain hypotheses \\
 \addlinespace
 \textsf{PAR} & $I$ is even for every configuration in general position
   & project lemma & this project, \S\ref{sec:par}
@@ -258,23 +314,35 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
   & Lean formalization & \texttt{lean/}\allowbreak\texttt{Endgame}\allowbreak\texttt{.lean}
   & \stat{lean-kernel-checked} & completeness of the $225$ list not formalized \\
 \addlinespace
+\textsf{LEAN-GEO} & A closed polygon meets a line evenly; hence $\delta(\GD)\ge1$ and Lemma~A's $h_2$
+  & Lean formalization & \texttt{lean/}\allowbreak\texttt{Segment}\allowbreak\texttt{Geometry}\allowbreak\texttt{.lean}
+  & \stat{lean-kernel-checked} & Mathlib-free; orientation level \\
+\addlinespace
+\textsf{LEAN-I2} & The stored mask bit means point-set disjointness of the two closed sides in $\mathbb{R}^2$
+  & Lean formalization & \texttt{Disjointness}\allowbreak\texttt{Graph} $+$ \texttt{PointSet}\allowbreak\texttt{Semantics}
+  & \stat{lean-kernel-checked} & \textsf{I2a}$+$\textsf{I2b}; uses Mathlib and $\mathbb{R}$, so only this step leaves the Mathlib-free base \\
+\addlinespace
+\textsf{LEAN-MAIN} & $38$ is the greatest attained crossing count over \texttt{Config}
+  & Lean formalization & \texttt{MainTheorem}, \texttt{Intersection}\allowbreak\texttt{Parity}
+  & proved \emph{from} \texttt{hclass} and \texttt{hne40} & \textbf{not a proof of $f(7,7)=38$}; see \S\ref{sec:leanmain} \\
+\addlinespace
 \textsf{LB38} & $f(7,7)\ge38$
   & construction & this project
-  & \stat{lean-kernel-checked} & none known \\
+  & \stat{lean-kernel-checked} & orientation-level simplicity; no Jordan-curve step \\
 \addlinespace
 \textsf{UB42} & $I=42$ is impossible
   & project inference & this project, \S\ref{sec:i42}
-  & \stat{manually checked}; exhaustively swept & consumes \textsf{C1}, \textsf{LA}, \textsf{EX} only --- \emph{not} \textsf{A7-EXT}; \textsf{C1} gives only $I\le42$, so this branch is needed \\
+  & \stat{lean-kernel-checked} given \textsf{X1},\textsf{X2} (\texttt{Exclude42}); also exhaustively swept & consumes \textsf{C1}, \textsf{LA}, \textsf{EX} only --- \emph{not} \textsf{A7-EXT}; \textsf{C1} gives only $I\le42$, so this branch is needed \\
 \addlinespace
 \textsf{UB40} & $I=40$ is impossible, hence $f(7,7)\le38$
-  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5-C}, \textsf{A5-A}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}, \textsf{UB42}
-  & conditional on \textsf{A7-EXT} & \textbf{fails if \textsf{A7-EXT} fails} \\
+  & composite & \textsf{GP}, \textsf{C1}, \textsf{C2}, \textsf{A5-C}, \textsf{A5-A}, \textsf{A7-EXT}, \textsf{A7-BRIDGE}, \textsf{LA}, \textsf{COMP}
+  & \stat{not formalized}; conditional on \textsf{A7-EXT} & \textbf{fails if \textsf{A7-EXT} fails}. Carried in Lean as the bare hypothesis \texttt{hne40}, which is \emph{out of reach} of the kernel (\S\ref{sec:hne40}) \\
 \end{longtable}
 }
 
 \section{External mathematical dependencies}
 
-\subsection{\textsf{GP} --- general position, AKR \S9}\label{sec:gp}
+\subsection{\texorpdfstring{\textsf{GP} --- general position, AKR \S9}{GP -- general position, AKR S9}}\label{sec:gp}
 
 \textbf{Role.} The whole combinatorial argument is carried out in a
 general-position regime. \textsf{GP} is what licenses that restriction.
@@ -315,7 +383,7 @@ research. Everything here is in the intersection-\emph{point} model, and the
 result must not be restated in the pairs model.
 \end{remark}
 
-\subsection{\textsf{C1} --- {\v C}ern{\'y} Lemma 1}\label{sec:c1}
+\subsection{\texorpdfstring{\textsf{C1} --- {\v C}ern{\'y} Lemma 1}{C1 -- Cerny Lemma 1}}\label{sec:c1}
 
 A line meets a simple $k$-gon an even number of times, hence at most $k-1$ times
 for odd $k$ \cite[Lemma 1]{CernyEtAl2003}. Applied to $\ell(p_i)$ against $Q$ and
@@ -326,110 +394,7 @@ polygon. The single consequence used is
 \]
 Together with $|\ED|=49-I$ this also gives $I\le42$.
 
-\subsection{Parity: $I$ is even}\label{sec:par}
-
-\textbf{Role.} With $I\le42$ from \textsf{C1}, parity is what reduces the upper
-bound to the two branches $I=42$ and $I=40$. Without it, $39$ and $41$ would
-also need excluding.
-
-\textbf{Status.} \stat{lean-kernel-checked} as of 2026-09-14
-(\texttt{IntersectionParity.crossCountC\_even}), for an \emph{arbitrary}
-configuration rather than the certificate pair. It was previously carried as an
-assumption. The three standard axioms only.
-
-\textbf{The argument.} Two closed curves in general position cross an even
-number of times. Formalised so as to stay inside $\mathbb{Z}$, introducing no
-reals and so preserving the Mathlib-free trust base of the geometry group:
-
-\begin{enumerate}\itemsep0pt
-  \item an $\mathrm{inside}$ predicate for a point with respect to $\partial Q$,
-        defined by \emph{ray-crossing parity} under a sheared height order --- the
-        lexicographic $(y,x)$ order, which \texttt{hlt\_eq\_decide} identifies
-        with the order of the integer functional $p\mapsto N p_2+p_1$ once $N$
-        exceeds the $x$-spread, i.e.\ a ray obtained from the horizontal by an
-        infinitesimal tilt;
-  \item a four-point bridge lemma relating the orientation predicates of the two
-        segment endpoints to that parity;
-  \item the per-side lemma \texttt{crossRow\_parity}: side $i$ of $P$ crosses
-        $\partial Q$ an odd number of times exactly when its two endpoints differ
-        in inside-ness;
-  \item the cyclic sum: each vertex indicator occurs in exactly two consecutive
-        sides, so summing (3) around the closed polygon doubles every term. This
-        is the same cancellation \texttt{SegmentGeometry.cycChanges\_even}
-        performs for a line.
-\end{enumerate}
-
-\begin{remark}[Not the same as the line parity already present]
-\texttt{SegmentGeometry.metCount\_even} --- a closed polygon meets a \emph{line}
-an even number of times --- is a different statement, and is what feeds
-\textsf{C1} and hence $\delta(\GD)\ge1$. It does not give \textsf{PAR}.
-\end{remark}
-
-\subsection{Excluding $I=42$}\label{sec:i42}
-
-The manifest previously asserted twice that $I=42$ is ``excluded separately''
-without giving the argument. It is this. (This subsection is a
-\emph{project-original} argument --- dependency \textsf{UB42} --- placed here
-because it consumes \textsf{C1} directly; it is not itself an external result.)
-
-$I=42$ forces $|\ED|=7$. With $\delta(\GD)\ge1$ on $7+7$ vertices and only $7$
-edges, every vertex has degree exactly $1$, so $\GD$ is a \emph{perfect
-matching}. Its components are therefore the $7$ matched pairs: each component
-contains exactly one side of $P$ and one of $Q$. In particular no two sides of
-$P$ share a component.
-
-Next, both polygons are \emph{exceptional}. Lemma~\ref{lem:A} with $|S|=4$ would
-force $|\ED|\ge 7+(7-4)=10>7$, so neither $P$ nor $Q$ admits an uncrossable
-$4$-set. Hence the crossing-set data of \S\ref{sec:exc} applies to each.
-
-Now fix $j$. Since $\GD$ is a perfect matching, $N(q_j)=\{i_j\}$ is a singleton,
-so the set of sides of $P$ that $q_j$ \emph{crosses} is
-$\{0,\dots,6\}\setminus\{i_j\}$, of size $6$. Compatibility requires this
-crossing set to be contained in a maximal crossing set of $P$'s class. Every
-exceptional class has exactly five maximal crossing sets, each of size $6$ and of
-the form $\{0,\dots,6\}\setminus\{m\}$ for $m\in M_P$, with $|M_P|=5$. Two
-$6$-subsets of a $7$-set nest only if they are equal, so $i_j\in M_P$. This holds
-for every $j$, and the $i_j$ are distinct because $\GD$ is a matching, so all
-seven sides of $P$ lie in $M_P$ --- contradicting $|M_P|=5$. Hence $I\neq42$.
-
-\begin{remark}
-Verified by exhaustive sweep over all $7!=5{,}040$ perfect matchings against all
-$14$ profile classes: $0$ survive. Re-run against the independent profile
-reconstruction of \S\ref{sec:impl} (whose class labels differ from the shipped
-ones by a dihedral relabelling of side indices, matched $14/14$): also $0$. The
-two invariants consumed --- $|M|=5$, and maximal crossing sets
-$=\{\textsc{full}\setminus\{m\}: m\in M\}$ --- were recomputed from the class data
-rather than read from the stored invariant block, and hold for all $14$ classes
-in both reconstructions.
-\end{remark}
-
-\begin{remark}[This branch does not depend on \textsf{A7-EXT}]\label{rem:i42noa7}
-Earlier versions of this manifest excluded $I=42$ through \textsf{A7-EXT}: a
-perfect matching makes every consecutive pair relevant and every index-non-adjacent
-pair span four distinct components, so $H$ is the complement of the $7$-cycle,
-which contains the triangle $e_0e_2e_4$ and is not bipartite. That argument is
-correct but unnecessary. The route above consumes only \textsf{C1},
-\textsf{LA} and the exceptional-class invariants \textsf{EX}, all of which are
-elementary and order-type based, so no further external lemma is imported ---
-in particular not \cite[Lemma 3]{CernyEtAl2003}, whose four-page case analysis
-this project has not audited and which an earlier draft wrongly treated as the
-only available reroute.
-
-The practical consequence is that \textsf{A7-EXT} is load-bearing at exactly
-\emph{one} point in the proof: the $I=40$ endgame. It cannot be dropped there ---
-with the filter off the pipeline ends at $2{,}187$ surviving triples on $412$
-graphs, not $0$ (\S\ref{sec:comp}).
-\end{remark}
-
-\begin{remark}
-The shipped $|\ED|=7$ sweep reproduces the older route independently:
-$5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7-EXT}). The companion
-$|\ED|=8$ sweep gives $476{,}280\to1{,}078\to0$, for $I=41$, which parity already
-excludes. Both were a by-product of the historical enumeration bug of
-Remark~\ref{rem:bug} and are corroborative rather than load-bearing.
-\end{remark}
-
-\subsection{\textsf{C2} --- {\v C}ern{\'y} Lemma 2}
+\subsection{\texorpdfstring{\textsf{C2} --- {\v C}ern{\'y} Lemma 2}{C2 -- Cerny Lemma 2}}
 
 The only consequence used is a local forbidden configuration. Let
 $A,B,C,D,E$ be five consecutive vertices of $P$, giving four consecutive sides
@@ -486,7 +451,7 @@ neighbour would join them in one component. The set differences in
 \eqref{eq:adj} are then the neighbourhoods themselves.
 \end{remark}
 
-\subsection{\textsf{A7-EXT} and \textsf{A7-BRIDGE} --- AKR Lemma 7 and bipartiteness of $H$}\label{sec:a7ext}
+\subsection{\texorpdfstring{\textsf{A7-EXT} and \textsf{A7-BRIDGE} --- AKR Lemma 7 and bipartiteness of $H$}{A7-EXT and A7-BRIDGE -- AKR Lemma 7 and bipartiteness of H}}\label{sec:a7ext}
 
 This dependency was previously recorded as a single item. It bundles two things
 of very different character, and is split here:
@@ -609,15 +574,25 @@ would be fatal. The encoding was attacked on exactly that point:
   \item \textbf{positive control:} \textsc{akr}'s own Figure 6 configuration,
     reconstructed from integer line coefficients in exact rationals, satisfies
     all $64{,}566$ clauses --- so the encoding is not vacuously over-constrained;
-  \item an independent re-encoding from scratch reproduces all $20$ verdicts;
+  \item an independent re-encoding from scratch reproduces the verdicts;
   \item re-solved with CaDiCaL, Glucose and MiniSat, all agreeing;
-  \item $15$ \textsc{drat} proofs verified by a from-scratch \textsc{rup}/\textsc{rat}
-    checker, itself validated on $\mathrm{PHP}(4)$ and $\mathrm{PHP}(5)$;
+  \item \textsc{drat} refutations verified by a from-scratch
+    \textsc{rup}/\textsc{rat} checker, itself validated on $\mathrm{PHP}(4)$ and
+    $\mathrm{PHP}(5)$;
   \item the chirotope axiom set validated by reproducing the published
     enumeration counts $1,1,1,4$ for $n=3,\dots,6$ (\textsc{oeis} A006248);
-  \item coverage recomputed independently: the \textsf{generic}, \textsf{P-adj},
-    \textsf{Q-adj} and \textsf{PQ-adj} cases exhaust $n=7$, \emph{including} the
-    cyclic-distance-$2$ cases \textsc{akr}'s own described filter excludes.
+  \item \textbf{case exhaustion, after a repair.} The original coverage argument
+    reduced the adjacency cases by a symmetry orbit and was \emph{wrong}
+    (\S\ref{sec:defects}, item~7); the \textsf{PQ-adj} verdicts it produced were
+    vacuous. It is superseded by a derivation that uses no orbit argument at
+    all: in exact $\mathbb{Z}_7$ arithmetic the coincidence equations give five
+    types per polygon, hence $5\times5=25$ combined, confirmed by an exhaustive
+    sweep of $50{,}176$ labelled cases with $0$ violations. All $25$ are then
+    solved separately, with \textsf{both-hooking} and \textsf{both-hooked}
+    \textsc{unsat} in every one. That is $125$ instances and $125$ certificates
+    --- $110$ \textsc{drat} refutations and $15$ explicit models --- with no
+    solver-only verdict, each certificate bound to its formula by \textsc{sha}-256
+    and re-derived from source before checking.
 \end{itemize}
 
 Separately, a direct search for a counterexample on real heptagon pairs over
@@ -632,11 +607,10 @@ certified: (i) general position of the $\le12$ vertices is \textsc{wlog}
 (inherited from \textsf{GP}; perturbation can change $\GD$); (ii) ``four distinct
 components'' yields exactly the encoded pair pattern --- $24$ requirements
 ($16$ cross-polygon, $4$ within $P$, $4$ within $Q$), of which those sharing an
-endpoint carry no expressible constraint, leaving $24/23/23/22$ explicit crossing
-predicates in the \textsf{generic}/\textsf{P-adj}/\textsf{Q-adj}/\textsf{PQ-adj}
-variants; (iii) the four cases
-above exhaust $n=7$; (iv) Lemma 7's quantification matches the existential
-$S(e)$. The translation of ``segments cross'' and ``point in cone'' into
+endpoint carry no expressible constraint; (iii) the enumerated case list
+exhausts $n=7$ --- now derived exhaustively in exact arithmetic rather than by
+the orbit argument that turned out to be wrong, but by a project script, not by
+a certificate; (iv) Lemma 7's quantification matches the existential $S(e)$. The translation of ``segments cross'' and ``point in cone'' into
 chirotope conditions is validated by exact random testing, not by proof. And
 $S(e)\neq\emptyset$, needed alongside \textsf{A7-EXT}, rests on Lemma 5, which is
 machine-checked nowhere.
@@ -671,6 +645,10 @@ verify \textsc{akr}'s geometric theorem.
 
 \section{Project-original mathematical reductions}
 
+Four items: Lemma~A and the exceptional classification, which feed the
+enumeration; parity, which fixes the two branches to be excluded; and the
+exclusion of $I=42$, which is one of them. Nothing here is imported.
+
 \subsection{Lemma A}
 
 \begin{lemma}[Lemma A]\label{lem:A}
@@ -702,11 +680,21 @@ $4$-subset of its sides satisfies $(\star)$. Then
 
 \textbf{Lean boundary.} \texttt{lean/}\allowbreak\texttt{LemmaA}\allowbreak\texttt{.lean} kernel-checks the counting and
 the parity upgrade (\texttt{card\_E\_ge}, \texttt{card\_E\_ge\_eleven},
-\texttt{crossings\_le\_38}) as an \emph{implication}. The geometric premises
---- that each $q_j$ is disjoint from some member of $S$, and that each
-$p\notin S$ is disjoint from some $q_j$ --- remain explicit hypotheses,
-discharged in Lean only for the one explicit certificate pair. The
-$(\star)$ condition itself is not formalized.
+\texttt{crossings\_le\_38}) as an \emph{implication}. Of the two geometric
+premises:
+\begin{itemize}[leftmargin=*,nosep]
+  \item $h_2$ --- that each $p\notin S$ is disjoint from some $q_j$ --- is
+    \emph{derived}, for an arbitrary configuration, by the parity argument of
+    \texttt{SegmentGeometry.lean} (\textsf{LEAN-GEO}). It is no longer an
+    assumption;
+  \item $h_1$ --- that each $q_j$ is disjoint from some member of $S$ --- remains
+    an explicit hypothesis, discharged in Lean only for the one certificate pair.
+\end{itemize}
+The $(\star)$ condition itself is not formalized. Separately,
+\texttt{LemmaABridge.lean} connects Lemma~A's \texttt{Finset} cardinality to the
+mask-level \texttt{degSum} used everywhere else, which is what lets the
+$|\ED|<10\Rightarrow$ ``exceptional'' step be applied rather than assumed
+(\textsf{X3}).
 
 \subsection{Exceptional classification}\label{sec:exc}
 
@@ -745,6 +733,112 @@ Lemma~A is only ever instantiated at lines $\ell(q_j)$, which avoid $V(P)$ by
 transversals pass through a vertex of $P$ --- and no $\ell(q_j)$ can be such a
 line. Had the loose phrasing been implemented, the finite search would have been
 infeasible.
+\end{remark}
+
+\subsection{\texorpdfstring{Parity: $I$ is even}{Parity: I is even}}\label{sec:par}
+
+\textbf{Role.} With $I\le42$ from \textsf{C1}, parity is what reduces the upper
+bound to the two branches $I=42$ and $I=40$. Without it, $39$ and $41$ would
+also need excluding.
+
+\textbf{Status.} \stat{lean-kernel-checked} as of 2026-09-14
+(\texttt{IntersectionParity.crossCountC\_even}), for an \emph{arbitrary}
+configuration rather than the certificate pair. It was previously carried as an
+assumption. The three standard axioms only.
+
+\textbf{The argument.} Two closed curves in general position cross an even
+number of times. Formalised so as to stay inside $\mathbb{Z}$, introducing no
+reals and so preserving the Mathlib-free trust base of the geometry group:
+
+\begin{enumerate}\itemsep0pt
+  \item an $\mathrm{inside}$ predicate for a point with respect to $\partial Q$,
+        defined by \emph{ray-crossing parity} under a sheared height order --- the
+        lexicographic $(y,x)$ order, which \texttt{hlt\_eq\_decide} identifies
+        with the order of the integer functional $p\mapsto N p_2+p_1$ once $N$
+        exceeds the $x$-spread, i.e.\ a ray obtained from the horizontal by an
+        infinitesimal tilt;
+  \item a four-point bridge lemma relating the orientation predicates of the two
+        segment endpoints to that parity;
+  \item the per-side lemma \texttt{crossRow\_parity}: side $i$ of $P$ crosses
+        $\partial Q$ an odd number of times exactly when its two endpoints differ
+        in inside-ness;
+  \item the cyclic sum: each vertex indicator occurs in exactly two consecutive
+        sides, so summing (3) around the closed polygon doubles every term. This
+        is the same cancellation \texttt{SegmentGeometry.cycChanges\_even}
+        performs for a line.
+\end{enumerate}
+
+\begin{remark}[Not the same as the line parity already present]
+\texttt{SegmentGeometry.metCount\_even} --- a closed polygon meets a \emph{line}
+an even number of times --- is a different statement, and is what feeds
+\textsf{C1} and hence $\delta(\GD)\ge1$. It does not give \textsf{PAR}.
+\end{remark}
+
+\subsection{\texorpdfstring{\textsf{UB42} --- excluding $I=42$}{UB42 -- excluding I = 42}}\label{sec:i42}
+
+\textbf{Role.} \textsf{C1} caps $I$ at $42$, not at $40$, so the value $42$ must
+be excluded on its own. The manifest previously asserted twice that it is
+``excluded separately'' without giving the argument. It is this.
+
+\textbf{Status.} \stat{lean-kernel-checked} as
+\texttt{Exclude42.not\_crossCount\_42}, given the two named inputs \textsf{X1}
+and \textsf{X2}; see \S\ref{sec:lean}. Also verified by exhaustive sweep, below.
+
+$I=42$ forces $|\ED|=7$. With $\delta(\GD)\ge1$ on $7+7$ vertices and only $7$
+edges, every vertex has degree exactly $1$, so $\GD$ is a \emph{perfect
+matching}. Its components are therefore the $7$ matched pairs: each component
+contains exactly one side of $P$ and one of $Q$. In particular no two sides of
+$P$ share a component.
+
+Next, both polygons are \emph{exceptional}. Lemma~\ref{lem:A} with $|S|=4$ would
+force $|\ED|\ge 7+(7-4)=10>7$, so neither $P$ nor $Q$ admits an uncrossable
+$4$-set. Hence the crossing-set data of \S\ref{sec:exc} applies to each.
+
+Now fix $j$. Since $\GD$ is a perfect matching, $N(q_j)=\{i_j\}$ is a singleton,
+so the set of sides of $P$ that $q_j$ \emph{crosses} is
+$\{0,\dots,6\}\setminus\{i_j\}$, of size $6$. Compatibility requires this
+crossing set to be contained in a maximal crossing set of $P$'s class. Every
+exceptional class has exactly five maximal crossing sets, each of size $6$ and of
+the form $\{0,\dots,6\}\setminus\{m\}$ for $m\in M_P$, with $|M_P|=5$. Two
+$6$-subsets of a $7$-set nest only if they are equal, so $i_j\in M_P$. This holds
+for every $j$, and the $i_j$ are distinct because $\GD$ is a matching, so all
+seven sides of $P$ lie in $M_P$ --- contradicting $|M_P|=5$. Hence $I\neq42$.
+
+\begin{remark}
+Verified by exhaustive sweep over all $7!=5{,}040$ perfect matchings against all
+$14$ profile classes: $0$ survive. Re-run against the independent profile
+reconstruction of \S\ref{sec:impl} (whose class labels differ from the shipped
+ones by a dihedral relabelling of side indices, matched $14/14$): also $0$. The
+two invariants consumed --- $|M|=5$, and maximal crossing sets
+$=\{\textsc{full}\setminus\{m\}: m\in M\}$ --- were recomputed from the class data
+rather than read from the stored invariant block, and hold for all $14$ classes
+in both reconstructions.
+\end{remark}
+
+\begin{remark}[This branch does not depend on \textsf{A7-EXT}]\label{rem:i42noa7}
+Earlier versions of this manifest excluded $I=42$ through \textsf{A7-EXT}: a
+perfect matching makes every consecutive pair relevant and every index-non-adjacent
+pair span four distinct components, so $H$ is the complement of the $7$-cycle,
+which contains the triangle $e_0e_2e_4$ and is not bipartite. That argument is
+correct but unnecessary. The route above consumes only \textsf{C1},
+\textsf{LA} and the exceptional-class invariants \textsf{EX}, all of which are
+elementary and order-type based, so no further external lemma is imported ---
+in particular not \cite[Lemma 3]{CernyEtAl2003}, whose four-page case analysis
+this project has not audited and which an earlier draft wrongly treated as the
+only available reroute.
+
+The practical consequence is that \textsf{A7-EXT} is load-bearing at exactly
+\emph{one} point in the proof: the $I=40$ endgame. It cannot be dropped there ---
+with the filter off the pipeline ends at $2{,}187$ surviving triples on $412$
+graphs, not $0$ (\S\ref{sec:comp}).
+\end{remark}
+
+\begin{remark}
+The shipped $|\ED|=7$ sweep reproduces the older route independently:
+$5{,}040 \to 14$ (\textsf{A5-C}) $\to 0$ (\textsf{A7-EXT}). The companion
+$|\ED|=8$ sweep gives $476{,}280\to1{,}078\to0$, for $I=41$, which parity already
+excludes. Both were a by-product of the historical enumeration bug of
+Remark~\ref{rem:bug} and are corroborative rather than load-bearing.
 \end{remark}
 
 \section{Computational reduction}\label{sec:comp}
@@ -808,6 +902,18 @@ So the step that actually refutes --- $225 \to 0$ --- has \emph{certificate} and
 real: \texttt{check\_final\_certificate.py} shares no code with the generator,
 and \texttt{Endgame.lean} kernel-checks each of the $225$ cases. But the phrase
 ``two implementations agree'' covers filters (a)--(d) only. Recorded as K-20.
+\end{remark}
+
+\begin{remark}[The intermediate counts are artifacts; only the final $0$ is a claim]\label{rem:artifact}
+The figures $2{,}300$ and $121$ depend on which representative labelling of each
+exceptional class the pipeline carries: a superseded pipeline reported
+$3{,}522$ and $64$ at those same two stages. Nothing is wrong with either --- the
+stages count labelled objects, and the labelling is a choice --- but the
+comparison of two runs at an intermediate stage is meaningless unless the
+labelling is fixed. What \emph{is} labelling-invariant, and what the proof
+actually needs, is the terminal emptiness, which was re-derived per ordered
+class pair: $196$ ordered pairs $\times$ $3$ labellings, $0$ survivors in every
+case. Read every intermediate count in this manifest accordingly.
 \end{remark}
 
 \begin{remark}[The $121\to225$ step is not a filter]\label{rem:121}
@@ -944,13 +1050,79 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-Eleven libraries are declared in \texttt{lakefile.toml} and all eleven build
-(\texttt{1279} jobs, exit $0$). Five are described below; the geometry group and
-\texttt{EnumerationDomain} follow. None of the eleven contains \texttt{sorry},
-\texttt{admit}, a
-project-specific \texttt{axiom}, \texttt{unsafe}, or \texttt{native\_decide};
-this was verified by scanning the sources with comments stripped. All
-\texttt{decide} calls are ordinary kernel reduction.
+\textbf{Twenty-five} libraries are declared in \texttt{lakefile.toml} and all
+twenty-five build: $1{,}395$ jobs, exit $0$, verified 2026-09-14. None contains
+\texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
+\texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
+by scanning the sources with comments stripped. All \texttt{decide} calls are
+ordinary kernel reduction, so nothing rests on the compiler.
+
+\begin{remark}[Read \S\ref{sec:leanmain} first]
+Twenty-five libraries is enough to create a false impression of coverage. The
+target statement is \emph{not} proved; it is \emph{stated}, with two
+hypotheses. The value of the development is that it makes the residue precise
+and machine-readable, not that it closes it.
+\end{remark}
+
+\subsection*{The twenty-five libraries}
+
+Grouped by layer. ``core'' in the \textbf{Base} column means the library and
+everything it imports are Mathlib-free, so Mathlib is outside its trust base;
+thirteen of the twenty-five are, and five of those import literally nothing
+(\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
+\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other twelve reach
+Mathlib, and exactly one --- \texttt{PointSetSemantics} --- reaches the reals.
+
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
+\toprule
+\textbf{Library} & \textbf{Base} & \textbf{ID} & \textbf{What it proves} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Library} & \textbf{Base} & \textbf{ID} & \textbf{What it proves} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\multicolumn{4}{@{}l}{\emph{Certificate and elementary geometry}}\\
+\texttt{LowerBound} & core & \textsf{LEAN-LB} & the explicit pair: $38$ crossings over provably all $49$ side pairs; orientation-level simplicity and general position \\
+\texttt{GeometryDefs} & core & \textsf{LEAN-GEO} & orientation predicates, lines, cyclic vertex access \\
+\texttt{SegmentGeometry} & core & \textsf{LEAN-GEO} & a closed polygon meets a line evenly; hence $\delta(\GD)\ge1$ and Lemma~A's $h_2$, \emph{derived} rather than imported \\
+\texttt{LemmaA} & Mathlib & \textsf{LEAN-LA} & the counting core of Lemma~A and the parity upgrade, as an implication \\
+\texttt{LemmaABridge} & Mathlib & \textsf{X3} & Lemma~A's \texttt{Finset} count equals the mask-level \texttt{degSum}; hence ``$|\ED|<10\Rightarrow P$ exceptional'' \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Geometry-to-combinatorics bridge}}\\
+\texttt{DisjointnessGraph} & core & \textsf{I1}, \textsf{I2a} & \texttt{Config}; \texttt{toMasks} and its orientation-level spec; minimum degree on both sides \\
+\texttt{PointSetSemantics} & Mathlib, $\mathbb{R}$ & \textsf{I2b} & \texttt{DisjointO} iff the two closed sides are disjoint \emph{as point sets in} $\mathbb{R}^2$ \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{The stored endgame}}\\
+\texttt{EndgameDefs} & core & --- & the endgame predicates; \texttt{akr5Conclusion\_iff\_adjacent} \\
+\texttt{EndgameData} & core & --- & the $225$ certificate records, generated from the committed JSON \\
+\texttt{Endgame} & core & \textsf{LEAN-END} & all $225$ cases fail the \textsc{akr}-L5 condition; components recomputed in-kernel \\
+\texttt{AvoidingFlag} & core & \textsf{I3} (flag half) & the stored \texttt{avoiding} flag \emph{equals} the class table's avoiding-pair predicate \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Filter transcriptions and their obligations}}\\
+\texttt{Lemma7Bridge} & core & \textsf{A7-BRIDGE} & non-empty $+$ pairwise-disjoint status sets $\Rightarrow$ $H$ bipartite \\
+\texttt{CernyL2Interface} & core & \textsf{C2-BRIDGE} & the L2 filter fires iff an \emph{exact induced} perfect matching exists \\
+\texttt{FilterSoundness} & core & \textsf{E1}--\textsf{E8} & each filter's soundness obligation, as an implication from named external inputs \\
+\texttt{ComponentLabelling} & core & \textsf{E6} & a fuel-bounded closure labelling, equal labels iff connected, both directions \\
+\texttt{BipartiteDecision} & core & \textsf{E8a} & a total fuel-bounded $2$-colouring test, \texttt{true} iff bipartite, both directions \\
+\texttt{CernyL2Derivation} & Mathlib & \textsf{E5} & \textbf{attempted and blocked}; see \S\ref{sec:e5} \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{The enumeration obligations}}\\
+\texttt{EnumerationDomain} & Mathlib & obl.\ (1) & a configuration with $I=40$ lands in the search domain \\
+\texttt{DomainCount} & Mathlib & obl.\ (2) & $|\text{domain}| = 13{,}003{,}620$ \\
+\texttt{EnumerationComplete} & Mathlib & obl.\ (3) & the transcribed search recursion visits exactly the domain \\
+\texttt{CounterexampleCount} & Mathlib & (1)$+$(2) & a counterexample is one of exactly $13{,}003{,}620$ mask functions \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Upper-bound assembly}}\\
+\texttt{Exclude42} & Mathlib & \textsf{UB42} & $I\neq42$, from \textsf{X1} and \textsf{X2} \\
+\texttt{UpperBoundAssembly} & Mathlib & --- & $I\le42$ unconditionally; $I\le38$ from parity, $I\neq42$, $I\neq40$ \\
+\texttt{MainTheorem} & Mathlib & \textsf{LEAN-MAIN} & $38$ is the greatest attained crossing count, given the hypotheses \\
+\texttt{IntersectionParity} & Mathlib & \textsf{PAR} & $I$ is even for an arbitrary configuration; the final assembly \\
+\end{longtable}
+}
 
 \subsection*{\texttt{LowerBound.lean} --- \textsf{LEAN-LB}}
 \textbf{Imports: none.} Core Lean only; verified to compile with an empty
@@ -1006,8 +1178,10 @@ Principal theorems:
   \item \texttt{all\_225\_pairs\_in\_different\_components} : component
     separation is \emph{recomputed in the kernel} via a separator argument, not
     taken from the stored data;
-  \item \texttt{akr5Conclusion\_iff\_adjacent} : the published conclusion and the
-    implemented predicate are equivalent; this depends on no axioms at all;
+  \item \texttt{akr5Conclusion\_iff\_adjacent} (proved one level down, in
+    \texttt{EndgameDefs.lean}, in the same namespace) : the published conclusion
+    and the implemented predicate are equivalent; this depends on no axioms at
+    all;
   \item \texttt{akr5\_not\_vacuous} : $2{,}016$ of the $4{,}725$ side pairs in
     these graphs \emph{do} satisfy the condition.
 \end{itemize}
@@ -1121,29 +1295,59 @@ general position; \texttt{toMasks\_spec} proves that bit $j$ of mask $i$ holds
 by \emph{application} of the general theorem, not by \texttt{decide} on the
 certificate.
 
-\begin{remark}[Why \textsf{I2a} and not \textsf{I2}]
+\begin{remark}[Why the interface is split into \textsf{I2a} and \textsf{I2b}]
 The interface as originally written stated \texttt{toMasks\_spec} against
 \emph{point-set} disjointness of two segments in $\mathbb{R}^2$. That is not
-statable in this development: \texttt{Pt} is $\mathbb{Z}\times\mathbb{Z}$ and
-\texttt{side}\,$P\,i$ is never defined as a set. Stating it needs Mathlib's
-\texttt{segment} and the reals, destroying the Mathlib-free trust base. The
-interface was therefore split: \textsf{I2a}, the orientation-level form proved
-here, and \textsf{I2b}, the single point-set lemma
+statable in a Mathlib-free development: \texttt{Pt} is
+$\mathbb{Z}\times\mathbb{Z}$ and \texttt{side}\,$P\,i$ is never defined as a
+set. Stating it needs Mathlib's \texttt{segment} and the reals. The interface
+was therefore split: \textsf{I2a}, the orientation-level form proved here and
+consumed by everything downstream, and \textsf{I2b}, the single point-set lemma
 $\texttt{DisjointO}\;K\,i\,j \iff \operatorname{Disjoint}(\mathrm{seg}_P\,i,\mathrm{seg}_Q\,j)$,
-which is \emph{not} proved and would upgrade \textsf{I2a} to the original
-statement while touching nothing else. \texttt{Endgame.lean} consumes only the
-\emph{function} \texttt{toMasks}, never the specification, so every endgame
-theorem is unaffected by the split.
+which is quarantined in one leaf library so that the rest of the development
+keeps its Mathlib-free base. \texttt{Endgame.lean} consumes only the
+\emph{function} \texttt{toMasks}, never the specification, so no endgame theorem
+depends on either half.
 \end{remark}
 
-\subsection*{\texttt{EnumerationDomain.lean} --- \textsf{I5a}}
+\subsection*{\texttt{PointSetSemantics.lean} --- \textsf{I2b}}
+\textbf{Imports:} \texttt{DisjointnessGraph} and Mathlib
+(\texttt{Analysis.Convex.Segment}, \texttt{Data.Real.Basic}).
+\textbf{Axioms:} the three standard ones.
+
+\stat{lean-kernel-checked} as of 2026-09-14, and this closes \textsf{I2b}. The
+integer plane is embedded coordinatewise in $\mathbb{R}\times\mathbb{R}$ and
+\texttt{disjointO\_iff\_disjoint} proves, \emph{in both directions and with no
+hypotheses beyond \texttt{Config}'s own general-position fields},
+\[
+  \texttt{DisjointO}\;K\,i\,j
+  \iff
+  \operatorname{Disjoint}\bigl(\texttt{segment}_{\mathbb{R}}\,p_i,\ \texttt{segment}_{\mathbb{R}}\,q_j\bigr).
+\]
+Composed with \textsf{I2a} this gives \texttt{toMasks\_pointSet\_spec}: the
+stored mask bit means what it is supposed to mean about point sets in the real
+plane. Non-vacuity is proved on the certificate pair in both directions --- one
+disjoint pair, and one properly crossing pair together with an explicit common
+real point.
+
+\textbf{What this does \emph{not} do.} It makes \emph{side} disjointness
+faithful to $\mathbb{R}^2$. It says nothing about the polygon as a curve: the
+Jordan-curve step --- that the closed polygonal chain of \texttt{Simple7} bounds
+a region, which is what ``simple polygon'' means in $f(7,7)$ --- is still not
+formalised anywhere, and neither is the general-position reduction \textsf{GP}.
+Those are the two steps of \S\ref{sec:leanmain}, and this library reduces
+neither.
+
+\subsection*{The enumeration obligations --- \texttt{EnumerationDomain}, \texttt{DomainCount}, \texttt{EnumerationComplete}, \texttt{CounterexampleCount}}\label{sec:enumobl}
 \textbf{Imports:} \texttt{DisjointnessGraph}, \texttt{Endgame}, and Mathlib
 (\texttt{BigOperators}, \texttt{Polynomial.Coeff},
-\texttt{InclusionExclusion}, \texttt{Nat.Choose.Sum}).
-\textbf{Axioms:} \texttt{propext}, \texttt{Quot.sound} throughout Part~A ---
-\emph{no} \texttt{Classical.choice}, and no Mathlib result is used in substance
-there; Part~B adds \texttt{Classical.choice} through Mathlib's \texttt{Finset}
-and \texttt{Polynomial} machinery.
+\texttt{InclusionExclusion}, \texttt{Nat.Choose.Sum},
+\texttt{Finset.Powerset}, \texttt{Fintype.Pi}).
+\textbf{Axioms:} \texttt{propext}, \texttt{Quot.sound} throughout
+\texttt{EnumerationDomain}'s Part~A --- \emph{no} \texttt{Classical.choice}, and
+no Mathlib result is used in substance there; the counting parts add
+\texttt{Classical.choice} through Mathlib's \texttt{Finset} and
+\texttt{Polynomial} machinery.
 
 ``Completeness of the enumeration'' is four claims, not one:
 \begin{enumerate}\itemsep0pt
@@ -1167,19 +1371,38 @@ argued elsewhere. Definitionally, \texttt{degSum\_eq\_edgeCount} holds by
 \texttt{rfl}, so \texttt{InDomain}'s edge clause \emph{is} the quantity the
 certificate checker recomputes.
 
-\textbf{(2) is not proved.} Both ends are: \texttt{ieAlternatingSum\_eq} gives
-the numeric identity, and \texttt{gfCoeff9\_eq\_coeff} shows the summand really
-is $[x^9]\bigl((1+x)^m-1\bigr)^7$ rather than a formula someone wrote down;
-\texttt{domain\_card\_inclusion\_exclusion} gives the inclusion--exclusion step
-over uncovered $Q$-sides. The two links between them --- that each term depends
-only on the \emph{cardinality} of the excluded set (the source of the
-$\binom{7}{j}$), and that the term equals that coefficient --- are stated in the
-file and left unproved. The only cardinality fact kernel-checked is
-$0 < |\text{domain}|$.
+\textbf{(2) is proved.} \texttt{DomainCount.domainFinset\_card} closes it:
+\[
+  |\text{domainFinset}| = 13{,}003{,}620 ,
+\]
+supplying the two steps \texttt{EnumerationDomain.lean} had left open --- that
+the $t$-th inclusion--exclusion term depends only on $|t|$ (the source of the
+$\binom{7}{j}$), and that for $|t|=j$ it equals
+$[x^9]\bigl((1+x)^{7-j}-1\bigr)^{7}$. \texttt{CounterexampleCount} then joins
+(1) and (2) into the single sentence \emph{a hypothetical counterexample is one
+of exactly $13{,}003{,}620$ mask functions}. The count is proved, not evaluated:
+nothing in the kernel enumerates the set.
 
-\textbf{(3) and (4) are untouched.} Nothing in Lean inspects, extracts or
-certifies any search program. A correct domain count is not a proof that an
-implementation enumerates the right set.
+\textbf{(3) is proved, about the transcription.}
+\texttt{EnumerationComplete.enumerate\_complete} proves, by induction on the
+recursion depth, that the Lean transcription of
+\texttt{python/elimination/audit\_enum.py}'s \texttt{rec} emits every element of
+\texttt{InDomain} --- no bound, no special case --- and
+\texttt{enumerate\_sound} proves the converse, so the recursion visits
+\emph{exactly} the domain. The pruning bound $\min(3,\texttt{budget}-\texttt{rem})$
+is transcribed verbatim and then \emph{proved harmless} rather than dropped. The
+one presentational change is that the loop counter counts down, which makes the
+recursion structural: no \texttt{partial}, no well-founded recursion, no
+\texttt{decide} on the output list.
+
+\textbf{(4) is stated, not proved; and none of this is about the shipped
+programs.} Obligation (4) is \texttt{FilterSoundness.lean}, whose eight external
+inputs are tabulated in \S\ref{sec:leaniface}; six of the eight are open.
+Independently of that, obligations (3) and (4) alike are statements about
+\emph{Lean transcriptions} written by hand from the Python and C++ sources.
+Nothing in Lean reads, compiles, or cross-checks either program; there is no
+extraction. So ``the search recursion is complete'' means ``the Lean function is
+complete, and it was transcribed by eye from the Python''.
 
 \begin{remark}[A degree-sequence question, raised and closed]
 \texttt{Endgame.graphShapeOK} demands degree sequence $(2,2,1,1,1,1,1)$ on both
@@ -1191,48 +1414,290 @@ a search precondition, and both implementations enumerate the degree-$3$ branch,
 where it dies in the L5/L7/L3 filters. Recorded as K-17.
 \end{remark}
 
+
+\subsection*{\texttt{FilterSoundness.lean} and its two discharges --- \textsf{E1}--\textsf{E8}}\label{sec:leaniface}
+\textbf{Imports:} \texttt{DisjointnessGraph}, \texttt{Lemma7Bridge},
+\texttt{CernyL2Interface} --- all Mathlib-free, so this library and the two that
+discharge parts of it stay outside Mathlib's trust base.
+\textbf{Axioms:} the three standard ones; many declarations depend on none.
+
+This is where the pipeline's honesty is enforced. For each of the five filters
+it states the obligation \emph{a valid configuration's mask function is not
+discarded by this filter}, and proves that obligation as an implication from
+explicitly named external inputs. It proves none of those inputs, and --- the
+point of the design --- it does not declare them as \texttt{axiom}s either, so
+\texttt{\#print axioms} stays clean and a reader can see at each theorem exactly
+which import is carrying the weight.
+
+{\footnotesize\setlength{\tabcolsep}{4pt}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{1.1cm}>{\raggedright\arraybackslash}p{6.3cm}>{\raggedright\arraybackslash}p{2.2cm}>{\raggedright\arraybackslash}p{4.4cm}@{}}
+\toprule
+\textbf{ID} & \textbf{External input} & \textbf{Status} & \textbf{Where} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{ID} & \textbf{External input} & \textbf{Status} & \textbf{Where} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+\textsf{E1} & \textsc{akr} L5 for consecutive pairs & \stat{open} & hypothesis \texttt{hAKR5} of \texttt{filterA\_sound} \\
+\textsf{E2} & \textsc{akr} L5 for avoiding pairs, \emph{and} that the stored list $AV$ really consists of avoiding pairs & \stat{open} & \texttt{hAVlist}, \texttt{hAKR5} of \texttt{filterE\_sound} \\
+\textsf{E3} & \textsc{akr} L7 in the project's form: non-empty status sets, disjoint across $H$-edges & \stat{open} ($=$ \textsf{A7-EXT}) & \texttt{hne}, \texttt{hdisj} of \texttt{filterB\_sound} \\
+\textsf{E4} & the order-type fact behind filter (c): $q_j$'s crossing set sits in a maximal crossing set of $P$'s class & \stat{open} & \texttt{hcross} of \texttt{filterC\_sound}; reused as \textsf{X2} \\
+\textsf{E5} & {\v C}ern{\'y} L2: no Lemma-2 window carries an exact induced perfect matching & \stat{open}; attempted, \textbf{blocked} & \texttt{hC2} of \texttt{filterD\_sound}; \S\ref{sec:e5} \\
+\textsf{E6} & correctness of the component labelling & \stat{discharged} & \texttt{ComponentLabelling.lean} \\
+\textsf{E7} & $K$'s heptagons are among the $14$ enumerated classes, and the stored class data is correct for $K$ & \stat{open} --- \textbf{the classification itself} & \texttt{hmem} of \texttt{filterCDE\_sound} \\
+\textsf{E8a} & bipartiteness is decided by a correct algorithm & \stat{discharged} & \texttt{BipartiteDecision.lean} \\
+\textsf{E8b} & \emph{the shipped programs' routine} is such an algorithm & \stat{open} (transcription) & no extraction exists \\
+\end{longtable}
+}
+
+\noindent
+So \textbf{six} of the eight --- \textsf{E1}--\textsf{E5} and \textsf{E7} --- are
+open outright, and the transcription half \textsf{E8b} is open as well. Of the
+six, \textsf{E3} \emph{is} \textsf{A7-EXT}, the principal item of
+\S\ref{sec:a7ext}, and \textsf{E7} is the exceptional classification, the largest
+single unformalized computational object in the project.
+
+\textbf{\textsf{E6}, discharged.} \texttt{ComponentLabelling.lean} defines a
+concrete labelling of the $14$-vertex disjointness graph by a fuel-bounded
+closure iteration --- no \texttt{partial}, no well-founded recursion --- and
+proves \emph{equal labels iff connected}, in both directions. The asymmetry the
+file makes explicit is worth repeating: filters (a) and (e) need only ``different
+labels $\Rightarrow$ really different components'', because a labelling that
+merges components makes them test fewer pairs; filter (b) needs the \emph{iff},
+because $H$'s edges are defined by label distinctness, so a labelling that splits
+a component gives $H$ more edges, and bipartiteness of the true $H$ says nothing
+about a supergraph of it.
+
+\textbf{\textsf{E8}, half discharged.} \texttt{BipartiteDecision.lean} defines a
+total, fuel-bounded $2$-colouring test and proves \texttt{bipTest = true} iff the
+graph admits a proper $2$-colouring, then instantiates it at $H$. The
+``standard algorithmic fact'' \textsf{E8} named is now a kernel-checked theorem.
+What remains is \textsf{E8b}: the shipped C++ uses a parity disjoint-set union
+and the Python a DFS, whereas the verified Lean procedure is a fixed-point
+colour propagation. It is in the same family, not a byte-for-byte transcription,
+and no Lean code reads either program.
+
+\begin{remark}[Transcription, not extraction --- the gap common to every filter]
+\texttt{l5TestB}, \texttt{HAdj}, \texttt{CompatOk}, \texttt{L2Ok} and
+\texttt{L5PairsOk} were written \emph{by hand} from
+\texttt{python/elimination/audit\_enum.py} and
+\texttt{independent/implementation\_b/reduction.cpp}. Where a theorem in this
+development says ``the filter'', read ``the Lean transcription of the filter''.
+This applies to \textsf{C2-BRIDGE}, to \textsf{E8}, to obligation (3), and to
+every filter-soundness statement; it is a single systematic gap, not several
+independent ones, and closing it would require extraction or a verified
+compiler, neither of which is present.
+\end{remark}
+
+\begin{remark}[Two divergences between the two implementations, recorded here]
+\texttt{audit\_enum.py} runs a \emph{sixth} filter, {\v C}ern{\'y} Lemma 3,
+between (b) and (c); its soundness obligation is a genuine sixth obligation and
+is not stated in \texttt{FilterSoundness.lean}. It is also not a dependency: the
+pipeline gives an identical terminal set with and without it. And
+\texttt{reduction.cpp} does not implement filter (e) at all
+(Remark~\ref{rem:implb-scope}). So the intersection of what the two programs
+check is filters (a)--(d).
+\end{remark}
+
+\subsection*{\texttt{Exclude42} and \textsf{X1}--\textsf{X3}}
+\textbf{Imports:} \texttt{EnumerationDomain}, \texttt{FilterSoundness}, Mathlib.
+\textbf{Axioms:} the three standard ones.
+
+\texttt{Exclude42.lean} formalises \S\ref{sec:i42}. Kernel-checked from its
+hypotheses: seven edges plus minimum degree $1$ forces every degree to be
+exactly $1$ on either side (via the transpose double-count); a degree-$1$ mask
+has at most one set bit; the partner function $j\mapsto i_j$ is well defined and
+injective; and the nesting step, that a $6$-set $\{i:i\neq i_j\}$ inside a
+$6$-set $\{i:i\neq m\}$ forces $m=i_j$. The corollary
+\texttt{not\_crossCount\_42} is stated at the level of a geometric
+\texttt{Config}, and $I+|\ED|=49$ and $\delta(\GD)\ge1$ are \emph{not}
+hypotheses of it --- they are imported theorems.
+
+Three external inputs were named. Two remain:
+\begin{itemize}[leftmargin=*,nosep]
+  \item \textsf{X1}, the exceptional-class invariant: $|M_P|=5$ and the maximal
+    crossing sets are exactly $\{\textsc{full}\setminus\{m\}:m\in M_P\}$. This
+    is part of \textsf{EX}, and it is \emph{not} proved in Lean.
+  \item \textsf{X2}, the order-type fact behind filter (c) --- identical to
+    \textsf{E4}, reused verbatim rather than restated.
+  \item \textsf{X3}, that $P$ is exceptional, \stat{discharged} 2026-09-14 by
+    \texttt{LemmaABridge.lean}: \texttt{card\_E\_eq\_degSum} identifies Lemma~A's
+    \texttt{Finset} count with the mask-level \texttt{degSum}, after which
+    $\texttt{degSum}<10$ yields ``no uncrossable $4$-set'' by application of
+    Lemma~A rather than by assumption.
+\end{itemize}
+
+\subsection*{\texttt{IntersectionParity}, \texttt{UpperBoundAssembly}, \texttt{MainTheorem} --- the assembly}
+\textbf{Axioms:} the three standard ones throughout.
+
+\texttt{UpperBoundAssembly} proves $I\le42$ \emph{unconditionally} for every
+\texttt{Config}, by applying $I+|\ED|=49$ and the minimum-degree theorem --- so
+the project's use of {\v C}ern{\'y} L1 is, at this point, a consequence of its
+own parity argument rather than an import. It then proves that parity,
+$I\neq42$ and $I\neq40$ suffice for $I\le38$, and supplies a variant in which
+the $I=42$ branch is discharged through \texttt{Exclude42} instead of assumed.
+\texttt{MainTheorem} writes down the target sentence; \texttt{IntersectionParity}
+discharges parity (\textsf{PAR}, \S\ref{sec:par}) and assembles
+\texttt{isGreatest\_38\_final}, quoted in \S\ref{sec:leanmain}.
+
+Non-vacuity is proved rather than asserted at each stage: the certificate pair
+satisfies parity and both exclusions, and the bound is attained there, so the
+assembly is not a statement about the empty set and $38$ is not slack.
+
+\begin{remark}[The one thing \texttt{hclass} is not known to be]
+\texttt{hclass} asserts the exceptional-class data for \emph{every}
+\texttt{Config}, not only for the ones the reductio reaches. That is stronger
+than the mathematical claim it stands for, which is conditioned on $I=40$ (or,
+in \texttt{Exclude42}, on $I=42$). Nothing in the development proves
+\texttt{hclass} \emph{satisfiable}, and no non-vacuity witness for it is
+supplied. A reader should therefore treat \texttt{isGreatest\_38\_final} as a
+statement of the residue, not as evidence that the residue is consistent.
+\end{remark}
+
+\subsection*{\textsf{E5} --- attempted and \textsc{blocked}}\label{sec:e5}
+
+\texttt{CernyL2Derivation.lean} is an \emph{attempt} at \textsf{E5},
+{\v C}ern{\'y} Lemma 2's consequence, and it does not succeed. Its own header
+says so: ``this file does not discharge E5''. It must not be quoted as a proof
+of \textsf{E5} or of {\v C}ern{\'y} Lemma 2.
+
+What it proves is strictly weaker than \textsf{E5}: an integer affine identity
+for the triangle determinant; that a positively oriented interior point stays in
+any strict positive half-plane containing the triangle's vertices; that
+simplicity excludes proper crossings even of adjacent sides; and the conditional
+statement ``\textsf{E5} holds if \texttt{CollisionObstruction} does'', for the
+full forward-or-reverse window predicate. \texttt{CollisionObstruction} is the
+unresolved step, stated explicitly rather than assumed silently: the four
+complementary crossing patterns at an inside-triangle window must force a
+crossing between two sides of $Q$. That is a \emph{simultaneous} segment
+realizability argument, and testing each selected segment separately cannot
+reach it --- the file includes \texttt{localFixture}, a concrete configuration in
+which all sixteen required crossing and non-crossing entries hold, the triangle
+condition holds, the five-vertex path is simple, and cross general position
+holds, yet the selected segments cross each other. It is deliberately not a
+\texttt{Config}.
+
+\subsection*{\textsf{UB40} is out of reach of the kernel}\label{sec:hne40}
+
+\texttt{hne40} --- $I\neq40$ --- is the one hypothesis of
+\texttt{isGreatest\_38\_final} that is not an external lemma but a
+\emph{computation}. The natural hope is that the Lean kernel could simply
+perform it. \textbf{It cannot}, and as of 2026-09-14 this is a settled negative,
+not an open engineering question. \texttt{native\_decide} is excluded throughout
+the project because it adds \texttt{Lean.ofReduceBool} to the trust base; what
+follows concerns ordinary kernel reduction. Five routes were measured.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Monolithic kernel evaluation --- dead on memory.} A full
+    traversal is $226{,}668{,}772$ recursive calls. A ladder of partial runs fits
+    $\text{user} \approx 0.135 + 2.385\times10^{-4}\cdot\text{calls}$ seconds,
+    i.e.\ ${\approx}15$ CPU-hours, but peak resident set runs at
+    $20$--$25$\,KB per call: $4.5$--$5.8$\,TB against $8$\,GB installed. And that
+    is for \emph{counting only}, with no filter evaluated.
+  \item \textbf{Chunked evaluation --- memory solved, wrong problem.} Splitting
+    by the first four rows holds memory near $2$\,GB
+    ($1{,}917{,}400$ calls at $2.23$\,GB), which retires the $4.5$\,TB figure as
+    an artifact of building one enormous term. But it does not help: the
+    counting recursion memoises $226{,}668{,}772$ states down to $1{,}925$
+    distinct ones, a sharing factor of ${\approx}117{,}750$, and counting was
+    \emph{already} proved by \texttt{DomainCount}. Filter evaluation consumes the
+    whole graph, so none of that sharing applies.
+  \item \textbf{Per-graph filter cost --- the decisive measurement.} Forcing the
+    kernel to evaluate the component labelling and bipartiteness test on
+    $1$, $10$ and $40$ graphs gives a marginal cost of ${\approx}1.03$ CPU-seconds
+    per graph. Over $13{,}003{,}620$ graphs that is ${\approx}3{,}700$ CPU-hours
+    --- about $154$ days --- for \emph{two} of the five filters. The
+    kernel-to-Python ratio is ${\approx}70{,}000$, not the ${\approx}500$ one
+    would assume from arithmetic benchmarks. The obstacle is time, not memory.
+  \item \textbf{Re-encoding the filters for speed --- $7.3\times$, need
+    ${\approx}75\times$.} Rewriting the labelling as unrolled \texttt{Nat}
+    bitmask arithmetic with a $14$-step fixed point (correctness checked against
+    a reference first) takes $0.309$ down to $0.042$ CPU-seconds per graph on the
+    same $40$-graph benchmark. Projected over all five filters that is
+    ${\approx}1{,}000$--$1{,}500$ CPU-hours; a feasible one-off needs about $50$.
+    The route was closed against a gate fixed in advance.
+  \item \textbf{Structural shortcuts --- dead on arithmetic.} A
+    \textsf{UB42}-style argument from cheap invariants cuts about $33\%$. Leading
+    with the local, dynamic-programmable filters (crossing-set compatibility and
+    {\v C}ern{\'y} L2) still leaves $2{,}783{,}508$ graphs of the $13$ million for
+    some class pair. Neither is within two orders of magnitude of enough.
+\end{enumerate}
+
+\noindent
+\textbf{What is \emph{not} settled by this.} These are measurements about
+evaluating the \emph{present} $13{,}003{,}620$-element domain in the kernel. A
+mathematical restructuring that shrinks the domain itself would change the
+picture entirely --- but that is mathematics, not engineering, and nobody has
+one. The honest summary is that \textsf{UB40} will not become a Lean theorem by
+computation on this architecture, and that if it is to be formalised at all it
+must first be made smaller.
+
 \begin{center}
 \fbox{\parbox{0.93\textwidth}{Key finite and combinatorial components are
 formally verified in Lean; the published geometric lemmas themselves remain
-external dependencies. In particular $f(7,7)=38$ is \textbf{not} a Lean theorem,
-and the completeness of the $225$-case list is not formalized.}}
+external dependencies. In particular $f(7,7)=38$ is \textbf{not} a Lean theorem
+--- the strongest formalised statement carries the hypotheses \texttt{hclass}
+and \texttt{hne40} (\S\ref{sec:leanmain}) --- the completeness of the $225$-case
+list is not formalized, six of the eight external inputs
+\textsf{E1}--\textsf{E8} are open, and every filter statement is about a
+hand-written Lean transcription rather than about the shipped programs.}}
 \end{center}
 
 \section{Trust DAG}
 
+The upper bound splits into two independent branches at the top. Only the right
+branch touches \textsf{A7-EXT}, and only the right branch is unformalized.
+
 {\footnotesize
 \begin{verbatim}
-   AKR S9   (GP) ----------+
-   Cerny L1 (C1) ----------+
-   Cerny L2 (C2) ----------+        Lemma A (LA)  [Lean: counting core]
-   AKR L5   (A5) ----------+               |
-   AKR L7 (A7-EXT) * ------+               v
-                           |     exceptional classification (OT, EX)
-                           |       135 order types   [external DB]
-                           |       6,342 simple      [external DB]
-                           |       16 -> 14 classes  [reimplemented]
-                           v               |
-                    finite reduction (GR, COMP)
-                      /                  \
-                 Python                 C++17
-                      \                  /
-                    225 terminal triples
-                   (exact set match, 121 graphs)
-                             |
-                       certificates (CERT)
-                  standalone checker, 10 controls
-                             |
-                        Lean (LEAN-END)
-                 all 225 fail AKR-L5; iff bridge
-                             |
-                          I != 40
-                             |
+   AKR S9   (GP) --------------+
+   Cerny L1 (C1) --------------+
+   Cerny L2 (C2) --------------+     Lemma A (LA)  [Lean: counting core]
+   AKR L5   (A5) --------------+            |
+   AKR L7 (A7-EXT) * ----------+            v
+                               |  exceptional classification (OT, EX)
+                               |    135 order types   [external DB]
+                               |    6,342 simple      [external DB]
+                               |    16 -> 14 classes  [reimplemented]
+                               v            |
+                        finite reduction (GR, COMP)
+                          /                \
+                     Python               C++17     (filters (a)-(d) only)
+                          \                /
+                        225 terminal triples
+                       (exact set match, 121 graphs)
+                                 |
+                           certificates (CERT)
+                      standalone checker, 10 controls
+                                 |
+                            Lean (LEAN-END)
+                     all 225 fail AKR-L5; iff bridge
+                                 |
+                             I != 40  (UB40)      <-- NOT a Lean theorem;
+                                 |                    carried as `hne40`,
+                                 |                    out of kernel reach
+                                 |
+   I + |E| = 49  [Lean, any K] --+
+   delta >= 1    [Lean, any K] --+--> I <= 42   [Lean, unconditional]
+                                 |
+   I even (PAR)  [Lean, any K] --+
+                                 |
+   I != 42 (UB42) [Lean, given X1+X2] -- does NOT use A7-EXT
+                                 |
+                                 v
+                             I <= 38   [Lean]
+                                 |
              explicit 38-example (LB38) [Lean: LEAN-LB]
-                             |
-                      f(7,7) = 38   (candidate)
+                                 |
+                          f(7,7) = 38   (candidate)
+                     -- modulo the Jordan-curve step and GP,
+                        neither of which is formalized
 
-   * A7-EXT: VERY STRONGLY CORROBORATED, HUMAN REVIEW STILL DESIRABLE -- see the
-     A7-EXT subsection of Section 4.  The chain is
+   * A7-EXT: VERY STRONGLY CORROBORATED, HUMAN REVIEW STILL DESIRABLE -- see
+     the A7-EXT subsection.  The chain is
          A7-EXT  ==>  A7-BRIDGE  ==>  H bipartite
      where A7-EXT is the external reading of AKR Observation 6 / Lemma 7
      (adjacent H-vertices have disjoint status sets), and A7-BRIDGE is the
@@ -1302,23 +1767,60 @@ Listed because they calibrate how much checking this argument has had.
     manifest:} its earlier gloss of the narrow notion as ``edges $+$ cross
     non-edges'' was wrong, since those non-edges are automatic and the dichotomy
     is what carries the content; corrected in \S\ref{sec:a7ext}.
+  \item \textbf{The \textsf{A7} encoder's coverage argument was wrong.} The
+    oriented-matroid case exhaustion reduced the four $Q$-adjacency cases to one
+    representative by a symmetry orbit. That is valid for a $Q$-adjacency in
+    isolation and \emph{invalid} in combination with a $P$-adjacency: the
+    relabelling generators act in tandem, so the combined types split into
+    \emph{four} orbits and only one was solved. Worse, that one was vacuous ---
+    its base pattern is itself \textsc{unsat}, so every \textsf{PQ-adj} verdict,
+    including the two that matter, held for no reason. \emph{Effect on the
+    theorem:} none established either way at the time; the conclusion survived,
+    the evidence for it did not. \emph{Repair:} all $25$ combined types
+    enumerated with no symmetry reduction and solved separately, $125$
+    certificates, hash-bound to their formulas. \emph{Aggravating circumstance,
+    recorded because it is the point of this section:} an earlier hostile review
+    had checked the orbit structure for a $Q$-adjacency alone and endorsed the
+    argument as sound. \emph{Superseded by:} \S\ref{sec:a7ext}.
+  \item \textbf{Intermediate pipeline counts are labelling-dependent
+    artifacts.} The figures $2{,}300$ and $121$ depend on which representative
+    labelling of each exceptional class the pipeline happens to carry; a
+    superseded pipeline reported $3{,}522$ and $64$ for the same two stages.
+    \emph{Effect on the theorem:} none --- the terminal emptiness is
+    labelling-invariant and was re-derived per ordered class pair
+    ($196$ pairs, $3$ labellings, $0$ survivors in every case). \emph{Standing
+    consequence:} every intermediate count quoted in this manifest should be
+    read as an artifact of a particular run, and only the final $0$ as a claim.
 \end{enumerate}
 
 \section{Remaining work}
 
-\begin{enumerate}[leftmargin=*,nosep]
-  \item External human review of the \textsc{akr} Observation 6 / Lemma 7
-    interpretation (\S\ref{sec:a7ext}), and in particular of the four prose
-    bridges of Remark~\ref{rem:a7gap}.
-  \item Ideally, confirmation from one of the \textsc{akr} authors: that
+In priority order. The first three are the binding constraint; the rest is
+optional polish.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{External human review of \textsf{A7-EXT}} (\S\ref{sec:a7ext}),
+    and in particular of the four bridges of Remark~\ref{rem:a7gap}, which are
+    the project's own reasoning and not certified by anything.
+  \item \textbf{Independent expert review of the overall proof.} Every
+    mechanism this project has --- reimplementation, certificates, Lean --- is a
+    mechanism against \emph{implementation} error. None of them is a check on
+    whether the argument is the right argument.
+  \item \textbf{Confirmation from one of the \textsc{akr} authors}, ideally: that
     ``associated'', as used in Observation 6 and Lemma 7, carries the cone
     dichotomy; and, separately, notice of the Observation 6 counterexample and of
     the two \S10.2 counts that do not reproduce.
-  \item Independent expert review of the overall proof.
-  \item Conversion of this manifest into a readable paper.
-  \item The human author learning the argument well enough to defend it.
+  \item \textbf{The classification, \textsf{E7}/\textsf{X1}.} It is the largest
+    unformalized object in the proof, it is the content of \texttt{hclass}, and
+    it is the most plausible target for the next piece of formalization ---
+    unlike \textsf{UB40}, which is out of reach (\S\ref{sec:hne40}).
+  \item \textbf{Conversion of this manifest into a readable paper.}
+  \item \textbf{The human author learning the argument well enough to defend
+    it.}
   \item Further Lean formalization \emph{only} where it improves the trust
-    boundary.
+    boundary. In particular, chasing \texttt{hne40} by kernel computation is
+    settled negative and should not be reattempted without a mathematical
+    reduction of the domain first.
 \end{enumerate}
 
 Formalizing all of {\v C}ern{\'y} et al.\ or all of \textsc{akr} is
@@ -1339,13 +1841,25 @@ licenses precisely the disjoint-status consequence the argument uses. That
 consequence has since been independently corroborated --- by proof-checked
 unsatisfiability of an oriented-matroid encoding with a verified positive
 control, and by exact-arithmetic search --- but its four bridges to the
-geometric statement remain prose, so it is recorded as \stat{very strongly
-corroborated}, not verified. The same investigation found \textsc{akr}'s
-Observation 6 to be false as printed, a defect that does not reach this argument
-(\S\ref{sec:defects}, item 6). Conditional on \textsf{A7-EXT}, the deduction that
-the auxiliary graph $H$ is bipartite (\textsf{A7-BRIDGE}) is formally verified in
-Lean. Independent expert review remains required before the result should be
-treated as established.
+geometric statement remain the project's own reasoning, so it is recorded as
+\stat{very strongly corroborated}, not verified. The same investigation found
+\textsc{akr}'s Observation 6 to be false as printed, a defect that does not reach
+this argument (\S\ref{sec:defects}, item 6). Conditional on \textsf{A7-EXT}, the
+deduction that the auxiliary graph $H$ is bipartite (\textsf{A7-BRIDGE}) is
+formally verified in Lean.
+
+Two things should be said plainly alongside that. First, $f(7,7)=38$ is
+\textbf{not} a Lean theorem and will not become one by further computation: the
+strongest formalised statement still carries \texttt{hclass} and
+\texttt{hne40}, and \texttt{hne40} is out of the kernel's reach by a factor of
+roughly $75$ even after the fastest re-encoding measured (\S\ref{sec:hne40}).
+Second, the mechanisms this project has used --- independent reimplementation,
+certificates with standalone checkers, Lean-kernel verification --- are all
+mechanisms against \emph{implementation} error, and the record in
+\S\ref{sec:defects} shows they work. None of them is a check on whether the
+argument is the right argument. Independent expert review is therefore the
+binding constraint, and it remains required before the result should be treated
+as established.
 }}
 \end{center}
 

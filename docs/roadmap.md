@@ -95,9 +95,28 @@ is **not a function of `G^D`** — so no combinatorial filter can supply it. Mac
 the certificate. A record with a wrong flag passes every theorem. This is
 interface `I3` in `lean/README.md`.
 
+> **Partly closed 2026-09-14.** `lean/AvoidingFlag.lean` proves
+> `all_225_avoiding_flags_eq` — by `decide` over all 225 records, the stored flag
+> **equals** `(pairI, pairJ) ∈ avoidingPairs classUsed`, so the `false` case is
+> checked too. The flag is therefore no longer an independent failure mode.
+> **The geometric half of I3 is still open**: that the exceptional classification
+> is correct and complete (E7), that a record's class and indices correspond to
+> an actual polygon, and a geometric definition of "avoiding" — the development
+> has none, and `class_P`/`class_Q` remain opaque labels. See
+> `verification-status.md` row 13.
+
 **Risk 5 — point-set semantics (A, C).** Everything is at the orientation level.
 "No proper crossing" ⟹ "disjoint segments" needs ℝ². Real work, low risk of
 being *false*.
+
+> **Largely closed 2026-09-14**, and §5 below records it — noted here too,
+> because this ranked list was left stale. `lean/PointSetSemantics.lean` proves
+> `disjointO_iff_disjoint` in **both directions with no remaining hypotheses**,
+> against Mathlib's `segment ℝ`. **What this does not supply is the Jordan-curve
+> step**: `Simple7` is still orientation-level, so "the closed polygonal curve
+> bounds a region" remains unformalized, as does AKR §9.1's general-position
+> reduction. Those, not side-disjointness, are what still separate the
+> `Config`-level result from `f(7,7) = 38`. See `verification-status.md` row 26.
 
 **Risk 6 — external lemmas L2/L5 (I, J).** Audited; consequences identified.
 Following the component-C template is a known path.
@@ -123,14 +142,22 @@ project has twice built infrastructure it did not need.
 > **upper-bound assembly**, including the unconditional `I ≤ 42`; the **(X3)**
 > bridge making Lemma A usable at the mask level; and **the target statement
 > itself** (`MainTheorem.isGreatest_38`). Twenty-one Lean libraries, 657
-> theorems, no project axiom anywhere.
+> theorems, no project axiom anywhere. *(Those two figures are the count **at
+> that milestone**. The development is now at 25 libraries / 1395 jobs; the last
+> mechanical theorem census was 706 at 23 libraries and has not been re-run.)*
 
 **The situation has changed shape, and the next milestone should be chosen with
 that in mind.**
 
 After the above, the upper bound rests on exactly two things: **parity** (that
 `I` is even) and **`hne40`** (the enumeration). Everything else is
-kernel-checked. And `hne40`'s remaining hypotheses (E1)–(E5), (E7) are now *all*
+kernel-checked.
+
+> **Updated 2026-09-14: parity has since been proved**, so the count is one, not
+> two. `IntersectionParity.crossCountC_even` gives `I % 2 = 0` for an *arbitrary*
+> configuration, staying inside `Int` arithmetic. `hne40` is the single remaining
+> open input — and §8a–§8d below settle it **negative** for the kernel.
+> See `verification-status.md` rows 3 and 25. And `hne40`'s remaining hypotheses (E1)–(E5), (E7) are now *all*
 external mathematics — the published Černý and AKR lemmas plus the exceptional
 classification. There is no more "project's own algorithms" work left inside
 obligation (4); that was (E6) and (E8), and they are done or half done.
@@ -663,7 +690,7 @@ achieved on the filter most amenable to bitmask rewriting. The remaining cost is
 not an artifact of clumsy encoding; it is what kernel reduction of a nontrivial
 predicate costs, 13 million times over.
 
-### Status of the four routes to `hne40`
+### Status of the five routes to `hne40`
 
 | route | verdict |
 |---|---|

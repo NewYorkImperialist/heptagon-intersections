@@ -49,6 +49,16 @@ Thumbs.db
 desktop.ini
 
 # ---------------------------------------------------------------------------
+# Local agent/tool state
+#
+# Machine-local only.  This was previously covered by a *global* gitignore on
+# the author's machine, so it did not show up here but WOULD show up in any
+# fresh clone.  Committed to the repository ignore list so the working tree is
+# clean everywhere.
+# ---------------------------------------------------------------------------
+.claude/settings.local.json
+
+# ---------------------------------------------------------------------------
 # Scratch / transient run output
 # ---------------------------------------------------------------------------
 scratch/

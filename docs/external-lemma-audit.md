@@ -3,7 +3,48 @@
 Audit of the external mathematical dependencies of the candidate computer-assisted
 proof that `f(7,7) = 38`.
 
-**Auditor:** independent audit pass (Subagent C), 2026-09-13.
+**Auditor:** independent audit pass (Subagent C — an **LLM subagent**, not a
+person), 2026-09-13. *(Qualifier added 2026-09-14: "independent" here means a
+fresh model instance with no inherited context. **Independent human verification
+of this repository is still none**; see `ai-disclosure.md` and
+`verification-status.md` row 18.)*
+
+> **§7 IS SUPERSEDED — read this before §7. Banner added 2026-09-14; the body is
+> otherwise unedited except where marked inline.**
+>
+> §7 audits the project's **own** general-position argument, and it found that
+> argument **incorrect**. That finding was accepted and acted on: `proof-outline.md`
+> Step 0 was rewritten on 2026-09-13 to **cite AKR §9.1** instead of proving the
+> reduction itself, and `verification-status.md` row 4 marks the old argument
+> `SUPERSEDED / KNOWN DEFECT`. §7 therefore audits text that **no longer exists**,
+> and several of its present-tense sentences are now false:
+>
+> * "The project does **not** cite [AKR-J] §9; it proves the reduction itself."
+>   — false since 2026-09-13.
+> * "**K-10 should be upgraded from a completeness caveat to a correctness
+>   defect.**" — already done; K-10 is titled "the project's Step 0 is INCORRECT
+>   (UPGRADED 2026-09-13)".
+> * "**Option 3 is recommended**" (delete the type-(iii) argument and cite AKR
+>   §9.1) — already done.
+> * The long blockquote attributed to `docs/proof-outline.md:19–32` is **no longer
+>   in that file at all**.
+>
+> The audit's *verdict* stands and is why the repair happened. Only its
+> recommendations are spent.
+>
+> **Two further cautions that apply to the whole document:**
+>
+> 1. **Every `file:line` citation into `docs/` has drifted** and should be treated
+>    as a section pointer, not a line pointer. The referenced text has moved in
+>    `proof-outline.md`, `literature-notes.md` and `known-issues.md`. Quoted
+>    *content* was spot-checked and is accurate; the *line numbers* are not.
+> 2. **The summary table's "extra row" marks AKR §9's own reduction `VERIFIED`.**
+>    That overstates what was done — §7.3 records checking the §9.2 averaging
+>    argument, not re-deriving §9.1 — and it conflicts with
+>    `verification-status.md` row 4, which classifies this dependency as
+>    `EXTERNAL PUBLISHED LEMMA` (imported, not reproved), and with
+>    `a7-specification.md` R3, "External to this audit. Not re-derived here."
+>    The authoritative classification is row 4's.
 **Remit:** the *external* results (Černý Lemmas 1 and 2; AKR Lemmas 5 and 7; AKR's
 general-position reduction) and the project's *use* of them, including the STRICT
 Lemma-A line condition. The internal correctness of the enumeration is audited only
@@ -917,9 +958,12 @@ as curves" ([AKR-J] p. 1057). This is the project's own stated worry
 > pattern of Lemma 5. The remaining configuration is the one in Fig. 6.
 
 So the authors themselves machine-checked the exact statement the project leans on.
-This section does not appear in [AKR-C]; it is journal-only. The project's docs do
-not mention it anywhere, and it should be cited — it is the best available
-independent evidence for the project's single most load-bearing import.
+This section does not appear in [AKR-C]; it is journal-only. ~~The project's docs do
+not mention it anywhere, and it should be cited~~ — **acted on; this sentence is
+stale as of 2026-09-14.** AKR §10.2 is now cited in `literature-notes.md`,
+`known-issues.md` K-09, `akr-l7-human-review.md` §E, `a7-independent-proof.md` and
+`a7-specification.md`. It remains the best available independent evidence for the
+project's single most load-bearing import.
 *(The numeral 14 here is AKR's count of eight-line configurations and is unrelated to
 the project's 14 exceptional heptagon classes. Coincidence; do not conflate.)*
 
@@ -1434,11 +1478,22 @@ specific point while citing the journal for everything else.
    by AKR §10.2.
 5. **The project's Step 0 is defective** (§7.5) and its multiple-degeneracy case is
    not argued (§7.5, final note).
-6. **`docs/literature-notes.md:5–9` is stale** — it states that "no PDF of any source
-   paper is included in this repository". Three are, in `references/`, and their
-   hashes match the audit brief. (Not fixed here; outside this document's write scope.)
-7. **`docs/known-issues.md:633–635` can be closed** — Černý Lemma 2's exact statement
-   has now been read from the paper and matches the implementation (§3).
+6. ~~**`docs/literature-notes.md:5–9` is stale** — it states that "no PDF of any
+   source paper is included in this repository". Three are, in `references/`, and
+   their hashes match the audit brief.~~
+   **WITHDRAWN 2026-09-14 — this recommendation was itself wrong, and acting on it
+   would have introduced an error.** `literature-notes.md` now says "the PDFs
+   themselves are not committed", and that is **correct**: `.gitignore` excludes
+   `references/*.pdf`, and `git ls-files references/` returns only `README.md`.
+   The three PDFs exist on the author's disk only. **Consequence for this
+   document:** the SHA-256 values in §0's evidence table are "verified on disk"
+   and **cannot be re-checked by anyone who clones the repository**.
+7. **`docs/known-issues.md`'s Černý-Lemma-2 item can be closed** — Černý Lemma 2's
+   exact statement has now been read from the paper and matches the implementation
+   (§3). *(Status note, 2026-09-14: `verification-status.md` row 10 **has** been
+   upgraded to VERIFIED, but `known-issues.md` still records that verification as
+   open. The two authoritative documents disagree; this audit's recommendation has
+   been acted on in one of them only. Flagged, not resolved here.)*
 8. **The relabelling/no-symmetry-reduction argument (§6.5) is correct but unwritten.**
    It should appear in `proof-outline.md`; as it stands, a referee has to reconstruct
    why applying 14 canonical class profiles to un-canonicalised labelled graphs is sound.

@@ -1,19 +1,28 @@
 # Results, logs and counts
 
-Output from reproduction runs. Everything in this directory was produced on
-**2026-09-13**, during the repository-organization pass, by re-running the
-committed sources in an empty scratch directory.
+Output from reproduction runs and measurement. Everything under `logs/`,
+`counts/` and `validation/` was produced on **2026-09-13**, during the
+repository-organization pass, by re-running the committed sources in an empty
+scratch directory. `benchmarks/` is later and different in kind — it is timing
+and memory measurement of the Lean kernel, dated **2026-09-14**.
 
 Environment: Python 3.14.7, macOS 24.6.0 (arm64), single core, standard library
-only.
+only. `benchmarks/` records its own environment.
 
 ## Important
 
-These logs are a **reproduction of this project's own code by this project's own
-code**. They confirm that the shipped sources produce the documented figures.
-They are **not** independent verification, and they say nothing about whether
-the underlying mathematics or the translations of the external lemmas are
-correct. See `../docs/verification-status.md`.
+Most of these logs are a **reproduction of this project's own code by this
+project's own code**. They confirm that the shipped sources produce the
+documented figures, and nothing more.
+
+Three sets are different in kind and are marked as such below: the
+Implementation B logs (a separately written C++ codebase), the order-type audit
+logs (a separate Python audit built from an external database), and
+`benchmarks/` (measurement, not reproduction).
+
+**No log here is human verification, and none of them says anything about
+whether the underlying mathematics or the translations of the external lemmas
+are correct.** See `../docs/verification-status.md`.
 
 ## `logs/`
 
@@ -26,6 +35,7 @@ correct. See `../docs/verification-status.md`.
 | `2026-09-13_audit_pairs_196_class_pairs.log` | `audit_pairs.py` | 0 survivors over all 196 ordered class pairs, under 3 labellings | 3 m 8 s |
 | `2026-09-13_make_final_certificate_no_cernyL3.log` | `make_final_certificate.py` | 225 cases on 121 graphs, 0 survivors, **Černý L3 not applied** | 3 m 6 s |
 | `2026-09-13_make_final_certificate_with_cernyL3.log` | `make_final_certificate.py --with-l3` | identical 225 cases; counts reproduce `audit_enum.py` exactly | 3 m 6 s |
+| `2026-09-13_order_type_audit.log` | `independent/order_type_audit/run_audit.py` | 6342 simple 7-gons, 6007/319/**16**, **14** classes, rederived from the TU Graz database without importing `chiro.py`/`geom.py` | — |
 
 Two things worth reading carefully:
 
@@ -45,7 +55,7 @@ Implementation B logs:
 | File | Run | Result | Time |
 |---|---|---|---|
 | `2026-09-13_implementation_b_reduction.log` | `independent/implementation_b/reduction` | identical counts through 225 triples | 1.6 s |
-| `2026-09-13_graph_count_closed_form.log` | `count_check.py` | 13,003,620 by generating function, no enumeration | <1 s |
+| `2026-09-13_graph_count_closed_form.log` | `independent/implementation_b/count_check.py` | 13,003,620 by generating function, no enumeration | <1 s |
 
 These are in a **different language with a different enumeration**, so unlike
 the logs above they are not simply this project's code re-running itself. See
@@ -74,10 +84,42 @@ Implementation B's filters, all passing.
 Implementation B's 225 triples are **set-equal** to the certificate's, with zero
 elements in either difference.
 
+`2026-09-13_order_type_audit_tests.log` — 33/33 adversarial tests of the
+independent order-type audit, and
+`2026-09-13_order_type_audit_vs_project.log` — the audit's field-by-field
+comparison against `data/exceptional_profiles/exceptional_profiles_14.json`:
+a total, injective class bijection and 14/14 agreement on `M_set`,
+`maximal_crossing_sets`, `lemma2_windows` and `avoiding_pairs`.
+
+`2026-09-13_lean_build.log` and `2026-09-13_lean_endgame_build.log` — the Lean
+build as it stood on 2026-09-13. **These are historical.** The build has grown
+since; re-read the current figures from `lake build` or from `lean/README.md`,
+not from these logs.
+
 Together these confirm that each of the 225 final cases is refuted, and that the
 list of 225 is complete *with respect to a second, independently written
 enumeration*. They do not address a shared reading of the external lemmas or the
 single-sourced profile data. See `../docs/known-issues.md` K-02, K-03, K-09.
+
+## `benchmarks/`
+
+Measurement, not reproduction, and dated **2026-09-14**.
+
+`2026-09-14_kernel-enumeration-feasibility.md` records whether the 13,003,620-graph
+enumeration can be closed inside the Lean kernel by `decide`. Every scratch Lean
+source it timed is quoted in full, including the trials that timed out. The
+finding is that the binding constraint is **memory, not time**. See
+`../docs/roadmap.md` §8a, which draws the conclusion.
+
+`kernel_bench_run.py` is the driver for those trials. It hard-codes an absolute
+path to a specific `elan` toolchain binary and will need editing before it runs
+anywhere else.
+
+`fast-filter-attempt/fastlib.lean` is a scratch, **unbuilt** Lean file: a
+bitmask-only reformulation of the component labelling, written to see whether
+kernel reduction gets cheaper. It is not a `[[lean_lib]]`, is not part of
+`lake build`, and nothing in the repository depends on it. Do not read it as
+verified.
 
 ## Preserved historical figures
 

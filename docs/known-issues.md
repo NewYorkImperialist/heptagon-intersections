@@ -30,6 +30,10 @@ Issues are numbered `K-nn` and referenced from other documents.
 | K-17 | `Endgame.graphShapeOK` restricts the degree sequence; is that an unchecked filter?  (RAISED AND RESOLVED 2026-09-14) |
 | K-18 | `data/hashes/SHA256SUMS.lean` was stale, and `scripts/` was untracked  (FOUND AND FIXED 2026-09-14) |
 | K-19 | Three validators exit 0 on inputs that establish nothing  (TWO FIXED AT SOURCE, ONE OPEN, 2026-09-14) |
+| K-20 | Implementation B does not run the final filter, so the killing step has no second implementation  (DISCLOSURE GAP, 2026-09-14) |
+| K-21 | `audit_enum.py` applies Černý L3 unconditionally; the shipped certificate does not  (CLARIFICATION, 2026-09-14) |
+
+*(K-20 and K-21 were written below but omitted from this index; added 2026-09-14.)*
 
 ---
 
@@ -382,6 +386,33 @@ UTF-8), commit the file, and hash that.
 ---
 
 ## K-08 — Lean: seven files now kernel-checked  (LARGELY RESOLVED 2026-09-13)
+
+> **SNAPSHOT OF 2026-09-13 — the figures below are superseded. Note added
+> 2026-09-14; the entry itself is unedited.**
+>
+> This entry describes a seven-file development. There are now **25 libraries**
+> (`lake build`, 1395 jobs, exit 0), so the "742 jobs", "752 jobs", "seven
+> files" and "six of the seven import nothing" figures below are all historical.
+> The current per-claim record is `verification-status.md` row 15; the
+> mechanical per-library axiom census is in `lean/README.md`.
+>
+> Two statements in "What is still NOT formalized" have also been overtaken:
+>
+> * "**The five published lemmas**" — the load-bearing count is **four**
+>   (Černý L1, L2, AKR L5, L7). Černý L3 is not used by the shipped result
+>   (K-06, K-21).
+> * "**the exceptional classification and the elimination are not formalized at
+>   all**" — the elimination is now partly formalized. Three of the four
+>   enumeration obligations are kernel-checked (`EnumerationDomain.lean`,
+>   `DomainCount.lean`, `EnumerationComplete.lean`), the fourth is *stated*
+>   filter by filter in `FilterSoundness.lean`, and the 225-case endgame is
+>   kernel-checked in `Endgame.lean`. The exceptional classification (E7) is
+>   still not formalized.
+>
+> What has **not** changed, and is the point of the entry: `f(7,7) = 38` is
+> still **not** a Lean theorem, and the completeness of the 225-case list is
+> still not formalized. `hne40` is now a *settled negative* for the kernel
+> (`verification-status.md` row 28).
 
 **Status:** seven Lean files compile with no `sorry` and no project-specific
 axioms. `f(7,7) = 38` is still **not** a Lean theorem, and the completeness of
