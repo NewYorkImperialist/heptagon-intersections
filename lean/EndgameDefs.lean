@@ -6,13 +6,25 @@
   **Core Lean only — this file imports NOTHING.**  No Mathlib, no `axiom`, no
   `sorry`, no `native_decide`, no `unsafe`.
 
-  SCOPE NOTE (read before believing anything).  Nothing geometric is proved
-  here.  What is set up here is the purely finite combinatorial statement that
-  the 225 surviving `(class_P, class_Q, graph)` combinations must satisfy if
-  AKR Lemma 5 applies to them, so that `Endgame.lean` can kernel-check that all
-  225 violate it.  The geometric content of AKR Lemma 5 itself, the
-  classification of "avoiding" pairs, and the completeness of the 225-case list
-  are all OUTSIDE this development.
+  SCOPE NOTE (read before believing anything).  Nothing geometric is defined or
+  proved here, and nothing in this file or in `Endgame.lean` is a statement
+  about polygons.  What is set up here is the purely finite combinatorial
+  statement that the 225 surviving `(class_P, class_Q, graph)` records must
+  satisfy if AKR Lemma 5 applies to them, so that `Endgame.lean` can
+  kernel-check that all 225 violate it.
+
+  OUTSIDE this development, and not to be reported otherwise:
+  * the geometric content of AKR Lemma 5 itself;
+  * the geometric *avoiding* status of any side pair.  `Case.avoiding` below is
+    a STORED BOOLEAN FLAG read out of the JSON, not a proof; only its necessary
+    combinatorial consequence (distinct indices, in range, not cyclically
+    consecutive) is ever recomputed;
+  * any correspondence between the `class_P` / `class_Q` labels and actual
+    exceptional 7-gons — they are opaque `Nat`s here;
+  * completeness of the 225-case list.
+
+  `Endgame.lean`'s header states the interface (I1)-(I5) that would be needed to
+  turn these results into an impossibility theorem about polygons.
 -/
 
 namespace Heptagon
@@ -243,7 +255,12 @@ theorem not_conn_of_sep {M : Nat → Nat} {pm qm a b : Nat}
 /-! ## Certificate records -/
 
 /-- One entry of `data/certificates/final_elimination_225.json`, together with
-one piece of *derived* data (`sepP`, `sepQ`) that the kernel re-checks. -/
+one piece of *derived* data (`sepP`, `sepQ`) that the kernel re-checks.
+
+This is a record of `Nat`s and `List Nat`s.  Its fields are *transcribed* data;
+being a field of this structure confers no verified status on any of them.  The
+fields that ARE independently recomputed from `masks` are called out in
+`Endgame.lean` (`graphShapeOK`, `witnessConsistent`, `sepOK`). -/
 structure Case where
   /-- `case_id` -/
   caseId : Nat
@@ -271,7 +288,10 @@ structure Case where
   pairI : Nat
   /-- `witness.pair[1]` -/
   pairJ : Nat
-  /-- `witness.pair_kind == "avoiding"` -/
+  /-- `witness.pair_kind == "avoiding"`.  A STORED FLAG, transcribed from the
+  JSON.  Lean checks that it is `true`; Lean does NOT and cannot check that the
+  pair of sides is geometrically avoiding, since no geometry exists in this
+  development.  See (N1) / (I3) in the header of `Endgame.lean`. -/
   avoiding : Bool
   /-- `witness.component_of_i` -/
   compOfI : Nat

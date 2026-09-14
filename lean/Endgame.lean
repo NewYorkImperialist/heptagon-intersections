@@ -12,27 +12,134 @@
   WHAT IS AND IS NOT PROVED HERE  (read this before believing anything)
   ---------------------------------------------------------------------------
 
-  PROVED.  Let `certificates` be the 225 records transcribed from
-  `data/certificates/final_elimination_225.json`.  For every one of them, the
-  conclusion of AKR Lemma 5 *fails* for the stored pair of P-sides, even though
-  that pair is non-consecutive and its two endpoints provably lie in different
-  connected components of the disjointness graph.  Hence every one of the 225
-  combinations is inconsistent with AKR Lemma 5.
+  THIS FILE PROVES THEOREMS ABOUT A STORED CERTIFICATE, NOT ABOUT POLYGONS.
+  No theorem statement below mentions a polygon, a point or a coordinate; the
+  objects quantified over are `Nat`s, `List Nat`s and `Case` records.
+  `certificates` is a list of 225 such records, transcribed from
+  `data/certificates/final_elimination_225.json` by `gen_endgame_data.py`.
+  Every theorem below is a statement about that list of records.
 
-  NOT PROVED, and not provable here.
-  * AKR Lemma 5 itself.  It is an external published geometric lemma; its
-    conclusion is *formalised* here (`AKR5Conclusion`) but never derived.
-  * That "avoiding" (a geometric, order-type notion) holds for the stored pairs.
-    What is recomputed here is only the necessary combinatorial part, namely
-    that the pair is distinct and not cyclically consecutive; the `avoiding`
-    flag itself is taken from the certificate.
-  * That the list of 225 combinations is COMPLETE.  Completeness rests entirely
-    on the unformalised exhaustive enumeration upstream.
-  * Any geometry whatsoever: heptagons, crossings, chirotopes, the exceptional
-    classes indexed by `class_P` / `class_Q`.
+  VERIFIED IN THE KERNEL, for each of the 225 records:
+
+  (V1) COMPONENT SEPARATION.  The two P-sides of the stored pair lie in
+       different connected components of the bipartite disjointness graph
+       encoded by the record's bitmasks
+       (`all_225_pairs_in_different_components`).  This is genuinely
+       recomputed: the certificate's own `components_P` array is NOT trusted;
+       instead the generated data carries a vertex set `(sepP, sepQ)` and the
+       kernel checks that it is closed under adjacency, contains `p_pairI` and
+       omits `p_pairJ`.  `not_conn_of_sep` turns that into a disconnection
+       proof.  This is the separator argument, run in-kernel.
+
+  (V2) FAILURE OF THE AKR-L5 ADJACENCY CONCLUSION.  For the stored pair, the
+       conclusion of AKR Lemma 5 is false
+       (`all_225_cases_fail_AKR5_conclusion`, equivalently
+       `all_225_cases_fail_AKR5_requirement`): there is no pair of cyclically
+       consecutive Q-sides positioned as the lemma requires.
+
+  (V3) Bookkeeping: 225 records, `case_id`s `0..224`, no two records sharing the
+       canonical key `(class_P, class_Q, graph)`, well-formed 7-bit masks, 9
+       edges and degree sequence `(2,2,1,1,1,1,1)` on both sides recomputed
+       from the masks, and the internal consistency of the stored witness
+       fields against the masks.
+
+  NOT ESTABLISHED HERE.  In particular, the following are NOT theorems of this
+  development and must not be reported as such:
+
+  (N1) THE GEOMETRIC *AVOIDING* STATUS OF THE STORED SIDE PAIR.
+       `Case.avoiding` is a STORED BOOLEAN FLAG copied out of the JSON field
+       `witness.pair_kind == "avoiding"`.  `witnessConsistent` merely checks
+       that this Boolean is `true`; it is not, and cannot be, a proof of
+       anything geometric.  "Avoiding" is an order-type notion about two sides
+       of a polygon, and no polygon exists in this file.  What IS recomputed is
+       only the necessary COMBINATORIAL part: that the two indices are `< 7`,
+       distinct, and not cyclically consecutive.  A record whose flag was wrong
+       would sail through every theorem below.
+
+  (N2) THE CORRESPONDENCE BETWEEN EXCEPTIONAL-CLASS PROFILES AND ACTUAL
+       POLYGONS.  `class_P` and `class_Q` are opaque `Nat` labels here.
+       Nothing relates them to exceptional simple 7-gons, to the 14-entry
+       classification table, or to any geometric object; nothing says that a
+       surviving pair of heptagons must have a profile appearing in this list.
+
+  (N3) AKR LEMMA 5 ITSELF.  It is an external published geometric lemma.  Its
+       conclusion is *formalised* here (`AKR5Conclusion`) but never derived, and
+       the lemma is never assumed as an `axiom` either.
+
+  (N4) COMPLETENESS OF THE 225-CASE LIST.  That rests entirely on the
+       unformalised exhaustive enumeration upstream.
+
+  (N5) ANY GEOMETRY WHATSOEVER: heptagons, sides, crossings, chirotopes,
+       realisability.
 
   So this file discharges exactly one link of the chain: *given* the certificate
-  data and *given* AKR Lemma 5, all 225 remaining cases die.
+  data, *given* that the stored `avoiding` flags are geometrically correct, and
+  *given* AKR Lemma 5, all 225 remaining cases die.
+
+  ---------------------------------------------------------------------------
+  THE FUTURE INTERFACE: what it would take to make this a theorem about polygons
+  ---------------------------------------------------------------------------
+
+  The results below would become an impossibility theorem of the shape
+
+      theorem no_exceptional_survivor (K : Config) : ¬ Survives K
+
+  once the following were supplied.  This is ONE sufficient route, not the only
+  conceivable one; and NONE of it is built here.  What follows is a
+  specification of missing work, not a claim about it.  The file names are those
+  of `docs/lean-architecture.md`, none of which exist yet.
+
+  (I1) A TYPE OF CONFIGURATIONS.  `Config`: a pair of simple 7-gons in general
+       position, at the orientation-predicate level already used by
+       `LowerBound.lean`.  Supplied by: `Model.lean` (does not exist).
+
+  (I2) THE ABSTRACTION MAP AND ITS CORRECTNESS.
+           `toMasks : Config -> (Nat -> Nat)`
+           `toMasks_spec : forall K i j, i < 7 -> j < 7 ->
+               (bitAt (toMasks K i) j = true <-> Disjoint (side P i) (side Q j))`
+       i.e. bit `j` of mask `i` really encodes disjointness of the two closed
+       sides.  This is the only bridge from geometry to the bitmasks this file
+       manipulates.  Supplied by: `Model.lean`.
+
+  (I3) THE GEOMETRIC PREDICATE BEHIND (N1), AND A THEOREM DISCHARGING THE FLAG.
+           `Avoiding : Config -> Nat -> Nat -> Prop`     (order-type notion)
+           `avoiding_of_flag : forall K c, ProfileOf K = c -> c.avoiding = true
+                                 -> Avoiding K c.pairI c.pairJ`
+       THIS IS THE HARD ONE, and it is exactly what (N1) says is missing.  It
+       cannot be proved from the flag: the flag must be re-derived from the
+       exceptional class of `K`, since that is where the Python pipeline gets
+       it.  Supplied by: `Classification.lean` + `Profiles.lean`.
+
+  (I4) AKR LEMMA 5, AS AN IMPORTED STATEMENT (honestly flagged as an `axiom`,
+       or proved):
+           `akr5 : forall K a b, a < 7 -> b < 7 ->
+               (CycAdj a b \/ Avoiding K a b) ->
+               ~ Conn (toMasks K) (Vtx.P a) (Vtx.P b) ->
+               AKR5Conclusion (toMasks K) a b`
+       Supplied by: `Imported.lean` (does not exist).
+
+  (I5) THE PROFILE MAP AND COMPLETENESS — the fix for (N2) and (N4):
+           `ProfileOf : Config -> Case`   (class labels + bitmasks, canonicalised)
+           `profile_complete : forall K, Survives K ->
+               exists c, c IN certificates /\ ProfileOf K = c`
+       together with invariance of everything above under the dihedral
+       relabelling used to canonicalise profiles.  This is the formalised
+       counterpart of the 13,003,620-graph enumeration and is by far the
+       largest missing piece.  Supplied by: `Elimination.lean` (does not exist).
+
+  GIVEN (I1)-(I5) the assembly is short and purely logical, and uses this file
+  unchanged: take `K` with `Survives K`; (I5) gives a record `c`; rewriting
+  along `ProfileOf K = c` turns `all_225_pairs_in_different_components c` into
+  disconnection of `p_pairI`, `p_pairJ` in `toMasks K`;
+  `all_witnesses_consistent c` gives `pairI != pairJ` and `!cycAdjB pairI pairJ`
+  together with `c.avoiding = true`, which (I3) upgrades to
+  `Avoiding K c.pairI c.pairJ`; (I4) then forces
+  `AKR5Conclusion (toMasks K) c.pairI c.pairJ`, contradicting
+  `all_225_cases_fail_AKR5_conclusion c`.  Hence `¬ Survives K`.
+
+  The point of writing the interface out is that it makes the two gaps explicit
+  and localised: (I3) is where the `avoiding` flag stops being a flag, and (I5)
+  is where the 225-case list stops being a list someone handed us.
 -/
 import EndgameData
 
@@ -126,11 +233,18 @@ def witnessConsistent (c : Case) : Bool :=
   (c.compP.getD c.pairJ 99 == c.compOfJ) &&
   (c.compOfI != c.compOfJ)
 
-/-- In every case the stored witness is internally consistent: the witness side
-is `P`, the class used is `class_P`, the pair is marked `avoiding` and is indeed
-distinct and not cyclically consecutive, `N_i`, `N_j`, `A_i_minus_j`,
+/-- In every case the stored witness is internally consistent with the stored
+masks: the witness side is `P`, the class used is `class_P`, the pair indices
+are `< 7`, distinct and not cyclically consecutive, `N_i`, `N_j`, `A_i_minus_j`,
 `B_j_minus_i` are exactly what the bitmasks say they are, the stored components
-of the two pair endpoints differ, and no cyclically adjacent pair was recorded. -/
+of the two pair endpoints differ, and no cyclically adjacent pair was recorded.
+
+CAUTION about the `c.avoiding` conjunct: it checks only that the stored Boolean
+flag (`witness.pair_kind == "avoiding"` in the JSON) is `true`.  That is a fact
+about the file on disk, not a proof that the pair of sides is geometrically
+avoiding — see (N1) and (I3) in the file header.  The only part of "avoiding"
+recomputed here is its necessary combinatorial consequence, namely that the two
+indices are distinct and not cyclically consecutive. -/
 theorem all_witnesses_consistent : ∀ c ∈ certificates, witnessConsistent c = true :=
   of_all (by decide)
 
@@ -205,13 +319,19 @@ theorem all_225_cases_fail_AKR5_requirement :
   exact Bool.noConfusion h1
 
 /-- **MAIN THEOREM, in the form of AKR Lemma 5's literal conclusion.**  For every
-one of the 225 cases, there is no pair of cyclically consecutive Q-sides
+one of the 225 records, there is no pair of cyclically consecutive Q-sides
 `q_i, q_{i'}` with `(p_a,q_i), (p_b,q_{i'}) ∈ E` and `(p_a,q_{i'}), (p_b,q_i) ∉ E`,
-where `(p_a, p_b)` is the stored pair.  Since (by
-`all_225_pairs_in_different_components`) `p_a` and `p_b` lie in different
-components and (by `all_witnesses_consistent`) the pair is non-consecutive and
-recorded as avoiding, AKR Lemma 5 would force such a pair to exist.  Every one
-of the 225 combinations is therefore impossible. -/
+where `(p_a, p_b)` is the stored pair.
+
+What this buys, stated exactly.  By `all_225_pairs_in_different_components`,
+`p_a` and `p_b` lie in different components — that half is a kernel-checked
+recomputation.  By `all_witnesses_consistent` the pair is distinct and not
+cyclically consecutive, and the stored `avoiding` flag is `true`.  IF that flag
+is geometrically correct (it is NOT verified here: see (N1) in the file header)
+AND AKR Lemma 5 holds (external, see (N3)), THEN the lemma would force such a
+pair of Q-sides to exist, contradicting this theorem — so the record could not
+be the profile of an actual pair of heptagons.  The conditional is the theorem;
+the discharge of its two antecedents is the future interface (I3), (I4). -/
 theorem all_225_cases_fail_AKR5_conclusion :
     ∀ c ∈ certificates, ¬ AKR5Conclusion c.M c.pairI c.pairJ := by
   intro c hc h

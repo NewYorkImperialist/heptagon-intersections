@@ -38,11 +38,34 @@
       * `opposite_of_adj`        : every edge joins a hooking-only vertex to a
                                    hooked-only vertex;
       * `disjoint_statuses_imply_bipartite` : the graph is bipartite, i.e.
-                                   admits a proper 2-colouring (needs the
-                                   statuses to be decidable, only to build the
-                                   `Bool`-valued colouring);
+                                   admits a proper 2-colouring (takes a
+                                   decidability hypothesis `hdec`, used *only*
+                                   to build the `Bool`-valued colouring);
       * `disjoint_statuses_imply_bipartite'` : the same, in partition form,
-                                   with no decidability hypothesis.
+                                   with no decidability hypothesis;
+      * `disjoint_statuses_imply_bipartite_classical` : the `Bool`-colouring
+                                   conclusion from `hne` and `hdisj` alone,
+                                   with `hdec` discharged classically.
+
+  ON `hdec`.  It is a FORMALIZATION CONVENIENCE, not a mathematical assumption,
+  and emphatically not an unproved geometric hypothesis.  `Bipartite` is defined
+  here as the existence of a `Bool`-valued proper 2-colouring, while `S` is an
+  arbitrary `Prop`-valued predicate; some decision procedure for "does `e`
+  realise `hooking`?" is therefore needed just to *write down* a function
+  `V -> Bool`.  It is discharged for free for any explicitly given status
+  assignment (`Example.bipartite`), and unconditionally by
+  `Classical.propDecidable` (`disjoint_statuses_imply_bipartite_classical`).
+  No mathematical content whatsoever is hidden in it.
+
+  AXIOMS (verbatim `#print axioms`, Lean 4.33.1).  Every theorem in this file
+  except one `does not depend on any axioms` -- including `adj_irrefl`,
+  `isolated_of_both`, `statusIs_of_adj`, `opposite_of_adj`,
+  `disjoint_statuses_imply_bipartite`, `disjoint_statuses_imply_bipartite'` and
+  all of the `Example` non-vacuity theorems.  The single exception is the
+  classical corollary `disjoint_statuses_imply_bipartite_classical`, which
+  `depends on axioms: [propext, Classical.choice, Quot.sound]` because it invokes
+  `Classical.propDecidable`.  The file's "no axioms at all" claim refers to the
+  former group and must NOT be extended to the corollary.
 
   Symmetry of `Adj` is never assumed (the theorems are stated so that they do
   not need it); irreflexivity is derived, not assumed.
@@ -215,12 +238,22 @@ theorem opposite_of_adj
 
 /-- **Theorem 4 (main): disjoint statuses imply bipartiteness.**
 
-`hdec` only says that "does `e` realise the status `hooking`?" is a decidable
-question; it is needed solely to *construct* the `Bool`-valued colouring, and
-holds for any explicitly given finite status assignment (see `Example.bipartite`
-below).  Nothing mathematical is hidden in it, and
-`disjoint_statuses_imply_bipartite'` below gives the same conclusion, in
-partition form, with no decidability hypothesis at all. -/
+`hdec` says only that "does `e` realise the status `hooking`?" is a decidable
+question.  It is a *formalization convenience*, not a mathematical assumption:
+`Bipartite` is defined via a `Bool`-valued colouring while `S` is an arbitrary
+`Prop`-valued predicate, so a decision procedure is needed purely to *construct*
+the function `V -> Bool`.  It is not a geometric hypothesis and nothing about
+AKR Lemma 7 is smuggled into it.
+
+Three ways to see that it costs nothing:
+* it holds definitionally for any explicitly given status assignment (see
+  `Example.bipartite` below);
+* `disjoint_statuses_imply_bipartite'` below draws the same conclusion in
+  partition form with no decidability hypothesis at all, and no axioms;
+* `disjoint_statuses_imply_bipartite_classical` below drops `hdec` outright,
+  at the cost of `Classical.choice`.
+
+This theorem itself depends on no axioms. -/
 theorem disjoint_statuses_imply_bipartite
     (hne : ∀ e, ∃ s, S e s)
     (hdisj : ∀ e e' s, Adj e e' → S e s → S e' s → False)
@@ -260,6 +293,24 @@ theorem disjoint_statuses_imply_bipartite'
   · intro he'
     exact hooking_of_not_hooked S hne e
       (fun h => hdisj e e' Status.hooked hadj h (hooked_of_not_hooking S hne e' he'))
+
+/-- **Corollary (classical).**  The two mathematical hypotheses `hne` and
+`hdisj` alone already give bipartiteness in the `Bool`-colouring sense: the
+decidability hypothesis of `disjoint_statuses_imply_bipartite` is discharged by
+`Classical.propDecidable`, confirming that it carried no mathematical content.
+
+**AXIOM WARNING.**  This is the *only* declaration in this file that depends on
+any axiom.  `#print axioms` reports
+`[propext, Classical.choice, Quot.sound]` for it, whereas
+`disjoint_statuses_imply_bipartite`, `disjoint_statuses_imply_bipartite'` and
+every other theorem here report `does not depend on any axioms`.  Do not quote
+this corollary in support of the file's axiom-free claim. -/
+theorem disjoint_statuses_imply_bipartite_classical
+    (hne : ∀ e, ∃ s, S e s)
+    (hdisj : ∀ e e' s, Adj e e' → S e s → S e' s → False) :
+    Bipartite Adj :=
+  disjoint_statuses_imply_bipartite Adj S hne hdisj
+    (fun e => Classical.propDecidable (S e Status.hooking))
 
 end Inference
 

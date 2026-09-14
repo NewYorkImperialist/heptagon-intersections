@@ -15,24 +15,44 @@
   below is impossible.  {\v C}ern{\'y} Lemma 2 itself remains an external
   mathematical dependency of the project.
 
-  What IS established here is one thing only: that the *computational filter
-  predicate* actually implemented in
-      `python/elimination/audit_enum.py`      (function `L2_ok`)
-      `independent/implementation_b/reduction.cpp` (function `l2_ok`)
-  fires exactly when the combinatorial pattern described in the manifest is
-  present, namely:
+  What IS established here is one thing only: that the Lean definitions
+  `matchAtB` / `l2FiresB` / `l2OkB` below -- a *transcription* of the
+  computational filter predicate -- fire exactly when the combinatorial pattern
+  described in the manifest is present, namely:
 
     given four consecutive sides of P (a "window" w, w+1, w+2, w+3 mod 7) and
     four sides of Q, the induced subgraph of the disjointness graph on those
     4+4 sides is EXACTLY a perfect matching.
 
+  TRANSCRIPTION, NOT EXTRACTION (read this twice).  The predicates below were
+  transcribed BY HAND from
+      `python/elimination/audit_enum.py`           (function `L2_ok`)
+      `independent/implementation_b/reduction.cpp` (function `l2_ok`)
+  and are *claimed*, not proved, to agree with them.  There is no code
+  extraction out of Lean, no compilation of these definitions into the pipeline,
+  and no mechanised cross-check against the Python source or the C++ binary.
+  Every theorem below is a statement about the Lean definitions in this file.
+  That those definitions faithfully mirror the two implementations is an
+  unverified human reading, and is the point at which this bridge can still
+  fail.  Wherever the theorem names or docstrings say "the filter", read "the
+  Lean transcription of the filter".
+
   The word "exactly" is load-bearing, and the equivalence proved below makes
   both halves of it explicit:
     (a) all four matching edges are PRESENT;
     (b) all twelve non-matching cross pairs are ABSENT.
-  A perfect matching PLUS an extra edge is NOT the forbidden pattern, and
-  `test_extraEdge_notDetected` below is a kernel-checked witness that the
-  predicate indeed does not fire on such a configuration.
+
+  CONSEQUENTLY, and stated carefully: a 4x4 block that is a perfect matching
+  PLUS an extra edge inside the block is not the forbidden pattern *for that
+  block*.  It does NOT follow that the filter fails to fire.  `l2FiresB`
+  existentially quantifies over all ordered 4-tuples of Q-sides, and `l2OkB`
+  over all windows of the class, so ANOTHER block -- at the same window or a
+  different one -- can still be an exact induced matching and trigger the
+  filter.  `test_extraEdge_notDetected` below is a kernel-checked statement
+  about one specific fixture (`Nextra`), for which, as it happens, no window
+  fires at all; it is NOT a general law that adding an edge stops the filter.
+  `test_outsideEdge_detected` records the complementary fact that an extra edge
+  landing *outside* the block leaves the pattern, and the firing, intact.
   ---------------------------------------------------------------------------
 -/
 
@@ -107,12 +127,15 @@ def IsExactInducedMatching (N : Nat → Nat) (w j0 j1 j2 j3 : Nat) : Prop :=
 
 /-! ## The computational filter predicate
 
-`degIn4 m j0 j1 j2 j3` is the code's `pc(N[s] & S)` where `S` is the 7-bit mask
-`(1 << j0) | (1 << j1) | (1 << j2) | (1 << j3)`.  Because the search enforces
-`j0, j1, j2, j3` pairwise distinct *before* this quantity is ever consulted
-(C++ lines 201-209; Python `dq={j:0 for j in qs}` over a 4-element combination),
-the population count of `N[s] & S` is exactly the sum of the four indicator
-bits written out below. -/
+`degIn4 m j0 j1 j2 j3` is intended to mirror the code's `pc(N[s] & S)`, where
+`S` is the 7-bit mask `(1 << j0) | (1 << j1) | (1 << j2) | (1 << j3)`.  The
+search enforces `j0, j1, j2, j3` pairwise distinct *before* this quantity is
+ever consulted (C++ lines 201-209; Python `dq={j:0 for j in qs}` over a
+4-element combination), so the population count of `N[s] & S` is the sum of the
+four indicator bits written out below.
+
+That last sentence is a human reading of the two implementations; Lean neither
+sees nor checks their source.  Only the Lean definition is used below. -/
 def degIn4 (m j0 j1 j2 j3 : Nat) : Nat :=
   (if bitAt m j0 then 1 else 0) + (if bitAt m j1 then 1 else 0) +
   (if bitAt m j2 then 1 else 0) + (if bitAt m j3 then 1 else 0)
@@ -155,10 +178,14 @@ theorem degIn4_one {m j0 j1 j2 j3 : Nat} (h : degIn4 m j0 j1 j2 j3 = 1) :
 
 /-! ## The interface theorem -/
 
-/-- **Interface theorem.**  The computational filter fires at window `w` if and
-only if there is a 4-tuple of Q-sides whose induced block with the window is
-*exactly* a perfect matching — all four matching edges present, all twelve
-cross pairs absent. -/
+/-- **Interface theorem.**  The filter predicate *as transcribed in this file*
+fires at window `w` if and only if there is a 4-tuple of Q-sides whose induced
+block with the window is *exactly* a perfect matching — all four matching edges
+present, all twelve cross pairs absent.
+
+Note the existential: firing at `w` means *some* 4-tuple is an exact induced
+matching, so destroying one such tuple does not by itself stop `l2FiresB` from
+being `true`. -/
 theorem l2FiresB_iff (N : Nat → Nat) (w : Nat) :
     l2FiresB N w = true ↔ ∃ j0 j1 j2 j3, IsExactInducedMatching N w j0 j1 j2 j3 := by
   constructor
@@ -239,9 +266,11 @@ theorem l2FiresB_iff (N : Nat → Nat) (w : Nat) :
     simp [matchAtB, degIn4, e0, e1, e2, e3,
       a01, a02, a03, a10, a12, a13, a20, a21, a23, a30, a31, a32, n01, n02, n03, n12, n13, n23]
 
-/-- **Interface theorem, `l2_ok` form.**  The survival test implemented by
-`L2_ok` (Python) and `l2_ok` (C++) holds exactly when no Lemma-2 window of the
-class carries an exact induced perfect matching. -/
+/-- **Interface theorem, `l2_ok` form.**  The Lean transcription of the survival
+test (`L2_ok` in Python, `l2_ok` in C++) holds exactly when NO Lemma-2 window of
+the class carries an exact induced perfect matching — for any window and any
+4-tuple.  As above, this is a theorem about the Lean definition `l2OkB`; the
+agreement of `l2OkB` with the two implementations is transcription, not proof. -/
 theorem l2OkB_iff (N : Nat → Nat) (W : List Nat) :
     l2OkB N W = true ↔ ∀ w ∈ W, ¬ ∃ j0 j1 j2 j3, IsExactInducedMatching N w j0 j1 j2 j3 := by
   constructor
@@ -272,8 +301,13 @@ def Npos : Nat → Nat := ofList [1, 2, 4, 8, 0, 0, 0]
 `5, 6, 0, 1`, to exercise the `mod 7` arithmetic. -/
 def Nwrap : Nat → Nat := ofList [4, 8, 0, 0, 0, 1, 2]
 
-/-- NEGATIVE (the load-bearing case).  `Npos` PLUS one extra edge
-`(p_0, q_1)`: a perfect matching *plus* an extra edge.  Not forbidden. -/
+/-- NEGATIVE (the load-bearing case).  `Npos` PLUS one extra edge `(p_0, q_1)`
+landing *inside* the block `{q_0, q_1, q_2, q_3}`.  The block `(0,1,2,3)` at
+window `0` is then a perfect matching *plus* an extra edge, hence no longer an
+*exact* induced matching.  For this particular mask family no other block at any
+other window is one either — that is the content of
+`test_extraEdge_notDetected`, and it is a fact about this fixture, not a general
+consequence of adding an edge. -/
 def Nextra : Nat → Nat := ofList [1 + 2, 2, 4, 8, 0, 0, 0]
 
 /-- POSITIVE, discriminating.  `Npos` plus an extra edge `(p_0, q_4)` that lies
@@ -305,14 +339,23 @@ theorem test_wrap_pattern :
     ∃ j0 j1 j2 j3, IsExactInducedMatching Nwrap 5 j0 j1 j2 j3 :=
   (l2FiresB_iff Nwrap 5).mp test_wrap_detected
 
-/-- **THE LOAD-BEARING NEGATIVE TEST.**  A perfect matching PLUS an extra edge
-is NOT the forbidden configuration, and the filter does not fire on it — at
-window `0`, nor at any other window. -/
+/-- **THE LOAD-BEARING NEGATIVE TEST.**  For the specific fixture `Nextra`, the
+filter fires at no window at all.
+
+Read this statement precisely.  The extra edge `(p_0, q_1)` destroys the
+exact-matching property of the block it lands in; whether the filter still fires
+then depends on whether some *other* 4-tuple, at this or another window, is an
+exact induced matching — and for `Nextra` none is.  The theorem below is exactly
+that per-fixture claim, checked over all seven windows.  It is not, and must not
+be quoted as, a general "an extra edge stops the filter" law. -/
 theorem test_extraEdge_notDetected : idx7.all (fun w => !l2FiresB Nextra w) = true := by decide
 
 /-- The same statement in mathematical form: no window of `Nextra` carries an
-exact induced perfect matching.  Adding an edge to a forbidden block makes it
-un-forbidden. -/
+exact induced perfect matching.  The general fact this illustrates is the local
+one: adding an edge inside a block makes *that block* un-forbidden.  It does not
+follow that the graph survives the filter — some other block may still be an
+exact induced matching.  For `Nextra` none is, which is why this fixture also
+satisfies `l2OkB`. -/
 theorem test_extraEdge_noPattern :
     ∀ w, w < 7 → ¬ ∃ j0 j1 j2 j3, IsExactInducedMatching Nextra w j0 j1 j2 j3 := by
   intro w hw hc
@@ -320,10 +363,17 @@ theorem test_extraEdge_noPattern :
   rw [(l2FiresB_iff Nextra w).mpr hc] at h
   exact Bool.noConfusion h
 
-/-- `l2_ok` therefore accepts `Nextra` for every possible window profile. -/
+/-- Because no window of `Nextra` fires, the transcribed `l2_ok` accepts it for
+every possible window profile.  (This is a consequence of the *global* statement
+`test_extraEdge_notDetected`, not of the single destroyed block.) -/
 theorem test_extraEdge_l2Ok : l2OkB Nextra idx7 = true := by decide
 
-/-- An edge leaving the block does not destroy the induced pattern. -/
+/-- An edge leaving the block does not destroy the induced pattern: the
+forbidden configuration is a property of the INDUCED subgraph on the chosen
+4 + 4 sides, so `Noutside` still fires at window `0`.  Together with
+`test_extraEdge_notDetected` this pins down what "exact induced" means, and
+shows that extra edges are only fatal to the pattern when they land inside the
+block. -/
 theorem test_outsideEdge_detected : l2FiresB Noutside 0 = true := by decide
 
 theorem test_outsideEdge_pattern :
