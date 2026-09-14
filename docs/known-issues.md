@@ -1170,3 +1170,76 @@ derives no empty clause. It lives under `independent/akr_l7_reproduction/`,
 which was being edited concurrently, and was deliberately left untouched; the
 gate in `verify-all.sh` (and test N7) catches it, but the tool should be fixed
 too.
+
+---
+
+## K-20 — Implementation B does not run the final filter, so the killing step has no second implementation  (DISCLOSURE GAP, 2026-09-14)
+
+**Status:** open as a disclosure gap; **not** a defect in any result. Found while
+scoping enumeration obligation (4).
+
+`independent/implementation_b/` is the project's evidence for
+"**REPRODUCED BY A SECOND IMPLEMENTATION**" (verification-status row 14). It
+reproduces the reduction `13,003,620 → 225` and the exact 225-triple set with
+zero set difference either way. What it does **not** do — by deliberate design,
+stated in its own source and spec — is apply the **final avoiding-pair AKR L5
+filter**, the step that takes `225 → 0`:
+
+* `reduction.cpp:20` — "The avoiding-pair AKR L5 filter is NOT implemented
+  (SPEC.md sec. 6)."
+* `SPEC.md` §6 — "this is the already-certified final stage (`known-issues.md`
+  K-03) and is the target set's successor, not part of it."
+* `implementation_b_output.json` — `"final_avoiding_pair_filter_applied": false`.
+
+So the **actual refutation step has certificate-level and Lean-level
+independence, but no second implementation.** `check_final_certificate.py`
+shares no code with the generator and re-refutes all 225 cases, and
+`Endgame.lean` kernel-checks every one of them — both genuinely independent of
+the Python search. But the reassurance "two implementations agree" covers
+filters (a)–(d) only.
+
+Černý L3 is likewise not implemented in B, which is sound: K-06 established L3
+is redundant, and the shipped certificate is generated with
+`Cerny_Lemma_3: false`.
+
+**Why this is a disclosure gap and not a defect.** Nothing claimed is false, and
+the 225 → 0 step is the *best*-verified step in the project (a committed
+certificate, an independent checker, and a Lean proof of each case). The problem
+is that row 14 and `paper/proof-manifest.tex`'s pipeline table did not say which
+filters the second implementation covers, and the manifest's `225` row lists
+"Python, C++, certificate, Lean" in its **Checked by** column, which a reader
+can easily take to mean C++ checks the avoiding-pair step. It does not.
+
+**Fixed** by stating the filter scope explicitly in both places. The underlying
+situation is unchanged: writing a second implementation of the avoiding-pair
+stage remains genuinely useful work, and it is the smallest such gap.
+
+---
+
+## K-21 — `audit_enum.py` applies Černý L3 unconditionally; the shipped certificate does not  (CLARIFICATION, 2026-09-14)
+
+**Status:** not a defect; recorded because the two scripts differ and a reader
+comparing their counts will otherwise be misled.
+
+`python/elimination/audit_enum.py:86` applies Černý Lemma 3 to both sides
+**unconditionally**:
+
+```python
+if not L3_ok(N) or not L3_ok(NQ): return
+```
+
+`python/elimination/make_final_certificate.py` makes the same filter conditional
+on `--with_l3` (line 114), and the **shipped** certificate
+`data/certificates/final_elimination_225.json` records
+`"Cerny_Lemma_3": false` and lists four external lemmas, not five.
+
+So the load-bearing pipeline is the five filters (a)–(e), and Černý L3 is *not*
+among them. `audit_enum.py`'s reported intermediate counts do include L3
+filtering; the certificate's do not. K-06 established the two agree —
+`2,300 → 121 → 225 → 0` either way, with identical certificates case for case —
+which is why this is a clarification rather than a defect.
+
+**Consequence for obligation (4).** The soundness obligations that must be
+discharged are those of filters (a)–(e). Černý L3 does **not** add a sixth
+obligation for the shipped result. It would if anyone relied on `audit_enum.py`'s
+counts directly, and `lean/FilterSoundness.lean` notes this in its header.

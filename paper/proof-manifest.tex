@@ -745,11 +745,27 @@ $42{,}238$       & \textsc{akr} L7 $\Rightarrow$ $H$ bipartite & \textsf{A7-EXT}
 $24{,}990$       & crossing-set compatibility & elementary (order type) & Python, C++ \\
 $2{,}300$        & {\v C}ern{\'y} L2, class-dependent & \textsf{C2} & Python, C++ \\
 $121$            & \emph{(change of counted object)} & --- & Python, C++ \\
-$225$            & \textsc{akr} L5, avoiding pairs & \textsf{A5-A} & Python, C++, certificate, Lean \\
+$225$            & \textsc{akr} L5, avoiding pairs & \textsf{A5-A} & Python, certificate, Lean \\
 $0$              & --- & --- & --- \\
 \bottomrule
 \end{tabular}}
 \end{center}
+
+\begin{remark}[Which filters the second implementation covers]\label{rem:implb-scope}
+The \textbf{Checked by} column above says ``Python, C++'' for the first four
+filters and \emph{omits} C++ for the final avoiding-pair stage. That is not an
+oversight: Implementation B \textbf{deliberately does not implement the
+avoiding-pair \textsc{akr} L5 filter} (\texttt{reduction.cpp}:20;
+\texttt{SPEC.md} \S6; \texttt{"final\_avoiding\_pair\_filter\_applied": false}
+in its output), nor {\v C}ern{\'y} L3. It reproduces the reduction down to the
+$225$-triple set and stops.
+
+So the step that actually refutes --- $225 \to 0$ --- has \emph{certificate} and
+\emph{Lean} independence but \textbf{no second implementation}. Those two are
+real: \texttt{check\_final\_certificate.py} shares no code with the generator,
+and \texttt{Endgame.lean} kernel-checks each of the $225$ cases. But the phrase
+``two implementations agree'' covers filters (a)--(d) only. Recorded as K-20.
+\end{remark}
 
 \begin{remark}[The $121\to225$ step is not a filter]\label{rem:121}
 This is a change in what is being counted, and it should not be read as a

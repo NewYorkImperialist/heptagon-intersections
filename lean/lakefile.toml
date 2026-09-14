@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness"]
 
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
@@ -92,3 +92,15 @@ name = "EnumerationComplete"
 # so it must come last of all.  Says NOTHING about obligations (3) and (4).
 [[lean_lib]]
 name = "CounterexampleCount"
+
+# Enumeration obligation (4), STATED filter by filter and NOT closed:
+# FilterSoundness.lean states, for each of the five filters of the elimination
+# pipeline, the obligation "a valid configuration's mask function is not
+# discarded by this filter", and proves the implication from an explicitly
+# named external hypothesis (AKR Lemma 5 / AKR Lemma 7 / the order-type fact /
+# Cerny Lemma 2 / correctness of the component labelling) to that conclusion.
+# It proves NONE of those hypotheses, and it is not a proof of obligation (4).
+# Imports DisjointnessGraph, Lemma7Bridge and CernyL2Interface -- all
+# Mathlib-free -- so it must come after them.
+[[lean_lib]]
+name = "FilterSoundness"
