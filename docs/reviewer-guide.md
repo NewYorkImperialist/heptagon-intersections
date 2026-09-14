@@ -1049,8 +1049,13 @@ is formalized — so the Lean claims are narrower than their file names suggest.
    erratum either way.
 2. **One hour:** re-derive `13,003,620` from the inclusion–exclusion formula of
    §2.6, independently of any code (§6.1).
-3. **One hour:** recompute the stored `avoiding` flags from the 14-class profile
-   table (§6.4). Smallest real gap in the Lean development.
+3. ~~**One hour:** recompute the stored `avoiding` flags from the 14-class
+   profile table (§6.4).~~ **Done 2026-09-14** — `lean/AvoidingFlag.lean` proves
+   by `decide` that all 225 stored flags *equal* the class-table predicate (an
+   equality, so the `false` case is checked too), with the table generated from
+   the JSON. What remains there is the *geometric* half: that the classification
+   is correct (E7) and what "avoiding" means about actual polygons, which the
+   development still does not define.
 4. **One hour:** re-run the 25-case symmetry-free enumeration and re-check its
    certificates yourself — `coverage25/verify_all.py`, stdlib-only, ~3 min, no
    solver and no trust in ours (§6.3). Better still, re-derive the 25-figure
