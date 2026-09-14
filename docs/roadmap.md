@@ -263,12 +263,71 @@ written*.** Not "would be slow" — not feasible as a build step.
 > **a day**, not weeks — expensive and absurd as a build step, but not obviously
 > impossible as a one-off.
 >
-> **So the honest position is: the barrier is real, and its magnitude is not
-> established.** My own estimates in this section span orders of magnitude. A
-> careful benchmark of a *properly engineered* counting formulation — size-indexed
-> mask iteration, the real prune, `Nat` accumulator, no list construction — is a
-> concrete, bounded next experiment, and it should be run before anyone concludes
-> either that the goal is reachable or that it is not.
+> **So the honest position was: the barrier is real, and its magnitude is not
+> established.** That benchmark has now been run. See §8a.
+
+### 8a. The benchmark, run properly (2026-09-14)
+
+A rigorous benchmark of exactly the formulation §8 called for — popcount-indexed
+mask iteration, the real prune, `Nat` accumulator, no list construction — was
+carried out. Full report, all thirteen scratch Lean files, the measurement
+harness and the Python cross-checks are preserved at
+[`results/benchmarks/2026-09-14_kernel-enumeration-feasibility.md`](../results/benchmarks/2026-09-14_kernel-enumeration-feasibility.md).
+
+**Scale of the problem, measured exactly:** the full traversal is
+**226,668,772 recursive calls** (202,591,578 terminal), yielding the 13,003,620
+accepted tuples.
+
+**The measured ladder** (`Nat`, completed runs only):
+
+| calls | user s | wall s | peak RSS |
+|---:|---:|---:|---:|
+| 19,174 | 4.05 | 3.96 | 0.91 GB |
+| 29,101 | 6.61 | 6.58 | 1.00 GB |
+| 88,905 | 20.86 | 21.12 | 2.42 GB |
+| 134,030 | 32.65 | **173.80** | 2.68 GB |
+| 228,061 | — | **did not finish in 180 s** | — |
+
+**CPU time scales linearly and gives ≈15 CPU-hours.** A least-squares fit on the
+completed points gives `user ≈ 0.135 + 2.385e-4 × calls`, so 226,668,772 calls
+projects to 54,066 s = **15.0 CPU-hours** (band 13–16).
+
+**Wall time does not.** At 134,030 calls, wall time is **5.3× CPU time** — the
+machine is already swapping — and that single point alone projects to 81.65
+wall-hours. The linear wall model has broken *before* reaching 0.06% of the full
+tree.
+
+**Memory is the binding constraint, as suspected.** Peak RSS runs at roughly
+**20–25 KB per call** above baseline. Extending that naively to 226,668,772 calls
+gives **4.5–5.8 TB — some 560–720× the 8 GB installed**. That figure is
+illustrative rather than measured (sharing, compression and cache policy could
+change it), but the direction is not in doubt: during a large run `vm_stat`
+reported ~19.75 GB sitting in the system compressor.
+
+**Two secondary results worth knowing, both negative.** `UInt8` masks were
+**1.8–2.0× *slower*** in user CPU than `Nat` (and used more memory), so the
+obvious "use machine words" optimisation is counterproductive here. Switching
+`foldl` to `foldr` did not help either.
+
+**Soundness of the measurement itself:** every completed Lean equation was true
+and independently verified in Python, and the `Nat` trials reported
+`depends on axioms: [propext]` — no `native_decide`, nothing smuggled in.
+
+### The verdict
+
+**Not feasible on this machine, and the obstacle is memory rather than time.**
+~15 CPU-hours would be tolerable for a one-off; 4.5 TB of resident memory is not.
+
+Three caveats stated plainly, because this should not be over-read:
+
+1. It identifies a **resource cliff for one formulation**, and does not prove
+   every kernel-only approach infeasible. Chunked certificates, explicit state
+   sharing, or a formulation with better term sharing were not benchmarked.
+2. **The 15 CPU-hours is for *counting only*.** It does not evaluate a single
+   filter. The actual `hne40` argument needs AKR L5, AKR L7, crossing-set
+   compatibility and Černý L2 applied per graph, which is strictly more work.
+3. A machine with far more RAM might complete it. That is a purchasable
+   experiment, and it is the one that would settle the question.
 
 ### The way forward, and there is a good one
 
@@ -378,6 +437,19 @@ the failure obligation (4) exists to prevent.
    it — see `python/elimination/audit_enum.py` for the filter, and note that
    (c) is just "every `crossSet(q_j)` misses some element of `M_P`".
 
-**Do route 2's measurement first.** It is one script, it is decisive, and it
-costs nothing compared with either formalizing an external lemma or engineering
-a kernel enumeration.
+**Route 2 was measured, and it is dead.** Crossing-set compatibility applied
+*alone* to the 13,003,620-graph domain leaves:
+
+* **5,404,140** surviving for some P-class;
+* **2,783,508** surviving on both sides for some class pair.
+
+Still millions — against the 42,238 that AKR L5 alone achieves. So leading with
+the local filters does **not** spare the global ones from seeing most of the
+domain, and the row-DP idea buys nothing on its own. The script is
+`results/benchmarks/` adjacent work; the filter is just "every `crossSet(q_j)`
+misses some element of `M_P`".
+
+That leaves route 1 (carry a candidate partition in the DP state) as the only
+untested restructuring, and it should be weighed against §8a's finding that the
+binding constraint is **memory**, which a larger state space makes worse, not
+better.
