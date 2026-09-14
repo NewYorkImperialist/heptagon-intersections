@@ -430,8 +430,13 @@ C++ implementation, and it fails loudly and specifically rather than skipping:
 
 ```bash
 bash scripts/verify-all.sh            # full run
-bash scripts/verify-all.sh --quick    # steps 1-4 only, a few seconds
+bash scripts/verify-all.sh --quick    # steps 1-4 + the DRAT gate self-test
 ```
+
+Observed warm: **4 s** for `--quick` (9 checks passed, 2 steps deferred,
+exit 2). A cold clone must first build Mathlib, which is why `--quick` defers
+the Lean build entirely when the `.olean` cache is absent, and then reports
+PARTIAL rather than success.
 
 Exit `0` means complete success, `1` a failed check (a **missing** required
 input counts as a failure, never a skip), `2` partial (something was deferred
