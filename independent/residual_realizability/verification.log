@@ -1,0 +1,10 @@
+COVERAGE: source sets agree on 2187 triples; 412 graphs; 412 checked vertex relabellings; orbit sizes {0: 36, 1: 144, 2: 196, 3: 36}
+POSITIVE: lower_bound_38; 364 nonzero determinants; 38 crossings; 162774 clauses; 0 violated
+negative: regenerated CNF; PROOF VERIFIED (UNSAT); RUP only
+NEGATIVE: same side pair required to cross and not cross; PROOF VERIFIED (UNSAT)
+CHECKER NEGATIVE: fake refutation of positive CNF rejected
+orbit_000: regenerated CNF; PROOF VERIFIED (UNSAT); RUP only
+orbit_001: regenerated CNF; PROOF VERIFIED (UNSAT); RUP only
+orbit_002: regenerated CNF; PROOF VERIFIED (UNSAT); RUP only
+orbit_003: regenerated CNF; PROOF VERIFIED (UNSAT); RUP only
+RESULT: 412/412 residual graphs excluded by 4 checked DRAT proofs and 412 checked vertex relabellings; 2187/2187 triples covered; 0 unresolved

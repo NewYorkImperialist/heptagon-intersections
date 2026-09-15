@@ -1,0 +1,4 @@
+POSITIVE: lower_bound_38; 364 nonzero determinants; 38 crossings; 162774 clauses; 0 violated
+positive SAT; model checked
+negative UNSAT; DRAT checked (RUP only)
+NEGATIVE: same side pair required to cross and not cross; PROOF VERIFIED (UNSAT)

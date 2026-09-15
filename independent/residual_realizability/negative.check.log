@@ -1,0 +1,3 @@
+formula: 162778 clauses; proof: 283 steps
+added lemmas verified: 169 (of which RAT-only: 0)   deletions: 114   empty clause derived: True
+RESULT: PROOF VERIFIED (UNSAT)
