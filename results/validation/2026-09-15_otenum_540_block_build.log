@@ -1,0 +1,634 @@
+start 2026-09-15 01:59:12
+OTEnum000A 8s elapsed=8s
+OTEnum000B 7s elapsed=15s
+OTEnum000C 5s elapsed=20s
+OTEnum000D 4s elapsed=24s
+OTEnum001A 7s elapsed=31s
+OTEnum001B 10s elapsed=41s
+OTEnum001C 4s elapsed=45s
+OTEnum001D 5s elapsed=50s
+OTEnum002A 7s elapsed=57s
+OTEnum002B 10s elapsed=67s
+OTEnum002C 5s elapsed=72s
+OTEnum002D 6s elapsed=78s
+OTEnum003A 6s elapsed=84s
+OTEnum003B 10s elapsed=94s
+OTEnum003C 5s elapsed=99s
+OTEnum003D 5s elapsed=104s
+OTEnum004A 5s elapsed=109s
+OTEnum004B 8s elapsed=117s
+OTEnum004C 4s elapsed=121s
+OTEnum004D 5s elapsed=126s
+OTEnum005A 8s elapsed=134s
+OTEnum005B 6s elapsed=140s
+OTEnum005C 6s elapsed=146s
+OTEnum005D 7s elapsed=153s
+OTEnum006A 7s elapsed=160s
+OTEnum006B 7s elapsed=167s
+OTEnum006C 5s elapsed=172s
+OTEnum006D 7s elapsed=179s
+OTEnum007A 7s elapsed=186s
+OTEnum007B 6s elapsed=193s
+OTEnum007C 5s elapsed=198s
+OTEnum007D 8s elapsed=206s
+OTEnum008A 8s elapsed=214s
+OTEnum008B 8s elapsed=222s
+OTEnum008C 6s elapsed=228s
+OTEnum008D 8s elapsed=236s
+OTEnum009A 8s elapsed=244s
+OTEnum009B 7s elapsed=251s
+OTEnum009C 5s elapsed=256s
+OTEnum009D 8s elapsed=264s
+OTEnum010A 6s elapsed=270s
+OTEnum010B 9s elapsed=279s
+OTEnum010C 8s elapsed=287s
+OTEnum010D 6s elapsed=293s
+OTEnum011A 6s elapsed=299s
+OTEnum011B 5s elapsed=304s
+OTEnum011C 5s elapsed=309s
+OTEnum011D 6s elapsed=315s
+OTEnum012A 8s elapsed=323s
+OTEnum012B 12s elapsed=335s
+OTEnum012C 7s elapsed=342s
+OTEnum012D 5s elapsed=347s
+OTEnum013A 13s elapsed=360s
+OTEnum013B 15s elapsed=375s
+OTEnum013C 9s elapsed=384s
+OTEnum013D 9s elapsed=393s
+OTEnum014A 14s elapsed=407s
+OTEnum014B 16s elapsed=423s
+OTEnum014C 9s elapsed=432s
+OTEnum014D 10s elapsed=442s
+OTEnum015A 10s elapsed=452s
+OTEnum015B 13s elapsed=465s
+OTEnum015C 10s elapsed=475s
+OTEnum015D 6s elapsed=481s
+OTEnum016A 8s elapsed=489s
+OTEnum016B 12s elapsed=501s
+OTEnum016C 7s elapsed=508s
+OTEnum016D 5s elapsed=513s
+OTEnum017A 3s elapsed=516s
+OTEnum017B 15s elapsed=531s
+OTEnum017C 14s elapsed=545s
+OTEnum017D 13s elapsed=558s
+OTEnum018A 15s elapsed=573s
+OTEnum018B 14s elapsed=587s
+OTEnum018C 9s elapsed=596s
+OTEnum018D 9s elapsed=605s
+OTEnum019A 15s elapsed=620s
+OTEnum019B 18s elapsed=638s
+OTEnum019C 16s elapsed=654s
+OTEnum019D 14s elapsed=668s
+OTEnum020A 15s elapsed=683s
+OTEnum020B 11s elapsed=694s
+OTEnum020C 8s elapsed=702s
+OTEnum020D 15s elapsed=717s
+OTEnum021A 22s elapsed=739s
+OTEnum021B 19s elapsed=758s
+OTEnum021C 19s elapsed=777s
+OTEnum021D 19s elapsed=796s
+OTEnum022A 38s elapsed=834s
+OTEnum022B 21s elapsed=855s
+OTEnum022C 17s elapsed=872s
+OTEnum022D 17s elapsed=889s
+OTEnum023A 15s elapsed=904s
+OTEnum023B 18s elapsed=922s
+OTEnum023C 11s elapsed=933s
+OTEnum023D 9s elapsed=942s
+OTEnum024A 10s elapsed=952s
+OTEnum024B 12s elapsed=964s
+OTEnum024C 9s elapsed=973s
+OTEnum024D 6s elapsed=979s
+OTEnum025A 14s elapsed=993s
+OTEnum025B 14s elapsed=1007s
+OTEnum025C 15s elapsed=1022s
+OTEnum025D 10s elapsed=1032s
+OTEnum026A 16s elapsed=1048s
+OTEnum026B 19s elapsed=1067s
+OTEnum026C 13s elapsed=1080s
+OTEnum026D 11s elapsed=1091s
+OTEnum027A 13s elapsed=1104s
+OTEnum027B 20s elapsed=1124s
+OTEnum027C 13s elapsed=1137s
+OTEnum027D 8s elapsed=1145s
+OTEnum028A 15s elapsed=1160s
+OTEnum028B 23s elapsed=1183s
+OTEnum028C 15s elapsed=1198s
+OTEnum028D 8s elapsed=1206s
+OTEnum029A 22s elapsed=1228s
+OTEnum029B 23s elapsed=1251s
+OTEnum029C 17s elapsed=1268s
+OTEnum029D 10s elapsed=1278s
+OTEnum030A 29s elapsed=1307s
+OTEnum030B 25s elapsed=1332s
+OTEnum030C 15s elapsed=1347s
+OTEnum030D 13s elapsed=1360s
+OTEnum031A 15s elapsed=1375s
+OTEnum031B 21s elapsed=1396s
+OTEnum031C 11s elapsed=1407s
+OTEnum031D 8s elapsed=1415s
+OTEnum032A 14s elapsed=1429s
+OTEnum032B 20s elapsed=1449s
+OTEnum032C 11s elapsed=1460s
+OTEnum032D 8s elapsed=1468s
+OTEnum033A 13s elapsed=1481s
+OTEnum033B 26s elapsed=1507s
+OTEnum033C 17s elapsed=1524s
+OTEnum033D 9s elapsed=1533s
+OTEnum034A 14s elapsed=1547s
+OTEnum034B 23s elapsed=1570s
+OTEnum034C 13s elapsed=1583s
+OTEnum034D 7s elapsed=1590s
+OTEnum035A 36s elapsed=1626s
+OTEnum035B 26s elapsed=1652s
+OTEnum035C 17s elapsed=1669s
+OTEnum035D 17s elapsed=1686s
+OTEnum036A 37s elapsed=1723s
+OTEnum036B 26s elapsed=1749s
+OTEnum036C 15s elapsed=1764s
+OTEnum036D 11s elapsed=1775s
+OTEnum037A 12s elapsed=1787s
+OTEnum037B 18s elapsed=1805s
+OTEnum037C 14s elapsed=1819s
+OTEnum037D 8s elapsed=1827s
+OTEnum038A 7s elapsed=1834s
+OTEnum038B 12s elapsed=1846s
+OTEnum038C 19s elapsed=1865s
+OTEnum038D 19s elapsed=1884s
+OTEnum039A 22s elapsed=1906s
+OTEnum039B 42s elapsed=1948s
+OTEnum039C 18s elapsed=1966s
+OTEnum039D 20s elapsed=1986s
+OTEnum040A 16s elapsed=2002s
+OTEnum040B 14s elapsed=2016s
+OTEnum040C 15s elapsed=2031s
+OTEnum040D 33s elapsed=2064s
+OTEnum041A 24s elapsed=2088s
+OTEnum041B 22s elapsed=2110s
+OTEnum041C 15s elapsed=2125s
+OTEnum041D 49s elapsed=2174s
+OTEnum042A 24s elapsed=2198s
+OTEnum042B 22s elapsed=2220s
+OTEnum042C 19s elapsed=2239s
+OTEnum042D 39s elapsed=2278s
+OTEnum043A 22s elapsed=2300s
+OTEnum043B 11s elapsed=2311s
+OTEnum043C 8s elapsed=2319s
+OTEnum043D 13s elapsed=2332s
+OTEnum044A 18s elapsed=2350s
+OTEnum044B 17s elapsed=2367s
+OTEnum044C 12s elapsed=2379s
+OTEnum044D 8s elapsed=2387s
+OTEnum045A 12s elapsed=2399s
+OTEnum045B 18s elapsed=2417s
+OTEnum045C 12s elapsed=2429s
+OTEnum045D 9s elapsed=2438s
+OTEnum046A 16s elapsed=2454s
+OTEnum046B 20s elapsed=2474s
+OTEnum046C 11s elapsed=2485s
+OTEnum046D 30s elapsed=2515s
+OTEnum047A 25s elapsed=2540s
+OTEnum047B 19s elapsed=2559s
+OTEnum047C 12s elapsed=2571s
+OTEnum047D 17s elapsed=2588s
+OTEnum048A 23s elapsed=2611s
+OTEnum048B 19s elapsed=2630s
+OTEnum048C 10s elapsed=2640s
+OTEnum048D 15s elapsed=2655s
+OTEnum049A 23s elapsed=2678s
+OTEnum049B 19s elapsed=2697s
+OTEnum049C 12s elapsed=2709s
+OTEnum049D 12s elapsed=2721s
+OTEnum050A 17s elapsed=2738s
+OTEnum050B 16s elapsed=2754s
+OTEnum050C 11s elapsed=2765s
+OTEnum050D 8s elapsed=2773s
+OTEnum051A 18s elapsed=2791s
+OTEnum051B 20s elapsed=2811s
+OTEnum051C 15s elapsed=2826s
+OTEnum051D 18s elapsed=2844s
+OTEnum052A 13s elapsed=2857s
+OTEnum052B 13s elapsed=2870s
+OTEnum052C 7s elapsed=2877s
+OTEnum052D 5s elapsed=2882s
+OTEnum053A 14s elapsed=2896s
+OTEnum053B 16s elapsed=2912s
+OTEnum053C 7s elapsed=2919s
+OTEnum053D 9s elapsed=2928s
+OTEnum054A 14s elapsed=2942s
+OTEnum054B 15s elapsed=2957s
+OTEnum054C 8s elapsed=2965s
+OTEnum054D 13s elapsed=2978s
+OTEnum055A 17s elapsed=2995s
+OTEnum055B 15s elapsed=3010s
+OTEnum055C 8s elapsed=3018s
+OTEnum055D 14s elapsed=3032s
+OTEnum056A 16s elapsed=3048s
+OTEnum056B 10s elapsed=3058s
+OTEnum056C 7s elapsed=3065s
+OTEnum056D 15s elapsed=3080s
+OTEnum057A 11s elapsed=3091s
+OTEnum057B 16s elapsed=3107s
+OTEnum057C 17s elapsed=3124s
+OTEnum057D 14s elapsed=3138s
+OTEnum058A 17s elapsed=3155s
+OTEnum058B 15s elapsed=3170s
+OTEnum058C 11s elapsed=3181s
+OTEnum058D 13s elapsed=3194s
+OTEnum059A 50s elapsed=3244s
+OTEnum059B 24s elapsed=3268s
+OTEnum059C 14s elapsed=3282s
+OTEnum059D 17s elapsed=3299s
+OTEnum060A 21s elapsed=3320s
+OTEnum060B 21s elapsed=3341s
+OTEnum060C 16s elapsed=3357s
+OTEnum060D 46s elapsed=3403s
+OTEnum061A 20s elapsed=3423s
+OTEnum061B 12s elapsed=3435s
+OTEnum061C 6s elapsed=3441s
+OTEnum061D 18s elapsed=3459s
+OTEnum062A 15s elapsed=3474s
+OTEnum062B 17s elapsed=3491s
+OTEnum062C 13s elapsed=3504s
+OTEnum062D 8s elapsed=3512s
+OTEnum063A 6s elapsed=3518s
+OTEnum063B 14s elapsed=3532s
+OTEnum063C 17s elapsed=3549s
+OTEnum063D 13s elapsed=3562s
+OTEnum064A 8s elapsed=3570s
+OTEnum064B 6s elapsed=3576s
+OTEnum064C 5s elapsed=3581s
+OTEnum064D 11s elapsed=3592s
+OTEnum065A 9s elapsed=3601s
+OTEnum065B 7s elapsed=3608s
+OTEnum065C 5s elapsed=3613s
+OTEnum065D 10s elapsed=3623s
+OTEnum066A 9s elapsed=3632s
+OTEnum066B 8s elapsed=3640s
+OTEnum066C 6s elapsed=3646s
+OTEnum066D 18s elapsed=3664s
+OTEnum067A 17s elapsed=3681s
+OTEnum067B 9s elapsed=3690s
+OTEnum067C 7s elapsed=3697s
+OTEnum067D 15s elapsed=3712s
+OTEnum068A 14s elapsed=3726s
+OTEnum068B 9s elapsed=3735s
+OTEnum068C 7s elapsed=3742s
+OTEnum068D 13s elapsed=3755s
+OTEnum069A 13s elapsed=3768s
+OTEnum069B 17s elapsed=3785s
+OTEnum069C 11s elapsed=3796s
+OTEnum069D 8s elapsed=3804s
+OTEnum070A 11s elapsed=3815s
+OTEnum070B 17s elapsed=3832s
+OTEnum070C 9s elapsed=3841s
+OTEnum070D 9s elapsed=3850s
+OTEnum071A 17s elapsed=3867s
+OTEnum071B 17s elapsed=3884s
+OTEnum071C 11s elapsed=3895s
+OTEnum071D 8s elapsed=3903s
+OTEnum072A 12s elapsed=3915s
+OTEnum072B 13s elapsed=3928s
+OTEnum072C 9s elapsed=3937s
+OTEnum072D 7s elapsed=3944s
+OTEnum073A 15s elapsed=3959s
+OTEnum073B 16s elapsed=3975s
+OTEnum073C 12s elapsed=3987s
+OTEnum073D 32s elapsed=4019s
+OTEnum074A 24s elapsed=4043s
+OTEnum074B 19s elapsed=4062s
+OTEnum074C 14s elapsed=4076s
+OTEnum074D 18s elapsed=4094s
+OTEnum075A 17s elapsed=4111s
+OTEnum075B 18s elapsed=4129s
+OTEnum075C 11s elapsed=4140s
+OTEnum075D 8s elapsed=4148s
+OTEnum076A 11s elapsed=4159s
+OTEnum076B 17s elapsed=4176s
+OTEnum076C 13s elapsed=4189s
+OTEnum076D 8s elapsed=4197s
+OTEnum077A 22s elapsed=4219s
+OTEnum077B 17s elapsed=4236s
+OTEnum077C 11s elapsed=4247s
+OTEnum077D 12s elapsed=4259s
+OTEnum078A 13s elapsed=4272s
+OTEnum078B 8s elapsed=4280s
+OTEnum078C 8s elapsed=4288s
+OTEnum078D 15s elapsed=4303s
+OTEnum079A 15s elapsed=4318s
+OTEnum079B 7s elapsed=4325s
+OTEnum079C 5s elapsed=4330s
+OTEnum079D 12s elapsed=4342s
+OTEnum080A 22s elapsed=4364s
+OTEnum080B 22s elapsed=4386s
+OTEnum080C 20s elapsed=4406s
+OTEnum080D 55s elapsed=4461s
+OTEnum081A 17s elapsed=4478s
+OTEnum081B 8s elapsed=4486s
+OTEnum081C 8s elapsed=4494s
+OTEnum081D 18s elapsed=4512s
+OTEnum082A 11s elapsed=4523s
+OTEnum082B 13s elapsed=4536s
+OTEnum082C 7s elapsed=4543s
+OTEnum082D 5s elapsed=4548s
+OTEnum083A 11s elapsed=4559s
+OTEnum083B 16s elapsed=4575s
+OTEnum083C 11s elapsed=4586s
+OTEnum083D 12s elapsed=4598s
+OTEnum084A 11s elapsed=4609s
+OTEnum084B 18s elapsed=4627s
+OTEnum084C 12s elapsed=4639s
+OTEnum084D 9s elapsed=4648s
+OTEnum085A 12s elapsed=4660s
+OTEnum085B 18s elapsed=4678s
+OTEnum085C 14s elapsed=4692s
+OTEnum085D 10s elapsed=4702s
+OTEnum086A 13s elapsed=4715s
+OTEnum086B 21s elapsed=4736s
+OTEnum086C 11s elapsed=4747s
+OTEnum086D 8s elapsed=4755s
+OTEnum087A 12s elapsed=4767s
+OTEnum087B 18s elapsed=4785s
+OTEnum087C 10s elapsed=4795s
+OTEnum087D 8s elapsed=4803s
+OTEnum088A 26s elapsed=4829s
+OTEnum088B 23s elapsed=4852s
+OTEnum088C 14s elapsed=4866s
+OTEnum088D 13s elapsed=4879s
+OTEnum089A 26s elapsed=4905s
+OTEnum089B 37s elapsed=4942s
+OTEnum089C 35s elapsed=4977s
+OTEnum089D 24s elapsed=5001s
+OTEnum090A 22s elapsed=5023s
+OTEnum090B 18s elapsed=5041s
+OTEnum090C 14s elapsed=5055s
+OTEnum090D 34s elapsed=5089s
+OTEnum091A 40s elapsed=5129s
+OTEnum091B 25s elapsed=5154s
+OTEnum091C 15s elapsed=5169s
+OTEnum091D 13s elapsed=5182s
+OTEnum092A 43s elapsed=5225s
+OTEnum092B 25s elapsed=5250s
+OTEnum092C 13s elapsed=5263s
+OTEnum092D 13s elapsed=5276s
+OTEnum093A 10s elapsed=5286s
+OTEnum093B 8s elapsed=5294s
+OTEnum093C 5s elapsed=5299s
+OTEnum093D 8s elapsed=5307s
+OTEnum094A 5s elapsed=5312s
+OTEnum094B 5s elapsed=5317s
+OTEnum094C 4s elapsed=5321s
+OTEnum094D 6s elapsed=5327s
+OTEnum095A 16s elapsed=5343s
+OTEnum095B 20s elapsed=5363s
+OTEnum095C 15s elapsed=5378s
+OTEnum095D 13s elapsed=5391s
+OTEnum096A 18s elapsed=5409s
+OTEnum096B 21s elapsed=5430s
+OTEnum096C 13s elapsed=5443s
+OTEnum096D 11s elapsed=5454s
+OTEnum097A 17s elapsed=5471s
+OTEnum097B 18s elapsed=5489s
+OTEnum097C 10s elapsed=5499s
+OTEnum097D 14s elapsed=5513s
+OTEnum098A 17s elapsed=5530s
+OTEnum098B 11s elapsed=5541s
+OTEnum098C 7s elapsed=5548s
+OTEnum098D 11s elapsed=5559s
+OTEnum099A 13s elapsed=5572s
+OTEnum099B 12s elapsed=5584s
+OTEnum099C 9s elapsed=5593s
+OTEnum099D 11s elapsed=5604s
+OTEnum100A 11s elapsed=5615s
+OTEnum100B 9s elapsed=5624s
+OTEnum100C 9s elapsed=5633s
+OTEnum100D 13s elapsed=5646s
+OTEnum101A 16s elapsed=5662s
+OTEnum101B 12s elapsed=5674s
+OTEnum101C 7s elapsed=5681s
+OTEnum101D 11s elapsed=5692s
+OTEnum102A 11s elapsed=5703s
+OTEnum102B 9s elapsed=5712s
+OTEnum102C 7s elapsed=5719s
+OTEnum102D 15s elapsed=5734s
+OTEnum103A 19s elapsed=5753s
+OTEnum103B 15s elapsed=5768s
+OTEnum103C 7s elapsed=5775s
+OTEnum103D 11s elapsed=5786s
+OTEnum104A 43s elapsed=5829s
+OTEnum104B 20s elapsed=5849s
+OTEnum104C 16s elapsed=5865s
+OTEnum104D 15s elapsed=5880s
+OTEnum105A 33s elapsed=5913s
+OTEnum105B 17s elapsed=5930s
+OTEnum105C 15s elapsed=5945s
+OTEnum105D 14s elapsed=5959s
+OTEnum106A 42s elapsed=6001s
+OTEnum106B 19s elapsed=6020s
+OTEnum106C 13s elapsed=6033s
+OTEnum106D 12s elapsed=6045s
+OTEnum107A 33s elapsed=6078s
+OTEnum107B 16s elapsed=6094s
+OTEnum107C 12s elapsed=6106s
+OTEnum107D 14s elapsed=6120s
+OTEnum108A 18s elapsed=6138s
+OTEnum108B 12s elapsed=6150s
+OTEnum108C 9s elapsed=6159s
+OTEnum108D 11s elapsed=6170s
+OTEnum109A 14s elapsed=6184s
+OTEnum109B 13s elapsed=6197s
+OTEnum109C 9s elapsed=6206s
+OTEnum109D 10s elapsed=6216s
+OTEnum110A 15s elapsed=6231s
+OTEnum110B 12s elapsed=6243s
+OTEnum110C 10s elapsed=6253s
+OTEnum110D 9s elapsed=6262s
+OTEnum111A 51s elapsed=6313s
+OTEnum111B 20s elapsed=6333s
+OTEnum111C 10s elapsed=6343s
+OTEnum111D 13s elapsed=6356s
+OTEnum112A 43s elapsed=6399s
+OTEnum112B 16s elapsed=6415s
+OTEnum112C 9s elapsed=6424s
+OTEnum112D 15s elapsed=6439s
+OTEnum113A 45s elapsed=6484s
+OTEnum113B 15s elapsed=6499s
+OTEnum113C 9s elapsed=6508s
+OTEnum113D 17s elapsed=6525s
+OTEnum114A 38s elapsed=6563s
+OTEnum114B 16s elapsed=6579s
+OTEnum114C 11s elapsed=6590s
+OTEnum114D 16s elapsed=6606s
+OTEnum115A 16s elapsed=6622s
+OTEnum115B 8s elapsed=6630s
+OTEnum115C 8s elapsed=6638s
+OTEnum115D 12s elapsed=6650s
+OTEnum116A 22s elapsed=6672s
+OTEnum116B 13s elapsed=6685s
+OTEnum116C 14s elapsed=6699s
+OTEnum116D 17s elapsed=6716s
+OTEnum117A 23s elapsed=6739s
+OTEnum117B 15s elapsed=6754s
+OTEnum117C 15s elapsed=6769s
+OTEnum117D 13s elapsed=6782s
+OTEnum118A 22s elapsed=6804s
+OTEnum118B 13s elapsed=6817s
+OTEnum118C 14s elapsed=6831s
+OTEnum118D 12s elapsed=6843s
+OTEnum119A 12s elapsed=6855s
+OTEnum119B 7s elapsed=6862s
+OTEnum119C 9s elapsed=6871s
+OTEnum119D 11s elapsed=6882s
+OTEnum120A 22s elapsed=6904s
+OTEnum120B 13s elapsed=6917s
+OTEnum120C 10s elapsed=6927s
+OTEnum120D 23s elapsed=6950s
+OTEnum121A 31s elapsed=6981s
+OTEnum121B 13s elapsed=6994s
+OTEnum121C 11s elapsed=7005s
+OTEnum121D 24s elapsed=7029s
+OTEnum122A 37s elapsed=7066s
+OTEnum122B 15s elapsed=7081s
+OTEnum122C 11s elapsed=7092s
+OTEnum122D 18s elapsed=7110s
+OTEnum123A 28s elapsed=7138s
+OTEnum123B 15s elapsed=7153s
+OTEnum123C 9s elapsed=7162s
+OTEnum123D 17s elapsed=7179s
+OTEnum124A 33s elapsed=7212s
+OTEnum124B 17s elapsed=7229s
+OTEnum124C 13s elapsed=7242s
+OTEnum124D 18s elapsed=7260s
+OTEnum125A 75s elapsed=7335s
+OTEnum125B 16s elapsed=7351s
+OTEnum125C 10s elapsed=7361s
+OTEnum125D 28s elapsed=7389s
+OTEnum126A 91s elapsed=7480s
+OTEnum126B 21s elapsed=7501s
+OTEnum126C 10s elapsed=7511s
+OTEnum126D 16s elapsed=7527s
+OTEnum127A 63s elapsed=7590s
+OTEnum127B 18s elapsed=7608s
+OTEnum127C 12s elapsed=7620s
+OTEnum127D 18s elapsed=7638s
+OTEnum128A 20s elapsed=7658s
+OTEnum128B 11s elapsed=7669s
+OTEnum128C 7s elapsed=7676s
+OTEnum128D 33s elapsed=7709s
+OTEnum129A 44s elapsed=7753s
+OTEnum129B 20s elapsed=7773s
+OTEnum129C 15s elapsed=7788s
+OTEnum129D 23s elapsed=7811s
+OTEnum130A 38s elapsed=7849s
+OTEnum130B 20s elapsed=7869s
+OTEnum130C 12s elapsed=7881s
+OTEnum130D 15s elapsed=7896s
+OTEnum131A 57s elapsed=7953s
+OTEnum131B 20s elapsed=7973s
+OTEnum131C 15s elapsed=7988s
+OTEnum131D 18s elapsed=8006s
+OTEnum132A 5s elapsed=8011s
+OTEnum132B 16s elapsed=8027s
+OTEnum132C 19s elapsed=8046s
+OTEnum132D 22s elapsed=8068s
+OTEnum133A 13s elapsed=8081s
+OTEnum133B 20s elapsed=8101s
+OTEnum133C 14s elapsed=8115s
+OTEnum133D 8s elapsed=8123s
+OTEnum134A 5s elapsed=8128s
+OTEnum134B 6s elapsed=8134s
+OTEnum134C 7s elapsed=8141s
+OTEnum134D 6s elapsed=8147s
+all 540 blocks built, 8147s  2026-09-15 04:14:59
+✖ [1815/1816] Building OTEnumAll (2.2s)
+trace: .> LEAN_PATH=/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/Cli/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/batteries/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/Qq/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/aesop/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/proofwidgets/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/importGraph/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/plausible/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/packages/mathlib/.lake/build/lib/lean:/Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/build/lib/lean /Users/jaydenlin/.elan/toolchains/leanprover--lean4---v4.33.1/bin/lean /Users/jaydenlin/dev/lean/heptagon-intersections/lean/OTEnumAll.lean -o /Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/build/lib/lean/OTEnumAll.olean -i /Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/build/lib/lean/OTEnumAll.ilean -c /Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/build/ir/OTEnumAll.c --setup /Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake/build/ir/OTEnumAll.setup.json --json
+error: OTEnumAll.lean:562:46: unsolved goals
+⊢ [(73, 269), (89, 49), (90, 204), (106, 141), (107, 122), (121, 102), (126, 124), (127, 281), (129, 122), (131, 69),
+      (131, 245), (131, 351), (132, 231), (132, 245), (132, 306), (132, 340)] =
+    expectedPolygons
+warning: OTEnumAll.lean:1107:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [List.flatMap_cons, List.flatMap_nil, enumRep_eq_parts, enumPart_0A, enumPart_0B, enumPart_0C,
+    enumPart_0D, enumPart_1A, enumPart_1B, enumPart_1C, enumPart_1D, enumPart_2A, enumPart_2B, enumPart_2C, enumPart_2D,
+    enumPart_3A, enumPart_3B, enumPart_3C, enumPart_3D, enumPart_4A, enumPart_4B, enumPart_4C, enumPart_4D, enumPart_5A,
+    enumPart_5B, enumPart_5C, enumPart_5D, enumPart_6A, enumPart_6B, enumPart_6C, enumPart_6D, enumPart_7A, enumPart_7B,
+    enumPart_7C, enumPart_7D, enumPart_8A, enumPart_8B, enumPart_8C, enumPart_8D, enumPart_9A, enumPart_9B, enumPart_9C,
+    enumPart_9D, enumPart_10A, enumPart_10B, enumPart_10C, enumPart_10D, enumPart_11A, enumPart_11B, enumPart_11C,
+    enumPart_11D, enumPart_12A, enumPart_12B, enumPart_12C, enumPart_12D, enumPart_13A, enumPart_13B, enumPart_13C,
+    enumPart_13D, enumPart_14A, enumPart_14B, enumPart_14C, enumPart_14D, enumPart_15A, enumPart_15B, enumPart_15C,
+    enumPart_15D, enumPart_16A, enumPart_16B, enumPart_16C, enumPart_16D, enumPart_17A, enumPart_17B, enumPart_17C,
+    enumPart_17D, enumPart_18A, enumPart_18B, enumPart_18C, enumPart_18D, enumPart_19A, enumPart_19B, enumPart_19C,
+    enumPart_19D, enumPart_20A, enumPart_20B, enumPart_20C, enumPart_20D, enumPart_21A, enumPart_21B, enumPart_21C,
+    enumPart_21D, enumPart_22A, enumPart_22B, enumPart_22C, enumPart_22D, enumPart_23A, enumPart_23B, enumPart_23C,
+    enumPart_23D, enumPart_24A, enumPart_24B, enumPart_24C, enumPart_24D, enumPart_25A, enumPart_25B, enumPart_25C,
+    enumPart_25D, enumPart_26A, enumPart_26B, enumPart_26C, enumPart_26D, enumPart_27A, enumPart_27B, enumPart_27C,
+    enumPart_27D, enumPart_28A, enumPart_28B, enumPart_28C, enumPart_28D, enumPart_29A, enumPart_29B, enumPart_29C,
+    enumPart_29D, enumPart_30A, enumPart_30B, enumPart_30C, enumPart_30D, enumPart_31A, enumPart_31B, enumPart_31C,
+    enumPart_31D, enumPart_32A, enumPart_32B, enumPart_32C, enumPart_32D, enumPart_33A, enumPart_33B, enumPart_33C,
+    enumPart_33D, enumPart_34A, enumPart_34B, enumPart_34C, enumPart_34D, enumPart_35A, enumPart_35B, enumPart_35C,
+    enumPart_35D, enumPart_36A, enumPart_36B, enumPart_36C, enumPart_36D, enumPart_37A, enumPart_37B, enumPart_37C,
+    enumPart_37D, enumPart_38A, enumPart_38B, enumPart_38C, enumPart_38D, enumPart_39A, enumPart_39B, enumPart_39C,
+    enumPart_39D, enumPart_40A, enumPart_40B, enumPart_40C, enumPart_40D, enumPart_41A, enumPart_41B, enumPart_41C,
+    enumPart_41D, enumPart_42A, enumPart_42B, enumPart_42C, enumPart_42D, enumPart_43A, enumPart_43B, enumPart_43C,
+    enumPart_43D, enumPart_44A, enumPart_44B, enumPart_44C, enumPart_44D, enumPart_45A, enumPart_45B, enumPart_45C,
+    enumPart_45D, enumPart_46A, enumPart_46B, enumPart_46C, enumPart_46D, enumPart_47A, enumPart_47B, enumPart_47C,
+    enumPart_47D, enumPart_48A, enumPart_48B, enumPart_48C, enumPart_48D, enumPart_49A, enumPart_49B, enumPart_49C,
+    enumPart_49D, enumPart_50A, enumPart_50B, enumPart_50C, enumPart_50D, enumPart_51A, enumPart_51B, enumPart_51C,
+    enumPart_51D, enumPart_52A, enumPart_52B, enumPart_52C, enumPart_52D, enumPart_53A, enumPart_53B, enumPart_53C,
+    enumPart_53D, enumPart_54A, enumPart_54B, enumPart_54C, enumPart_54D, enumPart_55A, enumPart_55B, enumPart_55C,
+    enumPart_55D, enumPart_56A, enumPart_56B, enumPart_56C, enumPart_56D, enumPart_57A, enumPart_57B, enumPart_57C,
+    enumPart_57D, enumPart_58A, enumPart_58B, enumPart_58C, enumPart_58D, enumPart_59A, enumPart_59B, enumPart_59C,
+    enumPart_59D, enumPart_60A, enumPart_60B, enumPart_60C, enumPart_60D, enumPart_61A, enumPart_61B, enumPart_61C,
+    enumPart_61D, enumPart_62A, enumPart_62B, enumPart_62C, enumPart_62D, enumPart_63A, enumPart_63B, enumPart_63C,
+    enumPart_63D, enumPart_64A, enumPart_64B, enumPart_64C, enumPart_64D, enumPart_65A, enumPart_65B, enumPart_65C,
+    enumPart_65D, enumPart_66A, enumPart_66B, enumPart_66C, enumPart_66D, enumPart_67A, enumPart_67B, enumPart_67C,
+    enumPart_67D, enumPart_68A, enumPart_68B, enumPart_68C, enumPart_68D, enumPart_69A, enumPart_69B, enumPart_69C,
+    enumPart_69D, enumPart_70A, enumPart_70B, enumPart_70C, enumPart_70D, enumPart_71A, enumPart_71B, enumPart_71C,
+    enumPart_71D, enumPart_72A, enumPart_72B, enumPart_72C, enumPart_72D, enumPart_73A, enumPart_73B, enumPart_73C,
+    enumPart_73D, enumPart_74A, enumPart_74B, enumPart_74C, enumPart_74D, enumPart_75A, enumPart_75B, enumPart_75C,
+    enumPart_75D, enumPart_76A, enumPart_76B, enumPart_76C, enumPart_76D, enumPart_77A, enumPart_77B, enumPart_77C,
+    enumPart_77D, enumPart_78A, enumPart_78B, enumPart_78C, enumPart_78D, enumPart_79A, enumPart_79B, enumPart_79C,
+    enumPart_79D, enumPart_80A, enumPart_80B, enumPart_80C, enumPart_80D, enumPart_81A, enumPart_81B, enumPart_81C,
+    enumPart_81D, enumPart_82A, enumPart_82B, enumPart_82C, enumPart_82D, enumPart_83A, enumPart_83B, enumPart_83C,
+    enumPart_83D, enumPart_84A, enumPart_84B, enumPart_84C, enumPart_84D, enumPart_85A, enumPart_85B, enumPart_85C,
+    enumPart_85D, enumPart_86A, enumPart_86B, enumPart_86C, enumPart_86D, enumPart_87A, enumPart_87B, enumPart_87C,
+    enumPart_87D, enumPart_88A, enumPart_88B, enumPart_88C, enumPart_88D, enumPart_89A, enumPart_89B, enumPart_89C,
+    enumPart_89D, enumPart_90A, enumPart_90B, enumPart_90C, enumPart_90D, enumPart_91A, enumPart_91B, enumPart_91C,
+    enumPart_91D, enumPart_92A, enumPart_92B, enumPart_92C, enumPart_92D, enumPart_93A, enumPart_93B, enumPart_93C,
+    enumPart_93D, enumPart_94A, enumPart_94B, enumPart_94C, enumPart_94D, enumPart_95A, enumPart_95B, enumPart_95C,
+    enumPart_95D, enumPart_96A, enumPart_96B, enumPart_96C, enumPart_96D, enumPart_97A, enumPart_97B, enumPart_97C,
+    enumPart_97D, enumPart_98A, enumPart_98B, enumPart_98C, enumPart_98D, enumPart_99A, enumPart_99B, enumPart_99C,
+    enumPart_99D, enumPart_100A, enumPart_100B, enumPart_100C, enumPart_100D, enumPart_101A, enumPart_101B,
+    enumPart_101C, enumPart_101D, enumPart_102A, enumPart_102B, enumPart_102C, enumPart_102D, enumPart_103A,
+    enumPart_103B, enumPart_103C, enumPart_103D, enumPart_104A, enumPart_104B, enumPart_104C, enumPart_104D,
+    enumPart_105A, enumPart_105B, enumPart_105C, enumPart_105D, enumPart_106A, enumPart_106B, enumPart_106C,
+    enumPart_106D, enumPart_107A, enumPart_107B, enumPart_107C, enumPart_107D, enumPart_108A, enumPart_108B,
+    enumPart_108C, enumPart_108D, enumPart_109A, enumPart_109B, enumPart_109C, enumPart_109D, enumPart_110A,
+    enumPart_110B, enumPart_110C, enumPart_110D, enumPart_111A, enumPart_111B, enumPart_111C, enumPart_111D,
+    enumPart_112A, enumPart_112B, enumPart_112C, enumPart_112D, enumPart_113A, enumPart_113B, enumPart_113C,
+    enumPart_113D, enumPart_114A, enumPart_114B, enumPart_114C, enumPart_114D, enumPart_115A, enumPart_115B,
+    enumPart_115C, enumPart_115D, enumPart_116A, enumPart_116B, enumPart_116C, enumPart_116D, enumPart_117A,
+    enumPart_117B, enumPart_117C, enumPart_117D, enumPart_118A, enumPart_118B, enumPart_118C, enumPart_118D,
+    enumPart_119A, enumPart_119B, enumPart_119C, enumPart_119D, enumPart_120A, enumPart_120B, enumPart_120C,
+    enumPart_120D, enumPart_121A, enumPart_121B, enumPart_121C, enumPart_121D, enumPart_122A, enumPart_122B,
+    enumPart_122C, enumPart_122D, enumPart_123A, enumPart_123B, enumPart_123C, enumPart_123D, enumPart_124A,
+    enumPart_124B, enumPart_124C, enumPart_124D, enumPart_125A, enumPart_125B, enumPart_125C, enumPart_125D,
+    enumPart_126A, enumPart_126B, enumPart_126C, enumPart_126D, enumPart_127A, enumPart_127B, enumPart_127C,
+    enumPart_127D, enumPart_128A, enumPart_128B, enumPart_128C, enumPart_128D, enumPart_129A, enumPart_129B,
+    enumPart_129C, enumPart_129D, enumPart_130A, enumPart_130B, enumPart_130C, enumPart_130D, enumPart_131A,
+    enumPart_131B, enumPart_131C, enumPart_131D, enumPart_132A, enumPart_132B, enumPart_132C, enumPart_132D,
+    enumPart_133A, enumPart_133B, enumPart_133C, enumPart_133D, enumPart_134A, enumPart_134B, enumPart_134C,
+    enumPart_134D, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+error: OTEnumAll.lean:1119:2: unsolved goals
+case refine_1
+⊢ expectedPolygons.length = 16
+error: Lean exited with code 1
+Some required targets logged failures:
+- OTEnumAll
+error: build failed
+ASSEMBLY FAILED
+done 2026-09-15 04:15:03 total=8151s

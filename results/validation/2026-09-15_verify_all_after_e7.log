@@ -1,0 +1,2264 @@
+
+========================================================================
+heptagon-intersections :: verify-all
+========================================================================
+repository root : /Users/jaydenlin/dev/lean/heptagon-intersections
+mode            : full (steps 1-6)
+date            : 2026-09-15T13:57:03Z
+uname           : Darwin 24.6.0 arm64
+shell           : bash 3.2.57(1)-release
+python3         : python3 (Python 3.14.7)
+lake            : Lake version 5.0.0-src+293d5d0 (Lean version 4.34.0)
+sha256 tool     : shasum -a 256
+C++ compiler    : c++
+run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A   (kept; nothing is written to evidence/logs/ by this script)
+
+========================================================================
+STEP 1/6 -- Lean build
+========================================================================
+command : cd lean && lake build
+expected: exit 0; no 'error:' line; no 'declaration uses sorry' warning;
+          every declared lean_lib produces a .olean; no sorry/admit/
+          native_decide/axiom in the sources
+NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,
+          which kernel-check the (E7a) exhaustiveness enumeration one
+          order-type representative at a time -- about 17 CPU-hours, so a
+          few wall-clock hours at -j6.  A WARM rebuild is still seconds,
+          so repeat runs of this script are unaffected.  Everything else
+          in the development builds in about two minutes; if you want that
+          first, build the non-shard targets by name (they are the
+          [[lean_lib]] entries in lean/lakefile.toml above the generated
+          shard block), then come back for  lake build -j6 OTEnumAll.
+⚠ [1305/1315] Replayed IntersectionParity
+warning: IntersectionParity.lean:189:5: Variable name `h1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: IntersectionParity.lean:189:19: Variable name `h2` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h2
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: IntersectionParity.lean:195:5: Variable name `h1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: IntersectionParity.lean:195:19: Variable name `h2` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h2
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: IntersectionParity.lean:195:33: Variable name `h3` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h3
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+ℹ [1393/1452] Replayed CernyL2Derivation
+info: CernyL2Derivation.lean:209:0: 'Heptagon.CernyL2Derivation.triangle_affine' depends on axioms: [propext, Quot.sound]
+info: CernyL2Derivation.lean:210:0: 'Heptagon.CernyL2Derivation.triangle_positive_halfplane' depends on axioms: [propext, Quot.sound]
+info: CernyL2Derivation.lean:211:0: 'Heptagon.CernyL2Derivation.simple_sides_noncrossing' depends on axioms: [propext]
+info: CernyL2Derivation.lean:212:0: 'Heptagon.CernyL2Derivation.matching_crossings' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CernyL2Derivation.lean:213:0: 'Heptagon.CernyL2Derivation.no_window_matching' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CernyL2Derivation.lean:214:0: 'Heptagon.CernyL2Derivation.filterD_of_collision' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CernyL2Derivation.lean:215:0: 'Heptagon.CernyL2Derivation.cert_sides_noncrossing' depends on axioms: [propext]
+info: CernyL2Derivation.lean:216:0: 'Heptagon.CernyL2Derivation.localFixture' depends on axioms: [propext]
+info: CernyL2Derivation.lean:217:0: 'Heptagon.CernyL2Derivation.cert_collision' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CernyL2Derivation.lean:218:0: 'Heptagon.CernyL2Derivation.cert_window' depends on axioms: [propext, Quot.sound]
+info: CernyL2Derivation.lean:219:0: 'Heptagon.CernyL2Derivation.cert_filterD_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [1401/1452] Replayed AKRL5Derivation
+info: AKRL5Derivation.lean:122:0: 'Heptagon.AKRL5Derivation.inhabited_of_parity' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:123:0: 'Heptagon.AKRL5Derivation.exclusive_of_separation' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:124:0: 'Heptagon.AKRL5Derivation.full_of_contact' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:125:0: 'Heptagon.AKRL5Derivation.contact_iff_full' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:126:0: 'Heptagon.AKRL5Derivation.filterA_of_contact' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:127:0: 'Heptagon.AKRL5Derivation.fixture_degrees' depends on axioms: [propext]
+info: AKRL5Derivation.lean:128:0: 'Heptagon.AKRL5Derivation.fixture_separated' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:129:0: 'Heptagon.AKRL5Derivation.fixture_rejected' depends on axioms: [propext]
+info: AKRL5Derivation.lean:130:0: 'Heptagon.AKRL5Derivation.cert_inhabited' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:131:0: 'Heptagon.AKRL5Derivation.cert_separated' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:132:0: 'Heptagon.AKRL5Derivation.cert_contact' depends on axioms: [propext, Quot.sound]
+info: AKRL5Derivation.lean:133:0: 'Heptagon.AKRL5Derivation.cert_filterA' depends on axioms: [propext, Quot.sound]
+ℹ [1446/1752] Replayed IntersectionCount
+info: IntersectionCount.lean:141:0: 'Heptagon.IntersectionCount.pair_card' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:142:0: 'Heptagon.IntersectionCount.common_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:143:0: 'Heptagon.IntersectionCount.common_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:144:0: 'Heptagon.IntersectionCount.shared_is_vertex' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:145:0: 'Heptagon.IntersectionCount.side_indices_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:146:0: 'Heptagon.IntersectionCount.crossingPoint_mem' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:147:0: 'Heptagon.IntersectionCount.crossingPoint_injective' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:148:0: 'Heptagon.IntersectionCount.points_eq_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:149:0: 'Heptagon.IntersectionCount.intersectionPoints_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:150:0: 'Heptagon.IntersectionCount.crossCountC_eq_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: IntersectionCount.lean:151:0: 'Heptagon.IntersectionCount.cert_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
+⚠ [4675/4676] Replayed OTCompleteAll
+warning: OTCompleteAll.lean:294:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_0_0, slice_0_1, slice_0_2, slice_0_3, slice_0_4, slice_0_5, slice_0_6,
+    slice_0_7, slice_0_8, slice_0_9, slice_0_10, slice_0_11, slice_0_12, slice_0_13, slice_0_14, slice_0_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:299:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_1_0, slice_1_1, slice_1_2, slice_1_3, slice_1_4, slice_1_5, slice_1_6,
+    slice_1_7, slice_1_8, slice_1_9, slice_1_10, slice_1_11, slice_1_12, slice_1_13, slice_1_14, slice_1_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:304:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_2_0, slice_2_1, slice_2_2, slice_2_3, slice_2_4, slice_2_5, slice_2_6,
+    slice_2_7, slice_2_8, slice_2_9, slice_2_10, slice_2_11, slice_2_12, slice_2_13, slice_2_14, slice_2_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:309:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_3_0, slice_3_1, slice_3_2, slice_3_3, slice_3_4, slice_3_5, slice_3_6,
+    slice_3_7, slice_3_8, slice_3_9, slice_3_10, slice_3_11, slice_3_12, slice_3_13, slice_3_14, slice_3_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:314:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_4_0, slice_4_1, slice_4_2, slice_4_3, slice_4_4, slice_4_5, slice_4_6,
+    slice_4_7, slice_4_8, slice_4_9, slice_4_10, slice_4_11, slice_4_12, slice_4_13, slice_4_14, slice_4_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:319:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_5_0, slice_5_1, slice_5_2, slice_5_3, slice_5_4, slice_5_5, slice_5_6,
+    slice_5_7, slice_5_8, slice_5_9, slice_5_10, slice_5_11, slice_5_12, slice_5_13, slice_5_14, slice_5_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:324:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_6_0, slice_6_1, slice_6_2, slice_6_3, slice_6_4, slice_6_5, slice_6_6,
+    slice_6_7, slice_6_8, slice_6_9, slice_6_10, slice_6_11, slice_6_12, slice_6_13, slice_6_14, slice_6_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:329:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_7_0, slice_7_1, slice_7_2, slice_7_3, slice_7_4, slice_7_5, slice_7_6,
+    slice_7_7, slice_7_8, slice_7_9, slice_7_10, slice_7_11, slice_7_12, slice_7_13, slice_7_14, slice_7_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:334:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_8_0, slice_8_1, slice_8_2, slice_8_3, slice_8_4, slice_8_5, slice_8_6,
+    slice_8_7, slice_8_8, slice_8_9, slice_8_10, slice_8_11, slice_8_12, slice_8_13, slice_8_14, slice_8_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:339:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_9_0, slice_9_1, slice_9_2, slice_9_3, slice_9_4, slice_9_5, slice_9_6,
+    slice_9_7, slice_9_8, slice_9_9, slice_9_10, slice_9_11, slice_9_12, slice_9_13, slice_9_14, slice_9_15,
+    List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:344:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_10_0, slice_10_1, slice_10_2, slice_10_3, slice_10_4, slice_10_5,
+    slice_10_6, slice_10_7, slice_10_8, slice_10_9, slice_10_10, slice_10_11, slice_10_12, slice_10_13, slice_10_14,
+    slice_10_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:349:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_11_0, slice_11_1, slice_11_2, slice_11_3, slice_11_4, slice_11_5,
+    slice_11_6, slice_11_7, slice_11_8, slice_11_9, slice_11_10, slice_11_11, slice_11_12, slice_11_13, slice_11_14,
+    slice_11_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:354:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_12_0, slice_12_1, slice_12_2, slice_12_3, slice_12_4, slice_12_5,
+    slice_12_6, slice_12_7, slice_12_8, slice_12_9, slice_12_10, slice_12_11, slice_12_12, slice_12_13, slice_12_14,
+    slice_12_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:359:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_13_0, slice_13_1, slice_13_2, slice_13_3, slice_13_4, slice_13_5,
+    slice_13_6, slice_13_7, slice_13_8, slice_13_9, slice_13_10, slice_13_11, slice_13_12, slice_13_13, slice_13_14,
+    slice_13_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:364:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_14_0, slice_14_1, slice_14_2, slice_14_3, slice_14_4, slice_14_5,
+    slice_14_6, slice_14_7, slice_14_8, slice_14_9, slice_14_10, slice_14_11, slice_14_12, slice_14_13, slice_14_14,
+    slice_14_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:369:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [basePart,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, slice_15_0, slice_15_1, slice_15_2, slice_15_3, slice_15_4, slice_15_5,
+    slice_15_6, slice_15_7, slice_15_8, slice_15_9, slice_15_10, slice_15_11, slice_15_12, slice_15_13, slice_15_14,
+    slice_15_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: OTCompleteAll.lean:380:65: This simp argument is unused:
+  List.append_assoc
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [allSurvivors,
+    show (List.range 16 : List Nat) = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] from rfl,
+    List.flatMap_cons, List.flatMap_nil, basePart_0, basePart_1, basePart_2, basePart_3, basePart_4, basePart_5,
+    basePart_6, basePart_7, basePart_8, basePart_9, basePart_10, basePart_11, basePart_12, basePart_13, basePart_14,
+    basePart_15, List.nil_append, List.append_nil, List.cons_append]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+Build completed successfully (4676 jobs).
+(lean build wall time: 9 s)
+   assert OK   : no compilation errors
+   assert OK   : no theorem is closed by sorry (lake exits 0 on sorry -- it is only a warning)
+   assert OK   : all 835 declared lean_lib targets produced a .olean
+   assert OK   : no sorry/admit/native_decide/unsafe/partial/axiom in any
+                 lean source declared by lakefile.toml
+   assert OK   : every committed lean/*.lean is a declared lean_lib
+   lakefile declares 835 lean_lib target(s); lake reported 4676 jobs
+--- PASS: 1. Lean build (835 libraries, 4676 jobs)
+
+========================================================================
+STEP 2/6 -- lower-bound certificate (f(7,7) >= 38)
+========================================================================
+command : python3 python/validation/check_lower_bound.py
+expected: exit 0, every line PASS, AND the absolute values I = 38,
+          I + |E| = 49, min degree = 1 (the script itself only checks the
+          certificate against its own 'verified' block, so it would accept
+          a self-consistent certificate claiming a different number)
+checking data/lower_bound/lower_bound_38.json
+
+  PASS  P is a simple polygon: True
+  PASS  Q is a simple polygon: True
+  PASS  all 14 vertices in general position: True
+  PASS  no vertex lies on the other boundary: True
+  PASS  boundary intersections I: 38
+  PASS  disjointness graph edges |E|: 11
+  PASS  I + |E| = 49: 49
+  PASS  minimum degree on the P side: 1
+  PASS  per-P-side crossing counts: [6, 6, 6, 6, 6, 6, 2]
+  PASS  disjointness graph components: 3
+
+All checks passed.  This certifies f(7,7) >= 38.
+It does NOT certify the upper bound f(7,7) <= 38.
+   assert OK   : no FAIL line
+   assert OK   : I = 38 exactly (absolute, not just self-consistent)
+   assert OK   : I + |E| = 49
+   assert OK   : minimum disjointness degree = 1
+   assert OK   : P simple
+   assert OK   : Q simple
+   assert OK   : final verdict line present
+--- PASS: 2. lower-bound certificate (I = 38)
+
+========================================================================
+STEP 3/6 -- endgame certificate (225 cases)
+========================================================================
+command : python3 python/validation/check_final_certificate.py data/certificates/final_elimination_225.json
+expected: exit 0 AND exactly 225 cases checked.  A certificate with zero
+          cases makes the checker print 'OK: all 0 cases ...' and exit 0,
+          so the case count is asserted separately.
+certificate : final_elimination_225.json
+profiles    : exceptional_profiles_14.json (14 classes)
+Cerny L3 active in generation: False
+external lemmas relied on    : Cerny L1, Cerny L2, AKR L5, AKR L7
+
+cases checked        : 225
+distinct graphs      : 121
+degree sequences (P) : {(2, 2, 1, 1, 1, 1, 1): 225}
+degree sequences (Q) : {(2, 2, 1, 1, 1, 1, 1): 225}
+classes P            : [1, 2, 3, 4, 9, 10, 11, 12, 13]
+classes Q            : [1, 2, 3, 4, 9, 10, 11, 12, 13]
+
+OK: all 225 cases establish the AKR Lemma 5 contradiction.
+Each case is refuted; COMPLETENESS of the case list is NOT checked here.
+   assert OK   : no FAILED banner
+   assert OK   : exactly 225 cases were checked (not 0)
+   assert OK   : 121 distinct graphs
+   assert OK   : verdict line names 225, not 0
+--- PASS: 3. endgame certificate (225 cases)
+
+========================================================================
+STEP 4/6 -- data hash manifests
+========================================================================
+expected: every listed digest reports OK; the number of OK lines equals the
+          number of manifest entries and is > 0 (an empty or truncated
+          manifest verifies nothing while still exiting 0 on some systems)
+
+-- data/hashes/SHA256SUMS
+   command : cd data && shasum -a 256 -c hashes/SHA256SUMS
+lower_bound/lower_bound_38.json: OK
+order_types/order_types_7.json: OK
+exceptional_profiles/exceptional_profiles_14.json: OK
+certificates/final_elimination_225.json: OK
+certificates/final_elimination_225_with_cernyL3.json: OK
+   assert OK   : 5/5 entries verified
+--- PASS: 4. hash manifest data/hashes/SHA256SUMS (5 files)
+
+-- ./data/hashes/SHA256SUMS.tools
+   command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.tools
+python/elimination/make_final_certificate.py: OK
+python/validation/check_final_certificate.py: OK
+python/classification/export_profiles.py: OK
+python/validation/check_lower_bound.py: OK
+   assert OK   : 4/4 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.tools (4 files)
+
+-- ./data/hashes/SHA256SUMS.lean
+   command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.lean
+lean/AKRL5Derivation.lean: OK
+lean/AvoidingFlag.lean: OK
+lean/BipartiteDecision.lean: OK
+lean/CernyL2Derivation.lean: OK
+lean/CernyL2Interface.lean: OK
+lean/ClassDataFields.lean: OK
+lean/ClassDataFromChirotope.lean: OK
+lean/ClassDataWitness.lean: OK
+lean/ClassInvariant.lean: OK
+lean/ComponentLabelling.lean: OK
+lean/CounterexampleCount.lean: OK
+lean/DisjointnessGraph.lean: OK
+lean/DomainCount.lean: OK
+lean/Endgame.lean: OK
+lean/EndgameData.lean: OK
+lean/EndgameDefs.lean: OK
+lean/EnumerationComplete.lean: OK
+lean/EnumerationDomain.lean: OK
+lean/ExceptionalClass.lean: OK
+lean/Exclude42.lean: OK
+lean/FilterSoundness.lean: OK
+lean/GeometryDefs.lean: OK
+lean/IntersectionCount.lean: OK
+lean/IntersectionParity.lean: OK
+lean/Lemma7Bridge.lean: OK
+lean/LemmaA.lean: OK
+lean/LemmaABridge.lean: OK
+lean/LowerBound.lean: OK
+lean/MainTheorem.lean: OK
+lean/OTComp00_00.lean: OK
+lean/OTComp00_01.lean: OK
+lean/OTComp00_02.lean: OK
+lean/OTComp00_03.lean: OK
+lean/OTComp00_04.lean: OK
+lean/OTComp00_05.lean: OK
+lean/OTComp00_06.lean: OK
+lean/OTComp00_07.lean: OK
+lean/OTComp00_08.lean: OK
+lean/OTComp00_09.lean: OK
+lean/OTComp00_10.lean: OK
+lean/OTComp00_11.lean: OK
+lean/OTComp00_12.lean: OK
+lean/OTComp00_13.lean: OK
+lean/OTComp00_14.lean: OK
+lean/OTComp00_15.lean: OK
+lean/OTComp01_00.lean: OK
+lean/OTComp01_01.lean: OK
+lean/OTComp01_02.lean: OK
+lean/OTComp01_03.lean: OK
+lean/OTComp01_04.lean: OK
+lean/OTComp01_05.lean: OK
+lean/OTComp01_06.lean: OK
+lean/OTComp01_07.lean: OK
+lean/OTComp01_08.lean: OK
+lean/OTComp01_09.lean: OK
+lean/OTComp01_10.lean: OK
+lean/OTComp01_11.lean: OK
+lean/OTComp01_12.lean: OK
+lean/OTComp01_13.lean: OK
+lean/OTComp01_14.lean: OK
+lean/OTComp01_15.lean: OK
+lean/OTComp02_00.lean: OK
+lean/OTComp02_01.lean: OK
+lean/OTComp02_02.lean: OK
+lean/OTComp02_03.lean: OK
+lean/OTComp02_04.lean: OK
+lean/OTComp02_05.lean: OK
+lean/OTComp02_06.lean: OK
+lean/OTComp02_07.lean: OK
+lean/OTComp02_08.lean: OK
+lean/OTComp02_09.lean: OK
+lean/OTComp02_10.lean: OK
+lean/OTComp02_11.lean: OK
+lean/OTComp02_12.lean: OK
+lean/OTComp02_13.lean: OK
+lean/OTComp02_14.lean: OK
+lean/OTComp02_15.lean: OK
+lean/OTComp03_00.lean: OK
+lean/OTComp03_01.lean: OK
+lean/OTComp03_02.lean: OK
+lean/OTComp03_03.lean: OK
+lean/OTComp03_04.lean: OK
+lean/OTComp03_05.lean: OK
+lean/OTComp03_06.lean: OK
+lean/OTComp03_07.lean: OK
+lean/OTComp03_08.lean: OK
+lean/OTComp03_09.lean: OK
+lean/OTComp03_10.lean: OK
+lean/OTComp03_11.lean: OK
+lean/OTComp03_12.lean: OK
+lean/OTComp03_13.lean: OK
+lean/OTComp03_14.lean: OK
+lean/OTComp03_15.lean: OK
+lean/OTComp04_00.lean: OK
+lean/OTComp04_01.lean: OK
+lean/OTComp04_02.lean: OK
+lean/OTComp04_03.lean: OK
+lean/OTComp04_04.lean: OK
+lean/OTComp04_05.lean: OK
+lean/OTComp04_06.lean: OK
+lean/OTComp04_07.lean: OK
+lean/OTComp04_08.lean: OK
+lean/OTComp04_09.lean: OK
+lean/OTComp04_10.lean: OK
+lean/OTComp04_11.lean: OK
+lean/OTComp04_12.lean: OK
+lean/OTComp04_13.lean: OK
+lean/OTComp04_14.lean: OK
+lean/OTComp04_15.lean: OK
+lean/OTComp05_00.lean: OK
+lean/OTComp05_01.lean: OK
+lean/OTComp05_02.lean: OK
+lean/OTComp05_03.lean: OK
+lean/OTComp05_04.lean: OK
+lean/OTComp05_05.lean: OK
+lean/OTComp05_06.lean: OK
+lean/OTComp05_07.lean: OK
+lean/OTComp05_08.lean: OK
+lean/OTComp05_09.lean: OK
+lean/OTComp05_10.lean: OK
+lean/OTComp05_11.lean: OK
+lean/OTComp05_12.lean: OK
+lean/OTComp05_13.lean: OK
+lean/OTComp05_14.lean: OK
+lean/OTComp05_15.lean: OK
+lean/OTComp06_00.lean: OK
+lean/OTComp06_01.lean: OK
+lean/OTComp06_02.lean: OK
+lean/OTComp06_03.lean: OK
+lean/OTComp06_04.lean: OK
+lean/OTComp06_05.lean: OK
+lean/OTComp06_06.lean: OK
+lean/OTComp06_07.lean: OK
+lean/OTComp06_08.lean: OK
+lean/OTComp06_09.lean: OK
+lean/OTComp06_10.lean: OK
+lean/OTComp06_11.lean: OK
+lean/OTComp06_12.lean: OK
+lean/OTComp06_13.lean: OK
+lean/OTComp06_14.lean: OK
+lean/OTComp06_15.lean: OK
+lean/OTComp07_00.lean: OK
+lean/OTComp07_01.lean: OK
+lean/OTComp07_02.lean: OK
+lean/OTComp07_03.lean: OK
+lean/OTComp07_04.lean: OK
+lean/OTComp07_05.lean: OK
+lean/OTComp07_06.lean: OK
+lean/OTComp07_07.lean: OK
+lean/OTComp07_08.lean: OK
+lean/OTComp07_09.lean: OK
+lean/OTComp07_10.lean: OK
+lean/OTComp07_11.lean: OK
+lean/OTComp07_12.lean: OK
+lean/OTComp07_13.lean: OK
+lean/OTComp07_14.lean: OK
+lean/OTComp07_15.lean: OK
+lean/OTComp08_00.lean: OK
+lean/OTComp08_01.lean: OK
+lean/OTComp08_02.lean: OK
+lean/OTComp08_03.lean: OK
+lean/OTComp08_04.lean: OK
+lean/OTComp08_05.lean: OK
+lean/OTComp08_06.lean: OK
+lean/OTComp08_07.lean: OK
+lean/OTComp08_08.lean: OK
+lean/OTComp08_09.lean: OK
+lean/OTComp08_10.lean: OK
+lean/OTComp08_11.lean: OK
+lean/OTComp08_12.lean: OK
+lean/OTComp08_13.lean: OK
+lean/OTComp08_14.lean: OK
+lean/OTComp08_15.lean: OK
+lean/OTComp09_00.lean: OK
+lean/OTComp09_01.lean: OK
+lean/OTComp09_02.lean: OK
+lean/OTComp09_03.lean: OK
+lean/OTComp09_04.lean: OK
+lean/OTComp09_05.lean: OK
+lean/OTComp09_06.lean: OK
+lean/OTComp09_07.lean: OK
+lean/OTComp09_08.lean: OK
+lean/OTComp09_09.lean: OK
+lean/OTComp09_10.lean: OK
+lean/OTComp09_11.lean: OK
+lean/OTComp09_12.lean: OK
+lean/OTComp09_13.lean: OK
+lean/OTComp09_14.lean: OK
+lean/OTComp09_15.lean: OK
+lean/OTComp10_00.lean: OK
+lean/OTComp10_01.lean: OK
+lean/OTComp10_02.lean: OK
+lean/OTComp10_03.lean: OK
+lean/OTComp10_04.lean: OK
+lean/OTComp10_05.lean: OK
+lean/OTComp10_06.lean: OK
+lean/OTComp10_07.lean: OK
+lean/OTComp10_08.lean: OK
+lean/OTComp10_09.lean: OK
+lean/OTComp10_10.lean: OK
+lean/OTComp10_11.lean: OK
+lean/OTComp10_12.lean: OK
+lean/OTComp10_13.lean: OK
+lean/OTComp10_14.lean: OK
+lean/OTComp10_15.lean: OK
+lean/OTComp11_00.lean: OK
+lean/OTComp11_01.lean: OK
+lean/OTComp11_02.lean: OK
+lean/OTComp11_03.lean: OK
+lean/OTComp11_04.lean: OK
+lean/OTComp11_05.lean: OK
+lean/OTComp11_06.lean: OK
+lean/OTComp11_07.lean: OK
+lean/OTComp11_08.lean: OK
+lean/OTComp11_09.lean: OK
+lean/OTComp11_10.lean: OK
+lean/OTComp11_11.lean: OK
+lean/OTComp11_12.lean: OK
+lean/OTComp11_13.lean: OK
+lean/OTComp11_14.lean: OK
+lean/OTComp11_15.lean: OK
+lean/OTComp12_00.lean: OK
+lean/OTComp12_01.lean: OK
+lean/OTComp12_02.lean: OK
+lean/OTComp12_03.lean: OK
+lean/OTComp12_04.lean: OK
+lean/OTComp12_05.lean: OK
+lean/OTComp12_06.lean: OK
+lean/OTComp12_07.lean: OK
+lean/OTComp12_08.lean: OK
+lean/OTComp12_09.lean: OK
+lean/OTComp12_10.lean: OK
+lean/OTComp12_11.lean: OK
+lean/OTComp12_12.lean: OK
+lean/OTComp12_13.lean: OK
+lean/OTComp12_14.lean: OK
+lean/OTComp12_15.lean: OK
+lean/OTComp13_00.lean: OK
+lean/OTComp13_01.lean: OK
+lean/OTComp13_02.lean: OK
+lean/OTComp13_03.lean: OK
+lean/OTComp13_04.lean: OK
+lean/OTComp13_05.lean: OK
+lean/OTComp13_06.lean: OK
+lean/OTComp13_07.lean: OK
+lean/OTComp13_08.lean: OK
+lean/OTComp13_09.lean: OK
+lean/OTComp13_10.lean: OK
+lean/OTComp13_11.lean: OK
+lean/OTComp13_12.lean: OK
+lean/OTComp13_13.lean: OK
+lean/OTComp13_14.lean: OK
+lean/OTComp13_15.lean: OK
+lean/OTComp14_00.lean: OK
+lean/OTComp14_01.lean: OK
+lean/OTComp14_02.lean: OK
+lean/OTComp14_03.lean: OK
+lean/OTComp14_04.lean: OK
+lean/OTComp14_05.lean: OK
+lean/OTComp14_06.lean: OK
+lean/OTComp14_07.lean: OK
+lean/OTComp14_08.lean: OK
+lean/OTComp14_09.lean: OK
+lean/OTComp14_10.lean: OK
+lean/OTComp14_11.lean: OK
+lean/OTComp14_12.lean: OK
+lean/OTComp14_13.lean: OK
+lean/OTComp14_14.lean: OK
+lean/OTComp14_15.lean: OK
+lean/OTComp15_00.lean: OK
+lean/OTComp15_01.lean: OK
+lean/OTComp15_02.lean: OK
+lean/OTComp15_03.lean: OK
+lean/OTComp15_04.lean: OK
+lean/OTComp15_05.lean: OK
+lean/OTComp15_06.lean: OK
+lean/OTComp15_07.lean: OK
+lean/OTComp15_08.lean: OK
+lean/OTComp15_09.lean: OK
+lean/OTComp15_10.lean: OK
+lean/OTComp15_11.lean: OK
+lean/OTComp15_12.lean: OK
+lean/OTComp15_13.lean: OK
+lean/OTComp15_14.lean: OK
+lean/OTComp15_15.lean: OK
+lean/OTCompleteAll.lean: OK
+lean/OTCompleteDefs.lean: OK
+lean/OTCompleteWitness.lean: OK
+lean/OTEnum000A.lean: OK
+lean/OTEnum000B.lean: OK
+lean/OTEnum000C.lean: OK
+lean/OTEnum000D.lean: OK
+lean/OTEnum001A.lean: OK
+lean/OTEnum001B.lean: OK
+lean/OTEnum001C.lean: OK
+lean/OTEnum001D.lean: OK
+lean/OTEnum002A.lean: OK
+lean/OTEnum002B.lean: OK
+lean/OTEnum002C.lean: OK
+lean/OTEnum002D.lean: OK
+lean/OTEnum003A.lean: OK
+lean/OTEnum003B.lean: OK
+lean/OTEnum003C.lean: OK
+lean/OTEnum003D.lean: OK
+lean/OTEnum004A.lean: OK
+lean/OTEnum004B.lean: OK
+lean/OTEnum004C.lean: OK
+lean/OTEnum004D.lean: OK
+lean/OTEnum005A.lean: OK
+lean/OTEnum005B.lean: OK
+lean/OTEnum005C.lean: OK
+lean/OTEnum005D.lean: OK
+lean/OTEnum006A.lean: OK
+lean/OTEnum006B.lean: OK
+lean/OTEnum006C.lean: OK
+lean/OTEnum006D.lean: OK
+lean/OTEnum007A.lean: OK
+lean/OTEnum007B.lean: OK
+lean/OTEnum007C.lean: OK
+lean/OTEnum007D.lean: OK
+lean/OTEnum008A.lean: OK
+lean/OTEnum008B.lean: OK
+lean/OTEnum008C.lean: OK
+lean/OTEnum008D.lean: OK
+lean/OTEnum009A.lean: OK
+lean/OTEnum009B.lean: OK
+lean/OTEnum009C.lean: OK
+lean/OTEnum009D.lean: OK
+lean/OTEnum010A.lean: OK
+lean/OTEnum010B.lean: OK
+lean/OTEnum010C.lean: OK
+lean/OTEnum010D.lean: OK
+lean/OTEnum011A.lean: OK
+lean/OTEnum011B.lean: OK
+lean/OTEnum011C.lean: OK
+lean/OTEnum011D.lean: OK
+lean/OTEnum012A.lean: OK
+lean/OTEnum012B.lean: OK
+lean/OTEnum012C.lean: OK
+lean/OTEnum012D.lean: OK
+lean/OTEnum013A.lean: OK
+lean/OTEnum013B.lean: OK
+lean/OTEnum013C.lean: OK
+lean/OTEnum013D.lean: OK
+lean/OTEnum014A.lean: OK
+lean/OTEnum014B.lean: OK
+lean/OTEnum014C.lean: OK
+lean/OTEnum014D.lean: OK
+lean/OTEnum015A.lean: OK
+lean/OTEnum015B.lean: OK
+lean/OTEnum015C.lean: OK
+lean/OTEnum015D.lean: OK
+lean/OTEnum016A.lean: OK
+lean/OTEnum016B.lean: OK
+lean/OTEnum016C.lean: OK
+lean/OTEnum016D.lean: OK
+lean/OTEnum017A.lean: OK
+lean/OTEnum017B.lean: OK
+lean/OTEnum017C.lean: OK
+lean/OTEnum017D.lean: OK
+lean/OTEnum018A.lean: OK
+lean/OTEnum018B.lean: OK
+lean/OTEnum018C.lean: OK
+lean/OTEnum018D.lean: OK
+lean/OTEnum019A.lean: OK
+lean/OTEnum019B.lean: OK
+lean/OTEnum019C.lean: OK
+lean/OTEnum019D.lean: OK
+lean/OTEnum020A.lean: OK
+lean/OTEnum020B.lean: OK
+lean/OTEnum020C.lean: OK
+lean/OTEnum020D.lean: OK
+lean/OTEnum021A.lean: OK
+lean/OTEnum021B.lean: OK
+lean/OTEnum021C.lean: OK
+lean/OTEnum021D.lean: OK
+lean/OTEnum022A.lean: OK
+lean/OTEnum022B.lean: OK
+lean/OTEnum022C.lean: OK
+lean/OTEnum022D.lean: OK
+lean/OTEnum023A.lean: OK
+lean/OTEnum023B.lean: OK
+lean/OTEnum023C.lean: OK
+lean/OTEnum023D.lean: OK
+lean/OTEnum024A.lean: OK
+lean/OTEnum024B.lean: OK
+lean/OTEnum024C.lean: OK
+lean/OTEnum024D.lean: OK
+lean/OTEnum025A.lean: OK
+lean/OTEnum025B.lean: OK
+lean/OTEnum025C.lean: OK
+lean/OTEnum025D.lean: OK
+lean/OTEnum026A.lean: OK
+lean/OTEnum026B.lean: OK
+lean/OTEnum026C.lean: OK
+lean/OTEnum026D.lean: OK
+lean/OTEnum027A.lean: OK
+lean/OTEnum027B.lean: OK
+lean/OTEnum027C.lean: OK
+lean/OTEnum027D.lean: OK
+lean/OTEnum028A.lean: OK
+lean/OTEnum028B.lean: OK
+lean/OTEnum028C.lean: OK
+lean/OTEnum028D.lean: OK
+lean/OTEnum029A.lean: OK
+lean/OTEnum029B.lean: OK
+lean/OTEnum029C.lean: OK
+lean/OTEnum029D.lean: OK
+lean/OTEnum030A.lean: OK
+lean/OTEnum030B.lean: OK
+lean/OTEnum030C.lean: OK
+lean/OTEnum030D.lean: OK
+lean/OTEnum031A.lean: OK
+lean/OTEnum031B.lean: OK
+lean/OTEnum031C.lean: OK
+lean/OTEnum031D.lean: OK
+lean/OTEnum032A.lean: OK
+lean/OTEnum032B.lean: OK
+lean/OTEnum032C.lean: OK
+lean/OTEnum032D.lean: OK
+lean/OTEnum033A.lean: OK
+lean/OTEnum033B.lean: OK
+lean/OTEnum033C.lean: OK
+lean/OTEnum033D.lean: OK
+lean/OTEnum034A.lean: OK
+lean/OTEnum034B.lean: OK
+lean/OTEnum034C.lean: OK
+lean/OTEnum034D.lean: OK
+lean/OTEnum035A.lean: OK
+lean/OTEnum035B.lean: OK
+lean/OTEnum035C.lean: OK
+lean/OTEnum035D.lean: OK
+lean/OTEnum036A.lean: OK
+lean/OTEnum036B.lean: OK
+lean/OTEnum036C.lean: OK
+lean/OTEnum036D.lean: OK
+lean/OTEnum037A.lean: OK
+lean/OTEnum037B.lean: OK
+lean/OTEnum037C.lean: OK
+lean/OTEnum037D.lean: OK
+lean/OTEnum038A.lean: OK
+lean/OTEnum038B.lean: OK
+lean/OTEnum038C.lean: OK
+lean/OTEnum038D.lean: OK
+lean/OTEnum039A.lean: OK
+lean/OTEnum039B.lean: OK
+lean/OTEnum039C.lean: OK
+lean/OTEnum039D.lean: OK
+lean/OTEnum040A.lean: OK
+lean/OTEnum040B.lean: OK
+lean/OTEnum040C.lean: OK
+lean/OTEnum040D.lean: OK
+lean/OTEnum041A.lean: OK
+lean/OTEnum041B.lean: OK
+lean/OTEnum041C.lean: OK
+lean/OTEnum041D.lean: OK
+lean/OTEnum042A.lean: OK
+lean/OTEnum042B.lean: OK
+lean/OTEnum042C.lean: OK
+lean/OTEnum042D.lean: OK
+lean/OTEnum043A.lean: OK
+lean/OTEnum043B.lean: OK
+lean/OTEnum043C.lean: OK
+lean/OTEnum043D.lean: OK
+lean/OTEnum044A.lean: OK
+lean/OTEnum044B.lean: OK
+lean/OTEnum044C.lean: OK
+lean/OTEnum044D.lean: OK
+lean/OTEnum045A.lean: OK
+lean/OTEnum045B.lean: OK
+lean/OTEnum045C.lean: OK
+lean/OTEnum045D.lean: OK
+lean/OTEnum046A.lean: OK
+lean/OTEnum046B.lean: OK
+lean/OTEnum046C.lean: OK
+lean/OTEnum046D.lean: OK
+lean/OTEnum047A.lean: OK
+lean/OTEnum047B.lean: OK
+lean/OTEnum047C.lean: OK
+lean/OTEnum047D.lean: OK
+lean/OTEnum048A.lean: OK
+lean/OTEnum048B.lean: OK
+lean/OTEnum048C.lean: OK
+lean/OTEnum048D.lean: OK
+lean/OTEnum049A.lean: OK
+lean/OTEnum049B.lean: OK
+lean/OTEnum049C.lean: OK
+lean/OTEnum049D.lean: OK
+lean/OTEnum050A.lean: OK
+lean/OTEnum050B.lean: OK
+lean/OTEnum050C.lean: OK
+lean/OTEnum050D.lean: OK
+lean/OTEnum051A.lean: OK
+lean/OTEnum051B.lean: OK
+lean/OTEnum051C.lean: OK
+lean/OTEnum051D.lean: OK
+lean/OTEnum052A.lean: OK
+lean/OTEnum052B.lean: OK
+lean/OTEnum052C.lean: OK
+lean/OTEnum052D.lean: OK
+lean/OTEnum053A.lean: OK
+lean/OTEnum053B.lean: OK
+lean/OTEnum053C.lean: OK
+lean/OTEnum053D.lean: OK
+lean/OTEnum054A.lean: OK
+lean/OTEnum054B.lean: OK
+lean/OTEnum054C.lean: OK
+lean/OTEnum054D.lean: OK
+lean/OTEnum055A.lean: OK
+lean/OTEnum055B.lean: OK
+lean/OTEnum055C.lean: OK
+lean/OTEnum055D.lean: OK
+lean/OTEnum056A.lean: OK
+lean/OTEnum056B.lean: OK
+lean/OTEnum056C.lean: OK
+lean/OTEnum056D.lean: OK
+lean/OTEnum057A.lean: OK
+lean/OTEnum057B.lean: OK
+lean/OTEnum057C.lean: OK
+lean/OTEnum057D.lean: OK
+lean/OTEnum058A.lean: OK
+lean/OTEnum058B.lean: OK
+lean/OTEnum058C.lean: OK
+lean/OTEnum058D.lean: OK
+lean/OTEnum059A.lean: OK
+lean/OTEnum059B.lean: OK
+lean/OTEnum059C.lean: OK
+lean/OTEnum059D.lean: OK
+lean/OTEnum060A.lean: OK
+lean/OTEnum060B.lean: OK
+lean/OTEnum060C.lean: OK
+lean/OTEnum060D.lean: OK
+lean/OTEnum061A.lean: OK
+lean/OTEnum061B.lean: OK
+lean/OTEnum061C.lean: OK
+lean/OTEnum061D.lean: OK
+lean/OTEnum062A.lean: OK
+lean/OTEnum062B.lean: OK
+lean/OTEnum062C.lean: OK
+lean/OTEnum062D.lean: OK
+lean/OTEnum063A.lean: OK
+lean/OTEnum063B.lean: OK
+lean/OTEnum063C.lean: OK
+lean/OTEnum063D.lean: OK
+lean/OTEnum064A.lean: OK
+lean/OTEnum064B.lean: OK
+lean/OTEnum064C.lean: OK
+lean/OTEnum064D.lean: OK
+lean/OTEnum065A.lean: OK
+lean/OTEnum065B.lean: OK
+lean/OTEnum065C.lean: OK
+lean/OTEnum065D.lean: OK
+lean/OTEnum066A.lean: OK
+lean/OTEnum066B.lean: OK
+lean/OTEnum066C.lean: OK
+lean/OTEnum066D.lean: OK
+lean/OTEnum067A.lean: OK
+lean/OTEnum067B.lean: OK
+lean/OTEnum067C.lean: OK
+lean/OTEnum067D.lean: OK
+lean/OTEnum068A.lean: OK
+lean/OTEnum068B.lean: OK
+lean/OTEnum068C.lean: OK
+lean/OTEnum068D.lean: OK
+lean/OTEnum069A.lean: OK
+lean/OTEnum069B.lean: OK
+lean/OTEnum069C.lean: OK
+lean/OTEnum069D.lean: OK
+lean/OTEnum070A.lean: OK
+lean/OTEnum070B.lean: OK
+lean/OTEnum070C.lean: OK
+lean/OTEnum070D.lean: OK
+lean/OTEnum071A.lean: OK
+lean/OTEnum071B.lean: OK
+lean/OTEnum071C.lean: OK
+lean/OTEnum071D.lean: OK
+lean/OTEnum072A.lean: OK
+lean/OTEnum072B.lean: OK
+lean/OTEnum072C.lean: OK
+lean/OTEnum072D.lean: OK
+lean/OTEnum073A.lean: OK
+lean/OTEnum073B.lean: OK
+lean/OTEnum073C.lean: OK
+lean/OTEnum073D.lean: OK
+lean/OTEnum074A.lean: OK
+lean/OTEnum074B.lean: OK
+lean/OTEnum074C.lean: OK
+lean/OTEnum074D.lean: OK
+lean/OTEnum075A.lean: OK
+lean/OTEnum075B.lean: OK
+lean/OTEnum075C.lean: OK
+lean/OTEnum075D.lean: OK
+lean/OTEnum076A.lean: OK
+lean/OTEnum076B.lean: OK
+lean/OTEnum076C.lean: OK
+lean/OTEnum076D.lean: OK
+lean/OTEnum077A.lean: OK
+lean/OTEnum077B.lean: OK
+lean/OTEnum077C.lean: OK
+lean/OTEnum077D.lean: OK
+lean/OTEnum078A.lean: OK
+lean/OTEnum078B.lean: OK
+lean/OTEnum078C.lean: OK
+lean/OTEnum078D.lean: OK
+lean/OTEnum079A.lean: OK
+lean/OTEnum079B.lean: OK
+lean/OTEnum079C.lean: OK
+lean/OTEnum079D.lean: OK
+lean/OTEnum080A.lean: OK
+lean/OTEnum080B.lean: OK
+lean/OTEnum080C.lean: OK
+lean/OTEnum080D.lean: OK
+lean/OTEnum081A.lean: OK
+lean/OTEnum081B.lean: OK
+lean/OTEnum081C.lean: OK
+lean/OTEnum081D.lean: OK
+lean/OTEnum082A.lean: OK
+lean/OTEnum082B.lean: OK
+lean/OTEnum082C.lean: OK
+lean/OTEnum082D.lean: OK
+lean/OTEnum083A.lean: OK
+lean/OTEnum083B.lean: OK
+lean/OTEnum083C.lean: OK
+lean/OTEnum083D.lean: OK
+lean/OTEnum084A.lean: OK
+lean/OTEnum084B.lean: OK
+lean/OTEnum084C.lean: OK
+lean/OTEnum084D.lean: OK
+lean/OTEnum085A.lean: OK
+lean/OTEnum085B.lean: OK
+lean/OTEnum085C.lean: OK
+lean/OTEnum085D.lean: OK
+lean/OTEnum086A.lean: OK
+lean/OTEnum086B.lean: OK
+lean/OTEnum086C.lean: OK
+lean/OTEnum086D.lean: OK
+lean/OTEnum087A.lean: OK
+lean/OTEnum087B.lean: OK
+lean/OTEnum087C.lean: OK
+lean/OTEnum087D.lean: OK
+lean/OTEnum088A.lean: OK
+lean/OTEnum088B.lean: OK
+lean/OTEnum088C.lean: OK
+lean/OTEnum088D.lean: OK
+lean/OTEnum089A.lean: OK
+lean/OTEnum089B.lean: OK
+lean/OTEnum089C.lean: OK
+lean/OTEnum089D.lean: OK
+lean/OTEnum090A.lean: OK
+lean/OTEnum090B.lean: OK
+lean/OTEnum090C.lean: OK
+lean/OTEnum090D.lean: OK
+lean/OTEnum091A.lean: OK
+lean/OTEnum091B.lean: OK
+lean/OTEnum091C.lean: OK
+lean/OTEnum091D.lean: OK
+lean/OTEnum092A.lean: OK
+lean/OTEnum092B.lean: OK
+lean/OTEnum092C.lean: OK
+lean/OTEnum092D.lean: OK
+lean/OTEnum093A.lean: OK
+lean/OTEnum093B.lean: OK
+lean/OTEnum093C.lean: OK
+lean/OTEnum093D.lean: OK
+lean/OTEnum094A.lean: OK
+lean/OTEnum094B.lean: OK
+lean/OTEnum094C.lean: OK
+lean/OTEnum094D.lean: OK
+lean/OTEnum095A.lean: OK
+lean/OTEnum095B.lean: OK
+lean/OTEnum095C.lean: OK
+lean/OTEnum095D.lean: OK
+lean/OTEnum096A.lean: OK
+lean/OTEnum096B.lean: OK
+lean/OTEnum096C.lean: OK
+lean/OTEnum096D.lean: OK
+lean/OTEnum097A.lean: OK
+lean/OTEnum097B.lean: OK
+lean/OTEnum097C.lean: OK
+lean/OTEnum097D.lean: OK
+lean/OTEnum098A.lean: OK
+lean/OTEnum098B.lean: OK
+lean/OTEnum098C.lean: OK
+lean/OTEnum098D.lean: OK
+lean/OTEnum099A.lean: OK
+lean/OTEnum099B.lean: OK
+lean/OTEnum099C.lean: OK
+lean/OTEnum099D.lean: OK
+lean/OTEnum100A.lean: OK
+lean/OTEnum100B.lean: OK
+lean/OTEnum100C.lean: OK
+lean/OTEnum100D.lean: OK
+lean/OTEnum101A.lean: OK
+lean/OTEnum101B.lean: OK
+lean/OTEnum101C.lean: OK
+lean/OTEnum101D.lean: OK
+lean/OTEnum102A.lean: OK
+lean/OTEnum102B.lean: OK
+lean/OTEnum102C.lean: OK
+lean/OTEnum102D.lean: OK
+lean/OTEnum103A.lean: OK
+lean/OTEnum103B.lean: OK
+lean/OTEnum103C.lean: OK
+lean/OTEnum103D.lean: OK
+lean/OTEnum104A.lean: OK
+lean/OTEnum104B.lean: OK
+lean/OTEnum104C.lean: OK
+lean/OTEnum104D.lean: OK
+lean/OTEnum105A.lean: OK
+lean/OTEnum105B.lean: OK
+lean/OTEnum105C.lean: OK
+lean/OTEnum105D.lean: OK
+lean/OTEnum106A.lean: OK
+lean/OTEnum106B.lean: OK
+lean/OTEnum106C.lean: OK
+lean/OTEnum106D.lean: OK
+lean/OTEnum107A.lean: OK
+lean/OTEnum107B.lean: OK
+lean/OTEnum107C.lean: OK
+lean/OTEnum107D.lean: OK
+lean/OTEnum108A.lean: OK
+lean/OTEnum108B.lean: OK
+lean/OTEnum108C.lean: OK
+lean/OTEnum108D.lean: OK
+lean/OTEnum109A.lean: OK
+lean/OTEnum109B.lean: OK
+lean/OTEnum109C.lean: OK
+lean/OTEnum109D.lean: OK
+lean/OTEnum110A.lean: OK
+lean/OTEnum110B.lean: OK
+lean/OTEnum110C.lean: OK
+lean/OTEnum110D.lean: OK
+lean/OTEnum111A.lean: OK
+lean/OTEnum111B.lean: OK
+lean/OTEnum111C.lean: OK
+lean/OTEnum111D.lean: OK
+lean/OTEnum112A.lean: OK
+lean/OTEnum112B.lean: OK
+lean/OTEnum112C.lean: OK
+lean/OTEnum112D.lean: OK
+lean/OTEnum113A.lean: OK
+lean/OTEnum113B.lean: OK
+lean/OTEnum113C.lean: OK
+lean/OTEnum113D.lean: OK
+lean/OTEnum114A.lean: OK
+lean/OTEnum114B.lean: OK
+lean/OTEnum114C.lean: OK
+lean/OTEnum114D.lean: OK
+lean/OTEnum115A.lean: OK
+lean/OTEnum115B.lean: OK
+lean/OTEnum115C.lean: OK
+lean/OTEnum115D.lean: OK
+lean/OTEnum116A.lean: OK
+lean/OTEnum116B.lean: OK
+lean/OTEnum116C.lean: OK
+lean/OTEnum116D.lean: OK
+lean/OTEnum117A.lean: OK
+lean/OTEnum117B.lean: OK
+lean/OTEnum117C.lean: OK
+lean/OTEnum117D.lean: OK
+lean/OTEnum118A.lean: OK
+lean/OTEnum118B.lean: OK
+lean/OTEnum118C.lean: OK
+lean/OTEnum118D.lean: OK
+lean/OTEnum119A.lean: OK
+lean/OTEnum119B.lean: OK
+lean/OTEnum119C.lean: OK
+lean/OTEnum119D.lean: OK
+lean/OTEnum120A.lean: OK
+lean/OTEnum120B.lean: OK
+lean/OTEnum120C.lean: OK
+lean/OTEnum120D.lean: OK
+lean/OTEnum121A.lean: OK
+lean/OTEnum121B.lean: OK
+lean/OTEnum121C.lean: OK
+lean/OTEnum121D.lean: OK
+lean/OTEnum122A.lean: OK
+lean/OTEnum122B.lean: OK
+lean/OTEnum122C.lean: OK
+lean/OTEnum122D.lean: OK
+lean/OTEnum123A.lean: OK
+lean/OTEnum123B.lean: OK
+lean/OTEnum123C.lean: OK
+lean/OTEnum123D.lean: OK
+lean/OTEnum124A.lean: OK
+lean/OTEnum124B.lean: OK
+lean/OTEnum124C.lean: OK
+lean/OTEnum124D.lean: OK
+lean/OTEnum125A.lean: OK
+lean/OTEnum125B.lean: OK
+lean/OTEnum125C.lean: OK
+lean/OTEnum125D.lean: OK
+lean/OTEnum126A.lean: OK
+lean/OTEnum126B.lean: OK
+lean/OTEnum126C.lean: OK
+lean/OTEnum126D.lean: OK
+lean/OTEnum127A.lean: OK
+lean/OTEnum127B.lean: OK
+lean/OTEnum127C.lean: OK
+lean/OTEnum127D.lean: OK
+lean/OTEnum128A.lean: OK
+lean/OTEnum128B.lean: OK
+lean/OTEnum128C.lean: OK
+lean/OTEnum128D.lean: OK
+lean/OTEnum129A.lean: OK
+lean/OTEnum129B.lean: OK
+lean/OTEnum129C.lean: OK
+lean/OTEnum129D.lean: OK
+lean/OTEnum130A.lean: OK
+lean/OTEnum130B.lean: OK
+lean/OTEnum130C.lean: OK
+lean/OTEnum130D.lean: OK
+lean/OTEnum131A.lean: OK
+lean/OTEnum131B.lean: OK
+lean/OTEnum131C.lean: OK
+lean/OTEnum131D.lean: OK
+lean/OTEnum132A.lean: OK
+lean/OTEnum132B.lean: OK
+lean/OTEnum132C.lean: OK
+lean/OTEnum132D.lean: OK
+lean/OTEnum133A.lean: OK
+lean/OTEnum133B.lean: OK
+lean/OTEnum133C.lean: OK
+lean/OTEnum133D.lean: OK
+lean/OTEnum134A.lean: OK
+lean/OTEnum134B.lean: OK
+lean/OTEnum134C.lean: OK
+lean/OTEnum134D.lean: OK
+lean/OTEnumAll.lean: OK
+lean/OTEnumShard.lean: OK
+lean/OrderTypeClassification.lean: OK
+lean/PointSetSemantics.lean: OK
+lean/PolygonSimple.lean: OK
+lean/SegmentGeometry.lean: OK
+lean/UpperBoundAssembly.lean: OK
+lean/gen_endgame_data.py: OK
+lean/lakefile.toml: OK
+lean/lean-toolchain: OK
+   assert OK   : 838/838 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.lean (838 files)
+
+-- ./data/hashes/SHA256SUMS.implementation_b
+   command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.implementation_b
+independent/implementation_b/reduction.cpp: OK
+independent/implementation_b/SPEC.md: OK
+independent/implementation_b/make_profiles.py: OK
+independent/implementation_b/count_check.py: OK
+independent/implementation_b/compare_with_certificate.py: OK
+independent/implementation_b/profiles.txt: OK
+independent/implementation_b/implementation_b_output.json: OK
+   assert OK   : 7/7 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.implementation_b (7 files)
+
+-- ./data/hashes/SHA256SUMS.order_type_audit
+   command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.order_type_audit
+independent/order_type_audit/otlib.py: OK
+independent/order_type_audit/run_audit.py: OK
+independent/order_type_audit/tests.py: OK
+independent/order_type_audit/compare.py: OK
+independent/order_type_audit/independent_profiles.json: OK
+independent/order_type_audit/comparison_report.json: OK
+independent/order_type_audit/external/otypes07.b08: OK
+independent/order_type_audit/external/hamilt07.b08: OK
+   assert OK   : 8/8 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.order_type_audit (8 files)
+
+========================================================================
+STEP 5/6 -- independent AKR Lemma 7 / A7 evidence
+========================================================================
+
+-- 5a. SELF-TEST of this script's DRAT gate
+   expected: the gate ACCEPTS a genuine UNSAT proof and REJECTS (i) a proof
+             that never reaches the empty clause -- which dratcheck.py itself
+             exits 0 on -- (ii) a corrupted proof, and (iii) a missing proof.
+   assert OK   : gate ACCEPTS the genuine PHP(4) refutation
+   assert OK   : gate REJECTS a proof that never derives the empty clause
+                 (dratcheck.py exited 0 on it and printed: RESULT: *** proof did not derive the empty clause ***)
+   assert OK   : gate REJECTS a proof with one literal sign flipped
+   assert OK   : gate REJECTS a missing proof file
+--- PASS: 5a. DRAT gate self-test
+
+-- 5b. regenerate the 20 gitignored CNFs and compare SHA-256
+   command : python3 evidence/regen_cnf.py --write /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/cnf
+   expected: 'OK: all 20 CNFs regenerated byte-identically'
+PQ-adj_mixed-1.cnf       sha256 OK      a083c0961deaeff14553fc96a34de7dfccb4027b2961018f3bd6cbcb1f9d879f
+PQ-adj_mixed-2.cnf       sha256 OK      05b26c08ffa8b0f78a1a1e8e90cfb4884ad1fb5c249febf3cf2c1cbc104043a9
+PQ-adj_both-hooking.cnf  sha256 OK      0bb4f6ba980973271046a92796aaa863696676164fe66c515a63c48b891227af
+PQ-adj_both-hooked.cnf   sha256 OK      febfdba99449c99d0516f63c69c43a92ae4253269526f050b1fde31e179ec486
+
+OK: all 20 CNFs regenerated byte-identically from indep_om.py
+   assert OK   : no mismatched CNF
+   assert OK   : all 20 CNFs byte-identical to their recorded digests
+   assert OK   : 20 .cnf files written to the run dir
+--- PASS: 5b. CNF regeneration (20/20 byte-identical)
+
+-- 5c. one committed project DRAT refutation through the gate
+   command : dratcheck.py /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/cnf/generic_both-hooking.cnf evidence/drat/generic_both-hooking.drat
+   expected: PROOF VERIFIED (UNSAT); takes about 45 s
+   formula: 64566 clauses; proof: 663 steps
+   added lemmas verified: 518 (of which RAT-only: 0)   deletions: 145   empty clause derived: True
+   RESULT: PROOF VERIFIED (UNSAT)
+--- PASS: 5c. spot-check DRAT refutation (generic_both-hooking)
+
+-- 5d. the full A7 reproduction
+   command : independent/akr_l7_reproduction/reproduce.sh
+   expected: exit 0 and 'ALL CHECKS PASSED' and no '*** FAIL' line.
+             exit 2 means every executed check passed but z3 was skipped
+             (PARTIAL).  Takes roughly 5 minutes; the 15 DRAT re-checks
+             dominate.  NOTE: that script's own step() helper pipes into
+             tee without pipefail, so its exit status alone cannot be
+             trusted; the output is asserted on as well.
+   NOTE: reproduce.sh writes into independent/akr_l7_reproduction/evidence/logs/,
+         which is TRACKED historical evidence.  A copy of its pre-run contents
+         is in /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/05d_evidence_logs_before/ .
+         Restore with:  git -C /Users/jaydenlin/dev/lean/heptagon-intersections checkout -- independent/akr_l7_reproduction/evidence/logs
+
+========================================================================
+ENVIRONMENT
+========================================================================
+python           : 3.14.7 on macOS-15.6.1-arm64-arm-64bit-Mach-O
+z3 (z3-solver)   : PRESENT
+pysat            : ABSENT  -> cannot re-SOLVE; DRAT re-checking is unaffected
+SAT binaries     : NONE found on PATH
+
+========================================================================
+STEP: regenerate CNFs from indep_om.py and check SHA-256
+========================================================================
+generic_none.cnf         sha256 OK      5224c51d4d0920243e88baca4bfbcd7dc2bd9bcc7ed1199187aa4e62ee35b428
+generic_mixed-1.cnf      sha256 OK      c63b2408a991b20e5b215f5d003637c88a0e5888c68fcc6ecc32dda2c4e1fb4c
+generic_mixed-2.cnf      sha256 OK      e124f66057b07a7119e315686dfb76fb0f8721753aabfb7c610b4a48756a0f9c
+generic_both-hooking.cnf sha256 OK      afb87ba9118fb2125cd97cc1a05558630a7056408dc54b875f713a9c1c135fa5
+generic_both-hooked.cnf  sha256 OK      241ff8193c81052183fc43133eb270690629dd3d10a4f958585584e5b0d4652d
+P-adj_none.cnf           sha256 OK      e73ef4cd4b83238f37476207ad33d9707d5d3ce21c1e2ff431fef52d79b197d9
+P-adj_mixed-1.cnf        sha256 OK      a2bbf8ef746a120fcdeff677d801d37c050d99d29cf2a5bcbb99d001921bbf8f
+P-adj_mixed-2.cnf        sha256 OK      091114d8b15b3c1906b61ca4dfc555bb41f3cdb12120986099c0bd0f2dbc470e
+P-adj_both-hooking.cnf   sha256 OK      9ba8a3d87df52e17645f25e9b3bb731c2105d3af9329a2408a9b9f671b83fe14
+P-adj_both-hooked.cnf    sha256 OK      f3268af46f27664239cc4e022adc127aa92bcdd516fc4ab9c352c00e4f5c5e0b
+Q-adj_none.cnf           sha256 OK      98c4975f8e683767ca30e3a9863ebb1e43aa16aef091ed8cee0f8d6aea6f6958
+Q-adj_mixed-1.cnf        sha256 OK      1f32473b9e0362e2dbcc7f140ebe4d4d8c16c5de4a620948f1dc0677d5ca4330
+Q-adj_mixed-2.cnf        sha256 OK      eca2414cab9c6cfffd55358e294616bd86b4e8de4443ad4ffc5b5036a2767fd6
+Q-adj_both-hooking.cnf   sha256 OK      d1c735cf8a1c7968509258800445a87a9c135277c815d4ec0a773226a0da7aed
+Q-adj_both-hooked.cnf    sha256 OK      79c7ffa7a674225d66378e7d6bd3f1fb1af534017dae0ca1d4cdc44be12cb2c1
+PQ-adj_none.cnf          sha256 OK      28153d2430124b019fd6d078403ff3b653bcb30b9814f31308739a8b66cb0df6
+PQ-adj_mixed-1.cnf       sha256 OK      a083c0961deaeff14553fc96a34de7dfccb4027b2961018f3bd6cbcb1f9d879f
+PQ-adj_mixed-2.cnf       sha256 OK      05b26c08ffa8b0f78a1a1e8e90cfb4884ad1fb5c249febf3cf2c1cbc104043a9
+PQ-adj_both-hooking.cnf  sha256 OK      0bb4f6ba980973271046a92796aaa863696676164fe66c515a63c48b891227af
+PQ-adj_both-hooked.cnf   sha256 OK      febfdba99449c99d0516f63c69c43a92ae4253269526f050b1fde31e179ec486
+
+OK: all 20 CNFs regenerated byte-identically from indep_om.py
+--- PASS: regenerate CNFs from indep_om.py and check SHA-256
+
+========================================================================
+STEP: verify SHA-256 of all recovered artifacts
+========================================================================
+hash-verified: 56 file(s)
+OK: every artifact matches SHA256SUMS.txt
+--- PASS: verify SHA-256 of all recovered artifacts
+
+========================================================================
+STEP: validate dratcheck.py (PHP(4)/PHP(5) positives + negative controls)
+========================================================================
+== POSITIVE controls: pigeonhole PHP(4), PHP(5) — must VERIFY ==
+php4_lingeling       VERIFIED UNSAT (as required)
+php4_glucose4        VERIFIED UNSAT (as required)
+php5_lingeling       VERIFIED UNSAT (as required)
+php5_glucose4        VERIFIED UNSAT (as required)
+
+== NEGATIVE controls: each MUST be rejected ==
+php4_corrupt     REJECTED   real PHP(4) proof with one literal sign flipped
+                  *** DRAT CHECK FAILED at step 0: (11, 1, 5, 2, 6)
+                  
+sat_trivial      REJECTED   satisfiable formula + proof asserting the empty clause
+                  *** DRAT CHECK FAILED at step 0: ()
+                  
+unjustified      REJECTED   lemma not implied by the formula
+                  *** DRAT CHECK FAILED at step 1: ()
+                  
+wrong_formula    REJECTED   real UNSAT proof checked against the weaker SATISFIABLE generic_none CNF
+                  *** DRAT CHECK FAILED at step 0: (5, 1, 14)
+                  
+OK: dratcheck.py accepts all 4 pigeonhole proofs and rejects all 4 bad proofs.
+--- PASS: validate dratcheck.py (PHP(4)/PHP(5) positives + negative controls)
+
+========================================================================
+STEP: re-check all 15 DRAT refutations
+========================================================================
+generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     38.80s
+generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     32.17s
+P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      8.96s
+P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.63s
+P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.76s
+P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.65s
+Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     12.98s
+Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      7.96s
+Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.09s
+Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.92s
+PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.45s
+PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.33s
+PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      4.97s
+PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.21s
+PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.13s
+
+total wall time: 168.02s
+OK: 15 DRAT proofs verified UNSAT, 5 instances SAT (no proof), 20 total
+--- PASS: re-check all 15 DRAT refutations
+
+========================================================================
+STEP: check exported models for the 5 satisfiable instances
+========================================================================
+generic_none         clauses=64542   satisfied=64542   violated=0
+generic_mixed-1      clauses=64566   satisfied=64566   violated=0
+generic_mixed-2      clauses=64566   satisfied=64566   violated=0
+P-adj_none           clauses=37808   satisfied=37808   violated=0
+Q-adj_none           clauses=37808   satisfied=37808   violated=0
+
+OK: all 5 exported models verified in pure Python (no solver).
+--- PASS: check exported models for the 5 satisfiable instances
+
+========================================================================
+STEP: z3 cross-check of all 20 instances
+========================================================================
+generic_none           z3=sat   expected=sat   OK  vars=220  clauses=64542    0.33s
+generic_mixed-1        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
+generic_mixed-2        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
+generic_both-hooking   z3=unsat expected=unsat OK  vars=220  clauses=64566    0.35s
+generic_both-hooked    z3=unsat expected=unsat OK  vars=220  clauses=64566    0.12s
+P-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.06s
+P-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+P-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+P-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+P-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+Q-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.06s
+Q-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+Q-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+Q-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+Q-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+PQ-adj_none            z3=unsat expected=unsat OK  vars=120  clauses=20764    0.03s
+PQ-adj_mixed-1         z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+PQ-adj_mixed-2         z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+PQ-adj_both-hooking    z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+PQ-adj_both-hooked     z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+
+OK: z3 agrees with RESULTS.md on all 20 instances (15 unsat, 5 sat with exported models)
+--- PASS: z3 cross-check
+
+========================================================================
+STEP: positive control - AKR Fig. 6 vs the actual clauses
+========================================================================
+pattern conditions checked: 24 mismatches: 0
+hooking1=True hooked1=False hooking2=False hooked2=True
+clauses in independent generic/mixed-1 CNF: 64566  VIOLATED by the real configuration: 0
+--- PASS: Fig. 6 realises the pattern and satisfies every clause of generic/mixed-1
+
+========================================================================
+STEP: Observation 6 counterexample certificate
+========================================================================
+P (triangle) sides:
+   p0 = ((2, 0), (3, 4))
+   p1 = ((3, 4), (-2, 0))
+   p2 = ((-2, 0), (2, 0))
+Q (pentagon) sides:
+   q0 = ((4, -4), (-3, 1))
+   q1 = ((-3, 1), (0, -1))
+   q2 = ((0, -1), (3, 3))
+   q3 = ((3, 3), (2, 1))
+   q4 = ((2, 1), (4, -4))
+
+P simple: True    Q simple: True
+14/8 vertices distinct: True
+no 3 of the 8 combined vertices collinear (GP2): True
+no vertex of one polygon on the other (GP1): True
+no two of the 8 sides parallel (GP3): True
+
+Disjointness graph G^D  (edge = the two sides are DISJOINT):
+   p0 : E E . . .
+   p1 : . . E E E
+   p2 : . . . E E
+   (E = disjoint = edge of G^D,  . = they cross)
+components: [['p0', 'q0', 'q1'], ['p1', 'p2', 'q2', 'q3', 'q4']]
+CC(p0) != CC(p1) : True
+
+The consecutive P-pair  a=p0, b=p1  (shared vertex {(3, 4)})
+The consecutive Q-pair  A=q0, B=q4  (shared vertex {(4, -4)})
+  (p0,q0) in E^D  [a,A disjoint] : True
+  (p1,q4) in E^D  [b,B disjoint] : True
+  => q0,q4 is ASSOCIATED to p0,p1 under AKR's printed definition
+  (p0,q4) NOT in E^D [a,B cross]  : True    <- Lemma 5's cross non-edge (N1)
+  (p1,q0) NOT in E^D [b,A cross]  : True    <- Lemma 5's cross non-edge (N2)
+
+  I(a,b) = (3, 4)    I(A,B) = (4, -4)
+  hooking?  I(A,B) in Cone(a,b) : False
+  hooked ?  I(a,b) in Cone(A,B) : False
+  => the pair is NEITHER hooking NOR hooked; Lemma 5's cone dichotomy FAILS for it
+
+  axis = the line through I(a,b)=(3, 4) and I(A,B)=(4, -4)
+    a=p0  endpoints on sides [-1, 0]
+    b=p1  endpoints on sides [0, -1]
+    A=q0  endpoints on sides [0, -1]
+    B=q4  endpoints on sides [-1, 0]
+  Observation 6 demands {a,B} on one side and {b,A} on the other.
+  AXIS PROPERTY HOLDS: False
+--- PASS: exhibits two simple polygons in general position where the Axis Property fails
+
+========================================================================
+STEP: coverage.py -- HISTORICAL / SUPERSEDED, NOT load-bearing
+========================================================================
+This step reproduces the ORIGINAL coverage argument only so that the
+record can be re-derived.  Its conclusion -- that one Q-adj representative
+covers all four Q-adjacencies -- is WRONG in combination with a
+P-adjacency (docs/known-issues.md K-16), and the representative it
+justifies (PQ-adj) is VACUOUS: PQ-adj/none is UNSAT.
+Coverage is established by STEP 10 below, not here.
+
+P-side endpoint coincidences for n = 7, as a function of d = (j-i) mod 7:
+  d=2  vertices {'a2': 6, 'ap2': 1, 'b2': 1, 'bp2': 3, 'v1': 0, 'v2': 2}  coincidences {1: ['b2', 'ap2']}  -> P-adj (up to the a<->b, a'<->b' symmetry)
+  d=3  vertices {'a2': 6, 'ap2': 2, 'b2': 1, 'bp2': 4, 'v1': 0, 'v2': 3}  coincidences none  -> generic
+  d=4  vertices {'a2': 6, 'ap2': 3, 'b2': 1, 'bp2': 5, 'v1': 0, 'v2': 4}  coincidences none  -> generic
+  d=5  vertices {'a2': 6, 'ap2': 4, 'b2': 1, 'bp2': 6, 'v1': 0, 'v2': 5}  coincidences {6: ['a2', 'bp2']}  -> P-adj (up to the a<->b, a'<->b' symmetry)
+
+Q-side adjacency: the four possible adjacencies between the pairs (A,B)
+and (A',B') of Q, and their images under the order-16 automorphism group:
+  orbits among the four Q-adjacencies: [[('A', 'Ap'), ('A', 'Bp'), ('Ap', 'B'), ('B', 'Bp')]]
+  => 1 orbit(s); the Q-adj variant models one representative, so all are covered.
+--- PASS: the historical (superseded) output was reproduced verbatim
+
+========================================================================
+STEP: K-16 REPLACEMENT -- 25-combination coverage (LOAD-BEARING)
+========================================================================
+
+----------------------------------------------------------------------
+C25 ENVIRONMENT
+----------------------------------------------------------------------
+python : 3.14.7 on macOS-15.6.1-arm64-arm-64bit-Mach-O
+z3     : PRESENT
+pysat  : ABSENT (only needed to RE-DERIVE the DRAT proofs)
+cross-check interpreter: /Users/jaydenlin/dev/lean/heptagon-intersections/independent/akr_l7_reproduction/coverage25/.venv/bin/python
+venv pysat: 1.9.dev15
+NOTE: the 110 DRAT certificates under drat/ were derived once by
+      solve_all.py in the isolated venv coverage25/.venv (gitignored).
+      Re-CHECKING them (verify_all.py) needs only the standard library.
+
+----------------------------------------------------------------------
+C25 STEP: the 25 (P-type x Q-type) combinations
+----------------------------------------------------------------------
+P-types (5): none, a-ap, a-bp, b-ap, b-bp
+Q-types (5): none, A-Ap, A-Bp, B-Ap, B-Bp
+combinations: 5 x 5 = 25
+statuses (5): none, mixed-1, mixed-2, both-hooking, both-hooked
+instances:    125
+
+  Pnone  Qnone   points=12  legacy=generic
+  Pnone  QA-Ap   points=11  legacy=-
+  Pnone  QA-Bp   points=11  legacy=-
+  Pnone  QB-Ap   points=11  legacy=Q-adj
+  Pnone  QB-Bp   points=11  legacy=-
+  Pa-ap  Qnone   points=11  legacy=-
+  Pa-ap  QA-Ap   points=10  legacy=-
+  Pa-ap  QA-Bp   points=10  legacy=-
+  Pa-ap  QB-Ap   points=10  legacy=-
+  Pa-ap  QB-Bp   points=10  legacy=-
+  Pa-bp  Qnone   points=11  legacy=-
+  Pa-bp  QA-Ap   points=10  legacy=-
+  Pa-bp  QA-Bp   points=10  legacy=-
+  Pa-bp  QB-Ap   points=10  legacy=-
+  Pa-bp  QB-Bp   points=10  legacy=-
+  Pb-ap  Qnone   points=11  legacy=P-adj
+  Pb-ap  QA-Ap   points=10  legacy=-
+  Pb-ap  QA-Bp   points=10  legacy=-
+  Pb-ap  QB-Ap   points=10  legacy=PQ-adj
+  Pb-ap  QB-Bp   points=10  legacy=-
+  Pb-bp  Qnone   points=11  legacy=-
+  Pb-bp  QA-Ap   points=10  legacy=-
+  Pb-bp  QA-Bp   points=10  legacy=-
+  Pb-bp  QB-Ap   points=10  legacy=-
+  Pb-bp  QB-Bp   points=10  legacy=-
+--- PASS: the 25 (P-type x Q-type) combinations
+
+----------------------------------------------------------------------
+C25 STEP: completeness of the 25-combination list for n = 7
+----------------------------------------------------------------------
+==========================================================================
+COMPLETENESS OF THE 25-COMBINATION TYPE LIST FOR n = 7
+==========================================================================
+
+Step 1 -- which (u2-u) mod 7 are admissible
+   d = 0 : excluded  d=0: the two pairs coincide
+   d = 1 : excluded  the two pairs share a side (p_u+1)
+   d = 2 : ADMISSIBLE OK
+   d = 3 : ADMISSIBLE OK
+   d = 4 : ADMISSIBLE OK
+   d = 5 : ADMISSIBLE OK
+   d = 6 : excluded  the two pairs share a side (p_u)
+
+Step 2 -- the far-far coincidence conditions, solved exactly in Z_7
+   a2 = V(u-1), b2 = V(u+1), ap2 = V(u2-1), bp2 = V(u2+1)   [unprimed = pair(u)]
+   a2 = ap2   <=>  u-1 = u2-1   <=>  d = [0]   -> admissible d: NONE
+   b2 = bp2   <=>  u+1 = u2+1   <=>  d = [0]   -> admissible d: NONE
+   a2 = bp2   <=>  u-1 = u2+1   <=>  d = [5]   -> admissible d: [5]
+   b2 = ap2   <=>  u+1 = u2-1   <=>  d = [2]   -> admissible d: [2]
+   => for a FIXED labelling only d=2 (b2=ap2) and d=5 (a2=bp2) occur,
+      and never both, since d cannot be 2 and 5 at once.
+      Relabelling (which side is 'a') moves the coincidence among all
+      four named pairs, so all five P-types are labelled-realisable.
+
+Step 3 -- exhaustive enumeration over (u,d_P,w,d_Q,phi,labelling)
+   cases enumerated: 50176
+   (C1) apex coincidences        : 0
+   (C2) non-far-far coincidences : 0
+   (C3) simultaneous coincidences: 0
+   P-type occurrences: none=25088, a-ap=6272, a-bp=6272, b-ap=6272, b-bp=6272
+   Q-type occurrences: none=25088, A-Ap=6272, A-Bp=6272, B-Ap=6272, B-Bp=6272
+
+Step 4 -- every realisable combined type is in the solved 25-list
+   distinct realisable combined types : 25
+   solved combinations                : 25
+   realisable \ solved                : 0   <-- COVERAGE COMPLETE
+   solved but not realisable          : 0 
+   (solving unrealisable combinations is harmless: the list is a
+    SUPERSET of what a counterexample can produce.)
+
+Step 5 -- diagnostic: why 25 and not 4 (this is the K-16 defect)
+   Q-adjacencies in ISOLATION under the order-16 group: 1 orbit(s)
+       [('A', 'Ap'), ('A', 'Bp'), ('Ap', 'B'), ('B', 'Bp')]
+   => coverage.py's claim, and it is correct AS FAR AS IT GOES.
+   COMBINED (P-type,Q-type) under the SAME group: 5 orbit(s)
+       ['Pnone/Qnone']
+       ['Pa-ap/Qnone', 'Pa-bp/Qnone', 'Pb-ap/Qnone', 'Pb-bp/Qnone', 'Pnone/QA-Ap', 'Pnone/QA-Bp', 'Pnone/QB-Ap', 'Pnone/QB-Bp']
+       ['Pa-ap/QA-Ap', 'Pa-bp/QA-Bp', 'Pb-ap/QB-Ap', 'Pb-bp/QB-Bp']
+       ['Pa-ap/QA-Bp', 'Pa-ap/QB-Ap', 'Pa-bp/QA-Ap', 'Pa-bp/QB-Bp', 'Pb-ap/QA-Ap', 'Pb-ap/QB-Bp', 'Pb-bp/QA-Bp', 'Pb-bp/QB-Ap']
+       ['Pa-ap/QB-Bp', 'Pa-bp/QB-Ap', 'Pb-ap/QA-Bp', 'Pb-bp/QA-Ap']
+   => a single representative does NOT suffice.  No reduction is used
+      below: all 25 are solved separately.
+
+RESULT: the 25-combination list is COMPLETE for n = 7.
+--- PASS: completeness of the 25-combination list for n = 7
+
+----------------------------------------------------------------------
+C25 STEP: regenerate the 125 CNFs and check SHA-256
+----------------------------------------------------------------------
+Pnone_Qnone_none                   vars=220  clauses=64542  5224c51d4d092024  legacy=generic_none BYTE-IDENTICAL
+Pnone_Qnone_mixed-1                vars=220  clauses=64566  c63b2408a991b20e  legacy=generic_mixed-1 BYTE-IDENTICAL
+Pnone_Qnone_mixed-2                vars=220  clauses=64566  e124f66057b07a71  legacy=generic_mixed-2 BYTE-IDENTICAL
+Pnone_Qnone_both-hooking           vars=220  clauses=64566  afb87ba9118fb212  legacy=generic_both-hooking BYTE-IDENTICAL
+Pnone_Qnone_both-hooked            vars=220  clauses=64566  241ff8193c810521  legacy=generic_both-hooked BYTE-IDENTICAL
+Pnone_QA-Ap_none                   vars=165  clauses=37808  6f1fccd0c248bed6  
+Pnone_QA-Ap_mixed-1                vars=165  clauses=37832  d3301f81f027bb3c  
+Pnone_QA-Ap_mixed-2                vars=165  clauses=37832  c3dc29af80334709  
+Pnone_QA-Ap_both-hooking           vars=165  clauses=37832  844e158334c2c3d4  
+Pnone_QA-Ap_both-hooked            vars=165  clauses=37832  24a75c311e6c6c3d  
+Pnone_QA-Bp_none                   vars=165  clauses=37808  9f2d0ec0422c11ae  
+Pnone_QA-Bp_mixed-1                vars=165  clauses=37832  da21f7f0a3886118  
+Pnone_QA-Bp_mixed-2                vars=165  clauses=37832  d1a5cbce241630a8  
+Pnone_QA-Bp_both-hooking           vars=165  clauses=37832  d39558ac07fdae38  
+Pnone_QA-Bp_both-hooked            vars=165  clauses=37832  dd58dfd2cdd6a869  
+Pnone_QB-Ap_none                   vars=165  clauses=37808  98c4975f8e683767  legacy=Q-adj_none BYTE-IDENTICAL
+Pnone_QB-Ap_mixed-1                vars=165  clauses=37832  1f32473b9e0362e2  legacy=Q-adj_mixed-1 BYTE-IDENTICAL
+Pnone_QB-Ap_mixed-2                vars=165  clauses=37832  eca2414cab9c6cff  legacy=Q-adj_mixed-2 BYTE-IDENTICAL
+Pnone_QB-Ap_both-hooking           vars=165  clauses=37832  d1c735cf8a1c7968  legacy=Q-adj_both-hooking BYTE-IDENTICAL
+Pnone_QB-Ap_both-hooked            vars=165  clauses=37832  79c7ffa7a674225d  legacy=Q-adj_both-hooked BYTE-IDENTICAL
+Pnone_QB-Bp_none                   vars=165  clauses=37808  f41435ecc185a565  
+Pnone_QB-Bp_mixed-1                vars=165  clauses=37832  08fc3d6733e1ff96  
+Pnone_QB-Bp_mixed-2                vars=165  clauses=37832  e807b36214e6a651  
+Pnone_QB-Bp_both-hooking           vars=165  clauses=37832  ef1842ea19ae1665  
+Pnone_QB-Bp_both-hooked            vars=165  clauses=37832  78d5474a6268caf5  
+Pa-ap_Qnone_none                   vars=165  clauses=37808  ebc60fe6c3e05ea9  
+Pa-ap_Qnone_mixed-1                vars=165  clauses=37832  640f50766db9dfcc  
+Pa-ap_Qnone_mixed-2                vars=165  clauses=37832  834801cfc7561271  
+Pa-ap_Qnone_both-hooking           vars=165  clauses=37832  1e2a961143b3b2bd  
+Pa-ap_Qnone_both-hooked            vars=165  clauses=37832  ec0420b7896c2288  
+Pa-ap_QA-Ap_none                   vars=120  clauses=20764  002161b4d84c95cf  
+Pa-ap_QA-Ap_mixed-1                vars=120  clauses=20788  b6ac919a22327d5c  
+Pa-ap_QA-Ap_mixed-2                vars=120  clauses=20788  b5b03b3b276acce1  
+Pa-ap_QA-Ap_both-hooking           vars=120  clauses=20788  d3fff6c6cd00cefd  
+Pa-ap_QA-Ap_both-hooked            vars=120  clauses=20788  2220ad6cbbf90314  
+Pa-ap_QA-Bp_none                   vars=120  clauses=20764  6c23811d0f9ffe99  
+Pa-ap_QA-Bp_mixed-1                vars=120  clauses=20788  21f6876b87476d95  
+Pa-ap_QA-Bp_mixed-2                vars=120  clauses=20788  9bb741d020723e87  
+Pa-ap_QA-Bp_both-hooking           vars=120  clauses=20788  0fef735b672cce1f  
+Pa-ap_QA-Bp_both-hooked            vars=120  clauses=20788  70973b9012ca1e92  
+Pa-ap_QB-Ap_none                   vars=120  clauses=20764  186d8de9d81b278c  
+Pa-ap_QB-Ap_mixed-1                vars=120  clauses=20788  98cf6191ca33c68b  
+Pa-ap_QB-Ap_mixed-2                vars=120  clauses=20788  1f8666afbc8b3178  
+Pa-ap_QB-Ap_both-hooking           vars=120  clauses=20788  4ad4d4d1b13e78ad  
+Pa-ap_QB-Ap_both-hooked            vars=120  clauses=20788  030ee1f8bbd9863d  
+Pa-ap_QB-Bp_none                   vars=120  clauses=20764  7d3b944d82e6f001  
+Pa-ap_QB-Bp_mixed-1                vars=120  clauses=20788  a833fb2e8c886851  
+Pa-ap_QB-Bp_mixed-2                vars=120  clauses=20788  ba0490019a87247b  
+Pa-ap_QB-Bp_both-hooking           vars=120  clauses=20788  365c3bc5546ac1ef  
+Pa-ap_QB-Bp_both-hooked            vars=120  clauses=20788  319c912e25f400b6  
+Pa-bp_Qnone_none                   vars=165  clauses=37808  598183b4417da016  
+Pa-bp_Qnone_mixed-1                vars=165  clauses=37832  a1f9b851e9826f07  
+Pa-bp_Qnone_mixed-2                vars=165  clauses=37832  232f249af3b0ca66  
+Pa-bp_Qnone_both-hooking           vars=165  clauses=37832  b3ca348a29b33917  
+Pa-bp_Qnone_both-hooked            vars=165  clauses=37832  dc2e1b7110637ab6  
+Pa-bp_QA-Ap_none                   vars=120  clauses=20764  d68479ec25343a65  
+Pa-bp_QA-Ap_mixed-1                vars=120  clauses=20788  1c78671f52ed8a40  
+Pa-bp_QA-Ap_mixed-2                vars=120  clauses=20788  d83f7a72b60d4f0d  
+Pa-bp_QA-Ap_both-hooking           vars=120  clauses=20788  7786dbef3c530f63  
+Pa-bp_QA-Ap_both-hooked            vars=120  clauses=20788  4d378c4d8bc0d2a3  
+Pa-bp_QA-Bp_none                   vars=120  clauses=20764  4b229cc50a735f5b  
+Pa-bp_QA-Bp_mixed-1                vars=120  clauses=20788  4fdbc4c34ec6e473  
+Pa-bp_QA-Bp_mixed-2                vars=120  clauses=20788  7f31b7da3fa68405  
+Pa-bp_QA-Bp_both-hooking           vars=120  clauses=20788  bfbad71a122d8be7  
+Pa-bp_QA-Bp_both-hooked            vars=120  clauses=20788  f630fdf259103082  
+Pa-bp_QB-Ap_none                   vars=120  clauses=20764  2381e4b53d10c0ee  
+Pa-bp_QB-Ap_mixed-1                vars=120  clauses=20788  0a0e4b98683eb6df  
+Pa-bp_QB-Ap_mixed-2                vars=120  clauses=20788  875052a81abf17e9  
+Pa-bp_QB-Ap_both-hooking           vars=120  clauses=20788  0051bf334adc8f5f  
+Pa-bp_QB-Ap_both-hooked            vars=120  clauses=20788  8b0bb46efd5fc6f3  
+Pa-bp_QB-Bp_none                   vars=120  clauses=20764  f7783819a19f9b40  
+Pa-bp_QB-Bp_mixed-1                vars=120  clauses=20788  46e552d9e4178225  
+Pa-bp_QB-Bp_mixed-2                vars=120  clauses=20788  dc5eea156aeaaab9  
+Pa-bp_QB-Bp_both-hooking           vars=120  clauses=20788  a5d88089dd91d5cb  
+Pa-bp_QB-Bp_both-hooked            vars=120  clauses=20788  d9a2ff05eb33c44f  
+Pb-ap_Qnone_none                   vars=165  clauses=37808  e73ef4cd4b83238f  legacy=P-adj_none BYTE-IDENTICAL
+Pb-ap_Qnone_mixed-1                vars=165  clauses=37832  a2bbf8ef746a120f  legacy=P-adj_mixed-1 BYTE-IDENTICAL
+Pb-ap_Qnone_mixed-2                vars=165  clauses=37832  091114d8b15b3c19  legacy=P-adj_mixed-2 BYTE-IDENTICAL
+Pb-ap_Qnone_both-hooking           vars=165  clauses=37832  9ba8a3d87df52e17  legacy=P-adj_both-hooking BYTE-IDENTICAL
+Pb-ap_Qnone_both-hooked            vars=165  clauses=37832  f3268af46f276642  legacy=P-adj_both-hooked BYTE-IDENTICAL
+Pb-ap_QA-Ap_none                   vars=120  clauses=20764  ffa9de54e1b02cb4  
+Pb-ap_QA-Ap_mixed-1                vars=120  clauses=20788  68ad15e5eed94f46  
+Pb-ap_QA-Ap_mixed-2                vars=120  clauses=20788  9b18f3d4435597dc  
+Pb-ap_QA-Ap_both-hooking           vars=120  clauses=20788  1008fdc1d3ff5ced  
+Pb-ap_QA-Ap_both-hooked            vars=120  clauses=20788  8bab6c55b1ef304c  
+Pb-ap_QA-Bp_none                   vars=120  clauses=20764  9aed6ce166683d06  
+Pb-ap_QA-Bp_mixed-1                vars=120  clauses=20788  9af4a0db89bde6df  
+Pb-ap_QA-Bp_mixed-2                vars=120  clauses=20788  33eede6442544ae4  
+Pb-ap_QA-Bp_both-hooking           vars=120  clauses=20788  b4c9bf255c793b1f  
+Pb-ap_QA-Bp_both-hooked            vars=120  clauses=20788  5c72963d9055ec78  
+Pb-ap_QB-Ap_none                   vars=120  clauses=20764  28153d2430124b01  legacy=PQ-adj_none BYTE-IDENTICAL
+Pb-ap_QB-Ap_mixed-1                vars=120  clauses=20788  a083c0961deaeff1  legacy=PQ-adj_mixed-1 BYTE-IDENTICAL
+Pb-ap_QB-Ap_mixed-2                vars=120  clauses=20788  05b26c08ffa8b0f7  legacy=PQ-adj_mixed-2 BYTE-IDENTICAL
+Pb-ap_QB-Ap_both-hooking           vars=120  clauses=20788  0bb4f6ba98097327  legacy=PQ-adj_both-hooking BYTE-IDENTICAL
+Pb-ap_QB-Ap_both-hooked            vars=120  clauses=20788  febfdba99449c99d  legacy=PQ-adj_both-hooked BYTE-IDENTICAL
+Pb-ap_QB-Bp_none                   vars=120  clauses=20764  5909e335e04b4b16  
+Pb-ap_QB-Bp_mixed-1                vars=120  clauses=20788  08c85b0959374aa1  
+Pb-ap_QB-Bp_mixed-2                vars=120  clauses=20788  0d035074164eef01  
+Pb-ap_QB-Bp_both-hooking           vars=120  clauses=20788  609e4ee7ca7b9e75  
+Pb-ap_QB-Bp_both-hooked            vars=120  clauses=20788  27717c7f73de9d5f  
+Pb-bp_Qnone_none                   vars=165  clauses=37808  6f17861c0dc0788e  
+Pb-bp_Qnone_mixed-1                vars=165  clauses=37832  09ccb24c2f3a0de3  
+Pb-bp_Qnone_mixed-2                vars=165  clauses=37832  b6d507b7e0a863cd  
+Pb-bp_Qnone_both-hooking           vars=165  clauses=37832  d63585a7e2b7e110  
+Pb-bp_Qnone_both-hooked            vars=165  clauses=37832  273e79335e1abe9d  
+Pb-bp_QA-Ap_none                   vars=120  clauses=20764  e6ec37da3a0bb6a7  
+Pb-bp_QA-Ap_mixed-1                vars=120  clauses=20788  eb96b94092628090  
+Pb-bp_QA-Ap_mixed-2                vars=120  clauses=20788  37df60daa80a8755  
+Pb-bp_QA-Ap_both-hooking           vars=120  clauses=20788  070fef6825ddaa1c  
+Pb-bp_QA-Ap_both-hooked            vars=120  clauses=20788  8ed67d42c45237c5  
+Pb-bp_QA-Bp_none                   vars=120  clauses=20764  de69d1282a9b8203  
+Pb-bp_QA-Bp_mixed-1                vars=120  clauses=20788  e8eabaa799338b8a  
+Pb-bp_QA-Bp_mixed-2                vars=120  clauses=20788  00a6274f0b78527e  
+Pb-bp_QA-Bp_both-hooking           vars=120  clauses=20788  aab62b90d8f2045c  
+Pb-bp_QA-Bp_both-hooked            vars=120  clauses=20788  0f3b16211d4e988b  
+Pb-bp_QB-Ap_none                   vars=120  clauses=20764  0329731da06440aa  
+Pb-bp_QB-Ap_mixed-1                vars=120  clauses=20788  506f4615717b4980  
+Pb-bp_QB-Ap_mixed-2                vars=120  clauses=20788  9357af4798a3566a  
+Pb-bp_QB-Ap_both-hooking           vars=120  clauses=20788  743ecba058ab4664  
+Pb-bp_QB-Ap_both-hooked            vars=120  clauses=20788  d7ed457998c2e4ed  
+Pb-bp_QB-Bp_none                   vars=120  clauses=20764  8d94d8bdeefe7dc4  
+Pb-bp_QB-Bp_mixed-1                vars=120  clauses=20788  668109ae709c8ac8  
+Pb-bp_QB-Bp_mixed-2                vars=120  clauses=20788  6848ca8f45c1ad0a  
+Pb-bp_QB-Bp_both-hooking           vars=120  clauses=20788  8fb20a287a98d06f  
+Pb-bp_QB-Bp_both-hooked            vars=120  clauses=20788  35523ddc63d9874e  
+
+OK: 125 CNFs generated deterministically
+    20/20 legacy-twin instances byte-identical to the committed CNFs
+    125/125 match CNF_SHA256SUMS.txt
+--- PASS: regenerate the 125 CNFs and check SHA-256
+
+----------------------------------------------------------------------
+C25 STEP: re-check all 125 certificates (110 DRAT + 15 models, no solver)
+----------------------------------------------------------------------
+verifying 125 instances with 8 worker(s); checker = evidence/tools/dratcheck.py
+
+Pnone_Qnone_none                   SAT   model  VERIFIED               
+Pnone_Qnone_mixed-1                SAT   model  VERIFIED               
+Pnone_Qnone_mixed-2                SAT   model  VERIFIED               
+Pnone_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=663
+Pnone_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=606
+Pnone_QA-Ap_none                   SAT   model  VERIFIED               
+Pnone_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=462
+Pnone_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=521
+Pnone_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=547
+Pnone_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=440
+Pnone_QA-Bp_none                   SAT   model  VERIFIED               
+Pnone_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=412
+Pnone_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=408
+Pnone_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=377
+Pnone_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=395
+Pnone_QB-Ap_none                   SAT   model  VERIFIED               
+Pnone_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=441
+Pnone_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=382
+Pnone_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=503
+Pnone_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=290
+Pnone_QB-Bp_none                   SAT   model  VERIFIED               
+Pnone_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=476
+Pnone_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=451
+Pnone_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=481
+Pnone_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=375
+Pa-ap_Qnone_none                   SAT   model  VERIFIED               
+Pa-ap_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=355
+Pa-ap_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=471
+Pa-ap_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=469
+Pa-ap_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=408
+Pa-ap_QA-Ap_none                   UNSAT drat   VERIFIED               steps=339
+Pa-ap_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=275
+Pa-ap_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=347
+Pa-ap_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=270
+Pa-ap_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-ap_QA-Bp_none                   UNSAT drat   VERIFIED               steps=253
+Pa-ap_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=192
+Pa-ap_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=323
+Pa-ap_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=275
+Pa-ap_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=259
+Pa-ap_QB-Ap_none                   UNSAT drat   VERIFIED               steps=190
+Pa-ap_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=209
+Pa-ap_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=291
+Pa-ap_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=233
+Pa-ap_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=190
+Pa-ap_QB-Bp_none                   SAT   model  VERIFIED               
+Pa-ap_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=303
+Pa-ap_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=360
+Pa-ap_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=282
+Pa-ap_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=252
+Pa-bp_Qnone_none                   SAT   model  VERIFIED               
+Pa-bp_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=376
+Pa-bp_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=354
+Pa-bp_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=396
+Pa-bp_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-bp_QA-Ap_none                   UNSAT drat   VERIFIED               steps=253
+Pa-bp_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=192
+Pa-bp_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=323
+Pa-bp_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=275
+Pa-bp_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=259
+Pa-bp_QA-Bp_none                   UNSAT drat   VERIFIED               steps=339
+Pa-bp_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=275
+Pa-bp_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=372
+Pa-bp_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=270
+Pa-bp_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=399
+Pa-bp_QB-Ap_none                   SAT   model  VERIFIED               
+Pa-bp_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=303
+Pa-bp_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=344
+Pa-bp_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=282
+Pa-bp_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=291
+Pa-bp_QB-Bp_none                   UNSAT drat   VERIFIED               steps=192
+Pa-bp_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=209
+Pa-bp_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=291
+Pa-bp_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=233
+Pa-bp_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=190
+Pb-ap_Qnone_none                   SAT   model  VERIFIED               
+Pb-ap_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=396
+Pb-ap_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=371
+Pb-ap_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=389
+Pb-ap_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=418
+Pb-ap_QA-Ap_none                   UNSAT drat   VERIFIED               steps=209
+Pb-ap_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=226
+Pb-ap_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=285
+Pb-ap_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=260
+Pb-ap_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=187
+Pb-ap_QA-Bp_none                   SAT   model  VERIFIED               
+Pb-ap_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=339
+Pb-ap_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=304
+Pb-ap_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=394
+Pb-ap_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=320
+Pb-ap_QB-Ap_none                   UNSAT drat   VERIFIED               steps=329
+Pb-ap_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=283
+Pb-ap_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=348
+Pb-ap_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=280
+Pb-ap_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=272
+Pb-ap_QB-Bp_none                   UNSAT drat   VERIFIED               steps=276
+Pb-ap_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=229
+Pb-ap_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=361
+Pb-ap_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=392
+Pb-ap_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=244
+Pb-bp_Qnone_none                   SAT   model  VERIFIED               
+Pb-bp_Qnone_mixed-1                UNSAT drat   VERIFIED               steps=403
+Pb-bp_Qnone_mixed-2                UNSAT drat   VERIFIED               steps=382
+Pb-bp_Qnone_both-hooking           UNSAT drat   VERIFIED               steps=404
+Pb-bp_Qnone_both-hooked            UNSAT drat   VERIFIED               steps=544
+Pb-bp_QA-Ap_none                   SAT   model  VERIFIED               
+Pb-bp_QA-Ap_mixed-1                UNSAT drat   VERIFIED               steps=339
+Pb-bp_QA-Ap_mixed-2                UNSAT drat   VERIFIED               steps=304
+Pb-bp_QA-Ap_both-hooking           UNSAT drat   VERIFIED               steps=394
+Pb-bp_QA-Ap_both-hooked            UNSAT drat   VERIFIED               steps=320
+Pb-bp_QA-Bp_none                   UNSAT drat   VERIFIED               steps=236
+Pb-bp_QA-Bp_mixed-1                UNSAT drat   VERIFIED               steps=226
+Pb-bp_QA-Bp_mixed-2                UNSAT drat   VERIFIED               steps=285
+Pb-bp_QA-Bp_both-hooking           UNSAT drat   VERIFIED               steps=239
+Pb-bp_QA-Bp_both-hooked            UNSAT drat   VERIFIED               steps=187
+Pb-bp_QB-Ap_none                   UNSAT drat   VERIFIED               steps=277
+Pb-bp_QB-Ap_mixed-1                UNSAT drat   VERIFIED               steps=229
+Pb-bp_QB-Ap_mixed-2                UNSAT drat   VERIFIED               steps=361
+Pb-bp_QB-Ap_both-hooking           UNSAT drat   VERIFIED               steps=392
+Pb-bp_QB-Ap_both-hooked            UNSAT drat   VERIFIED               steps=238
+Pb-bp_QB-Bp_none                   UNSAT drat   VERIFIED               steps=378
+Pb-bp_QB-Bp_mixed-1                UNSAT drat   VERIFIED               steps=283
+Pb-bp_QB-Bp_mixed-2                UNSAT drat   VERIFIED               steps=279
+Pb-bp_QB-Bp_both-hooking           UNSAT drat   VERIFIED               steps=352
+Pb-bp_QB-Bp_both-hooked            UNSAT drat   VERIFIED               steps=272
+
+==========================================================================
+PER-COMBINATION TABLE  (all verdicts below are CERTIFICATE-VERIFIED)
+==========================================================================
+P-type Q-type none   mixed-1  mixed-2  both-hooking  both-hooked  note
+none   none   SAT    SAT      SAT      UNSAT         UNSAT        legacy=generic
+none   A-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+none   A-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+none   B-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        legacy=Q-adj
+none   B-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-ap   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-ap   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-ap   B-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-bp   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+a-bp   B-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+a-bp   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-ap   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        legacy=P-adj
+b-ap   A-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-ap   A-Bp   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-ap   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS legacy=PQ-adj
+b-ap   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   none   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-bp   A-Ap   SAT    UNSAT    UNSAT    UNSAT         UNSAT        
+b-bp   A-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   B-Ap   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+b-bp   B-Bp   UNSAT  UNSAT    UNSAT    UNSAT         UNSAT        VACUOUS
+
+125 instances verified: 110 DRAT refutations, 15 models
+combinations: 25   non-vacuous: 13   VACUOUS: 12
+   VACUOUS  Pa-ap  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-ap  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-ap  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pa-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QA-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-ap  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QA-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
+   VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
+both-hooking AND both-hooked UNSAT in all 25 combinations: True
+wall time: 143.9s
+
+OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
+    Every one of the 25 labelled (P-type x Q-type) combinations has
+    both-hooking and both-hooked refuted by a DRAT proof that was
+    re-checked here, against a CNF re-derived from source and matched
+    by SHA-256.
+--- PASS: re-check all 125 certificates (110 DRAT + 15 models, no solver)
+
+----------------------------------------------------------------------
+C25 STEP: independent solver cross-check of all 125 verdicts
+----------------------------------------------------------------------
+solvers available: pysat
+
+Pnone_Qnone_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_Qnone_mixed-1                expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_Qnone_mixed-2                expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_Qnone_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_Qnone_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Ap_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_QA-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Bp_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_QA-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QA-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Ap_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_QB-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Bp_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pnone_QB-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pnone_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_Qnone_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pa-ap_Qnone_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_Qnone_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_Qnone_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_Qnone_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QA-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Bp_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pa-ap_QB-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-ap_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_Qnone_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pa-bp_Qnone_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_Qnone_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_Qnone_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_Qnone_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QA-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Ap_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pa-bp_QB-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pa-bp_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_Qnone_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pb-ap_Qnone_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_Qnone_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_Qnone_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_Qnone_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Bp_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pb-ap_QA-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QA-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-ap_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_Qnone_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pb-bp_Qnone_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_Qnone_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_Qnone_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_Qnone_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Ap_none                   expected=SAT   cadical153=SAT glucose42=SAT  OK
+Pb-bp_QA-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QA-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Ap_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Ap_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Ap_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Ap_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Ap_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Bp_none                   expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Bp_mixed-1                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+Pb-bp_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
+
+125 instances, 6.5s
+OK: every available solver agrees with results.json on all 125 instances.
+--- PASS: c25 solver cross-check
+
+----------------------------------------------------------------------
+C25 SUMMARY
+----------------------------------------------------------------------
+K-16 REPLACEMENT COVERAGE ESTABLISHED.
+  25/25 labelled (P-type x Q-type) combinations enumerated, no symmetry reduction
+ 125/125 instances certificate-checked (110 DRAT refutations + 15 models)
+  25/25 combinations have both-hooking AND both-hooked UNSAT
+  12/25 combinations are VACUOUS (base pattern already UNSAT) and are
+        reported as such; the old PQ-adj representative was one of them
+--- PASS: 25/25 combinations, both-hooking and both-hooked UNSAT in all
+
+========================================================================
+SUMMARY
+========================================================================
+ALL CHECKS PASSED.
+  20/20 CNFs regenerated byte-identically from indep_om.py
+  15/15 DRAT refutations re-verified by a from-scratch checker
+   5/5  satisfiable instances confirmed by explicit, solver-free model checks
+   4/4  pigeonhole positives and 4/4 negative controls behaved correctly
+  Fig. 6 positive control and Observation 6 certificate reproduced
+  n=7 COVERAGE (the K-16 replacement, step 10):
+   25/25 labelled (P-type x Q-type) combinations, no symmetry reduction
+  125/125 instances certificate-checked (110 DRAT refutations + 15 models)
+   25/25 combinations have both-hooking AND both-hooked UNSAT
+   12/25 combinations are VACUOUS and are reported as such; the
+         superseded PQ-adj representative of step 9 was one of them
+Logs: evidence/logs/  and  coverage25/logs/
+   assert OK   : no step reported FAIL
+   assert OK   : the checker validation accepted no bad proof and rejected no good one
+   assert OK   : explicit success banner (not merely exit 0)
+--- PASS: 5d. A7 evidence reproduction
+
+========================================================================
+STEP 6/6 -- Implementation B (independent C++ reduction)
+========================================================================
+command : (in the run dir) c++ -O2 -std=c++17 -o reduction reduction.cpp && ./reduction --test && ./reduction && compare_with_certificate.py
+expected: every unit test passes; 13,003,620 graphs -> 225 triples over 121
+          graphs; the 225 triples are SET-EQUAL to the committed certificate.
+          NOTE: compare_with_certificate.py reports EXACT SET EQUALITY for two
+          EMPTY sets and count_check.py has no assertion at all, so the counts
+          225 / 121 / 13,003,620 are asserted here explicitly.
+
+-- 6a. convert the canonical profile JSON to a flat table
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/implb/profiles.txt: 14 classes
+--- PASS: 6a. make_profiles.py
+
+-- 6b. compile reduction.cpp with c++
+--- PASS: 6b. compile Implementation B
+
+-- 6c. adversarial unit tests (positive AND negative for every filter)
+loaded 14 profiles; M_set/maximal-crossing-set consistency OK
+SPEC sec.1  consecutive AKR Lemma 5
+  [PASS] L5 satisfied: {0} vs {1}  (got 1, want 1)
+  [PASS] L5 fails: {0} vs {3}  (got 0, want 0)
+  [PASS] L5 satisfied across wrap: {0} vs {6}  (got 1, want 1)
+  [PASS] L5 fails: {3} vs {5,6} (certificate case 0)  (got 0, want 0)
+  [PASS] L5 fails: {0,1} vs {0,1} (differences empty)  (got 0, want 0)
+SPEC sec.2  H bipartite
+  [PASS] H has an odd cycle when all 7 sides are in distinct components  (got 0, want 0)
+  [PASS] H is a matching -> bipartite  (got 1, want 1)
+  [PASS] H empty -> bipartite  (got 1, want 1)
+  [PASS] H isolated vertices -> bipartite  (got 1, want 1)
+SPEC sec.3  crossing-set compatibility
+  [PASS] compatible: every N(q_j)={0}, 0 in M_set  (got 1, want 1)
+  [PASS] incompatible: every N(q_j)={1}, 1 not in M_set  (got 0, want 0)
+  [PASS] incompatible: one bad column suffices  (got 0, want 0)
+SPEC sec.4  Cerny Lemma 2
+  [PASS] C2 VIOLATED: sides 0-3 form an induced perfect matching  (got 0, want 0)
+  [PASS] C2 satisfied: all four sides share one neighbour, no SDR  (got 1, want 1)
+  [PASS] C2 satisfied: only two candidate Q-sides for four P-sides  (got 1, want 1)
+  [PASS] C2 satisfied: extra edge means the block is not EXACTLY a matching  (got 1, want 1)
+  [PASS] C2 VIOLATED: a matching exists on an alternative representative  (got 0, want 0)
+  [PASS] C2 vacuously satisfied when the class has no windows  (got 1, want 1)
+  [PASS] C2 satisfied on real class 12 when all sides share neighbour 0  (got 1, want 1)
+  [PASS] C2 violated on real class 12 by the identity matching  (got 0, want 0)
+components
+  [PASS] p0 and p1 share neighbour q0 -> same component  (got 1, want 1)
+  [PASS] p0 and p2 -> different components  (got 0, want 0)
+  [PASS] q6 is isolated from p0's component  (got 0, want 0)
+
+all unit tests passed
+   assert OK   : no failing unit test
+   assert OK   : explicit all-passed line
+   assert OK   : 23 unit tests reported PASS
+--- PASS: 6c. Implementation B unit tests (23 tests)
+
+-- 6d. full reduction (13,003,620 graphs; about 2 s)
+loaded 14 profiles; M_set/maximal-crossing-set consistency OK
+graphs |E|=9 min degree>=1        : 13003620
+after consecutive AKR Lemma 5     : 42238
+after AKR Lemma 7 (H bipartite)   : 24990
+after crossing-set compatibility  : 2300
+after Cerny Lemma 2               : 121
+distinct surviving graphs         : 121
+(classP,classQ,graph) triples     : 225
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/implb/implementation_b_output.json
+   assert OK   : the enumeration really ran over 13,003,620 graphs
+   assert OK   : 121 surviving graphs
+   assert OK   : 225 surviving triples
+--- PASS: 6d. Implementation B full run (13,003,620 -> 225)
+
+-- 6e. closed-form graph-count cross-check (no enumeration)
+inclusion-exclusion over uncovered Q-sides:
+ j  C(7,j)         T(7-j)             term
+ 0       1    184,473,632      184,473,632
+ 1       7     43,273,440     -302,914,080
+ 2      21      7,656,250      160,781,250
+ 3      35        888,832      -31,109,120
+ 4      35         51,030        1,786,050
+ 5      21            672          -14,112
+ 6       7              0                0
+ 7       1              0                0
+
+9-edge graphs, min degree >= 1 both sides : 13,003,620
+  |E| = 7 : 5,040
+  |E| = 8 : 476,280
+  |E| = 9 : 13,003,620
+  sum     : 13,484,940   (the historical 13,484,940 figure; see known-issues.md K-01)
+   assert OK   : closed form agrees with the enumeration (count_check.py itself asserts nothing)
+   assert OK   : |E| = 9 term
+--- PASS: 6e. Implementation B count_check (13,003,620)
+
+-- 6f. strong set comparison against the committed 225-case certificate
+Implementation B : 225 triples (225 distinct)
+Certificate (A)  : 225 cases (225 distinct)
+
+  B graphs_E9_mindeg1                 : 13,003,620
+  B after_AKR_L5_consecutive          : 42,238
+  B after_AKR_L7_H_bipartite          : 24,990
+  B after_crossing_set_compatibility  : 2,300
+  B after_Cerny_L2                    : 121
+  B distinct_graphs                   : 121
+  B triples                           : 225
+
+triples only in the certificate : 0
+triples only in Implementation B: 0
+distinct graphs A / B           : 121 / 121  equal: True
+
+EXACT SET EQUALITY: Implementation B independently reproduces the certificate's 225 triples.
+   assert OK   : B produced 225 triples (NOT an empty set, which would compare equal to an empty A)
+   assert OK   : A has 225 cases
+   assert OK   : A \ B empty
+   assert OK   : B \ A empty
+   assert OK   : 121 distinct graphs on both sides
+   assert OK   : verdict line present
+--- PASS: 6f. Implementation B vs certificate (225 = 225, set-equal)
+
+-- 6g. freshly produced artifacts vs the committed ones (byte comparison)
+   assert OK   : profiles.txt is byte-identical to the committed copy
+   assert OK   : implementation_b_output.json is byte-identical to the committed copy
+
+========================================================================
+SUMMARY
+========================================================================
+wall time : 507 s
+logs      : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A
+
+PASSED (18):
+    1. Lean build (835 libraries, 4676 jobs)
+    2. lower-bound certificate (I = 38)
+    3. endgame certificate (225 cases)
+    4. hash manifest data/hashes/SHA256SUMS (5 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.tools (4 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.lean (838 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.implementation_b (7 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.order_type_audit (8 files)
+    5a. DRAT gate self-test
+    5b. CNF regeneration (20/20 byte-identical)
+    5c. spot-check DRAT refutation (generic_both-hooking)
+    5d. A7 evidence reproduction
+    6a. make_profiles.py
+    6b. compile Implementation B
+    6c. Implementation B unit tests (23 tests)
+    6d. Implementation B full run (13,003,620 -> 225)
+    6e. Implementation B count_check (13,003,620)
+    6f. Implementation B vs certificate (225 = 225, set-equal)
+
+COMPLETE SUCCESS (exit 0).  ALL CHECKS PASSED.
+  Lean build clean, no sorry, every declared library built;
+  f(7,7) >= 38 certificate re-checked from coordinates, I = 38 asserted;
+  all 225 endgame cases re-refuted by an independent checker;
+  every data/ and tool hash matches its manifest;
+  the DRAT gate was shown to reject non-refutations before being relied on;
+  the 19 MB of gitignored CNFs regenerate byte-identically;
+  the A7 evidence reproduces (20/20 CNFs, 15/15 DRAT refutations, 5/5 models);
+  Implementation B independently reproduces the same 225 triples.
+
+Note what this does NOT establish: f(7,7) = 38 is not a Lean theorem, and the
+upper bound still rests on unformalized lemmas.  See docs/verification-status.md.
