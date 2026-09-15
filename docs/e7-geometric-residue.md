@@ -77,9 +77,11 @@ Both inclusions need work, and both are classical:
   be written down explicitly, so this direction looks the more tractable of the
   two, and possibly doable without leaving `ℚ`.
 
-**(HP) is the whole geometric residue of (E7).** Granting it, steps (i)–(iv)
-carry the kernel-checked classification over to statements about integer
-heptagons in the plane.
+**(HP) is the whole geometric residue of the *classification statements*.**
+Granting it, steps (i)–(iv) carry rows 32, 36 and 37 — simplicity,
+exceptionality, the 6,342 and the 6,007/319/16 split — over from chirotopes to
+integer heptagons in the plane. It is **not** the whole of what (E7) needs; §3
+lists what it leaves untouched, and the difference matters.
 
 ---
 
@@ -103,6 +105,12 @@ with it:
 And (HP) is irrelevant to the two items that actually gate `f(7,7) = 38`:
 **A7-EXT** (row 9a), which needs a human judgement about a published
 definition, and **`hne40`** (row 28), which is a settled negative.
+
+---
+
+So the honest one-line summary is: *(HP) is the one lemma standing between the
+kernel-checked classification and the same statements about polygons* — not
+*(HP) closes (E7)*.
 
 ---
 
