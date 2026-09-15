@@ -1386,3 +1386,41 @@ So **`hclass` already entails `I ≠ 42`** — which is exactly the conclusion
 `paper/proof-manifest.tex`, which noticed the missing witness while checking
 that every hypothesis in the manifest had one. It is the kind of defect that
 survives because the statement *looks* like bookkeeping.
+
+### RESOLVED, and the proposed fix is impossible — 2026-09-14
+
+The obvious repair was to restrict the hypothesis to *exceptional*
+configurations, so that it would no longer decide the `I = 42` branch. **That
+repair cannot work, and the obstruction is now a machine-checked theorem rather
+than an opinion.**
+
+`lean/ExceptionalClass.lean`:
+
+```lean
+exceptional_of_crossCount_42 (K : Config) (h42 : crossCountC K = 42) : Exceptional K
+```
+
+`I = 42` forces `|E| = 7`; Lemma A (via `LemmaABridge`) then says a configuration
+with seven disjointness edges admits no uncrossable 4-set — i.e. **it is
+exceptional**. So every hypothetical 42-crossing configuration lies *inside* the
+restricted domain, and restricting to exceptional configurations retains all of
+them. Independence cannot be recovered that way.
+
+**What this changes about the right reading.** The entanglement is a fact about
+the mathematics, not an artifact of how the hypothesis was written. The class
+invariants together with Lemma A genuinely *do* suffice to exclude `I = 42` —
+which is exactly what `paper/proof-manifest.tex`'s `UB42` section already says
+it consumes (`C1`, `LA`, `EX`, and explicitly *not* `A7-EXT`).
+
+So the correct conclusion is **not** that the development is circular. It is:
+
+* `UB42` is a genuine consequence of the class data plus Lemma A, and always was;
+* a reader should therefore not count `UB42` and the class hypothesis as **two
+  independent pillars** — assuming the latter gives the former;
+* and the strength of `hclass` flagged above is **unavoidable** if one wants the
+  crossing-set covering condition at all.
+
+`isGreatest_38_restricted` and `crossCountC_le_38_restricted` are proved against
+the restricted hypothesis and are labelled in the file as *partial progress
+toward the repair*, not as the repair. That labelling is correct and should not
+be tidied away.

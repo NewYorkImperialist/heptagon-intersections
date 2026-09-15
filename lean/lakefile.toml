@@ -178,3 +178,14 @@ name = "PolygonSimple"
 # vacuous.  Imports IntersectionParity, so it comes last.
 [[lean_lib]]
 name = "ClassDataWitness"
+
+[[lean_lib]]
+name = "ExceptionalClass"
+
+# E1 attempt: conditional decomposition; cyclic contact remains open.
+[[lean_lib]]
+name = "AKRL5Derivation"
+
+# Crossing-pair count equals the finite real boundary-intersection point count.
+[[lean_lib]]
+name = "IntersectionCount"
