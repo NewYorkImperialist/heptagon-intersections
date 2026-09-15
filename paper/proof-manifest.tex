@@ -1056,32 +1056,35 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-\texttt{lakefile.toml} declares $576$ \texttt{[[lean\_lib]]} targets and all of
-them build, exit $0$, verified 2026-09-15 --- but that number would mislead if
-quoted flat. \textbf{Thirty-four} are hand-written libraries; the other $542$
-are \emph{generated} enumeration shards (\texttt{OTEnum*}), which exist only
-because one \texttt{decide +kernel} over the $48{,}600$-candidate
-classification enumeration does not finish and one module per (representative,
-block of $90$ cyclic orders) does. Everything below that says ``the libraries''
-means the thirty-four. None contains
+\texttt{lakefile.toml} declares $1{,}408$ \texttt{[[lean\_lib]]} targets and all
+of them build, exit $0$, verified 2026-09-15 --- but that number would mislead
+badly if quoted flat. \textbf{Thirty-four} are the libraries of the original
+development; \textbf{eleven} more carry the definitions and assemblies of the
+four results added on 2026-09-14/15; and the remaining $1{,}363$ are
+\emph{generated per-shard data modules}, each holding one \texttt{decide
++kernel} over one slice and nothing else. They exist only because four
+computations will not run in one piece --- the $48{,}600$-candidate
+classification enumeration, the $524{,}288$-candidate completeness search, the
+simple count and the stratification. Everything below that says ``the
+libraries'' means the forty-five that are not per-shard data. None contains
 \texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
 \texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
 by scanning the sources with comments stripped. All \texttt{decide} calls are
 ordinary kernel reduction, so nothing rests on the compiler.
 
 \begin{remark}[Read \S\ref{sec:leanmain} first]
-Thirty-four libraries, or five hundred and seventy-six targets, is enough to
-create a false impression of coverage. The
+Forty-five libraries, or fourteen hundred targets, is enough to create a false
+impression of coverage. The
 target statement is \emph{not} proved; it is \emph{stated}, with two
 hypotheses. The value of the development is that it makes the residue precise
 and machine-readable, not that it closes it.
 \end{remark}
 
-\subsection*{The thirty-four hand-written libraries}
+\subsection*{The forty-five libraries of substance}
 
 Grouped by layer. ``core'' in the \textbf{Base} column means the library and
 everything it imports are Mathlib-free, so Mathlib is outside its trust base;
-fourteen of the thirty-four are, and five of those import literally nothing
+fourteen of the forty-five are, and five of those import literally nothing
 (\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
 \texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other nineteen reach
 Mathlib, and only three --- \texttt{PointSetSemantics}, \texttt{PolygonSimple}
@@ -1149,6 +1152,11 @@ and \texttt{IntersectionCount} --- reach the reals. The generated
 \texttt{OrderTypeClassification} & Mathlib & \textsf{E7}(a) & all $14$ classes pass the exceptional test; the $16$ expected polygons are simple and reduce onto all $14$; the enumeration itself is stated here and settled by the shards below \\
 \texttt{ClassDataFields} & Mathlib & \textsf{E7}(b) & the remaining two stored fields, \texttt{lemma2\_windows} and \texttt{avoiding\_pairs}, recomputed from the chirotope and proved equal to the stored tables, $14/14$, on \texttt{propext} alone \\
 \texttt{OTEnum*} ($542$, generated) & Mathlib & \textsf{E7}(a) & the $135\times360$ enumeration, one module per (representative, block of $90$ cyclic orders), with \texttt{OTEnumAll} assembling them by rewriting --- \S\ref{sec:e7partial} \\
+\texttt{OTComplete*} ($259$, generated) & core & --- & completeness of the $135$-representative list: $524{,}288$ one-point extensions, $1{,}657$ survivors, each with an explicit relabelling witness so Lean verifies rather than searches \\
+\texttt{OTBridge} & Mathlib & --- & the two packings of ``the $135$'' proved to be the same $135$ \\
+\texttt{SimpleCount*} ($29$, generated) & Mathlib & --- & exactly $6{,}342$ simple heptagons, and the count per representative \\
+\texttt{Stratification*} ($542$, generated) & Mathlib & --- & the $6{,}007/319/16$ split of those $6{,}342$ \\
+\texttt{ClassificationSummary} & Mathlib & --- & assembly only; the classification results in one citable conjunction, with one header listing what is assumed \\
 \end{longtable}
 }
 
