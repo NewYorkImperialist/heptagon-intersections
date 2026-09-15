@@ -4,14 +4,14 @@ heptagon-intersections :: verify-all
 ========================================================================
 repository root : /Users/jaydenlin/dev/lean/heptagon-intersections
 mode            : full (steps 1-6)
-date            : 2026-09-15T14:27:05Z
+date            : 2026-09-15T17:24:36Z
 uname           : Darwin 24.6.0 arm64
 shell           : bash 3.2.57(1)-release
 python3         : python3 (Python 3.14.7)
 lake            : Lake version 5.0.0-src+293d5d0 (Lean version 4.34.0)
 sha256 tool     : shasum -a 256
 C++ compiler    : c++
-run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv   (kept; nothing is written to evidence/logs/ by this script)
+run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK   (kept; nothing is written to evidence/logs/ by this script)
 
 ========================================================================
 STEP 1/6 -- Lean build
@@ -29,7 +29,7 @@ NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,
           first, build the non-shard targets by name (they are the
           [[lean_lib]] entries in lean/lakefile.toml above the generated
           shard block), then come back for  lake build -j6 OTEnumAll.
-⚠ [1305/1344] Replayed IntersectionParity
+⚠ [1305/1339] Replayed IntersectionParity
 warning: IntersectionParity.lean:189:5: Variable name `h1` is not explicitly referenced.
 
 Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
@@ -60,7 +60,7 @@ Hint: The binding can be removed (if unused) or named `_` (if used implicitly). 
   [apply] _h3
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-ℹ [1393/1584] Replayed CernyL2Derivation
+ℹ [1393/1482] Replayed CernyL2Derivation
 info: CernyL2Derivation.lean:209:0: 'Heptagon.CernyL2Derivation.triangle_affine' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:210:0: 'Heptagon.CernyL2Derivation.triangle_positive_halfplane' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:211:0: 'Heptagon.CernyL2Derivation.simple_sides_noncrossing' depends on axioms: [propext]
@@ -72,7 +72,7 @@ info: CernyL2Derivation.lean:216:0: 'Heptagon.CernyL2Derivation.localFixture' de
 info: CernyL2Derivation.lean:217:0: 'Heptagon.CernyL2Derivation.cert_collision' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: CernyL2Derivation.lean:218:0: 'Heptagon.CernyL2Derivation.cert_window' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:219:0: 'Heptagon.CernyL2Derivation.cert_filterD_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
-ℹ [1401/1584] Replayed AKRL5Derivation
+ℹ [1401/1482] Replayed AKRL5Derivation
 info: AKRL5Derivation.lean:122:0: 'Heptagon.AKRL5Derivation.inhabited_of_parity' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:123:0: 'Heptagon.AKRL5Derivation.exclusive_of_separation' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:124:0: 'Heptagon.AKRL5Derivation.full_of_contact' depends on axioms: [propext, Quot.sound]
@@ -85,7 +85,7 @@ info: AKRL5Derivation.lean:130:0: 'Heptagon.AKRL5Derivation.cert_inhabited' depe
 info: AKRL5Derivation.lean:131:0: 'Heptagon.AKRL5Derivation.cert_separated' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:132:0: 'Heptagon.AKRL5Derivation.cert_contact' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:133:0: 'Heptagon.AKRL5Derivation.cert_filterA' depends on axioms: [propext, Quot.sound]
-ℹ [1436/1584] Replayed IntersectionCount
+ℹ [1476/1648] Replayed IntersectionCount
 info: IntersectionCount.lean:141:0: 'Heptagon.IntersectionCount.pair_card' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:142:0: 'Heptagon.IntersectionCount.common_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:143:0: 'Heptagon.IntersectionCount.common_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -97,7 +97,7 @@ info: IntersectionCount.lean:148:0: 'Heptagon.IntersectionCount.points_eq_range'
 info: IntersectionCount.lean:149:0: 'Heptagon.IntersectionCount.intersectionPoints_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:150:0: 'Heptagon.IntersectionCount.crossCountC_eq_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:151:0: 'Heptagon.IntersectionCount.cert_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [4675/4738] Replayed OTCompleteAll
+⚠ [4674/4702] Replayed OTCompleteAll
 warning: OTCompleteAll.lean:294:65: This simp argument is unused:
   List.append_assoc
 
@@ -285,16 +285,16 @@ Hint: Omit it from the simp argument list.
     basePart_15, List.nil_append, List.append_nil, List.cons_append]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-Build completed successfully (4738 jobs).
-(lean build wall time: 4 s)
+Build completed successfully (5822 jobs).
+(lean build wall time: 7 s)
    assert OK   : no compilation errors
    assert OK   : no theorem is closed by sorry (lake exits 0 on sorry -- it is only a warning)
-   assert OK   : all 866 declared lean_lib targets produced a .olean
+   assert OK   : all 1408 declared lean_lib targets produced a .olean
    assert OK   : no sorry/admit/native_decide/unsafe/partial/axiom in any
                  lean source declared by lakefile.toml
    assert OK   : every committed lean/*.lean is a declared lean_lib
-   lakefile declares 866 lean_lib target(s); lake reported 4738 jobs
---- PASS: 1. Lean build (866 libraries, 4738 jobs)
+   lakefile declares 1408 lean_lib target(s); lake reported 5822 jobs
+--- PASS: 1. Lean build (1408 libraries, 5822 jobs)
 
 ========================================================================
 STEP 2/6 -- lower-bound certificate (f(7,7) >= 38)
@@ -1248,12 +1248,554 @@ lean/SimpleCount25.lean: OK
 lean/SimpleCount26.lean: OK
 lean/SimpleCountAll.lean: OK
 lean/SimpleCountDefs.lean: OK
+lean/Strat000A.lean: OK
+lean/Strat000B.lean: OK
+lean/Strat000C.lean: OK
+lean/Strat000D.lean: OK
+lean/Strat001A.lean: OK
+lean/Strat001B.lean: OK
+lean/Strat001C.lean: OK
+lean/Strat001D.lean: OK
+lean/Strat002A.lean: OK
+lean/Strat002B.lean: OK
+lean/Strat002C.lean: OK
+lean/Strat002D.lean: OK
+lean/Strat003A.lean: OK
+lean/Strat003B.lean: OK
+lean/Strat003C.lean: OK
+lean/Strat003D.lean: OK
+lean/Strat004A.lean: OK
+lean/Strat004B.lean: OK
+lean/Strat004C.lean: OK
+lean/Strat004D.lean: OK
+lean/Strat005A.lean: OK
+lean/Strat005B.lean: OK
+lean/Strat005C.lean: OK
+lean/Strat005D.lean: OK
+lean/Strat006A.lean: OK
+lean/Strat006B.lean: OK
+lean/Strat006C.lean: OK
+lean/Strat006D.lean: OK
+lean/Strat007A.lean: OK
+lean/Strat007B.lean: OK
+lean/Strat007C.lean: OK
+lean/Strat007D.lean: OK
+lean/Strat008A.lean: OK
+lean/Strat008B.lean: OK
+lean/Strat008C.lean: OK
+lean/Strat008D.lean: OK
+lean/Strat009A.lean: OK
+lean/Strat009B.lean: OK
+lean/Strat009C.lean: OK
+lean/Strat009D.lean: OK
+lean/Strat010A.lean: OK
+lean/Strat010B.lean: OK
+lean/Strat010C.lean: OK
+lean/Strat010D.lean: OK
+lean/Strat011A.lean: OK
+lean/Strat011B.lean: OK
+lean/Strat011C.lean: OK
+lean/Strat011D.lean: OK
+lean/Strat012A.lean: OK
+lean/Strat012B.lean: OK
+lean/Strat012C.lean: OK
+lean/Strat012D.lean: OK
+lean/Strat013A.lean: OK
+lean/Strat013B.lean: OK
+lean/Strat013C.lean: OK
+lean/Strat013D.lean: OK
+lean/Strat014A.lean: OK
+lean/Strat014B.lean: OK
+lean/Strat014C.lean: OK
+lean/Strat014D.lean: OK
+lean/Strat015A.lean: OK
+lean/Strat015B.lean: OK
+lean/Strat015C.lean: OK
+lean/Strat015D.lean: OK
+lean/Strat016A.lean: OK
+lean/Strat016B.lean: OK
+lean/Strat016C.lean: OK
+lean/Strat016D.lean: OK
+lean/Strat017A.lean: OK
+lean/Strat017B.lean: OK
+lean/Strat017C.lean: OK
+lean/Strat017D.lean: OK
+lean/Strat018A.lean: OK
+lean/Strat018B.lean: OK
+lean/Strat018C.lean: OK
+lean/Strat018D.lean: OK
+lean/Strat019A.lean: OK
+lean/Strat019B.lean: OK
+lean/Strat019C.lean: OK
+lean/Strat019D.lean: OK
+lean/Strat020A.lean: OK
+lean/Strat020B.lean: OK
+lean/Strat020C.lean: OK
+lean/Strat020D.lean: OK
+lean/Strat021A.lean: OK
+lean/Strat021B.lean: OK
+lean/Strat021C.lean: OK
+lean/Strat021D.lean: OK
+lean/Strat022A.lean: OK
+lean/Strat022B.lean: OK
+lean/Strat022C.lean: OK
+lean/Strat022D.lean: OK
+lean/Strat023A.lean: OK
+lean/Strat023B.lean: OK
+lean/Strat023C.lean: OK
+lean/Strat023D.lean: OK
+lean/Strat024A.lean: OK
+lean/Strat024B.lean: OK
+lean/Strat024C.lean: OK
+lean/Strat024D.lean: OK
+lean/Strat025A.lean: OK
+lean/Strat025B.lean: OK
+lean/Strat025C.lean: OK
+lean/Strat025D.lean: OK
+lean/Strat026A.lean: OK
+lean/Strat026B.lean: OK
+lean/Strat026C.lean: OK
+lean/Strat026D.lean: OK
+lean/Strat027A.lean: OK
+lean/Strat027B.lean: OK
+lean/Strat027C.lean: OK
+lean/Strat027D.lean: OK
+lean/Strat028A.lean: OK
+lean/Strat028B.lean: OK
+lean/Strat028C.lean: OK
+lean/Strat028D.lean: OK
+lean/Strat029A.lean: OK
+lean/Strat029B.lean: OK
+lean/Strat029C.lean: OK
+lean/Strat029D.lean: OK
+lean/Strat030A.lean: OK
+lean/Strat030B.lean: OK
+lean/Strat030C.lean: OK
+lean/Strat030D.lean: OK
+lean/Strat031A.lean: OK
+lean/Strat031B.lean: OK
+lean/Strat031C.lean: OK
+lean/Strat031D.lean: OK
+lean/Strat032A.lean: OK
+lean/Strat032B.lean: OK
+lean/Strat032C.lean: OK
+lean/Strat032D.lean: OK
+lean/Strat033A.lean: OK
+lean/Strat033B.lean: OK
+lean/Strat033C.lean: OK
+lean/Strat033D.lean: OK
+lean/Strat034A.lean: OK
+lean/Strat034B.lean: OK
+lean/Strat034C.lean: OK
+lean/Strat034D.lean: OK
+lean/Strat035A.lean: OK
+lean/Strat035B.lean: OK
+lean/Strat035C.lean: OK
+lean/Strat035D.lean: OK
+lean/Strat036A.lean: OK
+lean/Strat036B.lean: OK
+lean/Strat036C.lean: OK
+lean/Strat036D.lean: OK
+lean/Strat037A.lean: OK
+lean/Strat037B.lean: OK
+lean/Strat037C.lean: OK
+lean/Strat037D.lean: OK
+lean/Strat038A.lean: OK
+lean/Strat038B.lean: OK
+lean/Strat038C.lean: OK
+lean/Strat038D.lean: OK
+lean/Strat039A.lean: OK
+lean/Strat039B.lean: OK
+lean/Strat039C.lean: OK
+lean/Strat039D.lean: OK
+lean/Strat040A.lean: OK
+lean/Strat040B.lean: OK
+lean/Strat040C.lean: OK
+lean/Strat040D.lean: OK
+lean/Strat041A.lean: OK
+lean/Strat041B.lean: OK
+lean/Strat041C.lean: OK
+lean/Strat041D.lean: OK
+lean/Strat042A.lean: OK
+lean/Strat042B.lean: OK
+lean/Strat042C.lean: OK
+lean/Strat042D.lean: OK
+lean/Strat043A.lean: OK
+lean/Strat043B.lean: OK
+lean/Strat043C.lean: OK
+lean/Strat043D.lean: OK
+lean/Strat044A.lean: OK
+lean/Strat044B.lean: OK
+lean/Strat044C.lean: OK
+lean/Strat044D.lean: OK
+lean/Strat045A.lean: OK
+lean/Strat045B.lean: OK
+lean/Strat045C.lean: OK
+lean/Strat045D.lean: OK
+lean/Strat046A.lean: OK
+lean/Strat046B.lean: OK
+lean/Strat046C.lean: OK
+lean/Strat046D.lean: OK
+lean/Strat047A.lean: OK
+lean/Strat047B.lean: OK
+lean/Strat047C.lean: OK
+lean/Strat047D.lean: OK
+lean/Strat048A.lean: OK
+lean/Strat048B.lean: OK
+lean/Strat048C.lean: OK
+lean/Strat048D.lean: OK
+lean/Strat049A.lean: OK
+lean/Strat049B.lean: OK
+lean/Strat049C.lean: OK
+lean/Strat049D.lean: OK
+lean/Strat050A.lean: OK
+lean/Strat050B.lean: OK
+lean/Strat050C.lean: OK
+lean/Strat050D.lean: OK
+lean/Strat051A.lean: OK
+lean/Strat051B.lean: OK
+lean/Strat051C.lean: OK
+lean/Strat051D.lean: OK
+lean/Strat052A.lean: OK
+lean/Strat052B.lean: OK
+lean/Strat052C.lean: OK
+lean/Strat052D.lean: OK
+lean/Strat053A.lean: OK
+lean/Strat053B.lean: OK
+lean/Strat053C.lean: OK
+lean/Strat053D.lean: OK
+lean/Strat054A.lean: OK
+lean/Strat054B.lean: OK
+lean/Strat054C.lean: OK
+lean/Strat054D.lean: OK
+lean/Strat055A.lean: OK
+lean/Strat055B.lean: OK
+lean/Strat055C.lean: OK
+lean/Strat055D.lean: OK
+lean/Strat056A.lean: OK
+lean/Strat056B.lean: OK
+lean/Strat056C.lean: OK
+lean/Strat056D.lean: OK
+lean/Strat057A.lean: OK
+lean/Strat057B.lean: OK
+lean/Strat057C.lean: OK
+lean/Strat057D.lean: OK
+lean/Strat058A.lean: OK
+lean/Strat058B.lean: OK
+lean/Strat058C.lean: OK
+lean/Strat058D.lean: OK
+lean/Strat059A.lean: OK
+lean/Strat059B.lean: OK
+lean/Strat059C.lean: OK
+lean/Strat059D.lean: OK
+lean/Strat060A.lean: OK
+lean/Strat060B.lean: OK
+lean/Strat060C.lean: OK
+lean/Strat060D.lean: OK
+lean/Strat061A.lean: OK
+lean/Strat061B.lean: OK
+lean/Strat061C.lean: OK
+lean/Strat061D.lean: OK
+lean/Strat062A.lean: OK
+lean/Strat062B.lean: OK
+lean/Strat062C.lean: OK
+lean/Strat062D.lean: OK
+lean/Strat063A.lean: OK
+lean/Strat063B.lean: OK
+lean/Strat063C.lean: OK
+lean/Strat063D.lean: OK
+lean/Strat064A.lean: OK
+lean/Strat064B.lean: OK
+lean/Strat064C.lean: OK
+lean/Strat064D.lean: OK
+lean/Strat065A.lean: OK
+lean/Strat065B.lean: OK
+lean/Strat065C.lean: OK
+lean/Strat065D.lean: OK
+lean/Strat066A.lean: OK
+lean/Strat066B.lean: OK
+lean/Strat066C.lean: OK
+lean/Strat066D.lean: OK
+lean/Strat067A.lean: OK
+lean/Strat067B.lean: OK
+lean/Strat067C.lean: OK
+lean/Strat067D.lean: OK
+lean/Strat068A.lean: OK
+lean/Strat068B.lean: OK
+lean/Strat068C.lean: OK
+lean/Strat068D.lean: OK
+lean/Strat069A.lean: OK
+lean/Strat069B.lean: OK
+lean/Strat069C.lean: OK
+lean/Strat069D.lean: OK
+lean/Strat070A.lean: OK
+lean/Strat070B.lean: OK
+lean/Strat070C.lean: OK
+lean/Strat070D.lean: OK
+lean/Strat071A.lean: OK
+lean/Strat071B.lean: OK
+lean/Strat071C.lean: OK
+lean/Strat071D.lean: OK
+lean/Strat072A.lean: OK
+lean/Strat072B.lean: OK
+lean/Strat072C.lean: OK
+lean/Strat072D.lean: OK
+lean/Strat073A.lean: OK
+lean/Strat073B.lean: OK
+lean/Strat073C.lean: OK
+lean/Strat073D.lean: OK
+lean/Strat074A.lean: OK
+lean/Strat074B.lean: OK
+lean/Strat074C.lean: OK
+lean/Strat074D.lean: OK
+lean/Strat075A.lean: OK
+lean/Strat075B.lean: OK
+lean/Strat075C.lean: OK
+lean/Strat075D.lean: OK
+lean/Strat076A.lean: OK
+lean/Strat076B.lean: OK
+lean/Strat076C.lean: OK
+lean/Strat076D.lean: OK
+lean/Strat077A.lean: OK
+lean/Strat077B.lean: OK
+lean/Strat077C.lean: OK
+lean/Strat077D.lean: OK
+lean/Strat078A.lean: OK
+lean/Strat078B.lean: OK
+lean/Strat078C.lean: OK
+lean/Strat078D.lean: OK
+lean/Strat079A.lean: OK
+lean/Strat079B.lean: OK
+lean/Strat079C.lean: OK
+lean/Strat079D.lean: OK
+lean/Strat080A.lean: OK
+lean/Strat080B.lean: OK
+lean/Strat080C.lean: OK
+lean/Strat080D.lean: OK
+lean/Strat081A.lean: OK
+lean/Strat081B.lean: OK
+lean/Strat081C.lean: OK
+lean/Strat081D.lean: OK
+lean/Strat082A.lean: OK
+lean/Strat082B.lean: OK
+lean/Strat082C.lean: OK
+lean/Strat082D.lean: OK
+lean/Strat083A.lean: OK
+lean/Strat083B.lean: OK
+lean/Strat083C.lean: OK
+lean/Strat083D.lean: OK
+lean/Strat084A.lean: OK
+lean/Strat084B.lean: OK
+lean/Strat084C.lean: OK
+lean/Strat084D.lean: OK
+lean/Strat085A.lean: OK
+lean/Strat085B.lean: OK
+lean/Strat085C.lean: OK
+lean/Strat085D.lean: OK
+lean/Strat086A.lean: OK
+lean/Strat086B.lean: OK
+lean/Strat086C.lean: OK
+lean/Strat086D.lean: OK
+lean/Strat087A.lean: OK
+lean/Strat087B.lean: OK
+lean/Strat087C.lean: OK
+lean/Strat087D.lean: OK
+lean/Strat088A.lean: OK
+lean/Strat088B.lean: OK
+lean/Strat088C.lean: OK
+lean/Strat088D.lean: OK
+lean/Strat089A.lean: OK
+lean/Strat089B.lean: OK
+lean/Strat089C.lean: OK
+lean/Strat089D.lean: OK
+lean/Strat090A.lean: OK
+lean/Strat090B.lean: OK
+lean/Strat090C.lean: OK
+lean/Strat090D.lean: OK
+lean/Strat091A.lean: OK
+lean/Strat091B.lean: OK
+lean/Strat091C.lean: OK
+lean/Strat091D.lean: OK
+lean/Strat092A.lean: OK
+lean/Strat092B.lean: OK
+lean/Strat092C.lean: OK
+lean/Strat092D.lean: OK
+lean/Strat093A.lean: OK
+lean/Strat093B.lean: OK
+lean/Strat093C.lean: OK
+lean/Strat093D.lean: OK
+lean/Strat094A.lean: OK
+lean/Strat094B.lean: OK
+lean/Strat094C.lean: OK
+lean/Strat094D.lean: OK
+lean/Strat095A.lean: OK
+lean/Strat095B.lean: OK
+lean/Strat095C.lean: OK
+lean/Strat095D.lean: OK
+lean/Strat096A.lean: OK
+lean/Strat096B.lean: OK
+lean/Strat096C.lean: OK
+lean/Strat096D.lean: OK
+lean/Strat097A.lean: OK
+lean/Strat097B.lean: OK
+lean/Strat097C.lean: OK
+lean/Strat097D.lean: OK
+lean/Strat098A.lean: OK
+lean/Strat098B.lean: OK
+lean/Strat098C.lean: OK
+lean/Strat098D.lean: OK
+lean/Strat099A.lean: OK
+lean/Strat099B.lean: OK
+lean/Strat099C.lean: OK
+lean/Strat099D.lean: OK
+lean/Strat100A.lean: OK
+lean/Strat100B.lean: OK
+lean/Strat100C.lean: OK
+lean/Strat100D.lean: OK
+lean/Strat101A.lean: OK
+lean/Strat101B.lean: OK
+lean/Strat101C.lean: OK
+lean/Strat101D.lean: OK
+lean/Strat102A.lean: OK
+lean/Strat102B.lean: OK
+lean/Strat102C.lean: OK
+lean/Strat102D.lean: OK
+lean/Strat103A.lean: OK
+lean/Strat103B.lean: OK
+lean/Strat103C.lean: OK
+lean/Strat103D.lean: OK
+lean/Strat104A.lean: OK
+lean/Strat104B.lean: OK
+lean/Strat104C.lean: OK
+lean/Strat104D.lean: OK
+lean/Strat105A.lean: OK
+lean/Strat105B.lean: OK
+lean/Strat105C.lean: OK
+lean/Strat105D.lean: OK
+lean/Strat106A.lean: OK
+lean/Strat106B.lean: OK
+lean/Strat106C.lean: OK
+lean/Strat106D.lean: OK
+lean/Strat107A.lean: OK
+lean/Strat107B.lean: OK
+lean/Strat107C.lean: OK
+lean/Strat107D.lean: OK
+lean/Strat108A.lean: OK
+lean/Strat108B.lean: OK
+lean/Strat108C.lean: OK
+lean/Strat108D.lean: OK
+lean/Strat109A.lean: OK
+lean/Strat109B.lean: OK
+lean/Strat109C.lean: OK
+lean/Strat109D.lean: OK
+lean/Strat110A.lean: OK
+lean/Strat110B.lean: OK
+lean/Strat110C.lean: OK
+lean/Strat110D.lean: OK
+lean/Strat111A.lean: OK
+lean/Strat111B.lean: OK
+lean/Strat111C.lean: OK
+lean/Strat111D.lean: OK
+lean/Strat112A.lean: OK
+lean/Strat112B.lean: OK
+lean/Strat112C.lean: OK
+lean/Strat112D.lean: OK
+lean/Strat113A.lean: OK
+lean/Strat113B.lean: OK
+lean/Strat113C.lean: OK
+lean/Strat113D.lean: OK
+lean/Strat114A.lean: OK
+lean/Strat114B.lean: OK
+lean/Strat114C.lean: OK
+lean/Strat114D.lean: OK
+lean/Strat115A.lean: OK
+lean/Strat115B.lean: OK
+lean/Strat115C.lean: OK
+lean/Strat115D.lean: OK
+lean/Strat116A.lean: OK
+lean/Strat116B.lean: OK
+lean/Strat116C.lean: OK
+lean/Strat116D.lean: OK
+lean/Strat117A.lean: OK
+lean/Strat117B.lean: OK
+lean/Strat117C.lean: OK
+lean/Strat117D.lean: OK
+lean/Strat118A.lean: OK
+lean/Strat118B.lean: OK
+lean/Strat118C.lean: OK
+lean/Strat118D.lean: OK
+lean/Strat119A.lean: OK
+lean/Strat119B.lean: OK
+lean/Strat119C.lean: OK
+lean/Strat119D.lean: OK
+lean/Strat120A.lean: OK
+lean/Strat120B.lean: OK
+lean/Strat120C.lean: OK
+lean/Strat120D.lean: OK
+lean/Strat121A.lean: OK
+lean/Strat121B.lean: OK
+lean/Strat121C.lean: OK
+lean/Strat121D.lean: OK
+lean/Strat122A.lean: OK
+lean/Strat122B.lean: OK
+lean/Strat122C.lean: OK
+lean/Strat122D.lean: OK
+lean/Strat123A.lean: OK
+lean/Strat123B.lean: OK
+lean/Strat123C.lean: OK
+lean/Strat123D.lean: OK
+lean/Strat124A.lean: OK
+lean/Strat124B.lean: OK
+lean/Strat124C.lean: OK
+lean/Strat124D.lean: OK
+lean/Strat125A.lean: OK
+lean/Strat125B.lean: OK
+lean/Strat125C.lean: OK
+lean/Strat125D.lean: OK
+lean/Strat126A.lean: OK
+lean/Strat126B.lean: OK
+lean/Strat126C.lean: OK
+lean/Strat126D.lean: OK
+lean/Strat127A.lean: OK
+lean/Strat127B.lean: OK
+lean/Strat127C.lean: OK
+lean/Strat127D.lean: OK
+lean/Strat128A.lean: OK
+lean/Strat128B.lean: OK
+lean/Strat128C.lean: OK
+lean/Strat128D.lean: OK
+lean/Strat129A.lean: OK
+lean/Strat129B.lean: OK
+lean/Strat129C.lean: OK
+lean/Strat129D.lean: OK
+lean/Strat130A.lean: OK
+lean/Strat130B.lean: OK
+lean/Strat130C.lean: OK
+lean/Strat130D.lean: OK
+lean/Strat131A.lean: OK
+lean/Strat131B.lean: OK
+lean/Strat131C.lean: OK
+lean/Strat131D.lean: OK
+lean/Strat132A.lean: OK
+lean/Strat132B.lean: OK
+lean/Strat132C.lean: OK
+lean/Strat132D.lean: OK
+lean/Strat133A.lean: OK
+lean/Strat133B.lean: OK
+lean/Strat133C.lean: OK
+lean/Strat133D.lean: OK
+lean/Strat134A.lean: OK
+lean/Strat134B.lean: OK
+lean/Strat134C.lean: OK
+lean/Strat134D.lean: OK
+lean/StratificationAll.lean: OK
+lean/StratificationDefs.lean: OK
 lean/UpperBoundAssembly.lean: OK
 lean/gen_endgame_data.py: OK
 lean/lakefile.toml: OK
 lean/lean-toolchain: OK
-   assert OK   : 869/869 entries verified
---- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.lean (869 files)
+   assert OK   : 1411/1411 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.lean (1411 files)
 
 -- ./data/hashes/SHA256SUMS.implementation_b
    command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.implementation_b
@@ -1296,7 +1838,7 @@ STEP 5/6 -- independent AKR Lemma 7 / A7 evidence
 --- PASS: 5a. DRAT gate self-test
 
 -- 5b. regenerate the 20 gitignored CNFs and compare SHA-256
-   command : python3 evidence/regen_cnf.py --write /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/cnf
+   command : python3 evidence/regen_cnf.py --write /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK/cnf
    expected: 'OK: all 20 CNFs regenerated byte-identically'
 PQ-adj_mixed-1.cnf       sha256 OK      a083c0961deaeff14553fc96a34de7dfccb4027b2961018f3bd6cbcb1f9d879f
 PQ-adj_mixed-2.cnf       sha256 OK      05b26c08ffa8b0f78a1a1e8e90cfb4884ad1fb5c249febf3cf2c1cbc104043a9
@@ -1310,7 +1852,7 @@ OK: all 20 CNFs regenerated byte-identically from indep_om.py
 --- PASS: 5b. CNF regeneration (20/20 byte-identical)
 
 -- 5c. one committed project DRAT refutation through the gate
-   command : dratcheck.py /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/cnf/generic_both-hooking.cnf evidence/drat/generic_both-hooking.drat
+   command : dratcheck.py /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK/cnf/generic_both-hooking.cnf evidence/drat/generic_both-hooking.drat
    expected: PROOF VERIFIED (UNSAT); takes about 45 s
    formula: 64566 clauses; proof: 663 steps
    added lemmas verified: 518 (of which RAT-only: 0)   deletions: 145   empty clause derived: True
@@ -1327,7 +1869,7 @@ OK: all 20 CNFs regenerated byte-identically from indep_om.py
              trusted; the output is asserted on as well.
    NOTE: reproduce.sh writes into independent/akr_l7_reproduction/evidence/logs/,
          which is TRACKED historical evidence.  A copy of its pre-run contents
-         is in /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/05d_evidence_logs_before/ .
+         is in /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK/05d_evidence_logs_before/ .
          Restore with:  git -C /Users/jaydenlin/dev/lean/heptagon-intersections checkout -- independent/akr_l7_reproduction/evidence/logs
 
 ========================================================================
@@ -1400,23 +1942,23 @@ OK: dratcheck.py accepts all 4 pigeonhole proofs and rejects all 4 bad proofs.
 ========================================================================
 STEP: re-check all 15 DRAT refutations
 ========================================================================
-generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     38.67s
-generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     31.93s
-P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      8.92s
-P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.55s
-P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.65s
-P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.53s
-Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     12.88s
-Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      7.92s
-Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.01s
-Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.88s
-PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.41s
-PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.29s
-PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      4.96s
-PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.18s
-PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.12s
+generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     39.27s
+generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     32.43s
+P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      9.05s
+P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.67s
+P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.77s
+P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.72s
+Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     13.06s
+Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      8.12s
+Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.21s
+Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.96s
+PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.48s
+PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.33s
+PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      5.00s
+PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.22s
+PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.15s
 
-total wall time: 166.88s
+total wall time: 169.42s
 OK: 15 DRAT proofs verified UNSAT, 5 instances SAT (no proof), 20 total
 --- PASS: re-check all 15 DRAT refutations
 
@@ -1435,25 +1977,25 @@ OK: all 5 exported models verified in pure Python (no solver).
 ========================================================================
 STEP: z3 cross-check of all 20 instances
 ========================================================================
-generic_none           z3=sat   expected=sat   OK  vars=220  clauses=64542    0.32s
+generic_none           z3=sat   expected=sat   OK  vars=220  clauses=64542    0.33s
 generic_mixed-1        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
-generic_mixed-2        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
-generic_both-hooking   z3=unsat expected=unsat OK  vars=220  clauses=64566    0.35s
+generic_mixed-2        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.11s
+generic_both-hooking   z3=unsat expected=unsat OK  vars=220  clauses=64566    0.36s
 generic_both-hooked    z3=unsat expected=unsat OK  vars=220  clauses=64566    0.12s
 P-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.06s
-P-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-P-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-P-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-P-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
+P-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+P-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+P-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+P-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
 Q-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.06s
 Q-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 Q-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 Q-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-Q-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-PQ-adj_none            z3=unsat expected=unsat OK  vars=120  clauses=20764    0.03s
-PQ-adj_mixed-1         z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+Q-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+PQ-adj_none            z3=unsat expected=unsat OK  vars=120  clauses=20764    0.04s
+PQ-adj_mixed-1         z3=unsat expected=unsat OK  vars=120  clauses=20788    0.04s
 PQ-adj_mixed-2         z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
-PQ-adj_both-hooking    z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
+PQ-adj_both-hooking    z3=unsat expected=unsat OK  vars=120  clauses=20788    0.04s
 PQ-adj_both-hooked     z3=unsat expected=unsat OK  vars=120  clauses=20788    0.03s
 
 OK: z3 agrees with RESULTS.md on all 20 instances (15 unsat, 5 sat with exported models)
@@ -1960,7 +2502,7 @@ combinations: 25   non-vacuous: 13   VACUOUS: 12
    VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
    VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
 both-hooking AND both-hooked UNSAT in all 25 combinations: True
-wall time: 136.4s
+wall time: 181.3s
 
 OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
     Every one of the 25 labelled (P-type x Q-type) combinations has
@@ -2100,7 +2642,7 @@ Pb-bp_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNS
 Pb-bp_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 Pb-bp_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 
-125 instances, 6.4s
+125 instances, 8.4s
 OK: every available solver agrees with results.json on all 125 instances.
 --- PASS: c25 solver cross-check
 
@@ -2147,7 +2689,7 @@ expected: every unit test passes; 13,003,620 graphs -> 225 triples over 121
           225 / 121 / 13,003,620 are asserted here explicitly.
 
 -- 6a. convert the canonical profile JSON to a flat table
-wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/implb/profiles.txt: 14 classes
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK/implb/profiles.txt: 14 classes
 --- PASS: 6a. make_profiles.py
 
 -- 6b. compile reduction.cpp with c++
@@ -2199,7 +2741,7 @@ after crossing-set compatibility  : 2300
 after Cerny Lemma 2               : 121
 distinct surviving graphs         : 121
 (classP,classQ,graph) triples     : 225
-wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/implb/implementation_b_output.json
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK/implb/implementation_b_output.json
    assert OK   : the enumeration really ran over 13,003,620 graphs
    assert OK   : 121 surviving graphs
    assert OK   : 225 surviving triples
@@ -2258,16 +2800,16 @@ EXACT SET EQUALITY: Implementation B independently reproduces the certificate's 
 ========================================================================
 SUMMARY
 ========================================================================
-wall time : 493 s
-logs      : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv
+wall time : 565 s
+logs      : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.R4NrbK
 
 PASSED (18):
-    1. Lean build (866 libraries, 4738 jobs)
+    1. Lean build (1408 libraries, 5822 jobs)
     2. lower-bound certificate (I = 38)
     3. endgame certificate (225 cases)
     4. hash manifest data/hashes/SHA256SUMS (5 files)
     4. hash manifest ./data/hashes/SHA256SUMS.tools (4 files)
-    4. hash manifest ./data/hashes/SHA256SUMS.lean (869 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.lean (1411 files)
     4. hash manifest ./data/hashes/SHA256SUMS.implementation_b (7 files)
     4. hash manifest ./data/hashes/SHA256SUMS.order_type_audit (8 files)
     5a. DRAT gate self-test

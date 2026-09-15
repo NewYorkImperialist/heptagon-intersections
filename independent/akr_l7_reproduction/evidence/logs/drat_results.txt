@@ -1,18 +1,18 @@
-generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     38.67s
-generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     31.93s
-P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      8.92s
-P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.55s
-P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.65s
-P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.53s
-Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     12.88s
-Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      7.92s
-Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.01s
-Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.88s
-PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.41s
-PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.29s
-PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      4.96s
-PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.18s
-PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.12s
+generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     39.27s
+generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     32.43s
+P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      9.05s
+P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.67s
+P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.77s
+P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.72s
+Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     13.06s
+Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      8.12s
+Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.21s
+Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.96s
+PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.48s
+PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.33s
+PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      5.00s
+PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.22s
+PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.15s
 
-total wall time: 166.88s
+total wall time: 169.42s
 OK: 15 DRAT proofs verified UNSAT, 5 instances SAT (no proof), 20 total

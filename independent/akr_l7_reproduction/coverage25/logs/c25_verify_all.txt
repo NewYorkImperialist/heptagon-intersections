@@ -171,7 +171,7 @@ combinations: 25   non-vacuous: 13   VACUOUS: 12
    VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
    VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
 both-hooking AND both-hooked UNSAT in all 25 combinations: True
-wall time: 136.4s
+wall time: 181.3s
 
 OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
     Every one of the 25 labelled (P-type x Q-type) combinations has

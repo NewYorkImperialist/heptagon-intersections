@@ -396,8 +396,33 @@ Implementation B independently reproducing 13,003,620 → 225. Log in
 **Not pushed.** Everything above is committed locally only; there is no standing
 authorization to push, so that is left as a decision.
 
+### And the stratification, 13:21
+
+**`Stratification.stratification : totals = [6007, 319, 16]`** — of the 6,342
+simple heptagons, 6,007 have some uncrossable 3-subset of sides, 319 have none
+of those but an uncrossable 4-subset, and 16 have neither. Row 5 quoted that
+split from the independent audit; **every number row 5 quotes is now
+kernel-checked**. 540 blocks, 8,907 s, serial; `propext` only.
+
+One near-miss worth recording. The assembly was first written as 540 nested
+`add3` calls with a trailing `rfl`. Had `simp only` failed to finish the
+arithmetic, that `rfl` would have re-evaluated `strataOf` from scratch and
+re-run the entire 8,907 s search *inside the kernel*. It was restructured
+before the build reached it, into a list of the 540 block results, so after
+`blockCounts_eq` only additions of literals remain and nothing is left that
+could re-run. The general lesson: in a sharded proof, a fallback tactic that
+can recompute the sharded object defeats the sharding silently.
+
+A second, smaller one: `git add -A` while a sharded build is in flight sweeps
+the unbuilt shard files into whatever commit you are making, producing a HEAD
+that declares libraries with no `.olean`. That happened once and was split back
+out with `git reset --soft HEAD~1`.
+
+`scripts/verify-all.sh` re-run over everything afterwards: **COMPLETE SUCCESS,
+exit 0**, all 1,411 files in `SHA256SUMS.lean` matching.
+
 **Next milestone: the geometric half of (E7)**, which is not a computation. The
 open items are unchanged in kind: (E3)/A7-EXT needs one discrete geometer,
-`hne40` is a settled negative, and nothing tonight touched either.
+`hne40` is a settled negative, and nothing here touched either.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
