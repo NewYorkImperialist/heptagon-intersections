@@ -125,3 +125,6 @@ independent/akr_l7_reproduction/evidence/**/__pycache__/
 # Fresh verification run output (historical logs under evidence/logs/ are tracked
 # and must stay distinct from re-run output).
 runs-local/
+
+# Generator scratch: regenerable caches and staged-but-unbuilt Lean modules
+.cache/

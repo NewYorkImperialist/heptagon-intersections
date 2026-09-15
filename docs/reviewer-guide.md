@@ -944,11 +944,15 @@ small-case diffs. Strong, not certified.
 are Černý L2, AKR L5, AKR L7, the order-type crossing fact and the exceptional
 classification. Closing them means formalizing published papers, not more bridge
 work — with one exception: (E7) is *this project's own* computation, not someone
-else's theorem, and part of it moved on 2026-09-14. `M_set` and the maximal
-crossing sets are now recomputed in Lean from each stored chirotope and proved
-equal to the stored fields, 14/14. What did **not** move is the part that makes
-(E7) the largest object here: that the 14 classes are all there are. See
-`verification-status.md` row 32 — and note (E5) and (E7) are load-bearing in a
+else's theorem, and it moved on 2026-09-14/15. **(E7b) is closed:** every field
+of the stored class data that the development consumes — `M_set`, the maximal
+crossing sets, `lemma2_windows`, `avoiding_pairs` — is now recomputed in Lean
+from the stored chirotope and proved equal to the stored table, 14/14. The last
+of those is the one to care about: `AvoidingFlag` checks the 225 endgame
+certificates against `avoiding_pairs`, which until then was read from JSON. What
+remains of (E7) is the geometric half — that a configuration belongs to the
+class its certificate names, and what the halfplane test means about polygons in
+the plane. See `verification-status.md` rows 32 and 33 — and note (E5) and (E7) are load-bearing in a
 way that surprised us; see
 the K-17 correction below.
 

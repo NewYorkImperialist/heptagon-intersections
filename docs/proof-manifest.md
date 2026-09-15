@@ -216,7 +216,7 @@ theorem.
 | **E4** | the order-type fact behind filter (c) (= **X2**) | open |
 | **E5** | Černý L2: no window carries an exact induced perfect matching | open; **attempted and blocked** (`CernyL2Derivation.lean`) |
 | **E6** | correctness of the component labelling | **discharged** (`ComponentLabelling.lean`, iff, both directions) |
-| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object. **Partly moved 2026-09-14:** `M_set` and the maximal crossing sets are now *recomputed* in Lean from each stored chirotope and proved equal to the stored fields, 14/14 (`ClassDataFromChirotope.recomputed_eq`); `lemma2_windows` and `avoiding_pairs` are not. Exhaustiveness — that no other of the 135 × 360 candidates is exceptional — is stated (`exceptionalPolygons`) and **unproved**. See `verification-status.md` row 32 |
+| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object. **(E7b) closed 2026-09-15:** every field of `ClassData` the development consumes is now *recomputed* in Lean from the stored chirotope and proved equal to the stored table, 14/14 — `M_set` and the maximal crossing sets by `ClassDataFromChirotope.recomputed_eq`, `lemma2_windows` and `avoiding_pairs` by `ClassDataFields.fields_recomputed_eq` (on `propext` alone). The second matters: `AvoidingFlag` checks the 225 endgame certificates against `avoiding_pairs`, which until then was read from JSON rather than derived. Exhaustiveness — that no other of the 135 × 360 candidates is exceptional — is stated (`exceptionalPolygons`) and **unproved**. See `verification-status.md` row 32 |
 | **E8a** | bipartiteness decided by a correct algorithm | **discharged** (`BipartiteDecision.lean`, iff, both directions) |
 | **E8b** | the *shipped programs'* routine is such an algorithm | open (transcription) |
 
@@ -299,10 +299,8 @@ one.
 3. **Confirmation from an AKR author**, ideally.
 4. **The classification (E7)** — the largest unformalized object, the content
    of `hclass`, and the most plausible next formalization target. Next concrete
-   steps: recompute `lemma2_windows` and `avoiding_pairs` from the chirotope in
-   Lean as was done for `M_set` (the second is load-bearing — `AvoidingFlag`
-   checks the 225 certificates against it), then exhaustiveness, which is the
-   hard one.
+   step: exhaustiveness. (E7b), the stored-class-data half, is closed —
+   every consumed field is now recomputed from the chirotope.
 5. Convert this manifest into a readable paper.
 6. The human author learning the argument well enough to defend it.
 7. Further Lean formalization only where it improves the trust boundary — and

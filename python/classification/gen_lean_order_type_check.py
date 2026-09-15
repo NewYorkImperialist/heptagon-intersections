@@ -8,7 +8,7 @@ p=Path('data/order_types/order_types_7.json');d=json.loads(p.read_bytes())
 trip=list(combinations(range(7),3)); vs=d['chirotopes'];assert len(vs)==135
 assert d['triple_order']==list(map(list,trip))
 assert all(len(v)==35 and set(v)<={-1,1} for v in vs)
-fours=[sum(1<<i for i in t) for t in combinations(range(7),4)]
+fours=sorted(sum(1<<i for i in t) for t in combinations(range(7),4))  # ascending, to match the filter over range 128
 def exceptional(v):
  chi=Chi(dict(zip(trip,v)),7)
  fam={sum(1<<s for s in range(7) if (s in A)!=((s+1)%7 in A)) for A in halfplane_subsets(chi,7)}
@@ -51,13 +51,33 @@ for cl in classes0:
  F=list(dict.fromkeys(sum(1<<k for k in range(7) if ((A>>k)&1)!=((A>>((k+1)%7))&1)) for A in hp))
  s+=f"  | {cl['class_index']} => {F}\n"
 s+='  | _ => []\n\n/-- Full family transcription checked against recomputation. -/\ntheorem classFam_eq : ∀ c : Fin 14, fam (chiro (signs c)) = classFam c := by decide +kernel\n\n'
-s+='''/-- Every four-side mask is contained in some member of fam: precisely
-absence of an uncrossable four-subset, in the transcribed finite test. -/
-def exceptional (chi : Nat → Nat → Nat → Int) : Bool :=
-  let F := fam chi
-  ((List.range 128).filter fun t =>
-    ((List.range 7).filter fun i => t.testBit i).length == 4).all fun t =>
-      F.any fun m => (t &&& m) == t
+s+=f'''/-- The 35 four-element side masks, as literals rather than as a filter over
+all 128 masks recomputed on every call.  `fourMasks_eq` checks the two agree. -/
+def fourMasks : List Nat := {fours}
+
+theorem fourMasks_eq : fourMasks =
+    (List.range 128).filter (fun t =>
+      ((List.range 7).filter fun i => t.testBit i).length == 4) := by decide
+
+/-- Every four-side mask is contained in some member of the family: precisely
+absence of an uncrossable four-subset, in the transcribed finite test.  Taking
+the family as an argument is not cosmetic -- written as `fam chi` inside the
+`fourMasks.all` body it is rebuilt for each of the 35 masks, which costs about
+35 times as much kernel reduction. -/
+def exceptionalOf (F : List Nat) : Bool :=
+  fourMasks.all fun t => F.any fun m => (t &&& m) == t
+
+/-- Reference form, over the deduplicated family. -/
+def exceptionalRef (chi : Nat → Nat → Nat → Int) : Bool := exceptionalOf (fam chi)
+
+/-- The same test over the family with repeats left in.  `any_fam_eq` makes the
+two equal as functions; this one skips two quadratic deduplication passes and is
+what the 48,600-candidate enumeration actually runs. -/
+def exceptional (chi : Nat → Nat → Nat → Int) : Bool := exceptionalOf (famRaw chi)
+
+theorem exceptional_eq_ref (chi : Nat → Nat → Nat → Int) :
+    exceptional chi = exceptionalRef chi := by
+  simp only [exceptional, exceptionalRef, exceptionalOf, any_fam_eq]
 
 '''
 # The identity vertex order of a canonical order-type representative is not a
@@ -69,7 +89,8 @@ prove that all exceptional simple polygons reduce to a stored class. -/
 theorem stored_classes_exceptional : ∀ c : Fin 14,
     exceptional (chiro (signs c)) = true := by
   intro c
-  unfold exceptional
+  rw [exceptional_eq_ref]
+  unfold exceptionalRef
   rw [classFam_eq c]
   revert c
   decide +kernel
@@ -87,15 +108,30 @@ def cycles : List (List Nat) :=
 cycs=[(0,)+p for p in permutations(range(1,7)) if p[0]<p[-1]]
 s+='  ['+',\n   '.join(str(list(c)) for c in cycs)+']\n'
 s+='''
+/-- The same 360 cyclic orders, each paired with its index.  Walking this
+instead of indexing `cycles` matters for kernel cost and for nothing else:
+`cycles.getD j []` rescans a 360-element literal, and in `exceptionalPolygons`
+that scan sits inside the chirotope query, so it runs hundreds of times per
+candidate.  The two theorems below check the pairing is exactly `cycles`
+against `List.range 360`. -/
+def cyclesIdx : List (Nat × List Nat) :=
+'''
+s+='  ['+',\n   '.join(f'({j}, {list(c)})' for j,c in enumerate(cycs))+']\n'
+s+='''
+theorem cyclesIdx_fst : cyclesIdx.map Prod.fst = List.range 360 := by decide
+theorem cyclesIdx_snd : cyclesIdx.map Prod.snd = cycles := by decide
+
 def relabel (v : List Int) (cyc : List Nat) : Nat → Nat → Nat → Int :=
   fun a b c => chiro v (cyc.getD a 0) (cyc.getD b 0) (cyc.getD c 0)
 
-/-- The full finite enumeration whose evaluation is a separate scale probe.
-No theorem about this list is asserted by the subchecks above. -/
+/-- The full finite enumeration.  `OTEnumAll.exceptionalPolygons_eq_expected`
+proves this equals `expectedPolygons`. -/
 def exceptionalPolygons : List (Nat × Nat) :=
-  (List.range 135).flatMap fun i => (List.range 360).filterMap fun j =>
-    let chi := relabel (orderSigns i) (cycles.getD j [])
-    if simple chi && exceptional chi then some (i,j) else none
+  (List.range 135).flatMap fun i =>
+    let v := orderSigns i
+    cyclesIdx.filterMap fun p =>
+      let chi := relabel v p.2
+      if simple chi && exceptional chi then some (i, p.1) else none
 
 end Heptagon.OrderTypeClassification
 '''

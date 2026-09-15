@@ -293,6 +293,15 @@ say "command : $S1_CMD"
 say "expected: exit 0; no 'error:' line; no 'declaration uses sorry' warning;"
 say "          every declared lean_lib produces a .olean; no sorry/admit/"
 say "          native_decide/axiom in the sources"
+say "NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,"
+say "          which kernel-check the (E7a) exhaustiveness enumeration one"
+say "          order-type representative at a time -- about 17 CPU-hours, so a"
+say "          few wall-clock hours at -j6.  A WARM rebuild is still seconds,"
+say "          so repeat runs of this script are unaffected.  Everything else"
+say "          in the development builds in about two minutes; if you want that"
+say "          first, build the non-shard targets by name (they are the"
+say "          [[lean_lib]] entries in lean/lakefile.toml above the generated"
+say "          shard block), then come back for  lake build -j6 OTEnumAll."
 
 MATHLIB_BUILT=0
 [ -d "$ROOT/lean/.lake/packages/mathlib/.lake/build/lib" ] && MATHLIB_BUILT=1

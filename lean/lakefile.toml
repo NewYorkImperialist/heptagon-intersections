@@ -1,5 +1,5 @@
 name = "heptagon"
-defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics", "CernyL2Derivation", "PolygonSimple", "ClassDataWitness", "ExceptionalClass", "AKRL5Derivation", "IntersectionCount", "ClassInvariant", "ClassDataFromChirotope", "OrderTypeClassification"]
+defaultTargets = ["LowerBound", "LemmaA", "EndgameDefs", "EndgameData", "Endgame", "Lemma7Bridge", "CernyL2Interface", "GeometryDefs", "SegmentGeometry", "DisjointnessGraph", "EnumerationDomain", "DomainCount", "EnumerationComplete", "CounterexampleCount", "FilterSoundness", "Exclude42", "UpperBoundAssembly", "ComponentLabelling", "BipartiteDecision", "LemmaABridge", "MainTheorem", "IntersectionParity", "AvoidingFlag", "PointSetSemantics", "CernyL2Derivation", "PolygonSimple", "ClassDataWitness", "ExceptionalClass", "AKRL5Derivation", "IntersectionCount", "ClassInvariant", "ClassDataFromChirotope", "OrderTypeClassification", "ClassDataFields", "OTEnumShard", "OTEnum000A", "OTEnum000B", "OTEnum000C", "OTEnum000D", "OTEnum001A", "OTEnum001B", "OTEnum001C", "OTEnum001D", "OTEnum002A", "OTEnum002B", "OTEnum002C", "OTEnum002D", "OTEnum003A", "OTEnum003B", "OTEnum003C", "OTEnum003D", "OTEnum004A", "OTEnum004B", "OTEnum004C", "OTEnum004D", "OTEnum005A", "OTEnum005B", "OTEnum005C", "OTEnum005D", "OTEnum006A", "OTEnum006B", "OTEnum006C", "OTEnum006D", "OTEnum007A", "OTEnum007B", "OTEnum007C", "OTEnum007D", "OTEnum008A", "OTEnum008B", "OTEnum008C", "OTEnum008D", "OTEnum009A", "OTEnum009B", "OTEnum009C", "OTEnum009D", "OTEnum010A", "OTEnum010B", "OTEnum010C", "OTEnum010D", "OTEnum011A", "OTEnum011B", "OTEnum011C", "OTEnum011D", "OTEnum012A", "OTEnum012B", "OTEnum012C", "OTEnum012D", "OTEnum013A", "OTEnum013B", "OTEnum013C", "OTEnum013D", "OTEnum014A", "OTEnum014B", "OTEnum014C", "OTEnum014D", "OTEnum015A", "OTEnum015B", "OTEnum015C", "OTEnum015D", "OTEnum016A", "OTEnum016B", "OTEnum016C", "OTEnum016D", "OTEnum017A", "OTEnum017B", "OTEnum017C", "OTEnum017D", "OTEnum018A", "OTEnum018B", "OTEnum018C", "OTEnum018D", "OTEnum019A", "OTEnum019B", "OTEnum019C", "OTEnum019D", "OTEnum020A", "OTEnum020B", "OTEnum020C", "OTEnum020D", "OTEnum021A", "OTEnum021B", "OTEnum021C", "OTEnum021D", "OTEnum022A", "OTEnum022B", "OTEnum022C", "OTEnum022D", "OTEnum023A", "OTEnum023B", "OTEnum023C", "OTEnum023D", "OTEnum024A", "OTEnum024B", "OTEnum024C", "OTEnum024D", "OTEnum025A", "OTEnum025B", "OTEnum025C", "OTEnum025D", "OTEnum026A", "OTEnum026B", "OTEnum026C", "OTEnum026D", "OTEnum027A", "OTEnum027B", "OTEnum027C", "OTEnum027D", "OTEnum028A", "OTEnum028B", "OTEnum028C", "OTEnum028D", "OTEnum029A", "OTEnum029B", "OTEnum029C", "OTEnum029D", "OTEnum030A", "OTEnum030B", "OTEnum030C", "OTEnum030D", "OTEnum031A", "OTEnum031B", "OTEnum031C", "OTEnum031D", "OTEnum032A", "OTEnum032B", "OTEnum032C", "OTEnum032D", "OTEnum033A", "OTEnum033B", "OTEnum033C", "OTEnum033D", "OTEnum034A", "OTEnum034B", "OTEnum034C", "OTEnum034D", "OTEnum035A", "OTEnum035B", "OTEnum035C", "OTEnum035D", "OTEnum036A", "OTEnum036B", "OTEnum036C", "OTEnum036D", "OTEnum037A", "OTEnum037B", "OTEnum037C", "OTEnum037D", "OTEnum038A", "OTEnum038B", "OTEnum038C", "OTEnum038D", "OTEnum039A", "OTEnum039B", "OTEnum039C", "OTEnum039D", "OTEnum040A", "OTEnum040B", "OTEnum040C", "OTEnum040D", "OTEnum041A", "OTEnum041B", "OTEnum041C", "OTEnum041D", "OTEnum042A", "OTEnum042B", "OTEnum042C", "OTEnum042D", "OTEnum043A", "OTEnum043B", "OTEnum043C", "OTEnum043D", "OTEnum044A", "OTEnum044B", "OTEnum044C", "OTEnum044D", "OTEnum045A", "OTEnum045B", "OTEnum045C", "OTEnum045D", "OTEnum046A", "OTEnum046B", "OTEnum046C", "OTEnum046D", "OTEnum047A", "OTEnum047B", "OTEnum047C", "OTEnum047D", "OTEnum048A", "OTEnum048B", "OTEnum048C", "OTEnum048D", "OTEnum049A", "OTEnum049B", "OTEnum049C", "OTEnum049D", "OTEnum050A", "OTEnum050B", "OTEnum050C", "OTEnum050D", "OTEnum051A", "OTEnum051B", "OTEnum051C", "OTEnum051D", "OTEnum052A", "OTEnum052B", "OTEnum052C", "OTEnum052D", "OTEnum053A", "OTEnum053B", "OTEnum053C", "OTEnum053D", "OTEnum054A", "OTEnum054B", "OTEnum054C", "OTEnum054D", "OTEnum055A", "OTEnum055B", "OTEnum055C", "OTEnum055D", "OTEnum056A", "OTEnum056B", "OTEnum056C", "OTEnum056D", "OTEnum057A", "OTEnum057B", "OTEnum057C", "OTEnum057D", "OTEnum058A", "OTEnum058B", "OTEnum058C", "OTEnum058D", "OTEnum059A", "OTEnum059B", "OTEnum059C", "OTEnum059D", "OTEnum060A", "OTEnum060B", "OTEnum060C", "OTEnum060D", "OTEnum061A", "OTEnum061B", "OTEnum061C", "OTEnum061D", "OTEnum062A", "OTEnum062B", "OTEnum062C", "OTEnum062D", "OTEnum063A", "OTEnum063B", "OTEnum063C", "OTEnum063D", "OTEnum064A", "OTEnum064B", "OTEnum064C", "OTEnum064D", "OTEnum065A", "OTEnum065B", "OTEnum065C", "OTEnum065D", "OTEnum066A", "OTEnum066B", "OTEnum066C", "OTEnum066D", "OTEnum067A", "OTEnum067B", "OTEnum067C", "OTEnum067D", "OTEnum068A", "OTEnum068B", "OTEnum068C", "OTEnum068D", "OTEnum069A", "OTEnum069B", "OTEnum069C", "OTEnum069D", "OTEnum070A", "OTEnum070B", "OTEnum070C", "OTEnum070D", "OTEnum071A", "OTEnum071B", "OTEnum071C", "OTEnum071D", "OTEnum072A", "OTEnum072B", "OTEnum072C", "OTEnum072D", "OTEnum073A", "OTEnum073B", "OTEnum073C", "OTEnum073D", "OTEnum074A", "OTEnum074B", "OTEnum074C", "OTEnum074D", "OTEnum075A", "OTEnum075B", "OTEnum075C", "OTEnum075D", "OTEnum076A", "OTEnum076B", "OTEnum076C", "OTEnum076D", "OTEnum077A", "OTEnum077B", "OTEnum077C", "OTEnum077D", "OTEnum078A", "OTEnum078B", "OTEnum078C", "OTEnum078D", "OTEnum079A", "OTEnum079B", "OTEnum079C", "OTEnum079D", "OTEnum080A", "OTEnum080B", "OTEnum080C", "OTEnum080D", "OTEnum081A", "OTEnum081B", "OTEnum081C", "OTEnum081D", "OTEnum082A", "OTEnum082B", "OTEnum082C", "OTEnum082D", "OTEnum083A", "OTEnum083B", "OTEnum083C", "OTEnum083D", "OTEnum084A", "OTEnum084B", "OTEnum084C", "OTEnum084D", "OTEnum085A", "OTEnum085B", "OTEnum085C", "OTEnum085D", "OTEnum086A", "OTEnum086B", "OTEnum086C", "OTEnum086D", "OTEnum087A", "OTEnum087B", "OTEnum087C", "OTEnum087D", "OTEnum088A", "OTEnum088B", "OTEnum088C", "OTEnum088D", "OTEnum089A", "OTEnum089B", "OTEnum089C", "OTEnum089D", "OTEnum090A", "OTEnum090B", "OTEnum090C", "OTEnum090D", "OTEnum091A", "OTEnum091B", "OTEnum091C", "OTEnum091D", "OTEnum092A", "OTEnum092B", "OTEnum092C", "OTEnum092D", "OTEnum093A", "OTEnum093B", "OTEnum093C", "OTEnum093D", "OTEnum094A", "OTEnum094B", "OTEnum094C", "OTEnum094D", "OTEnum095A", "OTEnum095B", "OTEnum095C", "OTEnum095D", "OTEnum096A", "OTEnum096B", "OTEnum096C", "OTEnum096D", "OTEnum097A", "OTEnum097B", "OTEnum097C", "OTEnum097D", "OTEnum098A", "OTEnum098B", "OTEnum098C", "OTEnum098D", "OTEnum099A", "OTEnum099B", "OTEnum099C", "OTEnum099D", "OTEnum100A", "OTEnum100B", "OTEnum100C", "OTEnum100D", "OTEnum101A", "OTEnum101B", "OTEnum101C", "OTEnum101D", "OTEnum102A", "OTEnum102B", "OTEnum102C", "OTEnum102D", "OTEnum103A", "OTEnum103B", "OTEnum103C", "OTEnum103D", "OTEnum104A", "OTEnum104B", "OTEnum104C", "OTEnum104D", "OTEnum105A", "OTEnum105B", "OTEnum105C", "OTEnum105D", "OTEnum106A", "OTEnum106B", "OTEnum106C", "OTEnum106D", "OTEnum107A", "OTEnum107B", "OTEnum107C", "OTEnum107D", "OTEnum108A", "OTEnum108B", "OTEnum108C", "OTEnum108D", "OTEnum109A", "OTEnum109B", "OTEnum109C", "OTEnum109D", "OTEnum110A", "OTEnum110B", "OTEnum110C", "OTEnum110D", "OTEnum111A", "OTEnum111B", "OTEnum111C", "OTEnum111D", "OTEnum112A", "OTEnum112B", "OTEnum112C", "OTEnum112D", "OTEnum113A", "OTEnum113B", "OTEnum113C", "OTEnum113D", "OTEnum114A", "OTEnum114B", "OTEnum114C", "OTEnum114D", "OTEnum115A", "OTEnum115B", "OTEnum115C", "OTEnum115D", "OTEnum116A", "OTEnum116B", "OTEnum116C", "OTEnum116D", "OTEnum117A", "OTEnum117B", "OTEnum117C", "OTEnum117D", "OTEnum118A", "OTEnum118B", "OTEnum118C", "OTEnum118D", "OTEnum119A", "OTEnum119B", "OTEnum119C", "OTEnum119D", "OTEnum120A", "OTEnum120B", "OTEnum120C", "OTEnum120D", "OTEnum121A", "OTEnum121B", "OTEnum121C", "OTEnum121D", "OTEnum122A", "OTEnum122B", "OTEnum122C", "OTEnum122D", "OTEnum123A", "OTEnum123B", "OTEnum123C", "OTEnum123D", "OTEnum124A", "OTEnum124B", "OTEnum124C", "OTEnum124D", "OTEnum125A", "OTEnum125B", "OTEnum125C", "OTEnum125D", "OTEnum126A", "OTEnum126B", "OTEnum126C", "OTEnum126D", "OTEnum127A", "OTEnum127B", "OTEnum127C", "OTEnum127D", "OTEnum128A", "OTEnum128B", "OTEnum128C", "OTEnum128D", "OTEnum129A", "OTEnum129B", "OTEnum129C", "OTEnum129D", "OTEnum130A", "OTEnum130B", "OTEnum130C", "OTEnum130D", "OTEnum131A", "OTEnum131B", "OTEnum131C", "OTEnum131D", "OTEnum132A", "OTEnum132B", "OTEnum132C", "OTEnum132D", "OTEnum133A", "OTEnum133B", "OTEnum133C", "OTEnum133D", "OTEnum134A", "OTEnum134B", "OTEnum134C", "OTEnum134D", "OTEnumAll"]
 # LowerBound.lean deliberately imports NOTHING (core Lean only); the Mathlib
 # dependency below is used solely by LemmaA.lean.
 [[require]]
@@ -200,3 +200,1636 @@ name = "ClassDataFromChirotope"
 
 [[lean_lib]]
 name = "OrderTypeClassification"
+
+[[lean_lib]]
+name = "ClassDataFields"
+
+# --- BEGIN generated E7(a) enumeration shards ---
+# Generated by python3 python/classification/gen_lean_enum_shards.py
+
+[[lean_lib]]
+name = "OTEnumShard"
+
+[[lean_lib]]
+name = "OTEnum000A"
+
+[[lean_lib]]
+name = "OTEnum000B"
+
+[[lean_lib]]
+name = "OTEnum000C"
+
+[[lean_lib]]
+name = "OTEnum000D"
+
+[[lean_lib]]
+name = "OTEnum001A"
+
+[[lean_lib]]
+name = "OTEnum001B"
+
+[[lean_lib]]
+name = "OTEnum001C"
+
+[[lean_lib]]
+name = "OTEnum001D"
+
+[[lean_lib]]
+name = "OTEnum002A"
+
+[[lean_lib]]
+name = "OTEnum002B"
+
+[[lean_lib]]
+name = "OTEnum002C"
+
+[[lean_lib]]
+name = "OTEnum002D"
+
+[[lean_lib]]
+name = "OTEnum003A"
+
+[[lean_lib]]
+name = "OTEnum003B"
+
+[[lean_lib]]
+name = "OTEnum003C"
+
+[[lean_lib]]
+name = "OTEnum003D"
+
+[[lean_lib]]
+name = "OTEnum004A"
+
+[[lean_lib]]
+name = "OTEnum004B"
+
+[[lean_lib]]
+name = "OTEnum004C"
+
+[[lean_lib]]
+name = "OTEnum004D"
+
+[[lean_lib]]
+name = "OTEnum005A"
+
+[[lean_lib]]
+name = "OTEnum005B"
+
+[[lean_lib]]
+name = "OTEnum005C"
+
+[[lean_lib]]
+name = "OTEnum005D"
+
+[[lean_lib]]
+name = "OTEnum006A"
+
+[[lean_lib]]
+name = "OTEnum006B"
+
+[[lean_lib]]
+name = "OTEnum006C"
+
+[[lean_lib]]
+name = "OTEnum006D"
+
+[[lean_lib]]
+name = "OTEnum007A"
+
+[[lean_lib]]
+name = "OTEnum007B"
+
+[[lean_lib]]
+name = "OTEnum007C"
+
+[[lean_lib]]
+name = "OTEnum007D"
+
+[[lean_lib]]
+name = "OTEnum008A"
+
+[[lean_lib]]
+name = "OTEnum008B"
+
+[[lean_lib]]
+name = "OTEnum008C"
+
+[[lean_lib]]
+name = "OTEnum008D"
+
+[[lean_lib]]
+name = "OTEnum009A"
+
+[[lean_lib]]
+name = "OTEnum009B"
+
+[[lean_lib]]
+name = "OTEnum009C"
+
+[[lean_lib]]
+name = "OTEnum009D"
+
+[[lean_lib]]
+name = "OTEnum010A"
+
+[[lean_lib]]
+name = "OTEnum010B"
+
+[[lean_lib]]
+name = "OTEnum010C"
+
+[[lean_lib]]
+name = "OTEnum010D"
+
+[[lean_lib]]
+name = "OTEnum011A"
+
+[[lean_lib]]
+name = "OTEnum011B"
+
+[[lean_lib]]
+name = "OTEnum011C"
+
+[[lean_lib]]
+name = "OTEnum011D"
+
+[[lean_lib]]
+name = "OTEnum012A"
+
+[[lean_lib]]
+name = "OTEnum012B"
+
+[[lean_lib]]
+name = "OTEnum012C"
+
+[[lean_lib]]
+name = "OTEnum012D"
+
+[[lean_lib]]
+name = "OTEnum013A"
+
+[[lean_lib]]
+name = "OTEnum013B"
+
+[[lean_lib]]
+name = "OTEnum013C"
+
+[[lean_lib]]
+name = "OTEnum013D"
+
+[[lean_lib]]
+name = "OTEnum014A"
+
+[[lean_lib]]
+name = "OTEnum014B"
+
+[[lean_lib]]
+name = "OTEnum014C"
+
+[[lean_lib]]
+name = "OTEnum014D"
+
+[[lean_lib]]
+name = "OTEnum015A"
+
+[[lean_lib]]
+name = "OTEnum015B"
+
+[[lean_lib]]
+name = "OTEnum015C"
+
+[[lean_lib]]
+name = "OTEnum015D"
+
+[[lean_lib]]
+name = "OTEnum016A"
+
+[[lean_lib]]
+name = "OTEnum016B"
+
+[[lean_lib]]
+name = "OTEnum016C"
+
+[[lean_lib]]
+name = "OTEnum016D"
+
+[[lean_lib]]
+name = "OTEnum017A"
+
+[[lean_lib]]
+name = "OTEnum017B"
+
+[[lean_lib]]
+name = "OTEnum017C"
+
+[[lean_lib]]
+name = "OTEnum017D"
+
+[[lean_lib]]
+name = "OTEnum018A"
+
+[[lean_lib]]
+name = "OTEnum018B"
+
+[[lean_lib]]
+name = "OTEnum018C"
+
+[[lean_lib]]
+name = "OTEnum018D"
+
+[[lean_lib]]
+name = "OTEnum019A"
+
+[[lean_lib]]
+name = "OTEnum019B"
+
+[[lean_lib]]
+name = "OTEnum019C"
+
+[[lean_lib]]
+name = "OTEnum019D"
+
+[[lean_lib]]
+name = "OTEnum020A"
+
+[[lean_lib]]
+name = "OTEnum020B"
+
+[[lean_lib]]
+name = "OTEnum020C"
+
+[[lean_lib]]
+name = "OTEnum020D"
+
+[[lean_lib]]
+name = "OTEnum021A"
+
+[[lean_lib]]
+name = "OTEnum021B"
+
+[[lean_lib]]
+name = "OTEnum021C"
+
+[[lean_lib]]
+name = "OTEnum021D"
+
+[[lean_lib]]
+name = "OTEnum022A"
+
+[[lean_lib]]
+name = "OTEnum022B"
+
+[[lean_lib]]
+name = "OTEnum022C"
+
+[[lean_lib]]
+name = "OTEnum022D"
+
+[[lean_lib]]
+name = "OTEnum023A"
+
+[[lean_lib]]
+name = "OTEnum023B"
+
+[[lean_lib]]
+name = "OTEnum023C"
+
+[[lean_lib]]
+name = "OTEnum023D"
+
+[[lean_lib]]
+name = "OTEnum024A"
+
+[[lean_lib]]
+name = "OTEnum024B"
+
+[[lean_lib]]
+name = "OTEnum024C"
+
+[[lean_lib]]
+name = "OTEnum024D"
+
+[[lean_lib]]
+name = "OTEnum025A"
+
+[[lean_lib]]
+name = "OTEnum025B"
+
+[[lean_lib]]
+name = "OTEnum025C"
+
+[[lean_lib]]
+name = "OTEnum025D"
+
+[[lean_lib]]
+name = "OTEnum026A"
+
+[[lean_lib]]
+name = "OTEnum026B"
+
+[[lean_lib]]
+name = "OTEnum026C"
+
+[[lean_lib]]
+name = "OTEnum026D"
+
+[[lean_lib]]
+name = "OTEnum027A"
+
+[[lean_lib]]
+name = "OTEnum027B"
+
+[[lean_lib]]
+name = "OTEnum027C"
+
+[[lean_lib]]
+name = "OTEnum027D"
+
+[[lean_lib]]
+name = "OTEnum028A"
+
+[[lean_lib]]
+name = "OTEnum028B"
+
+[[lean_lib]]
+name = "OTEnum028C"
+
+[[lean_lib]]
+name = "OTEnum028D"
+
+[[lean_lib]]
+name = "OTEnum029A"
+
+[[lean_lib]]
+name = "OTEnum029B"
+
+[[lean_lib]]
+name = "OTEnum029C"
+
+[[lean_lib]]
+name = "OTEnum029D"
+
+[[lean_lib]]
+name = "OTEnum030A"
+
+[[lean_lib]]
+name = "OTEnum030B"
+
+[[lean_lib]]
+name = "OTEnum030C"
+
+[[lean_lib]]
+name = "OTEnum030D"
+
+[[lean_lib]]
+name = "OTEnum031A"
+
+[[lean_lib]]
+name = "OTEnum031B"
+
+[[lean_lib]]
+name = "OTEnum031C"
+
+[[lean_lib]]
+name = "OTEnum031D"
+
+[[lean_lib]]
+name = "OTEnum032A"
+
+[[lean_lib]]
+name = "OTEnum032B"
+
+[[lean_lib]]
+name = "OTEnum032C"
+
+[[lean_lib]]
+name = "OTEnum032D"
+
+[[lean_lib]]
+name = "OTEnum033A"
+
+[[lean_lib]]
+name = "OTEnum033B"
+
+[[lean_lib]]
+name = "OTEnum033C"
+
+[[lean_lib]]
+name = "OTEnum033D"
+
+[[lean_lib]]
+name = "OTEnum034A"
+
+[[lean_lib]]
+name = "OTEnum034B"
+
+[[lean_lib]]
+name = "OTEnum034C"
+
+[[lean_lib]]
+name = "OTEnum034D"
+
+[[lean_lib]]
+name = "OTEnum035A"
+
+[[lean_lib]]
+name = "OTEnum035B"
+
+[[lean_lib]]
+name = "OTEnum035C"
+
+[[lean_lib]]
+name = "OTEnum035D"
+
+[[lean_lib]]
+name = "OTEnum036A"
+
+[[lean_lib]]
+name = "OTEnum036B"
+
+[[lean_lib]]
+name = "OTEnum036C"
+
+[[lean_lib]]
+name = "OTEnum036D"
+
+[[lean_lib]]
+name = "OTEnum037A"
+
+[[lean_lib]]
+name = "OTEnum037B"
+
+[[lean_lib]]
+name = "OTEnum037C"
+
+[[lean_lib]]
+name = "OTEnum037D"
+
+[[lean_lib]]
+name = "OTEnum038A"
+
+[[lean_lib]]
+name = "OTEnum038B"
+
+[[lean_lib]]
+name = "OTEnum038C"
+
+[[lean_lib]]
+name = "OTEnum038D"
+
+[[lean_lib]]
+name = "OTEnum039A"
+
+[[lean_lib]]
+name = "OTEnum039B"
+
+[[lean_lib]]
+name = "OTEnum039C"
+
+[[lean_lib]]
+name = "OTEnum039D"
+
+[[lean_lib]]
+name = "OTEnum040A"
+
+[[lean_lib]]
+name = "OTEnum040B"
+
+[[lean_lib]]
+name = "OTEnum040C"
+
+[[lean_lib]]
+name = "OTEnum040D"
+
+[[lean_lib]]
+name = "OTEnum041A"
+
+[[lean_lib]]
+name = "OTEnum041B"
+
+[[lean_lib]]
+name = "OTEnum041C"
+
+[[lean_lib]]
+name = "OTEnum041D"
+
+[[lean_lib]]
+name = "OTEnum042A"
+
+[[lean_lib]]
+name = "OTEnum042B"
+
+[[lean_lib]]
+name = "OTEnum042C"
+
+[[lean_lib]]
+name = "OTEnum042D"
+
+[[lean_lib]]
+name = "OTEnum043A"
+
+[[lean_lib]]
+name = "OTEnum043B"
+
+[[lean_lib]]
+name = "OTEnum043C"
+
+[[lean_lib]]
+name = "OTEnum043D"
+
+[[lean_lib]]
+name = "OTEnum044A"
+
+[[lean_lib]]
+name = "OTEnum044B"
+
+[[lean_lib]]
+name = "OTEnum044C"
+
+[[lean_lib]]
+name = "OTEnum044D"
+
+[[lean_lib]]
+name = "OTEnum045A"
+
+[[lean_lib]]
+name = "OTEnum045B"
+
+[[lean_lib]]
+name = "OTEnum045C"
+
+[[lean_lib]]
+name = "OTEnum045D"
+
+[[lean_lib]]
+name = "OTEnum046A"
+
+[[lean_lib]]
+name = "OTEnum046B"
+
+[[lean_lib]]
+name = "OTEnum046C"
+
+[[lean_lib]]
+name = "OTEnum046D"
+
+[[lean_lib]]
+name = "OTEnum047A"
+
+[[lean_lib]]
+name = "OTEnum047B"
+
+[[lean_lib]]
+name = "OTEnum047C"
+
+[[lean_lib]]
+name = "OTEnum047D"
+
+[[lean_lib]]
+name = "OTEnum048A"
+
+[[lean_lib]]
+name = "OTEnum048B"
+
+[[lean_lib]]
+name = "OTEnum048C"
+
+[[lean_lib]]
+name = "OTEnum048D"
+
+[[lean_lib]]
+name = "OTEnum049A"
+
+[[lean_lib]]
+name = "OTEnum049B"
+
+[[lean_lib]]
+name = "OTEnum049C"
+
+[[lean_lib]]
+name = "OTEnum049D"
+
+[[lean_lib]]
+name = "OTEnum050A"
+
+[[lean_lib]]
+name = "OTEnum050B"
+
+[[lean_lib]]
+name = "OTEnum050C"
+
+[[lean_lib]]
+name = "OTEnum050D"
+
+[[lean_lib]]
+name = "OTEnum051A"
+
+[[lean_lib]]
+name = "OTEnum051B"
+
+[[lean_lib]]
+name = "OTEnum051C"
+
+[[lean_lib]]
+name = "OTEnum051D"
+
+[[lean_lib]]
+name = "OTEnum052A"
+
+[[lean_lib]]
+name = "OTEnum052B"
+
+[[lean_lib]]
+name = "OTEnum052C"
+
+[[lean_lib]]
+name = "OTEnum052D"
+
+[[lean_lib]]
+name = "OTEnum053A"
+
+[[lean_lib]]
+name = "OTEnum053B"
+
+[[lean_lib]]
+name = "OTEnum053C"
+
+[[lean_lib]]
+name = "OTEnum053D"
+
+[[lean_lib]]
+name = "OTEnum054A"
+
+[[lean_lib]]
+name = "OTEnum054B"
+
+[[lean_lib]]
+name = "OTEnum054C"
+
+[[lean_lib]]
+name = "OTEnum054D"
+
+[[lean_lib]]
+name = "OTEnum055A"
+
+[[lean_lib]]
+name = "OTEnum055B"
+
+[[lean_lib]]
+name = "OTEnum055C"
+
+[[lean_lib]]
+name = "OTEnum055D"
+
+[[lean_lib]]
+name = "OTEnum056A"
+
+[[lean_lib]]
+name = "OTEnum056B"
+
+[[lean_lib]]
+name = "OTEnum056C"
+
+[[lean_lib]]
+name = "OTEnum056D"
+
+[[lean_lib]]
+name = "OTEnum057A"
+
+[[lean_lib]]
+name = "OTEnum057B"
+
+[[lean_lib]]
+name = "OTEnum057C"
+
+[[lean_lib]]
+name = "OTEnum057D"
+
+[[lean_lib]]
+name = "OTEnum058A"
+
+[[lean_lib]]
+name = "OTEnum058B"
+
+[[lean_lib]]
+name = "OTEnum058C"
+
+[[lean_lib]]
+name = "OTEnum058D"
+
+[[lean_lib]]
+name = "OTEnum059A"
+
+[[lean_lib]]
+name = "OTEnum059B"
+
+[[lean_lib]]
+name = "OTEnum059C"
+
+[[lean_lib]]
+name = "OTEnum059D"
+
+[[lean_lib]]
+name = "OTEnum060A"
+
+[[lean_lib]]
+name = "OTEnum060B"
+
+[[lean_lib]]
+name = "OTEnum060C"
+
+[[lean_lib]]
+name = "OTEnum060D"
+
+[[lean_lib]]
+name = "OTEnum061A"
+
+[[lean_lib]]
+name = "OTEnum061B"
+
+[[lean_lib]]
+name = "OTEnum061C"
+
+[[lean_lib]]
+name = "OTEnum061D"
+
+[[lean_lib]]
+name = "OTEnum062A"
+
+[[lean_lib]]
+name = "OTEnum062B"
+
+[[lean_lib]]
+name = "OTEnum062C"
+
+[[lean_lib]]
+name = "OTEnum062D"
+
+[[lean_lib]]
+name = "OTEnum063A"
+
+[[lean_lib]]
+name = "OTEnum063B"
+
+[[lean_lib]]
+name = "OTEnum063C"
+
+[[lean_lib]]
+name = "OTEnum063D"
+
+[[lean_lib]]
+name = "OTEnum064A"
+
+[[lean_lib]]
+name = "OTEnum064B"
+
+[[lean_lib]]
+name = "OTEnum064C"
+
+[[lean_lib]]
+name = "OTEnum064D"
+
+[[lean_lib]]
+name = "OTEnum065A"
+
+[[lean_lib]]
+name = "OTEnum065B"
+
+[[lean_lib]]
+name = "OTEnum065C"
+
+[[lean_lib]]
+name = "OTEnum065D"
+
+[[lean_lib]]
+name = "OTEnum066A"
+
+[[lean_lib]]
+name = "OTEnum066B"
+
+[[lean_lib]]
+name = "OTEnum066C"
+
+[[lean_lib]]
+name = "OTEnum066D"
+
+[[lean_lib]]
+name = "OTEnum067A"
+
+[[lean_lib]]
+name = "OTEnum067B"
+
+[[lean_lib]]
+name = "OTEnum067C"
+
+[[lean_lib]]
+name = "OTEnum067D"
+
+[[lean_lib]]
+name = "OTEnum068A"
+
+[[lean_lib]]
+name = "OTEnum068B"
+
+[[lean_lib]]
+name = "OTEnum068C"
+
+[[lean_lib]]
+name = "OTEnum068D"
+
+[[lean_lib]]
+name = "OTEnum069A"
+
+[[lean_lib]]
+name = "OTEnum069B"
+
+[[lean_lib]]
+name = "OTEnum069C"
+
+[[lean_lib]]
+name = "OTEnum069D"
+
+[[lean_lib]]
+name = "OTEnum070A"
+
+[[lean_lib]]
+name = "OTEnum070B"
+
+[[lean_lib]]
+name = "OTEnum070C"
+
+[[lean_lib]]
+name = "OTEnum070D"
+
+[[lean_lib]]
+name = "OTEnum071A"
+
+[[lean_lib]]
+name = "OTEnum071B"
+
+[[lean_lib]]
+name = "OTEnum071C"
+
+[[lean_lib]]
+name = "OTEnum071D"
+
+[[lean_lib]]
+name = "OTEnum072A"
+
+[[lean_lib]]
+name = "OTEnum072B"
+
+[[lean_lib]]
+name = "OTEnum072C"
+
+[[lean_lib]]
+name = "OTEnum072D"
+
+[[lean_lib]]
+name = "OTEnum073A"
+
+[[lean_lib]]
+name = "OTEnum073B"
+
+[[lean_lib]]
+name = "OTEnum073C"
+
+[[lean_lib]]
+name = "OTEnum073D"
+
+[[lean_lib]]
+name = "OTEnum074A"
+
+[[lean_lib]]
+name = "OTEnum074B"
+
+[[lean_lib]]
+name = "OTEnum074C"
+
+[[lean_lib]]
+name = "OTEnum074D"
+
+[[lean_lib]]
+name = "OTEnum075A"
+
+[[lean_lib]]
+name = "OTEnum075B"
+
+[[lean_lib]]
+name = "OTEnum075C"
+
+[[lean_lib]]
+name = "OTEnum075D"
+
+[[lean_lib]]
+name = "OTEnum076A"
+
+[[lean_lib]]
+name = "OTEnum076B"
+
+[[lean_lib]]
+name = "OTEnum076C"
+
+[[lean_lib]]
+name = "OTEnum076D"
+
+[[lean_lib]]
+name = "OTEnum077A"
+
+[[lean_lib]]
+name = "OTEnum077B"
+
+[[lean_lib]]
+name = "OTEnum077C"
+
+[[lean_lib]]
+name = "OTEnum077D"
+
+[[lean_lib]]
+name = "OTEnum078A"
+
+[[lean_lib]]
+name = "OTEnum078B"
+
+[[lean_lib]]
+name = "OTEnum078C"
+
+[[lean_lib]]
+name = "OTEnum078D"
+
+[[lean_lib]]
+name = "OTEnum079A"
+
+[[lean_lib]]
+name = "OTEnum079B"
+
+[[lean_lib]]
+name = "OTEnum079C"
+
+[[lean_lib]]
+name = "OTEnum079D"
+
+[[lean_lib]]
+name = "OTEnum080A"
+
+[[lean_lib]]
+name = "OTEnum080B"
+
+[[lean_lib]]
+name = "OTEnum080C"
+
+[[lean_lib]]
+name = "OTEnum080D"
+
+[[lean_lib]]
+name = "OTEnum081A"
+
+[[lean_lib]]
+name = "OTEnum081B"
+
+[[lean_lib]]
+name = "OTEnum081C"
+
+[[lean_lib]]
+name = "OTEnum081D"
+
+[[lean_lib]]
+name = "OTEnum082A"
+
+[[lean_lib]]
+name = "OTEnum082B"
+
+[[lean_lib]]
+name = "OTEnum082C"
+
+[[lean_lib]]
+name = "OTEnum082D"
+
+[[lean_lib]]
+name = "OTEnum083A"
+
+[[lean_lib]]
+name = "OTEnum083B"
+
+[[lean_lib]]
+name = "OTEnum083C"
+
+[[lean_lib]]
+name = "OTEnum083D"
+
+[[lean_lib]]
+name = "OTEnum084A"
+
+[[lean_lib]]
+name = "OTEnum084B"
+
+[[lean_lib]]
+name = "OTEnum084C"
+
+[[lean_lib]]
+name = "OTEnum084D"
+
+[[lean_lib]]
+name = "OTEnum085A"
+
+[[lean_lib]]
+name = "OTEnum085B"
+
+[[lean_lib]]
+name = "OTEnum085C"
+
+[[lean_lib]]
+name = "OTEnum085D"
+
+[[lean_lib]]
+name = "OTEnum086A"
+
+[[lean_lib]]
+name = "OTEnum086B"
+
+[[lean_lib]]
+name = "OTEnum086C"
+
+[[lean_lib]]
+name = "OTEnum086D"
+
+[[lean_lib]]
+name = "OTEnum087A"
+
+[[lean_lib]]
+name = "OTEnum087B"
+
+[[lean_lib]]
+name = "OTEnum087C"
+
+[[lean_lib]]
+name = "OTEnum087D"
+
+[[lean_lib]]
+name = "OTEnum088A"
+
+[[lean_lib]]
+name = "OTEnum088B"
+
+[[lean_lib]]
+name = "OTEnum088C"
+
+[[lean_lib]]
+name = "OTEnum088D"
+
+[[lean_lib]]
+name = "OTEnum089A"
+
+[[lean_lib]]
+name = "OTEnum089B"
+
+[[lean_lib]]
+name = "OTEnum089C"
+
+[[lean_lib]]
+name = "OTEnum089D"
+
+[[lean_lib]]
+name = "OTEnum090A"
+
+[[lean_lib]]
+name = "OTEnum090B"
+
+[[lean_lib]]
+name = "OTEnum090C"
+
+[[lean_lib]]
+name = "OTEnum090D"
+
+[[lean_lib]]
+name = "OTEnum091A"
+
+[[lean_lib]]
+name = "OTEnum091B"
+
+[[lean_lib]]
+name = "OTEnum091C"
+
+[[lean_lib]]
+name = "OTEnum091D"
+
+[[lean_lib]]
+name = "OTEnum092A"
+
+[[lean_lib]]
+name = "OTEnum092B"
+
+[[lean_lib]]
+name = "OTEnum092C"
+
+[[lean_lib]]
+name = "OTEnum092D"
+
+[[lean_lib]]
+name = "OTEnum093A"
+
+[[lean_lib]]
+name = "OTEnum093B"
+
+[[lean_lib]]
+name = "OTEnum093C"
+
+[[lean_lib]]
+name = "OTEnum093D"
+
+[[lean_lib]]
+name = "OTEnum094A"
+
+[[lean_lib]]
+name = "OTEnum094B"
+
+[[lean_lib]]
+name = "OTEnum094C"
+
+[[lean_lib]]
+name = "OTEnum094D"
+
+[[lean_lib]]
+name = "OTEnum095A"
+
+[[lean_lib]]
+name = "OTEnum095B"
+
+[[lean_lib]]
+name = "OTEnum095C"
+
+[[lean_lib]]
+name = "OTEnum095D"
+
+[[lean_lib]]
+name = "OTEnum096A"
+
+[[lean_lib]]
+name = "OTEnum096B"
+
+[[lean_lib]]
+name = "OTEnum096C"
+
+[[lean_lib]]
+name = "OTEnum096D"
+
+[[lean_lib]]
+name = "OTEnum097A"
+
+[[lean_lib]]
+name = "OTEnum097B"
+
+[[lean_lib]]
+name = "OTEnum097C"
+
+[[lean_lib]]
+name = "OTEnum097D"
+
+[[lean_lib]]
+name = "OTEnum098A"
+
+[[lean_lib]]
+name = "OTEnum098B"
+
+[[lean_lib]]
+name = "OTEnum098C"
+
+[[lean_lib]]
+name = "OTEnum098D"
+
+[[lean_lib]]
+name = "OTEnum099A"
+
+[[lean_lib]]
+name = "OTEnum099B"
+
+[[lean_lib]]
+name = "OTEnum099C"
+
+[[lean_lib]]
+name = "OTEnum099D"
+
+[[lean_lib]]
+name = "OTEnum100A"
+
+[[lean_lib]]
+name = "OTEnum100B"
+
+[[lean_lib]]
+name = "OTEnum100C"
+
+[[lean_lib]]
+name = "OTEnum100D"
+
+[[lean_lib]]
+name = "OTEnum101A"
+
+[[lean_lib]]
+name = "OTEnum101B"
+
+[[lean_lib]]
+name = "OTEnum101C"
+
+[[lean_lib]]
+name = "OTEnum101D"
+
+[[lean_lib]]
+name = "OTEnum102A"
+
+[[lean_lib]]
+name = "OTEnum102B"
+
+[[lean_lib]]
+name = "OTEnum102C"
+
+[[lean_lib]]
+name = "OTEnum102D"
+
+[[lean_lib]]
+name = "OTEnum103A"
+
+[[lean_lib]]
+name = "OTEnum103B"
+
+[[lean_lib]]
+name = "OTEnum103C"
+
+[[lean_lib]]
+name = "OTEnum103D"
+
+[[lean_lib]]
+name = "OTEnum104A"
+
+[[lean_lib]]
+name = "OTEnum104B"
+
+[[lean_lib]]
+name = "OTEnum104C"
+
+[[lean_lib]]
+name = "OTEnum104D"
+
+[[lean_lib]]
+name = "OTEnum105A"
+
+[[lean_lib]]
+name = "OTEnum105B"
+
+[[lean_lib]]
+name = "OTEnum105C"
+
+[[lean_lib]]
+name = "OTEnum105D"
+
+[[lean_lib]]
+name = "OTEnum106A"
+
+[[lean_lib]]
+name = "OTEnum106B"
+
+[[lean_lib]]
+name = "OTEnum106C"
+
+[[lean_lib]]
+name = "OTEnum106D"
+
+[[lean_lib]]
+name = "OTEnum107A"
+
+[[lean_lib]]
+name = "OTEnum107B"
+
+[[lean_lib]]
+name = "OTEnum107C"
+
+[[lean_lib]]
+name = "OTEnum107D"
+
+[[lean_lib]]
+name = "OTEnum108A"
+
+[[lean_lib]]
+name = "OTEnum108B"
+
+[[lean_lib]]
+name = "OTEnum108C"
+
+[[lean_lib]]
+name = "OTEnum108D"
+
+[[lean_lib]]
+name = "OTEnum109A"
+
+[[lean_lib]]
+name = "OTEnum109B"
+
+[[lean_lib]]
+name = "OTEnum109C"
+
+[[lean_lib]]
+name = "OTEnum109D"
+
+[[lean_lib]]
+name = "OTEnum110A"
+
+[[lean_lib]]
+name = "OTEnum110B"
+
+[[lean_lib]]
+name = "OTEnum110C"
+
+[[lean_lib]]
+name = "OTEnum110D"
+
+[[lean_lib]]
+name = "OTEnum111A"
+
+[[lean_lib]]
+name = "OTEnum111B"
+
+[[lean_lib]]
+name = "OTEnum111C"
+
+[[lean_lib]]
+name = "OTEnum111D"
+
+[[lean_lib]]
+name = "OTEnum112A"
+
+[[lean_lib]]
+name = "OTEnum112B"
+
+[[lean_lib]]
+name = "OTEnum112C"
+
+[[lean_lib]]
+name = "OTEnum112D"
+
+[[lean_lib]]
+name = "OTEnum113A"
+
+[[lean_lib]]
+name = "OTEnum113B"
+
+[[lean_lib]]
+name = "OTEnum113C"
+
+[[lean_lib]]
+name = "OTEnum113D"
+
+[[lean_lib]]
+name = "OTEnum114A"
+
+[[lean_lib]]
+name = "OTEnum114B"
+
+[[lean_lib]]
+name = "OTEnum114C"
+
+[[lean_lib]]
+name = "OTEnum114D"
+
+[[lean_lib]]
+name = "OTEnum115A"
+
+[[lean_lib]]
+name = "OTEnum115B"
+
+[[lean_lib]]
+name = "OTEnum115C"
+
+[[lean_lib]]
+name = "OTEnum115D"
+
+[[lean_lib]]
+name = "OTEnum116A"
+
+[[lean_lib]]
+name = "OTEnum116B"
+
+[[lean_lib]]
+name = "OTEnum116C"
+
+[[lean_lib]]
+name = "OTEnum116D"
+
+[[lean_lib]]
+name = "OTEnum117A"
+
+[[lean_lib]]
+name = "OTEnum117B"
+
+[[lean_lib]]
+name = "OTEnum117C"
+
+[[lean_lib]]
+name = "OTEnum117D"
+
+[[lean_lib]]
+name = "OTEnum118A"
+
+[[lean_lib]]
+name = "OTEnum118B"
+
+[[lean_lib]]
+name = "OTEnum118C"
+
+[[lean_lib]]
+name = "OTEnum118D"
+
+[[lean_lib]]
+name = "OTEnum119A"
+
+[[lean_lib]]
+name = "OTEnum119B"
+
+[[lean_lib]]
+name = "OTEnum119C"
+
+[[lean_lib]]
+name = "OTEnum119D"
+
+[[lean_lib]]
+name = "OTEnum120A"
+
+[[lean_lib]]
+name = "OTEnum120B"
+
+[[lean_lib]]
+name = "OTEnum120C"
+
+[[lean_lib]]
+name = "OTEnum120D"
+
+[[lean_lib]]
+name = "OTEnum121A"
+
+[[lean_lib]]
+name = "OTEnum121B"
+
+[[lean_lib]]
+name = "OTEnum121C"
+
+[[lean_lib]]
+name = "OTEnum121D"
+
+[[lean_lib]]
+name = "OTEnum122A"
+
+[[lean_lib]]
+name = "OTEnum122B"
+
+[[lean_lib]]
+name = "OTEnum122C"
+
+[[lean_lib]]
+name = "OTEnum122D"
+
+[[lean_lib]]
+name = "OTEnum123A"
+
+[[lean_lib]]
+name = "OTEnum123B"
+
+[[lean_lib]]
+name = "OTEnum123C"
+
+[[lean_lib]]
+name = "OTEnum123D"
+
+[[lean_lib]]
+name = "OTEnum124A"
+
+[[lean_lib]]
+name = "OTEnum124B"
+
+[[lean_lib]]
+name = "OTEnum124C"
+
+[[lean_lib]]
+name = "OTEnum124D"
+
+[[lean_lib]]
+name = "OTEnum125A"
+
+[[lean_lib]]
+name = "OTEnum125B"
+
+[[lean_lib]]
+name = "OTEnum125C"
+
+[[lean_lib]]
+name = "OTEnum125D"
+
+[[lean_lib]]
+name = "OTEnum126A"
+
+[[lean_lib]]
+name = "OTEnum126B"
+
+[[lean_lib]]
+name = "OTEnum126C"
+
+[[lean_lib]]
+name = "OTEnum126D"
+
+[[lean_lib]]
+name = "OTEnum127A"
+
+[[lean_lib]]
+name = "OTEnum127B"
+
+[[lean_lib]]
+name = "OTEnum127C"
+
+[[lean_lib]]
+name = "OTEnum127D"
+
+[[lean_lib]]
+name = "OTEnum128A"
+
+[[lean_lib]]
+name = "OTEnum128B"
+
+[[lean_lib]]
+name = "OTEnum128C"
+
+[[lean_lib]]
+name = "OTEnum128D"
+
+[[lean_lib]]
+name = "OTEnum129A"
+
+[[lean_lib]]
+name = "OTEnum129B"
+
+[[lean_lib]]
+name = "OTEnum129C"
+
+[[lean_lib]]
+name = "OTEnum129D"
+
+[[lean_lib]]
+name = "OTEnum130A"
+
+[[lean_lib]]
+name = "OTEnum130B"
+
+[[lean_lib]]
+name = "OTEnum130C"
+
+[[lean_lib]]
+name = "OTEnum130D"
+
+[[lean_lib]]
+name = "OTEnum131A"
+
+[[lean_lib]]
+name = "OTEnum131B"
+
+[[lean_lib]]
+name = "OTEnum131C"
+
+[[lean_lib]]
+name = "OTEnum131D"
+
+[[lean_lib]]
+name = "OTEnum132A"
+
+[[lean_lib]]
+name = "OTEnum132B"
+
+[[lean_lib]]
+name = "OTEnum132C"
+
+[[lean_lib]]
+name = "OTEnum132D"
+
+[[lean_lib]]
+name = "OTEnum133A"
+
+[[lean_lib]]
+name = "OTEnum133B"
+
+[[lean_lib]]
+name = "OTEnum133C"
+
+[[lean_lib]]
+name = "OTEnum133D"
+
+[[lean_lib]]
+name = "OTEnum134A"
+
+[[lean_lib]]
+name = "OTEnum134B"
+
+[[lean_lib]]
+name = "OTEnum134C"
+
+[[lean_lib]]
+name = "OTEnum134D"
+
+[[lean_lib]]
+name = "OTEnumAll"
+# --- END generated E7(a) enumeration shards ---

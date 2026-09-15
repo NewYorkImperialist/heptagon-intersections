@@ -1056,29 +1056,38 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-\textbf{Thirty-three} libraries are declared in \texttt{lakefile.toml} and all
-thirty-three build: $1{,}444$ jobs, exit $0$, verified 2026-09-14. None contains
+\texttt{lakefile.toml} declares $576$ \texttt{[[lean\_lib]]} targets and all of
+them build, exit $0$, verified 2026-09-15 --- but that number would mislead if
+quoted flat. \textbf{Thirty-four} are hand-written libraries; the other $542$
+are \emph{generated} enumeration shards (\texttt{OTEnum*}), which exist only
+because one \texttt{decide +kernel} over the $48{,}600$-candidate
+classification enumeration does not finish and one module per (representative,
+block of $90$ cyclic orders) does. Everything below that says ``the libraries''
+means the thirty-four. None contains
 \texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
 \texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
 by scanning the sources with comments stripped. All \texttt{decide} calls are
 ordinary kernel reduction, so nothing rests on the compiler.
 
 \begin{remark}[Read \S\ref{sec:leanmain} first]
-Thirty-three libraries is enough to create a false impression of coverage. The
+Thirty-four libraries, or five hundred and seventy-six targets, is enough to
+create a false impression of coverage. The
 target statement is \emph{not} proved; it is \emph{stated}, with two
 hypotheses. The value of the development is that it makes the residue precise
 and machine-readable, not that it closes it.
 \end{remark}
 
-\subsection*{The thirty-three libraries}
+\subsection*{The thirty-four hand-written libraries}
 
 Grouped by layer. ``core'' in the \textbf{Base} column means the library and
 everything it imports are Mathlib-free, so Mathlib is outside its trust base;
-fourteen of the thirty-three are, and five of those import literally nothing
+fourteen of the thirty-four are, and five of those import literally nothing
 (\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
 \texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other nineteen reach
 Mathlib, and only three --- \texttt{PointSetSemantics}, \texttt{PolygonSimple}
-and \texttt{IntersectionCount} --- reach the reals.
+and \texttt{IntersectionCount} --- reach the reals. The generated
+\texttt{OTEnum*} shards are not counted here; they all sit above
+\texttt{OrderTypeClassification} and so reach Mathlib.
 
 {\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
@@ -1137,7 +1146,9 @@ and \texttt{IntersectionCount} --- reach the reals.
 \multicolumn{4}{@{}l}{\emph{Class data and the classification}}\\
 \texttt{ClassInvariant} & Mathlib & \textsf{X1} & $|M|=5$ and the maximal crossing sets are exactly $\{\textsc{full}\setminus\{m\}\}$, decided for the $14$ stored classes, the set equality in both directions \\
 \texttt{ClassDataFromChirotope} & Mathlib & \textsf{E7}(b) & $M$ and the maximal crossing sets \emph{recomputed} from each stored chirotope and proved equal to the stored fields, $14/14$; windows and avoiding pairs not yet \\
-\texttt{OrderTypeClassification} & Mathlib & \textsf{E7}(a), partial & all $14$ classes pass the exceptional test; the $16$ expected polygons are simple and reduce onto all $14$. \textbf{Exhaustiveness is stated and unproved} --- \S\ref{sec:e7partial} \\
+\texttt{OrderTypeClassification} & Mathlib & \textsf{E7}(a) & all $14$ classes pass the exceptional test; the $16$ expected polygons are simple and reduce onto all $14$; the enumeration itself is stated here and settled by the shards below \\
+\texttt{ClassDataFields} & Mathlib & \textsf{E7}(b) & the remaining two stored fields, \texttt{lemma2\_windows} and \texttt{avoiding\_pairs}, recomputed from the chirotope and proved equal to the stored tables, $14/14$, on \texttt{propext} alone \\
+\texttt{OTEnum*} ($542$, generated) & Mathlib & \textsf{E7}(a) & the $135\times360$ enumeration, one module per (representative, block of $90$ cyclic orders), with \texttt{OTEnumAll} assembling them by rewriting --- \S\ref{sec:e7partial} \\
 \end{longtable}
 }
 
@@ -1515,10 +1526,16 @@ results equal the stored fields, $14/14$;
 \texttt{OrderTypeClassification.classFam\_eq} pins the whole crossing family and
 not merely the two extracted fields. The Lean is a line-by-line transcription of
 \texttt{classdata()} in \texttt{python/classification/export\_profiles.py} and
-\texttt{halfplane\_subsets} in \texttt{python/core/chiro.py}. Two fields of the
-stored \texttt{ClassData} are \emph{not} yet recomputed: \texttt{lemma2\_windows}
-and \texttt{avoiding\_pairs}. The second is load-bearing, since
-\texttt{AvoidingFlag.lean} checks the $225$ certificates against it.
+\texttt{halfplane\_subsets} in \texttt{python/core/chiro.py}. The other two
+stored fields, \texttt{lemma2\_windows} and \texttt{avoiding\_pairs}, were
+closed the same way on 2026-09-15 by
+\texttt{ClassDataFields.fields\_recomputed\_eq}, which recomputes both from the
+chirotope and proves them equal to the stored tables, $14/14$, on
+\texttt{propext} alone. That one matters beyond bookkeeping:
+\texttt{AvoidingFlag.lean} checks the $225$ endgame certificates against
+\texttt{avoiding\_pairs}, and until then the table was read from JSON rather
+than derived. \textbf{Every field of \texttt{ClassData} the development
+consumes is now chirotope-derived}, so (b) is closed.
 
 \emph{(a) The fourteen classes are all there are.} This is not proved. What is
 proved is that all fourteen stored classes pass the uncrossable-four-subset test

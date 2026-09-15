@@ -1,7 +1,7 @@
 # Lean formalization
 
-> **Current state: thirty-three Lean libraries, all compiled clean with `lake build`
-> on Lean 4.33.1 (1444 jobs, exit 0).** Read the scope notes below before
+> **Current state: thirty-four hand-written Lean libraries, all compiled clean
+> with `lake build` on Lean 4.33.1, plus 542 generated enumeration shards.** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -40,7 +40,8 @@ input as an explicit hypothesis; `CernyL2Interface.lean` certifies a Lean
 
 ## What is here
 
-**Updated 2026-09-14.** Thirty-three Lean libraries build. The build numbers below
+**Updated 2026-09-15.** Thirty-four hand-written Lean libraries build, plus
+542 generated enumeration shards (see "Counting the libraries" below). The build numbers below
 were read off an actual run, not carried over from an earlier edit:
 
 ```
@@ -117,14 +118,25 @@ It is not copied from an earlier version of this document.
 | `ClassDataFromChirotope.lean` | `ClassInvariant`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(E7b), the finite half.** `recomputed_eq` rebuilds `M_set` and the inclusion-maximal crossing sets from each `canonical_chirotope` alone and proves they equal the stored fields, 14/14. A transcription of `classdata()` in `python/classification/export_profiles.py`. `lemma2_windows` and `avoiding_pairs` are **not** yet recomputed |
 | `OrderTypeClassification.lean` | `ClassDataFromChirotope`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` (its two main results, `classFam_eq` and `stored_classes_exceptional`, need only `propext`) | **(E7a) subchecks only.** All 14 stored classes pass the uncrossable-four-subset test, and each of the 16 expected labelled polygons is simple and reduces by an explicit dihedral relabelling to a stored class, hitting all 14. **Exhaustiveness is written down (`exceptionalPolygons`) and left unproved** — see `docs/verification-status.md` rows 32 and 33 |
 
-**Adding a library.** The table above is one row per `[[lean_lib]]`, in
-lakefile order, and is meant to be extended by appending. To add a library:
+| `ClassDataFields.lean` | `ClassDataFromChirotope`, **Mathlib** | no | `propext` | **(E7b) completed.** `fields_recomputed_eq` recomputes the other two stored class-data fields, `lemma2_windows` and `avoiding_pairs`, from each stored chirotope and proves them equal to the stored tables, 14/14. `avoiding_pairs` is the load-bearing one: `AvoidingFlag` checks the 225 endgame certificates against it |
+| `OTEnumShard.lean` + **540** `OTEnum<nnn><A–D>.lean` + `OTEnumAll.lean` | `OrderTypeClassification`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(E7a) exhaustiveness, generated and sharded.** One module per (order-type representative, block of 90 cyclic orders); `OTEnumAll` assembles them by rewriting and runs no search of its own. These are **generated**, not hand-written — see the note below — and they exist in this shape only because a single `decide +kernel` over all 48,600 candidates does not finish |
+
+**Counting the libraries.** `lakefile.toml` declares **576** `[[lean_lib]]`
+targets, and that number would mislead if quoted flat: **34** are hand-written
+libraries and **542** are *generated* enumeration shards, all of the form
+`OTEnum*`, produced by `python/classification/gen_lean_enum_shards.py`. The
+table above has one row per hand-written library and one row for the whole
+generated family. When this file says "the libraries", it means the 34.
+
+**Adding a library.** The table above is one row per hand-written
+`[[lean_lib]]`, in lakefile order, and is meant to be extended by appending.
+Generated families get a single row, as above. To add a library:
 add a `[[lean_lib]]` block plus a `defaultTargets` entry in `lakefile.toml`,
 append one row here, append its principal theorems to the axiom table below,
 and re-read the job count from `lake build` — do not adjust it by hand. Keep
 the columns in the same order; nothing else in this file needs to move.
 
-If `lakefile.toml` declares more libraries than the thirty-three listed above,
+If `lakefile.toml` declares more *hand-written* libraries than those listed above,
 **this section is the stale one, not the lakefile**. Regenerate the count and the
 axiom column mechanically rather than by editing prose:
 

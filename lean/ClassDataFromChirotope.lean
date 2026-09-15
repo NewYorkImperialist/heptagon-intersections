@@ -39,8 +39,9 @@ def triples : List (Nat × Nat × Nat) :=
   (List.range 7).flatMap fun a => (List.range 7).flatMap fun b =>
     (List.range 7).filterMap fun c => if a < b ∧ b < c then some (a,b,c) else none
 
-/-- Alternating extension of the sign vector; repeated indices return zero. -/
-def chiro (v : List Int) (a b c : Nat) : Int :=
+/-- Alternating extension of the sign vector; repeated indices return zero.
+This is the direct transcription: the index is found by searching `triples`. -/
+def chiroRef (v : List Int) (a b c : Nat) : Int :=
   if a = b ∨ b = c ∨ a = c then 0 else
   let lo := min a (min b c)
   let hi := max a (max b c)
@@ -49,14 +50,65 @@ def chiro (v : List Int) (a b c : Nat) : Int :=
     (if a > c then 1 else 0) + (if b > c then 1 else 0)
   (if inversions % 2 = 0 then 1 else -1) * v.getD idx 0
 
-/-- Vertex subsets as seven-bit masks: empty, full, and the four
-endpoint choices for every ordered pair, exactly halfplane_subsets. -/
-def halfplaneSubsets (chi : Nat → Nat → Nat → Int) : List Nat :=
-  (0 :: 127 :: ((List.range 7).flatMap fun i =>
+/-- Lexicographic rank of the increasing triple `a < b < c` among the 35
+increasing triples on 7 elements, in closed form.  The linear search in
+`chiroRef` is the bottleneck of every kernel computation over chirotopes, and
+this replaces it; `rank3_eq` below checks the two agree on every increasing
+triple, so nothing is taken on trust. -/
+def rank3 (a b c : Nat) : Nat :=
+  let k := b - a - 1
+  [0,15,25,31,34,35,35].getD a 35 + (k * (6 - a) - k * (k+1) / 2) + (c - b - 1)
+
+theorem rank3_eq : ∀ a : Fin 7, ∀ b : Fin 7, ∀ c : Fin 7, a < b → b < c →
+    rank3 a b c = triples.idxOf ((a : Nat), (b : Nat), (c : Nat)) := by decide
+
+/-- The same function as `chiroRef`, with the index in closed form.  Everything
+downstream uses this one; `chiro_eq_chiroRef` proves they agree. -/
+def chiro (v : List Int) (a b c : Nat) : Int :=
+  if a = b ∨ b = c ∨ a = c then 0 else
+  let lo := min a (min b c)
+  let hi := max a (max b c)
+  let idx := rank3 lo (a+b+c-lo-hi) hi
+  let inversions := (if a > b then 1 else 0) +
+    (if a > c then 1 else 0) + (if b > c then 1 else 0)
+  (if inversions % 2 = 0 then 1 else -1) * v.getD idx 0
+
+/-- The index agrees with the search whenever the three indices are distinct,
+which is exactly the branch `chiro` and `chiroRef` reach it in. -/
+theorem rank3_eq_idxOf_of_distinct : ∀ a : Fin 7, ∀ b : Fin 7, ∀ c : Fin 7,
+    ¬((a:Nat) = (b:Nat) ∨ (b:Nat) = (c:Nat) ∨ (a:Nat) = (c:Nat)) →
+      rank3 (min (a:Nat) (min (b:Nat) (c:Nat)))
+            ((a:Nat)+(b:Nat)+(c:Nat) - min (a:Nat) (min (b:Nat) (c:Nat))
+                                    - max (a:Nat) (max (b:Nat) (c:Nat)))
+            (max (a:Nat) (max (b:Nat) (c:Nat)))
+        = triples.idxOf (min (a:Nat) (min (b:Nat) (c:Nat)),
+            (a:Nat)+(b:Nat)+(c:Nat) - min (a:Nat) (min (b:Nat) (c:Nat))
+                                    - max (a:Nat) (max (b:Nat) (c:Nat)),
+            max (a:Nat) (max (b:Nat) (c:Nat))) := by decide
+
+/-- The optimisation is sound on every argument triple the development uses. -/
+theorem chiro_eq_chiroRef (v : List Int) :
+    ∀ a : Fin 7, ∀ b : Fin 7, ∀ c : Fin 7,
+      chiro v a b c = chiroRef v a b c := by
+  intro a b c
+  by_cases hd : (a:Nat) = (b:Nat) ∨ (b:Nat) = (c:Nat) ∨ (a:Nat) = (c:Nat)
+  · simp only [chiro, chiroRef, if_pos hd]
+  · simp only [chiro, chiroRef, if_neg hd, rank3_eq_idxOf_of_distinct a b c hd]
+
+/-- Vertex subsets as seven-bit masks: empty, full, and the four endpoint
+choices for every ordered pair, exactly `halfplane_subsets`, but with repeats
+left in.  The Python builds a `set`; the duplicate-free view is
+`halfplaneSubsets` below, and `mem_fam_iff` records that for the one question
+the enumeration asks -- membership -- the two are interchangeable. -/
+def halfplaneSubsetsRaw (chi : Nat → Nat → Nat → Int) : List Nat :=
+  0 :: 127 :: ((List.range 7).flatMap fun i =>
     (List.range 7).flatMap fun j => if i = j then [] else
       let L := ((List.range 7).filter fun k =>
         k != i && k != j && decide (chi i j k > 0)).foldl (fun m k => m + 2^k) 0
-      [L, L ||| 2^i, L ||| 2^j, L ||| 2^i ||| 2^j])).eraseDups
+      [L, L ||| 2^i, L ||| 2^j, L ||| 2^i ||| 2^j])
+
+def halfplaneSubsets (chi : Nat → Nat → Nat → Int) : List Nat :=
+  (halfplaneSubsetsRaw chi).eraseDups
 
 def sideMask (A : Nat) : Nat :=
   ((List.range 7).filter fun s => A.testBit s != A.testBit ((s+1)%7)).foldl
@@ -65,6 +117,27 @@ def sideMask (A : Nat) : Nat :=
 /-- The family is a set represented by a duplicate-free list. -/
 def fam (chi : Nat → Nat → Nat → Int) : List Nat :=
   ((halfplaneSubsets chi).map sideMask).eraseDups
+
+/-- The same family with repeats left in.  Deduplicating a 170-element list is
+two quadratic passes, and it is the single most expensive step in any kernel
+computation over this family; every question the enumeration asks of it is a
+membership question, so the repeats can simply stay. -/
+def famRaw (chi : Nat → Nat → Nat → Int) : List Nat :=
+  (halfplaneSubsetsRaw chi).map sideMask
+
+theorem mem_fam_iff (chi : Nat → Nat → Nat → Int) (m : Nat) :
+    m ∈ fam chi ↔ m ∈ famRaw chi := by
+  simp [fam, famRaw, halfplaneSubsets, List.mem_eraseDups, List.mem_map]
+
+/-- Consequently any predicate tested existentially over the family gives the
+same answer on either representation. -/
+theorem any_fam_eq (chi : Nat → Nat → Nat → Int) (p : Nat → Bool) :
+    (fam chi).any p = (famRaw chi).any p := by
+  rw [Bool.eq_iff_iff]
+  simp only [List.any_eq_true]
+  constructor
+  · rintro ⟨m, hm, hp⟩; exact ⟨m, (mem_fam_iff chi m).mp hm, hp⟩
+  · rintro ⟨m, hm, hp⟩; exact ⟨m, (mem_fam_iff chi m).mpr hm, hp⟩
 
 def missing (F : List Nat) : List Nat :=
   (List.range 7).filter fun j => F.contains (127 - 2^j)
