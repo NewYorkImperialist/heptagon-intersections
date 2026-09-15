@@ -216,3 +216,137 @@ transitively — so where the two disagreed, the manifest was correct.
 chirotope**, then E7(a) exhaustiveness if the parallel split lands.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
+
+---
+
+## 2026-09-15, overnight: (E7) closed on its computational side
+
+### The headline
+
+**(E7a) exhaustiveness is a kernel-checked theorem.**
+`OTEnumAll.exceptionalPolygons_eq_expected` proves
+
+    exceptionalPolygons = expectedPolygons
+
+over **all 135 × 360 = 48,600** (order-type representative, cyclic vertex order)
+candidates: exactly 16 of them give a simple heptagon with no uncrossable
+four-subset of sides. Axioms: `propext`, `Quot.sound` — **no `Classical.choice`**.
+Until tonight the 16 were a list *handed to* Lean; they are now the enumeration's
+own output. `sixteen_labelled_fourteen_classes` restates
+`verification-status.md` row 5 in those terms: 16 labelled exceptional
+heptagons, each reducing by an explicit dihedral relabelling to a stored class,
+all 14 classes occurring.
+
+**(E7b) is closed.** Every field of the stored `ClassData` that the development
+consumes is now recomputed in Lean from the stored chirotope and proved equal to
+the stored table, 14/14: `M_set` and the maximal crossing sets by
+`ClassDataFromChirotope.recomputed_eq`, `lemma2_windows` and `avoiding_pairs` by
+`ClassDataFields.fields_recomputed_eq` (on `propext` alone). The last one is the
+one to care about — `AvoidingFlag.lean` checks the 225 endgame certificates
+against `avoiding_pairs`, and until now that table was read from JSON rather
+than derived.
+
+**X1 is discharged** for the 14 stored classes (`ClassInvariant.lean`), with the
+set equality decided in **both** directions, so the table is neither a weakening
+nor a strengthening. `Exclude42`'s `I ≠ 42` no longer assumes it.
+
+### What this does NOT establish — read this before quoting the above
+
+* **Completeness of the 135-representative list** is not proved. It is the
+  remaining computational obligation and a build for it was running when this
+  was written (see below).
+* **No geometric reading.** `simple` and `exceptional` are chirotope predicates.
+  That they characterise simple heptagons and exceptionality *in the plane* is
+  not formalised; the development has no geometric definition of either, nor of
+  "avoiding".
+* **Class membership.** Nothing says a configuration belongs to the class its
+  certificate names. That is the geometric half of (E7) and it is untouched.
+* The 135 are a **superset** of the realizable order types — only necessary
+  Grassmann–Plücker and Radon conditions are imposed. A superset is what an
+  exclusion argument needs, and the JSON says the same.
+* `f(7,7) = 38` is **still not a Lean theorem** and the status is unchanged:
+  **candidate computer-assisted proof**. (E3)/A7-EXT still needs a human, and
+  `hne40` is still a settled negative.
+
+### How the enumeration was made to fit in the kernel
+
+A direct `decide +kernel` does not finish. Five definitional changes got it to
+**~1.9 core-hours**, and **each is paired with a kernel-checked equality**, so a
+reader can check the transcription against the Python and the optimisation
+against the transcription, separately. The reference definitions (`chiroRef`,
+`exceptionalRef`, `fam`) are kept beside the fast ones.
+
+1. closed-form triple rank replacing `triples.idxOf`'s 35-tuple linear scan;
+2. the 35 four-subset masks as literals, not a filter over 128;
+3. the crossing family with duplicates left in — `eraseDups` is two quadratic
+   passes and every question asked of the family is a membership question;
+4. the family as an **argument** (`exceptionalOf`), so it is built once per
+   candidate rather than once per mask — worth ~35× by itself;
+5. cycles paired with their indices, so a 360-element literal is not rescanned
+   inside every chirotope query.
+
+A full `Nat`-bitset re-encoding was also tried and was **not** dramatically
+faster. The bottleneck is list traversal and recomputation, not arithmetic.
+
+### The operational finding, which was the opposite of the obvious guess
+
+Lake 5.0.0 has **no `-j` flag** and defaults to one worker per core. On this
+8 GB machine:
+
+* a bare `lake build` of the shards was **OOM-killed** by the OS;
+* 3-way parallelism inflated individual shards from ~20 s to **11+ minutes**;
+* strictly **one module at a time** was fastest — 540 blocks in 8,147 s.
+
+Total RSS stays near 4 GB, so this does not look like memory exhaustion. The
+symptom is *system* time several times *user* time: page churn against macOS
+memory compression. CPU is not the binding constraint; memory bandwidth is.
+`verify-all.sh` now says this at step 1, and `verification-status.md` row 33
+records the measurements. Per-call costs, measured by isolating each predicate
+in a 20-call probe: `simple` ≈ **5 ms**, `exceptional` ≈ **0.36 s**.
+
+### Two defects found and fixed along the way
+
+* **`defaultTargets` listed only 27 of 33 declared libraries**, so plain
+  `lake build` — and therefore `verify-all.sh` — was **not rebuilding**
+  `ExceptionalClass`, `AKRL5Derivation` or `IntersectionCount`, all committed
+  earlier the same day. Declaring a `[[lean_lib]]` is not the same as putting it
+  in the default build, and the existing guard checked only the former.
+* **`lean/README.md` claimed "eighteen of the twenty-six libraries are
+  Mathlib-free"**, obtained by summing direct-import categories. That is not
+  what Mathlib-free means: a library importing only local modules still reaches
+  Mathlib if those do. Transitively it is 14 of 34, and `EnumerationComplete`,
+  `CounterexampleCount`, `UpperBoundAssembly` and `IntersectionParity` were
+  miscounted. `paper/proof-manifest.tex` defines its "core" column transitively
+  and was right all along; the README now says so, since a reader comparing the
+  two needs to know which to trust.
+
+### Counting caution
+
+`lakefile.toml` now declares **834** targets. Quoting that as a measure of the
+development would be dishonest: **34** are hand-written libraries and the rest
+are *generated* enumeration shards (`OTEnum*`, `OTComp*`), which exist only
+because the corresponding `decide +kernel` will not run in one piece.
+`lean/README.md` and the manifest both say this wherever the number appears.
+
+### In flight when this was written
+
+**Completeness of the 135-representative list.** The stage-by-stage
+construction in `python/core/chiro.py` extends each of the 16 six-element
+representatives by one point: 16 × 2^15 = **524,288** candidates, of which
+**1,657** survive the necessary conditions. Rather than transcribe `canonical`
+into Lean and search for a lex-minimum, each survivor ships with an explicit
+**witness** — a vertex permutation and an optional global sign flip — so Lean
+only verifies, never searches. All 1,657 witnesses were computed and checked
+outside Lean; all 135 classes are hit. 256 slice modules were building when this
+was written.
+
+What it will and will not say: it settles that every extension of a *stored*
+six-element representative satisfying the necessary conditions is a relabelled
+copy of a stored seven-element one. It will **not** prove that every rank-3
+chirotope on 7 elements restricts to one of the 16 — that is the mathematical
+content of the induction, and it is carried as an explicit hypothesis rather
+than assumed silently.
+
+**Next milestone: the geometric half of (E7)**, which is not a computation.
+
+Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
