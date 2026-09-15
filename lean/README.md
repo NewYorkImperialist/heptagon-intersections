@@ -1,7 +1,9 @@
 # Lean formalization
 
-> **Current state: thirty-four hand-written Lean libraries, all compiled clean
-> with `lake build` on Lean 4.33.1, plus 542 generated enumeration shards.** Read the scope notes below before
+> **Current state: forty-five Lean libraries of substance, all compiled clean
+> with `lake build` on Lean 4.33.1, plus 1,363 generated per-shard data modules
+> whose only purpose is to split four `decide +kernel` computations that will
+> not run in one piece.** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -40,8 +42,8 @@ input as an explicit hypothesis; `CernyL2Interface.lean` certifies a Lean
 
 ## What is here
 
-**Updated 2026-09-15.** Thirty-four hand-written Lean libraries build, plus
-542 generated enumeration shards (see "Counting the libraries" below). The build numbers below
+**Updated 2026-09-15.** Forty-five Lean libraries of substance build, plus 1,363
+generated per-shard data modules (see "Counting the libraries" below). The build numbers below
 were read off an actual run, not carried over from an earlier edit:
 
 ```
@@ -120,16 +122,29 @@ It is not copied from an earlier version of this document.
 
 | `ClassDataFields.lean` | `ClassDataFromChirotope`, **Mathlib** | no | `propext` | **(E7b) completed.** `fields_recomputed_eq` recomputes the other two stored class-data fields, `lemma2_windows` and `avoiding_pairs`, from each stored chirotope and proves them equal to the stored tables, 14/14. `avoiding_pairs` is the load-bearing one: `AvoidingFlag` checks the 225 endgame certificates against it |
 | `OTEnumShard.lean` + **540** `OTEnum<nnn><A–D>.lean` + `OTEnumAll.lean` | `OrderTypeClassification`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(E7a) exhaustiveness, generated and sharded.** One module per (order-type representative, block of 90 cyclic orders); `OTEnumAll` assembles them by rewriting and runs no search of its own. These are **generated**, not hand-written — see the note below — and they exist in this shape only because a single `decide +kernel` over all 48,600 candidates does not finish |
+| `OTCompleteDefs.lean` + **256** `OTComp<ii>_<kk>.lean` + `OTCompleteWitness.lean` + `OTCompleteAll.lean` | `Mathlib.Tactic` / each other | no | `propext` | **completeness of the 135-representative list, generated and sharded.** 16 × 2¹⁵ = 524,288 one-point extensions, 1,657 survivors, each shipped with an explicit relabelling witness so Lean verifies rather than searches — `canonical`, the subtlest function in `chiro.py`, never had to be transcribed. The induction hypothesis is **not** proved; it is stated in the module header |
+| `OTBridge.lean` | `OTCompleteWitness`, `OrderTypeClassification` | no | `propext` | **the two forms of the 135, identified.** The completeness proof packs each chirotope into 35 bits, the enumeration keeps 35 signs; `stored135_eq_orderSigns` proves they are the same 135. Without it, combining the two results would be an appeal to the reader's memory |
+| `SimpleCountDefs.lean` + **27** `SimpleCount<nn>.lean` + `SimpleCountAll.lean` | `OTEnumShard` | no | `propext` | **exactly 6,342 simple heptagons**, and the count for each individual representative |
+| `StratificationDefs.lean` + **540** `Strat<nnn><A–D>.lean` + `StratificationAll.lean` | `OTEnumShard` | no | `propext` | **the 6,007 / 319 / 16 split** of those 6,342 by largest uncrossable side-subset |
+| `ClassificationSummary.lean` | `OTBridge`, `OTCompleteAll`, `OTEnumAll` | no | `propext`, `Classical.choice`, `Quot.sound` | **assembly only; proves nothing new.** One citable conjunction of the classification results, and one header listing what is assumed — the induction hypothesis and any geometric reading |
 
-**Counting the libraries.** `lakefile.toml` declares **576** `[[lean_lib]]`
-targets, and that number would mislead if quoted flat: **34** are hand-written
-libraries and **542** are *generated* enumeration shards, all of the form
-`OTEnum*`, produced by `python/classification/gen_lean_enum_shards.py`. The
+**Counting the libraries.** `lakefile.toml` declares **1,408** `[[lean_lib]]`
+targets, and that number would mislead badly if quoted flat. Counted by hand
+from the lakefile: **34** are the libraries of the original development;
+**11** more carry the definitions and assemblies of the four new results
+(`OTEnumShard`, `OTEnumAll`, `OTCompleteDefs`, `OTCompleteWitness`,
+`OTCompleteAll`, `OTBridge`, `ClassificationSummary`, `SimpleCountDefs`,
+`SimpleCountAll`, `StratificationDefs`, `StratificationAll`); and the remaining
+**1,363** are generated per-shard data modules — `OTEnum<nnn><A–D>`,
+`OTComp<ii>_<kk>`, `SimpleCount<nn>`, `Strat<nnn><A–D>` — each holding one
+`decide +kernel` over one slice and nothing else. They exist only because four
+computations will not run in one piece; see row 33 of
+`docs/verification-status.md`. When this file says "the libraries", it means
+the 45 that are not per-shard data. The
 table above has one row per hand-written library and one row for the whole
 generated family. When this file says "the libraries", it means the 34.
 
-**Adding a library.** The table above is one row per hand-written
-`[[lean_lib]]`, in lakefile order, and is meant to be extended by appending.
+**Adding a library.** The table above is one row per library of substance, in lakefile order, and is meant to be extended by appending.
 Generated families get a single row, as above. To add a library:
 add a `[[lean_lib]]` block plus a `defaultTargets` entry in `lakefile.toml`,
 append one row here, append its principal theorems to the axiom table below,
