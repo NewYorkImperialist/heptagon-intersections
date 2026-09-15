@@ -1499,7 +1499,7 @@ which import is carrying the weight.
 \textsf{E4} & the order-type fact behind filter (c): $q_j$'s crossing set sits in a maximal crossing set of $P$'s class & \stat{open} & \texttt{hcross} of \texttt{filterC\_sound}; reused as \textsf{X2} \\
 \textsf{E5} & {\v C}ern{\'y} L2: no Lemma-2 window carries an exact induced perfect matching & \stat{open}; attempted, \textbf{blocked} & \texttt{hC2} of \texttt{filterD\_sound}; \S\ref{sec:e5} \\
 \textsf{E6} & correctness of the component labelling & \stat{discharged} & \texttt{ComponentLabelling.lean} \\
-\textsf{E7} & $K$'s heptagons are among the $14$ enumerated classes, and the stored class data is correct for $K$ & \stat{open} --- \textbf{the classification itself}; the stored-data half is \emph{partly} discharged, \S\ref{sec:e7partial} & \texttt{hmem} of \texttt{filterCDE\_sound} \\
+\textsf{E7} & $K$'s heptagons are among the $14$ enumerated classes, and the stored class data is correct for $K$ & \stat{open}, but its \emph{computational} half is closed; what remains is geometric, \S\ref{sec:e7partial} & \texttt{hmem} of \texttt{filterCDE\_sound} \\
 \textsf{E8a} & bipartiteness is decided by a correct algorithm & \stat{discharged} & \texttt{BipartiteDecision.lean} \\
 \textsf{E8b} & \emph{the shipped programs' routine} is such an algorithm & \stat{open} (transcription) & no extraction exists \\
 \end{longtable}
@@ -1509,13 +1509,16 @@ which import is carrying the weight.
 So \textbf{six} of the eight --- \textsf{E1}--\textsf{E5} and \textsf{E7} --- are
 open outright, and the transcription half \textsf{E8b} is open as well. Of the
 six, \textsf{E3} \emph{is} \textsf{A7-EXT}, the principal item of
-\S\ref{sec:a7ext}, and \textsf{E7} is the exceptional classification, the largest
-single unformalized computational object in the project. \textsf{E7} is the only
-one of the six on which anything has moved; \S\ref{sec:e7partial} says exactly
-how much, and it is less than the name ``partly discharged'' might suggest.
+\S\ref{sec:a7ext}. \textsf{E7} was the largest single unformalized
+computational object in the project; as of 2026-09-15 it is no longer, and it is
+the only one of the six on which anything has moved. \S\ref{sec:e7partial} says
+exactly what did move --- the whole computation --- and what did not, which is
+every connection to actual polygons in the plane.
 
 \subsection*{\textsf{E7}: what is now checked, and what is not}\label{sec:e7partial}
-\textsf{E7} is two claims joined by ``and'', and they are very different in size.
+\textsf{E7} is two claims joined by ``and''. Both are now settled \emph{as
+computations}; neither is settled \emph{as geometry}, and the gap between those
+two sentences is the whole of what remains.
 
 \emph{(b) The stored class data is correct.} This is now checked for the
 fourteen stored classes. \texttt{ClassDataFromChirotope.recomputed\_eq}
@@ -1537,20 +1540,19 @@ chirotope and proves them equal to the stored tables, $14/14$, on
 than derived. \textbf{Every field of \texttt{ClassData} the development
 consumes is now chirotope-derived}, so (b) is closed.
 
-\emph{(a) The fourteen classes are all there are.} This is not proved. What is
-proved is that all fourteen stored classes pass the uncrossable-four-subset test
-(\texttt{stored\_classes\_exceptional}), and that each of the sixteen expected
-labelled polygons is simple and reduces, under an explicit dihedral relabelling
-with an optional global sign flip, to a stored class chirotope, with all
-fourteen hit (\texttt{expected\_reductions\_checked}). That establishes the
-classes are \emph{realised}; it does not establish that no \emph{other}
-(representative, cyclic order) pair is exceptional. The exhaustiveness statement
-is written down --- \texttt{exceptionalPolygons} ranges over all
-$135\times360=48{,}600$ candidates --- and left unproved. It is true: verified
-outside Lean, $6342$ candidates are simple and exactly $16$ of those are
-exceptional, and the $6342$ is the same number the external \texttt{hamilt07.b08}
-cross-check gives. What blocks it is Lean kernel reduction cost, not doubt about
-the value. The completeness of the $135$-representative list, which had been external,
+\emph{(a) The fourteen classes are all there are.} Proved, over the
+$135$-representative list, on 2026-09-15.
+\texttt{OTEnum.exceptionalPolygons\_eq\_expected} kernel-checks that of all
+$135\times360=48{,}600$ (representative, cyclic order) candidates, exactly $16$
+give a simple heptagon with no uncrossable four-subset;
+\texttt{SimpleCount.simple\_total} that exactly $6{,}342$ are simple --- the
+same number the external \texttt{hamilt07.b08} cross-check gives; and
+\texttt{expected\_reductions\_checked} that the $16$ reduce onto the stored
+classes with all fourteen hit. The $135$-representative list is itself complete:
+\texttt{OTComplete.allSurvivors\_eq} and \texttt{witnesses\_ok} settle the
+inductive step, with the induction hypothesis --- that every rank-$3$ chirotope
+on $7$ elements restricts to one of the sixteen six-element representatives ---
+carried explicitly and \emph{not} proved. The completeness of the $135$-representative list, which had been external,
 was closed on 2026-09-15: \texttt{OTComplete.allSurvivors\_eq} proves that
 exactly $1{,}657$ of the $524{,}288$ one-point extensions of the sixteen stored
 six-element representatives satisfy the necessary Grassmann--Pl\"ucker and Radon

@@ -216,7 +216,7 @@ theorem.
 | **E4** | the order-type fact behind filter (c) (= **X2**) | open |
 | **E5** | Černý L2: no window carries an exact induced perfect matching | open; **attempted and blocked** (`CernyL2Derivation.lean`) |
 | **E6** | correctness of the component labelling | **discharged** (`ComponentLabelling.lean`, iff, both directions) |
-| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object. **(E7b) closed 2026-09-15:** every field of `ClassData` the development consumes is now *recomputed* in Lean from the stored chirotope and proved equal to the stored table, 14/14 — `M_set` and the maximal crossing sets by `ClassDataFromChirotope.recomputed_eq`, `lemma2_windows` and `avoiding_pairs` by `ClassDataFields.fields_recomputed_eq` (on `propext` alone). The second matters: `AvoidingFlag` checks the 225 endgame certificates against `avoiding_pairs`, which until then was read from JSON rather than derived. Exhaustiveness — that no other of the 135 × 360 candidates is exceptional — is stated (`exceptionalPolygons`) and **unproved**. See `verification-status.md` row 32 |
+| **E7** | the 14 exceptional classes, and the stored class data | open — but **its computational half is now closed**, and what remains is geometric. **(E7b), the stored class data:** every field of `ClassData` the development consumes is recomputed in Lean from the stored chirotope and proved equal to the stored table, 14/14. **(E7a), the enumeration:** exactly 16 of the 135 × 360 candidates are exceptional simple heptagons (`exceptionalPolygons_eq_expected`); exactly 6,342 are simple (`simple_total`); the 135-representative list is itself complete, modulo an explicit induction hypothesis (`allSurvivors_eq`, `witnesses_ok`). **What is left:** that a configuration belongs to the class its certificate names, and any geometric reading of the halfplane, simplicity and "avoiding" tests — the development has no geometric definition of any of them. See `verification-status.md` rows 32, 34, 35 and 36 |
 | **E8a** | bipartiteness decided by a correct algorithm | **discharged** (`BipartiteDecision.lean`, iff, both directions) |
 | **E8b** | the *shipped programs'* routine is such an algorithm | open (transcription) |
 
@@ -297,10 +297,12 @@ one.
    project has is a mechanism against *implementation* error; none is a check on
    whether the argument is the right argument.
 3. **Confirmation from an AKR author**, ideally.
-4. **The classification (E7)** — the largest unformalized object, the content
-   of `hclass`, and the most plausible next formalization target. Next concrete
-   step: exhaustiveness. (E7b), the stored-class-data half, is closed —
-   every consumed field is now recomputed from the chirotope.
+4. **The geometric half of (E7)** — the computational half closed on
+   2026-09-15 (enumeration, completeness of the 135-representative list, the
+   6,342 and the 16). What is left is not a computation: the development has no
+   geometric definition of the halfplane test, of simplicity for real polygons,
+   or of "avoiding", so nothing connects the chirotope predicates to polygons in
+   the plane.
 5. Convert this manifest into a readable paper.
 6. The human author learning the argument well enough to defend it.
 7. Further Lean formalization only where it improves the trust boundary — and
