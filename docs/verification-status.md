@@ -15,12 +15,13 @@ Overall status:
 Nothing here has been peer-reviewed. Nothing here has been verified by a person
 other than the original author working with LLM assistance.
 
-Thirty-four hand-written Lean libraries now compile (`lake build`, exit 0,
-re-verified 2026-09-15), alongside 542 generated enumeration shards (row 15), and many components are kernel-checked — see rows 1, 2,
-3, 7, 9b, 13, 15, 20, 21, 22, 23, 23b, 24, 25, 26 and 32. But `f(7,7) = 38` is
-**not** a Lean theorem: the published geometric lemmas remain external
-dependencies, the completeness of the 225-case list is not formalized, and
-`hne40` is a **settled negative** for the kernel (row 28).
+Forty-five Lean libraries of substance now compile (`lake build`, exit 0,
+re-verified 2026-09-15), alongside 1,363 generated per-shard data modules
+(row 15), and many components are kernel-checked — see rows 1, 2, 3, 7, 9b, 13,
+15, 20, 21, 22, 23, 23b, 24, 25, 26, 32, 34, 35, 36, 37 and 39. But
+`f(7,7) = 38` is **not** a Lean theorem: the published geometric lemmas remain
+external dependencies, the completeness of the 225-case list is not formalized,
+and `hne40` is a **settled negative** for the kernel (row 28).
 
 > **Corrected 2026-09-14.** This paragraph read "Seven Lean files now compile
 > (`lake build`, 752 jobs, exit 0)" long after the development passed twenty
