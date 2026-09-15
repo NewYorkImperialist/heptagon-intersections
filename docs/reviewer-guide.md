@@ -928,7 +928,7 @@ right set. As of the end of 2026-09-14 the position is:
 | 1 | counterexample lands in the searched domain | **proved** (`EnumerationDomain`), for an *arbitrary* configuration |
 | 2 | the domain has 13,003,620 elements | **proved** (`DomainCount.domainFinset_card`) |
 | 3 | the search visits every domain element | **proved** (`EnumerationComplete.enumerate_complete`) |
-| 4 | every valid configuration survives each filter | **stated** filter by filter; (E6) closed, (E8) half, (E1)–(E5)/(E7) open |
+| 4 | every valid configuration survives each filter | **stated** filter by filter; (E6) closed, (E8) half, (E7) closed computationally but open geometrically, (E1)–(E5) open |
 
 Two caveats a reviewer should weigh, because they are where the remaining risk
 actually sits.
@@ -944,15 +944,20 @@ small-case diffs. Strong, not certified.
 are Černý L2, AKR L5, AKR L7, the order-type crossing fact and the exceptional
 classification. Closing them means formalizing published papers, not more bridge
 work — with one exception: (E7) is *this project's own* computation, not someone
-else's theorem, and it moved on 2026-09-14/15. **(E7b) is closed:** every field
-of the stored class data that the development consumes — `M_set`, the maximal
-crossing sets, `lemma2_windows`, `avoiding_pairs` — is now recomputed in Lean
-from the stored chirotope and proved equal to the stored table, 14/14. The last
-of those is the one to care about: `AvoidingFlag` checks the 225 endgame
-certificates against `avoiding_pairs`, which until then was read from JSON. What
-remains of (E7) is the geometric half — that a configuration belongs to the
-class its certificate names, and what the halfplane test means about polygons in
-the plane. See `verification-status.md` rows 32 and 33 — and note (E5) and (E7) are load-bearing in a
+else's theorem, and **its computational half closed on 2026-09-14/15**. Every
+field of the stored class data the development consumes — `M_set`, the maximal
+crossing sets, `lemma2_windows`, `avoiding_pairs` — is recomputed in Lean from
+the stored chirotope and proved equal to the stored table, 14/14; the last of
+those is the one to care about, since `AvoidingFlag` checks the 225 endgame
+certificates against it. The enumeration is exhaustive: exactly 16 of the
+135 × 360 candidates are exceptional simple heptagons, exactly 6,342 are simple,
+and the 135-representative list is itself complete modulo an explicit induction
+hypothesis. **What remains of (E7) is entirely geometric** — that a
+configuration belongs to the class its certificate names, and what the
+halfplane, simplicity and "avoiding" tests mean about polygons in the plane. The
+development has no geometric definition of any of the three, so this is not a
+computation and will not be closed by one. See `verification-status.md` rows 32,
+34, 35 and 36 — and note (E5) and (E7) are load-bearing in a
 way that surprised us; see
 the K-17 correction below.
 
