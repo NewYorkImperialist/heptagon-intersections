@@ -4,14 +4,14 @@ heptagon-intersections :: verify-all
 ========================================================================
 repository root : /Users/jaydenlin/dev/lean/heptagon-intersections
 mode            : full (steps 1-6)
-date            : 2026-09-15T13:57:03Z
+date            : 2026-09-15T14:27:05Z
 uname           : Darwin 24.6.0 arm64
 shell           : bash 3.2.57(1)-release
 python3         : python3 (Python 3.14.7)
 lake            : Lake version 5.0.0-src+293d5d0 (Lean version 4.34.0)
 sha256 tool     : shasum -a 256
 C++ compiler    : c++
-run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A   (kept; nothing is written to evidence/logs/ by this script)
+run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv   (kept; nothing is written to evidence/logs/ by this script)
 
 ========================================================================
 STEP 1/6 -- Lean build
@@ -29,7 +29,7 @@ NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,
           first, build the non-shard targets by name (they are the
           [[lean_lib]] entries in lean/lakefile.toml above the generated
           shard block), then come back for  lake build -j6 OTEnumAll.
-⚠ [1305/1315] Replayed IntersectionParity
+⚠ [1305/1344] Replayed IntersectionParity
 warning: IntersectionParity.lean:189:5: Variable name `h1` is not explicitly referenced.
 
 Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
@@ -60,7 +60,7 @@ Hint: The binding can be removed (if unused) or named `_` (if used implicitly). 
   [apply] _h3
 
 Note: This linter can be disabled with `set_option linter.unusedVariables false`
-ℹ [1393/1452] Replayed CernyL2Derivation
+ℹ [1393/1584] Replayed CernyL2Derivation
 info: CernyL2Derivation.lean:209:0: 'Heptagon.CernyL2Derivation.triangle_affine' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:210:0: 'Heptagon.CernyL2Derivation.triangle_positive_halfplane' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:211:0: 'Heptagon.CernyL2Derivation.simple_sides_noncrossing' depends on axioms: [propext]
@@ -72,7 +72,7 @@ info: CernyL2Derivation.lean:216:0: 'Heptagon.CernyL2Derivation.localFixture' de
 info: CernyL2Derivation.lean:217:0: 'Heptagon.CernyL2Derivation.cert_collision' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: CernyL2Derivation.lean:218:0: 'Heptagon.CernyL2Derivation.cert_window' depends on axioms: [propext, Quot.sound]
 info: CernyL2Derivation.lean:219:0: 'Heptagon.CernyL2Derivation.cert_filterD_derived' depends on axioms: [propext, Classical.choice, Quot.sound]
-ℹ [1401/1452] Replayed AKRL5Derivation
+ℹ [1401/1584] Replayed AKRL5Derivation
 info: AKRL5Derivation.lean:122:0: 'Heptagon.AKRL5Derivation.inhabited_of_parity' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:123:0: 'Heptagon.AKRL5Derivation.exclusive_of_separation' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:124:0: 'Heptagon.AKRL5Derivation.full_of_contact' depends on axioms: [propext, Quot.sound]
@@ -85,7 +85,7 @@ info: AKRL5Derivation.lean:130:0: 'Heptagon.AKRL5Derivation.cert_inhabited' depe
 info: AKRL5Derivation.lean:131:0: 'Heptagon.AKRL5Derivation.cert_separated' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:132:0: 'Heptagon.AKRL5Derivation.cert_contact' depends on axioms: [propext, Quot.sound]
 info: AKRL5Derivation.lean:133:0: 'Heptagon.AKRL5Derivation.cert_filterA' depends on axioms: [propext, Quot.sound]
-ℹ [1446/1752] Replayed IntersectionCount
+ℹ [1436/1584] Replayed IntersectionCount
 info: IntersectionCount.lean:141:0: 'Heptagon.IntersectionCount.pair_card' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:142:0: 'Heptagon.IntersectionCount.common_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:143:0: 'Heptagon.IntersectionCount.common_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -97,7 +97,7 @@ info: IntersectionCount.lean:148:0: 'Heptagon.IntersectionCount.points_eq_range'
 info: IntersectionCount.lean:149:0: 'Heptagon.IntersectionCount.intersectionPoints_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:150:0: 'Heptagon.IntersectionCount.crossCountC_eq_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
 info: IntersectionCount.lean:151:0: 'Heptagon.IntersectionCount.cert_pointCount' depends on axioms: [propext, Classical.choice, Quot.sound]
-⚠ [4675/4676] Replayed OTCompleteAll
+⚠ [4675/4738] Replayed OTCompleteAll
 warning: OTCompleteAll.lean:294:65: This simp argument is unused:
   List.append_assoc
 
@@ -285,16 +285,16 @@ Hint: Omit it from the simp argument list.
     basePart_15, List.nil_append, List.append_nil, List.cons_append]
 
 Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
-Build completed successfully (4676 jobs).
-(lean build wall time: 9 s)
+Build completed successfully (4738 jobs).
+(lean build wall time: 4 s)
    assert OK   : no compilation errors
    assert OK   : no theorem is closed by sorry (lake exits 0 on sorry -- it is only a warning)
-   assert OK   : all 835 declared lean_lib targets produced a .olean
+   assert OK   : all 866 declared lean_lib targets produced a .olean
    assert OK   : no sorry/admit/native_decide/unsafe/partial/axiom in any
                  lean source declared by lakefile.toml
    assert OK   : every committed lean/*.lean is a declared lean_lib
-   lakefile declares 835 lean_lib target(s); lake reported 4676 jobs
---- PASS: 1. Lean build (835 libraries, 4676 jobs)
+   lakefile declares 866 lean_lib target(s); lake reported 4738 jobs
+--- PASS: 1. Lean build (866 libraries, 4738 jobs)
 
 ========================================================================
 STEP 2/6 -- lower-bound certificate (f(7,7) >= 38)
@@ -392,6 +392,7 @@ lean/ClassDataFields.lean: OK
 lean/ClassDataFromChirotope.lean: OK
 lean/ClassDataWitness.lean: OK
 lean/ClassInvariant.lean: OK
+lean/ClassificationSummary.lean: OK
 lean/ComponentLabelling.lean: OK
 lean/CounterexampleCount.lean: OK
 lean/DisjointnessGraph.lean: OK
@@ -412,6 +413,7 @@ lean/LemmaA.lean: OK
 lean/LemmaABridge.lean: OK
 lean/LowerBound.lean: OK
 lean/MainTheorem.lean: OK
+lean/OTBridge.lean: OK
 lean/OTComp00_00.lean: OK
 lean/OTComp00_01.lean: OK
 lean/OTComp00_02.lean: OK
@@ -1217,12 +1219,41 @@ lean/OrderTypeClassification.lean: OK
 lean/PointSetSemantics.lean: OK
 lean/PolygonSimple.lean: OK
 lean/SegmentGeometry.lean: OK
+lean/SimpleCount00.lean: OK
+lean/SimpleCount01.lean: OK
+lean/SimpleCount02.lean: OK
+lean/SimpleCount03.lean: OK
+lean/SimpleCount04.lean: OK
+lean/SimpleCount05.lean: OK
+lean/SimpleCount06.lean: OK
+lean/SimpleCount07.lean: OK
+lean/SimpleCount08.lean: OK
+lean/SimpleCount09.lean: OK
+lean/SimpleCount10.lean: OK
+lean/SimpleCount11.lean: OK
+lean/SimpleCount12.lean: OK
+lean/SimpleCount13.lean: OK
+lean/SimpleCount14.lean: OK
+lean/SimpleCount15.lean: OK
+lean/SimpleCount16.lean: OK
+lean/SimpleCount17.lean: OK
+lean/SimpleCount18.lean: OK
+lean/SimpleCount19.lean: OK
+lean/SimpleCount20.lean: OK
+lean/SimpleCount21.lean: OK
+lean/SimpleCount22.lean: OK
+lean/SimpleCount23.lean: OK
+lean/SimpleCount24.lean: OK
+lean/SimpleCount25.lean: OK
+lean/SimpleCount26.lean: OK
+lean/SimpleCountAll.lean: OK
+lean/SimpleCountDefs.lean: OK
 lean/UpperBoundAssembly.lean: OK
 lean/gen_endgame_data.py: OK
 lean/lakefile.toml: OK
 lean/lean-toolchain: OK
-   assert OK   : 838/838 entries verified
---- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.lean (838 files)
+   assert OK   : 869/869 entries verified
+--- PASS: 4. hash manifest ./data/hashes/SHA256SUMS.lean (869 files)
 
 -- ./data/hashes/SHA256SUMS.implementation_b
    command : cd . && shasum -a 256 -c data/hashes/SHA256SUMS.implementation_b
@@ -1265,7 +1296,7 @@ STEP 5/6 -- independent AKR Lemma 7 / A7 evidence
 --- PASS: 5a. DRAT gate self-test
 
 -- 5b. regenerate the 20 gitignored CNFs and compare SHA-256
-   command : python3 evidence/regen_cnf.py --write /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/cnf
+   command : python3 evidence/regen_cnf.py --write /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/cnf
    expected: 'OK: all 20 CNFs regenerated byte-identically'
 PQ-adj_mixed-1.cnf       sha256 OK      a083c0961deaeff14553fc96a34de7dfccb4027b2961018f3bd6cbcb1f9d879f
 PQ-adj_mixed-2.cnf       sha256 OK      05b26c08ffa8b0f78a1a1e8e90cfb4884ad1fb5c249febf3cf2c1cbc104043a9
@@ -1279,7 +1310,7 @@ OK: all 20 CNFs regenerated byte-identically from indep_om.py
 --- PASS: 5b. CNF regeneration (20/20 byte-identical)
 
 -- 5c. one committed project DRAT refutation through the gate
-   command : dratcheck.py /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/cnf/generic_both-hooking.cnf evidence/drat/generic_both-hooking.drat
+   command : dratcheck.py /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/cnf/generic_both-hooking.cnf evidence/drat/generic_both-hooking.drat
    expected: PROOF VERIFIED (UNSAT); takes about 45 s
    formula: 64566 clauses; proof: 663 steps
    added lemmas verified: 518 (of which RAT-only: 0)   deletions: 145   empty clause derived: True
@@ -1296,7 +1327,7 @@ OK: all 20 CNFs regenerated byte-identically from indep_om.py
              trusted; the output is asserted on as well.
    NOTE: reproduce.sh writes into independent/akr_l7_reproduction/evidence/logs/,
          which is TRACKED historical evidence.  A copy of its pre-run contents
-         is in /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/05d_evidence_logs_before/ .
+         is in /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/05d_evidence_logs_before/ .
          Restore with:  git -C /Users/jaydenlin/dev/lean/heptagon-intersections checkout -- independent/akr_l7_reproduction/evidence/logs
 
 ========================================================================
@@ -1369,23 +1400,23 @@ OK: dratcheck.py accepts all 4 pigeonhole proofs and rejects all 4 bad proofs.
 ========================================================================
 STEP: re-check all 15 DRAT refutations
 ========================================================================
-generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     38.80s
-generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     32.17s
-P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      8.96s
-P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.63s
-P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.76s
-P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.65s
-Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     12.98s
-Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      7.96s
-Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.09s
-Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.92s
-PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.45s
-PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.33s
-PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      4.97s
-PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.21s
-PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.13s
+generic_both-hooking   VERIFIED UNSAT             clauses=64566   steps=663     38.67s
+generic_both-hooked    VERIFIED UNSAT             clauses=64566   steps=606     31.93s
+P-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=396      8.92s
+P-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=371      7.55s
+P-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=389      8.65s
+P-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=418     12.53s
+Q-adj_mixed-1          VERIFIED UNSAT             clauses=37832   steps=441     12.88s
+Q-adj_mixed-2          VERIFIED UNSAT             clauses=37832   steps=382      7.92s
+Q-adj_both-hooking     VERIFIED UNSAT             clauses=37832   steps=503     13.01s
+Q-adj_both-hooked      VERIFIED UNSAT             clauses=37832   steps=290      5.88s
+PQ-adj_none            VERIFIED UNSAT             clauses=20764   steps=329      4.41s
+PQ-adj_mixed-1         VERIFIED UNSAT             clauses=20788   steps=283      3.29s
+PQ-adj_mixed-2         VERIFIED UNSAT             clauses=20788   steps=348      4.96s
+PQ-adj_both-hooking    VERIFIED UNSAT             clauses=20788   steps=280      3.18s
+PQ-adj_both-hooked     VERIFIED UNSAT             clauses=20788   steps=272      3.12s
 
-total wall time: 168.02s
+total wall time: 166.88s
 OK: 15 DRAT proofs verified UNSAT, 5 instances SAT (no proof), 20 total
 --- PASS: re-check all 15 DRAT refutations
 
@@ -1404,7 +1435,7 @@ OK: all 5 exported models verified in pure Python (no solver).
 ========================================================================
 STEP: z3 cross-check of all 20 instances
 ========================================================================
-generic_none           z3=sat   expected=sat   OK  vars=220  clauses=64542    0.33s
+generic_none           z3=sat   expected=sat   OK  vars=220  clauses=64542    0.32s
 generic_mixed-1        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
 generic_mixed-2        z3=sat   expected=sat   OK  vars=220  clauses=64566    0.10s
 generic_both-hooking   z3=unsat expected=unsat OK  vars=220  clauses=64566    0.35s
@@ -1413,7 +1444,7 @@ P-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.
 P-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 P-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 P-adj_both-hooking     z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
-P-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.07s
+P-adj_both-hooked      z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 Q-adj_none             z3=sat   expected=sat   OK  vars=165  clauses=37808    0.06s
 Q-adj_mixed-1          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
 Q-adj_mixed-2          z3=unsat expected=unsat OK  vars=165  clauses=37832    0.06s
@@ -1929,7 +1960,7 @@ combinations: 25   non-vacuous: 13   VACUOUS: 12
    VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
    VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
 both-hooking AND both-hooked UNSAT in all 25 combinations: True
-wall time: 143.9s
+wall time: 136.4s
 
 OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
     Every one of the 25 labelled (P-type x Q-type) combinations has
@@ -2069,7 +2100,7 @@ Pb-bp_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNS
 Pb-bp_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 Pb-bp_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 
-125 instances, 6.5s
+125 instances, 6.4s
 OK: every available solver agrees with results.json on all 125 instances.
 --- PASS: c25 solver cross-check
 
@@ -2116,7 +2147,7 @@ expected: every unit test passes; 13,003,620 graphs -> 225 triples over 121
           225 / 121 / 13,003,620 are asserted here explicitly.
 
 -- 6a. convert the canonical profile JSON to a flat table
-wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/implb/profiles.txt: 14 classes
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/implb/profiles.txt: 14 classes
 --- PASS: 6a. make_profiles.py
 
 -- 6b. compile reduction.cpp with c++
@@ -2168,7 +2199,7 @@ after crossing-set compatibility  : 2300
 after Cerny Lemma 2               : 121
 distinct surviving graphs         : 121
 (classP,classQ,graph) triples     : 225
-wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A/implb/implementation_b_output.json
+wrote /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv/implb/implementation_b_output.json
    assert OK   : the enumeration really ran over 13,003,620 graphs
    assert OK   : 121 surviving graphs
    assert OK   : 225 surviving triples
@@ -2227,16 +2258,16 @@ EXACT SET EQUALITY: Implementation B independently reproduces the certificate's 
 ========================================================================
 SUMMARY
 ========================================================================
-wall time : 507 s
-logs      : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.cvbn8A
+wall time : 493 s
+logs      : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.VLfDLv
 
 PASSED (18):
-    1. Lean build (835 libraries, 4676 jobs)
+    1. Lean build (866 libraries, 4738 jobs)
     2. lower-bound certificate (I = 38)
     3. endgame certificate (225 cases)
     4. hash manifest data/hashes/SHA256SUMS (5 files)
     4. hash manifest ./data/hashes/SHA256SUMS.tools (4 files)
-    4. hash manifest ./data/hashes/SHA256SUMS.lean (838 files)
+    4. hash manifest ./data/hashes/SHA256SUMS.lean (869 files)
     4. hash manifest ./data/hashes/SHA256SUMS.implementation_b (7 files)
     4. hash manifest ./data/hashes/SHA256SUMS.order_type_audit (8 files)
     5a. DRAT gate self-test

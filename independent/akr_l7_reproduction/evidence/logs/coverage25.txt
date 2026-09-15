@@ -416,7 +416,7 @@ combinations: 25   non-vacuous: 13   VACUOUS: 12
    VACUOUS  Pb-bp  QB-Ap   ('none' is UNSAT -> its other verdicts carry no information)
    VACUOUS  Pb-bp  QB-Bp   ('none' is UNSAT -> its other verdicts carry no information)
 both-hooking AND both-hooked UNSAT in all 25 combinations: True
-wall time: 143.9s
+wall time: 136.4s
 
 OK: coverage of Lemma 7 for n = 7 is complete and certificate-backed.
     Every one of the 25 labelled (P-type x Q-type) combinations has
@@ -556,7 +556,7 @@ Pb-bp_QB-Bp_mixed-2                expected=UNSAT cadical153=UNSAT glucose42=UNS
 Pb-bp_QB-Bp_both-hooking           expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 Pb-bp_QB-Bp_both-hooked            expected=UNSAT cadical153=UNSAT glucose42=UNSAT  OK
 
-125 instances, 6.5s
+125 instances, 6.4s
 OK: every available solver agrees with results.json on all 125 instances.
 --- PASS: c25 solver cross-check
 
