@@ -47,6 +47,14 @@ would support the narrow reading. We are not confident that is decisive.
 The journal [AKR-J] and conference [AKR-C] versions are **verbatim identical** on
 every passage below.
 
+> **These quotations were checked against the PDF itself on 2026-09-14**, not
+> copied from earlier project notes. Every passage in this section was located in
+> `references/akr-dcg-2022.pdf` (SHA-256 `f0ae336e…`, which also matches the value
+> recorded in [`external-lemma-audit.md`](external-lemma-audit.md) §0) and
+> compared character-by-character after normalising ligatures and mathematical
+> symbols. No transcription error was found. If you spot one anyway, that is
+> itself worth telling us.
+
 ### Associated pair — [AKR-J] §4, PDF p. 6 (journal p. 1054); [AKR-C] p. 24:5
 
 > Let `p_i, p_{i+1}` be two sides of *P* such that `CC(p_i) ≠ CC(p_{i+1})`. Then

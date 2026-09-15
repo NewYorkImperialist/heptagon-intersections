@@ -66,6 +66,13 @@ six named dependencies. Two findings below are new and material; one is a defect
 
 All three hashes match the values supplied with the audit brief.
 
+> **Re-verified 2026-09-14.** All three were recomputed from the files on disk
+> and match the values above. Note the standing limitation, unchanged: the PDFs
+> are `.gitignore`d (they are copyrighted), so **someone cloning this repository
+> still cannot check these hashes** — they can only confirm that whatever copy
+> they obtain independently has the same digest. The table establishes which
+> files this project read, not that a third party has the same files.
+
 **Citations.**
 
 * **[Č]** J. Černý, J. Kára, D. Kráľ, P. Podbrdský, M. Sotáková, R. Šámal,
