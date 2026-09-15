@@ -31,7 +31,10 @@ pair, to `¬ ProperCross (V i) (V (i+1)) (V j) (V (j+1))` for every non-adjacent
 `i, j` — which is the fourth conjunct of `DisjointnessGraph.Simple7`. This is a
 sign-bookkeeping identity, not geometry: for nonzero integers, `sign x ≠ sign y`
 iff `x * y < 0`, and `ProperCross` is exactly two such products being negative.
-*Being proved in `lean/SimpleBridge.lean`.*
+**Proved 2026-09-15** — `SimpleBridge.simple_chiOf_iff`, as an iff, under the
+general-position hypothesis alone; `simple_chiOf_of_Simple7` derives it from
+`Simple7` directly, and `simple_chiOf_Pv`/`simple_chiOf_Qv` fire it on the
+lower-bound certificate's two actual heptagons.
 
 **(ii) Side masks.** `sideMask A` is `{s : bit s of A ≠ bit (s+1 mod 7) of A}`,
 and side `s` joins vertex `s` to vertex `s+1`. So if `A` is the set of vertices
@@ -47,7 +50,8 @@ contained in some member of the family. By (ii)+(iii), that is: every 4-subset
 of sides is crossed by a single line. Which is "no uncrossable 4-set of sides",
 in the **strict** reading (`reviewer-guide.md` §6.5). Definitional.
 
-So steps (ii), (iii) and (iv) are bookkeeping, and step (i) is sign bookkeeping.
+So steps (ii), (iii) and (iv) are bookkeeping, and step (i) is sign bookkeeping
+and is now proved.
 Exactly one step is genuine planar geometry:
 
 ---
