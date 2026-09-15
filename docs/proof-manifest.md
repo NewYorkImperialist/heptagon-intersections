@@ -131,7 +131,7 @@ the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 | **LEAN-I2** | the mask bit means point-set disjointness in ℝ² | Lean | `DisjointnessGraph` + `PointSetSemantics` | LEAN-KERNEL-CHECKED | I2a + I2b; the only step that reaches ℝ |
 | **LEAN-MAIN** | 38 is the greatest attained crossing count over `Config` | Lean | `MainTheorem`, `IntersectionParity` | proved *from* `hclass` and `hne40` | **not a proof of `f(7,7) = 38`** |
 | **LB38** | `f(7,7) ≥ 38` | construction | this project | LEAN-KERNEL-CHECKED | simplicity now point-set (`PolygonSimple`); the Jordan curve theorem is still not formalized |
-| **UB42** | `I = 42` impossible | project inference | this project | LEAN-KERNEL-CHECKED given X1, X2 (`Exclude42`); also swept exhaustively | consumes C1, LA, EX only — **not** A7-EXT |
+| **UB42** | `I = 42` impossible | project inference | this project | LEAN-KERNEL-CHECKED; X1 decided for the 14 stored classes (`ClassInvariant`), X2 still assumed (`Exclude42`); also swept exhaustively | consumes C1, LA, EX only — **not** A7-EXT |
 | **UB40** | `I = 40` impossible | composite | GP, C1, C2, A5-C, A5-A, A7-EXT, A7-BRIDGE, LA, COMP | NOT FORMALIZED; conditional on **A7-EXT** | **fails if A7-EXT fails**; carried in Lean as the bare hypothesis `hne40`, which is out of kernel reach |
 
 ## Filter pipeline
@@ -216,15 +216,19 @@ theorem.
 | **E4** | the order-type fact behind filter (c) (= **X2**) | open |
 | **E5** | Černý L2: no window carries an exact induced perfect matching | open; **attempted and blocked** (`CernyL2Derivation.lean`) |
 | **E6** | correctness of the component labelling | **discharged** (`ComponentLabelling.lean`, iff, both directions) |
-| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object |
+| **E7** | the 14 exceptional classes, and the stored class data | open — **the classification itself**, the largest unformalized object. **Partly moved 2026-09-14:** `M_set` and the maximal crossing sets are now *recomputed* in Lean from each stored chirotope and proved equal to the stored fields, 14/14 (`ClassDataFromChirotope.recomputed_eq`); `lemma2_windows` and `avoiding_pairs` are not. Exhaustiveness — that no other of the 135 × 360 candidates is exceptional — is stated (`exceptionalPolygons`) and **unproved**. See `verification-status.md` row 32 |
 | **E8a** | bipartiteness decided by a correct algorithm | **discharged** (`BipartiteDecision.lean`, iff, both directions) |
 | **E8b** | the *shipped programs'* routine is such an algorithm | open (transcription) |
 
 Six of eight open, plus E8b. Interfaces **I1**, **I2a**, **I2b** are supplied;
 **I3** is closed on the flag half and open on the geometric half; **I4** (AKR L5
 as an imported statement) and **I5** (`ProfileOf` and completeness of the
-225-case list) do not exist. **X1** and **X2** remain hypotheses; **X3** was
-discharged 2026-09-14 by `LemmaABridge.lean`.
+225-case list) do not exist. **X2** remains a hypothesis. **X1** — the exceptional-class invariant — was
+**discharged 2026-09-14 for the 14 stored classes** by `ClassInvariant.lean`,
+with the set equality decided in both directions, so the table is neither a
+weakening nor a strengthening; deciding *which* class a configuration belongs to
+is still the caller's obligation and is (E7). **X3** was discharged 2026-09-14 by
+`LemmaABridge.lean`.
 
 **Transcription, not extraction.** The Lean filter definitions were written *by
 hand* from `python/elimination/audit_enum.py` and
@@ -293,8 +297,12 @@ one.
    project has is a mechanism against *implementation* error; none is a check on
    whether the argument is the right argument.
 3. **Confirmation from an AKR author**, ideally.
-4. **The classification (E7 / X1)** — the largest unformalized object, the
-   content of `hclass`, and the most plausible next formalization target.
+4. **The classification (E7)** — the largest unformalized object, the content
+   of `hclass`, and the most plausible next formalization target. Next concrete
+   steps: recompute `lemma2_windows` and `avoiding_pairs` from the chirotope in
+   Lean as was done for `M_set` (the second is load-bearing — `AvoidingFlag`
+   checks the 225 certificates against it), then exhaustiveness, which is the
+   hard one.
 5. Convert this manifest into a readable paper.
 6. The human author learning the argument well enough to defend it.
 7. Further Lean formalization only where it improves the trust boundary — and

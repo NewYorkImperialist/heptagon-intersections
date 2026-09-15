@@ -1056,29 +1056,29 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-\textbf{Twenty-six} libraries are declared in \texttt{lakefile.toml} and all
-twenty-six build: $1{,}397$ jobs, exit $0$, verified 2026-09-14. None contains
+\textbf{Thirty-three} libraries are declared in \texttt{lakefile.toml} and all
+thirty-three build: $1{,}444$ jobs, exit $0$, verified 2026-09-14. None contains
 \texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
 \texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
 by scanning the sources with comments stripped. All \texttt{decide} calls are
 ordinary kernel reduction, so nothing rests on the compiler.
 
 \begin{remark}[Read \S\ref{sec:leanmain} first]
-Twenty-six libraries is enough to create a false impression of coverage. The
+Thirty-three libraries is enough to create a false impression of coverage. The
 target statement is \emph{not} proved; it is \emph{stated}, with two
 hypotheses. The value of the development is that it makes the residue precise
 and machine-readable, not that it closes it.
 \end{remark}
 
-\subsection*{The twenty-six libraries}
+\subsection*{The thirty-three libraries}
 
 Grouped by layer. ``core'' in the \textbf{Base} column means the library and
 everything it imports are Mathlib-free, so Mathlib is outside its trust base;
-thirteen of the twenty-six are, and five of those import literally nothing
+fourteen of the thirty-three are, and five of those import literally nothing
 (\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
-\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other thirteen reach
-Mathlib, and only two --- \texttt{PointSetSemantics} and \texttt{PolygonSimple}
---- reach the reals.
+\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other nineteen reach
+Mathlib, and only three --- \texttt{PointSetSemantics}, \texttt{PolygonSimple}
+and \texttt{IntersectionCount} --- reach the reals.
 
 {\footnotesize\setlength{\tabcolsep}{4pt}
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.3cm}>{\raggedright\arraybackslash}p{1.5cm}>{\raggedright\arraybackslash}p{1.6cm}>{\raggedright\arraybackslash}p{7.4cm}@{}}
@@ -1103,6 +1103,7 @@ Mathlib, and only two --- \texttt{PointSetSemantics} and \texttt{PolygonSimple}
 \texttt{DisjointnessGraph} & core & \textsf{I1}, \textsf{I2a} & \texttt{Config}; \texttt{toMasks} and its orientation-level spec; minimum degree on both sides \\
 \texttt{PointSetSemantics} & Mathlib, $\mathbb{R}$ & \textsf{I2b} & \texttt{DisjointO} iff the two closed sides are disjoint \emph{as point sets in} $\mathbb{R}^2$ \\
 \texttt{PolygonSimple} & Mathlib, $\mathbb{R}$ & --- & \texttt{Simple7} implies the real closed polygonal curve is non-self-intersecting: distinct sides meet exactly at a shared cyclic endpoint, or not at all \\
+\texttt{IntersectionCount} & Mathlib, $\mathbb{R}$ & --- & the crossing-pair count equals the number of boundary-intersection \emph{points} in $\mathbb{R}^2$, with no extra hypotheses; $=38$ on the certificate \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{The stored endgame}}\\
 \texttt{EndgameDefs} & core & --- & the endgame predicates; \texttt{akr5Conclusion\_iff\_adjacent} \\
@@ -1117,6 +1118,7 @@ Mathlib, and only two --- \texttt{PointSetSemantics} and \texttt{PolygonSimple}
 \texttt{ComponentLabelling} & core & \textsf{E6} & a fuel-bounded closure labelling, equal labels iff connected, both directions \\
 \texttt{BipartiteDecision} & core & \textsf{E8a} & a total fuel-bounded $2$-colouring test, \texttt{true} iff bipartite, both directions \\
 \texttt{CernyL2Derivation} & Mathlib & \textsf{E5} & \textbf{attempted and blocked}; see \S\ref{sec:e5} \\
+\texttt{AKRL5Derivation} & core & \textsf{E1} & \textbf{attempted and blocked}; the missing hypothesis is proved \emph{equivalent} to \textsf{E1}, so the attempt is blocked and not nearly finished \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{The enumeration obligations}}\\
 \texttt{EnumerationDomain} & Mathlib & obl.\ (1) & a configuration with $I=40$ lands in the search domain \\
@@ -1126,9 +1128,16 @@ Mathlib, and only two --- \texttt{PointSetSemantics} and \texttt{PolygonSimple}
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Upper-bound assembly}}\\
 \texttt{Exclude42} & Mathlib & \textsf{UB42} & $I\neq42$, from \textsf{X1} and \textsf{X2} \\
+\texttt{ClassDataWitness} & Mathlib & --- & non-vacuity of \texttt{Exclude42}'s class hypothesis: an explicit satisfying \texttt{mcs}/$M_P$ pair \\
+\texttt{ExceptionalClass} & Mathlib & --- & $I=42$ \emph{forces} the configuration to be exceptional, so the $42$ branch cannot be separated from the class data \\
 \texttt{UpperBoundAssembly} & Mathlib & --- & $I\le42$ unconditionally; $I\le38$ from parity, $I\neq42$, $I\neq40$ \\
 \texttt{MainTheorem} & Mathlib & \textsf{LEAN-MAIN} & $38$ is the greatest attained crossing count, given the hypotheses \\
 \texttt{IntersectionParity} & Mathlib & \textsf{PAR} & $I$ is even for an arbitrary configuration; the final assembly \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{Class data and the classification}}\\
+\texttt{ClassInvariant} & Mathlib & \textsf{X1} & $|M|=5$ and the maximal crossing sets are exactly $\{\textsc{full}\setminus\{m\}\}$, decided for the $14$ stored classes, the set equality in both directions \\
+\texttt{ClassDataFromChirotope} & Mathlib & \textsf{E7}(b) & $M$ and the maximal crossing sets \emph{recomputed} from each stored chirotope and proved equal to the stored fields, $14/14$; windows and avoiding pairs not yet \\
+\texttt{OrderTypeClassification} & Mathlib & \textsf{E7}(a), partial & all $14$ classes pass the exceptional test; the $16$ expected polygons are simple and reduce onto all $14$. \textbf{Exhaustiveness is stated and unproved} --- \S\ref{sec:e7partial} \\
 \end{longtable}
 }
 
@@ -1479,7 +1488,7 @@ which import is carrying the weight.
 \textsf{E4} & the order-type fact behind filter (c): $q_j$'s crossing set sits in a maximal crossing set of $P$'s class & \stat{open} & \texttt{hcross} of \texttt{filterC\_sound}; reused as \textsf{X2} \\
 \textsf{E5} & {\v C}ern{\'y} L2: no Lemma-2 window carries an exact induced perfect matching & \stat{open}; attempted, \textbf{blocked} & \texttt{hC2} of \texttt{filterD\_sound}; \S\ref{sec:e5} \\
 \textsf{E6} & correctness of the component labelling & \stat{discharged} & \texttt{ComponentLabelling.lean} \\
-\textsf{E7} & $K$'s heptagons are among the $14$ enumerated classes, and the stored class data is correct for $K$ & \stat{open} --- \textbf{the classification itself} & \texttt{hmem} of \texttt{filterCDE\_sound} \\
+\textsf{E7} & $K$'s heptagons are among the $14$ enumerated classes, and the stored class data is correct for $K$ & \stat{open} --- \textbf{the classification itself}; the stored-data half is \emph{partly} discharged, \S\ref{sec:e7partial} & \texttt{hmem} of \texttt{filterCDE\_sound} \\
 \textsf{E8a} & bipartiteness is decided by a correct algorithm & \stat{discharged} & \texttt{BipartiteDecision.lean} \\
 \textsf{E8b} & \emph{the shipped programs' routine} is such an algorithm & \stat{open} (transcription) & no extraction exists \\
 \end{longtable}
@@ -1490,7 +1499,42 @@ So \textbf{six} of the eight --- \textsf{E1}--\textsf{E5} and \textsf{E7} --- ar
 open outright, and the transcription half \textsf{E8b} is open as well. Of the
 six, \textsf{E3} \emph{is} \textsf{A7-EXT}, the principal item of
 \S\ref{sec:a7ext}, and \textsf{E7} is the exceptional classification, the largest
-single unformalized computational object in the project.
+single unformalized computational object in the project. \textsf{E7} is the only
+one of the six on which anything has moved; \S\ref{sec:e7partial} says exactly
+how much, and it is less than the name ``partly discharged'' might suggest.
+
+\subsection*{\textsf{E7}: what is now checked, and what is not}\label{sec:e7partial}
+\textsf{E7} is two claims joined by ``and'', and they are very different in size.
+
+\emph{(b) The stored class data is correct.} This is now checked for the
+fourteen stored classes. \texttt{ClassDataFromChirotope.recomputed\_eq}
+\emph{recomputes} $M$ and the inclusion-maximal crossing sets from each class's
+\texttt{canonical\_chirotope} alone --- halfplane subsets over all $42$ ordered
+vertex pairs, then side masks, then the maximality filter --- and proves the
+results equal the stored fields, $14/14$;
+\texttt{OrderTypeClassification.classFam\_eq} pins the whole crossing family and
+not merely the two extracted fields. The Lean is a line-by-line transcription of
+\texttt{classdata()} in \texttt{python/classification/export\_profiles.py} and
+\texttt{halfplane\_subsets} in \texttt{python/core/chiro.py}. Two fields of the
+stored \texttt{ClassData} are \emph{not} yet recomputed: \texttt{lemma2\_windows}
+and \texttt{avoiding\_pairs}. The second is load-bearing, since
+\texttt{AvoidingFlag.lean} checks the $225$ certificates against it.
+
+\emph{(a) The fourteen classes are all there are.} This is not proved. What is
+proved is that all fourteen stored classes pass the uncrossable-four-subset test
+(\texttt{stored\_classes\_exceptional}), and that each of the sixteen expected
+labelled polygons is simple and reduces, under an explicit dihedral relabelling
+with an optional global sign flip, to a stored class chirotope, with all
+fourteen hit (\texttt{expected\_reductions\_checked}). That establishes the
+classes are \emph{realised}; it does not establish that no \emph{other}
+(representative, cyclic order) pair is exceptional. The exhaustiveness statement
+is written down --- \texttt{exceptionalPolygons} ranges over all
+$135\times360=48{,}600$ candidates --- and left unproved. It is true: verified
+outside Lean, $6342$ candidates are simple and exactly $16$ of those are
+exceptional, and the $6342$ is the same number the external \texttt{hamilt07.b08}
+cross-check gives. What blocks it is Lean kernel reduction cost, not doubt about
+the value. Beyond both halves, the completeness of the $135$-representative list
+itself, and any geometric reading of the halfplane test, remain external.
 
 \textbf{\textsf{E6}, discharged.} \texttt{ComponentLabelling.lean} defines a
 concrete labelling of the $14$-vertex disjointness graph by a fuel-bounded
@@ -1548,11 +1592,22 @@ $6$-set $\{i:i\neq m\}$ forces $m=i_j$. The corollary
 \texttt{Config}, and $I+|\ED|=49$ and $\delta(\GD)\ge1$ are \emph{not}
 hypotheses of it --- they are imported theorems.
 
-Three external inputs were named. Two remain:
+Three external inputs were named. One remains:
 \begin{itemize}[leftmargin=*,nosep]
   \item \textsf{X1}, the exceptional-class invariant: $|M_P|=5$ and the maximal
-    crossing sets are exactly $\{\textsc{full}\setminus\{m\}:m\in M_P\}$. This
-    is part of \textsf{EX}, and it is \emph{not} proved in Lean.
+    crossing sets are exactly $\{\textsc{full}\setminus\{m\}:m\in M_P\}$.
+    \stat{discharged} 2026-09-14 \emph{for the fourteen stored classes}, by
+    \texttt{ClassInvariant.lean}: \texttt{M\_card} and \texttt{class\_interface}
+    decide both parts over a table generated from
+    \texttt{exceptional\_profiles\_14.json}, and \texttt{maximal\_exact} decides
+    the set equality in \emph{both} directions, so the table is neither a
+    weakening nor a strengthening of the invariant.
+    \texttt{ClassInvariant.not\_crossCount\_42} is the theorem above with
+    \textsf{X1} supplied rather than assumed. What this does \emph{not} do is
+    decide which class a given configuration belongs to; that is still the
+    caller's obligation, and it is \textsf{E7}. So \textsf{X1} has moved from
+    ``assumed'' to ``true of the stored data'', not to ``true of every
+    exceptional heptagon''.
   \item \textsf{X2}, the order-type fact behind filter (c) --- identical to
     \textsf{E4}, reused verbatim rather than restated.
   \item \textsf{X3}, that $P$ is exceptional, \stat{discharged} 2026-09-14 by
@@ -1717,7 +1772,7 @@ branch touches \textsf{A7-EXT}, and only the right branch is unformalized.
                                  |
    I even (PAR)  [Lean, any K] --+
                                  |
-   I != 42 (UB42) [Lean, given X1+X2] -- does NOT use A7-EXT
+   I != 42 (UB42) [Lean, X1 decided for the 14 stored classes; given X2] -- does NOT use A7-EXT
                                  |
                                  v
                              I <= 38   [Lean]
@@ -1842,10 +1897,17 @@ optional polish.
     ``associated'', as used in Observation 6 and Lemma 7, carries the cone
     dichotomy; and, separately, notice of the Observation 6 counterexample and of
     the two \S10.2 counts that do not reproduce.
-  \item \textbf{The classification, \textsf{E7}/\textsf{X1}.} It is the largest
+  \item \textbf{The classification, \textsf{E7}.} It is the largest
     unformalized object in the proof, it is the content of \texttt{hclass}, and
     it is the most plausible target for the next piece of formalization ---
-    unlike \textsf{UB40}, which is out of reach (\S\ref{sec:hne40}).
+    unlike \textsf{UB40}, which is out of reach (\S\ref{sec:hne40}). Two pieces
+    of it were taken on 2026-09-14 (\S\ref{sec:e7partial}): \textsf{X1} is now
+    decided for the fourteen stored classes rather than assumed, and $M$ and the
+    maximal crossing sets are recomputed from each stored chirotope rather than
+    read. The two obvious next steps are the same treatment for
+    \texttt{lemma2\_windows} and \texttt{avoiding\_pairs} --- the latter matters,
+    because \texttt{AvoidingFlag} checks the $225$ certificates against it ---
+    and then exhaustiveness, which is the hard one.
   \item \textbf{Conversion of this manifest into a readable paper.}
   \item \textbf{The human author learning the argument well enough to defend
     it.}

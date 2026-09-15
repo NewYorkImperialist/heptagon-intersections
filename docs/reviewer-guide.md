@@ -425,7 +425,7 @@ transcribed.)
 | the Lean transcription of the Černý-L2 filter fires ⟺ an exact induced perfect matching exists | `CernyL2Interface.lean` | certifies the *Lean transcription*, not the Python/C++ source |
 | **`I ≤ 42` for every configuration**, unconditionally | `UpperBoundAssembly.lean` | this is Černý L1's consequence, *derived* not imported; `propext`/`Quot.sound` only |
 | **`I` is even** for every configuration | `IntersectionParity.lean` | stays in `Int`; `inside` by ray-crossing parity, no reals |
-| **`I ≠ 42`** | `Exclude42.lean` | modulo the class invariants (X1)/(X2) |
+| **`I ≠ 42`** | `Exclude42.lean`, `ClassInvariant.lean` | (X1) is now *decided* for the 14 stored classes, not assumed; modulo (X2), and modulo knowing which class a configuration is in, which is (E7) |
 | a counterexample lands in the searched domain (obligation 1) | `EnumerationDomain.lean` | arbitrary configuration; `I = 40` is an *input*, not a consequence |
 | the domain has exactly **13,003,620** elements (obligation 2) | `DomainCount.lean` | the `C(7,j)` falls out of regrouping, not asserted |
 | the search **visits every** domain element (obligation 3) | `EnumerationComplete.lean` | about the *Lean* transcription; **no extraction** |
@@ -463,7 +463,10 @@ Lemma 5 to avoiding pairs via an order-type predicate.
 
 *(Corrected 2026-09-14: this list also contained "the `I = 42` exclusion", which
 contradicted the §3.3 table immediately above — `I ≠ 42` is kernel-checked in
-`Exclude42.lean`, modulo the class invariants (X1)/(X2).)*
+`Exclude42.lean`, modulo the class invariants (X1)/(X2). Updated later the same
+day: (X1) is no longer assumed — `ClassInvariant.lean` decides it for the 14
+stored classes, in both directions — so what remains at this point is (X2) and
+the class-membership question, which is (E7).)*
 
 ### 3.5 The one contested import
 
@@ -940,7 +943,13 @@ small-case diffs. Strong, not certified.
 **On (4): the remaining inputs are other people's theorems.** (E1)–(E5) and (E7)
 are Černý L2, AKR L5, AKR L7, the order-type crossing fact and the exceptional
 classification. Closing them means formalizing published papers, not more bridge
-work — and note (E5) and (E7) are load-bearing in a way that surprised us; see
+work — with one exception: (E7) is *this project's own* computation, not someone
+else's theorem, and part of it moved on 2026-09-14. `M_set` and the maximal
+crossing sets are now recomputed in Lean from each stored chirotope and proved
+equal to the stored fields, 14/14. What did **not** move is the part that makes
+(E7) the largest object here: that the 14 classes are all there are. See
+`verification-status.md` row 32 — and note (E5) and (E7) are load-bearing in a
+way that surprised us; see
 the K-17 correction below.
 
 One question here was raised and closed on 2026-09-14, recorded as **K-17**, and

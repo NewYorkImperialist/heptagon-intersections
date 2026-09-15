@@ -154,3 +154,65 @@ absolutely rather than against the file's own `verified` block.
 **Next milestone: obligation (4)** — the sole remaining enumeration gap.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
+
+---
+
+## 2026-09-14, later: X1 discharged, E7(b) half-closed
+
+**X1, the exceptional-class invariant, is no longer a hypothesis of the `I = 42`
+exclusion** — for the 14 stored classes. `lean/ClassInvariant.lean` decides
+`|M| = 5` and `maximal_crossing_sets = {FULL \ {m} : m ∈ M}` over a table
+generated from `exceptional_profiles_14.json`, with `maximal_exact` giving the
+set equality in **both** directions so the table is neither a weakening nor a
+strengthening. `ClassInvariant.not_crossCount_42` is `Exclude42`'s theorem with
+X1 supplied rather than assumed.
+
+**E7(b), the "stored class data is correct" half, is partly closed.**
+`lean/ClassDataFromChirotope.lean` *recomputes* `M_set` and the inclusion-maximal
+crossing sets from each class's `canonical_chirotope` alone and proves they equal
+the stored fields, 14/14. `OrderTypeClassification.classFam_eq` pins the whole
+crossing family. `lemma2_windows` and `avoiding_pairs` are still stored, not
+recomputed — and `avoiding_pairs` is load-bearing, since `AvoidingFlag.lean`
+checks the 225 certificates against it. I have verified in Python that both
+recompute correctly 14/14, so that is a ready next step, not a research problem.
+
+**E7(a), exhaustiveness, is NOT closed and is the interesting negative.** The
+statement is written down (`exceptionalPolygons`, all 135 × 360 = 48,600
+candidates) and left unproved. It is true — verified independently in Python:
+6342 simple, of which exactly the 16 expected are exceptional, and the 6342
+matches the external `hamilt07.b08` cross-check. What blocks it is Lean kernel
+reduction cost. Measured, not guessed:
+
+- direct `decide +kernel` on the full statement: does not finish (a 180 s probe
+  and a 25 min single-representative probe both timed out);
+- the cost is dominated by list scans in the per-query path — `triples.idxOf`
+  over 35 tuples on every chirotope query, and `cycles.getD j []` re-traversing
+  a 360-element literal inside the `relabel` closure;
+- a closed-form triple rank (kernel-checked equal to `triples.idxOf` over all
+  increasing triples) plus hoisting the relabelled vector to once per candidate
+  plus literal four-subset masks bought roughly **8×**, not the ~100× needed;
+- a fully `Nat`-bitset encoding, where every operation is GMP-accelerated in the
+  kernel, was **not** dramatically better. That surprised me and is worth
+  recording: the bottleneck is not integer arithmetic.
+
+This is the same shape as `hne40` (row 28) but much less severe — a parallel
+per-representative split across cores is a plausible route and is being tried.
+
+**Hygiene defect found and fixed.** `defaultTargets` listed only 27 of the 33
+declared libraries, so plain `lake build` — and therefore `verify-all.sh` — was
+**not rebuilding** `ExceptionalClass`, `AKRL5Derivation` or `IntersectionCount`,
+all committed earlier the same day. Declaring a `[[lean_lib]]` is not the same as
+putting it in the default build, and the existing guard checked only the former.
+All 33 are now default targets; jobs 1397 → 1444.
+
+**Documentation defect found and fixed.** `lean/README.md` claimed "eighteen of
+the twenty-six libraries are Mathlib-free", obtained by adding direct-import
+categories. Importing only local modules does not make a library Mathlib-free if
+those modules import Mathlib. Over the transitive closure it is 14 of 33.
+`paper/proof-manifest.tex` had it right — it defines its "core" column
+transitively — so where the two disagreed, the manifest was correct.
+
+**Next milestone: `lemma2_windows` and `avoiding_pairs` recomputed from the
+chirotope**, then E7(a) exhaustiveness if the parallel split lands.
+
+Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**

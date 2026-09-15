@@ -182,7 +182,10 @@ Part B's `Finset`/`Polynomial` reasoning is why the import is there.
 > `IntersectionParity` were listed as Mathlib-free and are not. The quarantine
 > that matters is unaffected and still holds: `GeometryDefs`,
 > `SegmentGeometry` and `DisjointnessGraph` reach neither Mathlib nor
-> `Classical.choice`.
+> `Classical.choice`. `paper/proof-manifest.tex` had this right all along — it
+> defines its "core" column as "the library *and everything it imports* are
+> Mathlib-free" and counted thirteen of the then-twenty-six. Where this file and
+> the manifest disagreed, the manifest was correct.
 
 Reading the `autoImplicit` column: **twenty** files set
 `set_option autoImplicit false` — every declared library except the five listed
