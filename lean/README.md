@@ -1,7 +1,7 @@
 # Lean formalization
 
-> **Current state: twenty-five Lean libraries, all compiled clean with `lake build`
-> on Lean 4.33.1 (1397 jobs, exit 0).** Read the scope notes below before
+> **Current state: thirty-three Lean libraries, all compiled clean with `lake build`
+> on Lean 4.33.1 (1444 jobs, exit 0).** Read the scope notes below before
 > extrapolating. What is kernel-checked is the explicit integer certificate, the
 > combinatorial counting reduction, the finite 225-case endgame *as a statement
 > about a stored certificate*, one purely logical bridge lemma, a Lean
@@ -20,7 +20,7 @@
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All twenty-six libraries have this status, *for the statements they actually
+   → All thirty-three libraries have this status, *for the statements they actually
    make* — which in several cases is much narrower than the name of the file
    suggests. Check the scope note at the top of each file before quoting it.
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
@@ -40,13 +40,13 @@ input as an explicit hypothesis; `CernyL2Interface.lean` certifies a Lean
 
 ## What is here
 
-**Updated 2026-09-14.** Twenty-five Lean libraries build. The build numbers below
+**Updated 2026-09-14.** Thirty-three Lean libraries build. The build numbers below
 were read off an actual run, not carried over from an earlier edit:
 
 ```
 $ export PATH="$HOME/.elan/bin:$PATH"
 $ cd lean && lake build
-Build completed successfully (1397 jobs).
+Build completed successfully (1444 jobs).
 ```
 
 * **`lakefile.toml` declares twenty-five `[[lean_lib]]` targets**, all twenty-five in
@@ -109,6 +109,13 @@ It is not copied from an earlier version of this document.
 | `PointSetSemantics.lean` | `DisjointnessGraph`, **Mathlib** (`Analysis.Convex.Segment`, `Data.Real.Basic`, tactics) | **yes** | `propext`, `Classical.choice`, `Quot.sound` (1 of its 17 theorems needs none) | **interface I2b, proved in both directions.** Embeds `Pt := Int × Int` into `ℝ × ℝ` coordinatewise and proves `disjointO_iff_disjoint` — the orientation predicate "no proper crossing" holds **iff** the two *closed real* side segments are disjoint point sets — then composes it with I2a as `toMasks_pointSet_spec`. Non-vacuity is `decide`-checked on the certificate pair in both directions. This is the only library that uses ℝ. **It is not imported by `MainTheorem.lean`**, so the main chain is still orientation-level; what it removes is the *possibility* that the orientation reading and the point-set reading differ for integer segments |
 | `PolygonSimple.lean` | `PointSetSemantics`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the heptagon is a simple closed curve in ℝ².** `simple_closed_polygon` gives the *exact* intersection of any two distinct sides as a set equality: the shared vertex when they are cyclically adjacent, `∅` otherwise. Builds on I2b. **Does NOT prove the Jordan curve theorem** — no separation of the plane into interior and exterior is claimed |
 | `CernyL2Derivation.lean` | `FilterSoundness`, **Mathlib** (`Tactic.Ring`) | **yes** | `propext`, `Classical.choice`, `Quot.sound` (1 of its 12 theorems needs none) | **an attempt at (E5) that does NOT discharge it.** The unresolved step is isolated as an explicit predicate `CollisionObstruction`, and the conclusion is conditional on it. What *is* proved: the integer affine identity behind the triangle half-plane argument, that a triangle's interior preserves a strict half-plane, and that simplicity excludes adjacent-side proper crossings. `localFixture` is a `decide`-checked concrete obstruction showing why testing each selected segment separately cannot finish the argument — it satisfies every local condition and is deliberately **not** a `Config`. Read the file header before quoting this file |
+| `ClassDataWitness.lean` | `Exclude42`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **non-vacuity witness for `hclass`.** Exhibits `certMcs = [123, 119, 111, 95, 63]` with `certMP = {2,3,4,5,6}` satisfying the class condition, so `Exclude42`'s hypothesis group is not vacuously satisfiable-by-emptiness |
+| `ExceptionalClass.lean` | `Exclude42`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **the K-22 repair is impossible.** `exceptional_of_crossCount_42` proves that `crossCountC K = 42` *forces* `Exceptional K`, so the 42 branch cannot be separated from the exceptional-class data by weakening the hypothesis |
+| `AKRL5Derivation.lean` | `FilterSoundness`, **Mathlib** | **yes** | `propext`, `Classical.choice`, `Quot.sound` | **an attempt at (E1) that does NOT discharge it**, recorded in the same shape as `CernyL2Derivation`. `contact_iff_full` proves the missing `AdjacentContact` hypothesis is *equivalent* to (E1), so the attempt is blocked rather than nearly finished |
+| `IntersectionCount.lean` | `PolygonSimple`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **crossing-pair count = boundary-intersection point count.** `crossCountC_eq_pointCount` closes the gap between the combinatorial count and `(intersectionPoints K).ncard`, with **no extra hypotheses**; `cert_pointCount` evaluates it to 38 on the lower-bound certificate |
+| `ClassInvariant.lean` | `Exclude42`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` (1 of its 5 theorems needs no `Classical.choice`) | **(X1) discharged for the 14 stored classes.** Tables generated from `exceptional_profiles_14.json`; `maximal_exact` is a set equality in both directions, so the table neither weakens nor strengthens the invariant. `not_crossCount_42` is `Exclude42`'s theorem with X1 supplied instead of assumed |
+| `ClassDataFromChirotope.lean` | `ClassInvariant`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` | **(E7b), the finite half.** `recomputed_eq` rebuilds `M_set` and the inclusion-maximal crossing sets from each `canonical_chirotope` alone and proves they equal the stored fields, 14/14. A transcription of `classdata()` in `python/classification/export_profiles.py`. `lemma2_windows` and `avoiding_pairs` are **not** yet recomputed |
+| `OrderTypeClassification.lean` | `ClassDataFromChirotope`, **Mathlib** | no | `propext`, `Classical.choice`, `Quot.sound` (its two main results, `classFam_eq` and `stored_classes_exceptional`, need only `propext`) | **(E7a) subchecks only.** All 14 stored classes pass the uncrossable-four-subset test, and each of the 16 expected labelled polygons is simple and reduces by an explicit dihedral relabelling to a stored class, hitting all 14. **Exhaustiveness is written down (`exceptionalPolygons`) and left unproved** — see `docs/verification-status.md` rows 32 and 33 |
 
 **Adding a library.** The table above is one row per `[[lean_lib]]`, in
 lakefile order, and is meant to be extended by appending. To add a library:
@@ -117,7 +124,7 @@ append one row here, append its principal theorems to the axiom table below,
 and re-read the job count from `lake build` — do not adjust it by hand. Keep
 the columns in the same order; nothing else in this file needs to move.
 
-If `lakefile.toml` declares more libraries than the twenty-five listed above,
+If `lakefile.toml` declares more libraries than the thirty-three listed above,
 **this section is the stale one, not the lakefile**. Regenerate the count and the
 axiom column mechanically rather than by editing prose:
 
@@ -151,18 +158,31 @@ run_cmd do
 Reading the import column: **five** files — `LowerBound`, `EndgameDefs`,
 `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs` — import *nothing at all*
 and compile with a bare `lean` against an empty `LEAN_PATH`.
-**Twelve** more — `EndgameData`, `Endgame`, `SegmentGeometry`,
-`DisjointnessGraph`, `EnumerationComplete`, `CounterexampleCount`,
-`FilterSoundness`, `UpperBoundAssembly`, `ComponentLabelling`,
-`BipartiteDecision`, `IntersectionParity` and `AvoidingFlag` — import only files
-from this directory. So **eighteen of the twenty-six libraries are
-Mathlib-free**. **Eight** files reach Mathlib — `LemmaA`, `EnumerationDomain`,
-`DomainCount`, `Exclude42`, `LemmaABridge`, `MainTheorem`, `PointSetSemantics`
-and `CernyL2Derivation` — and they are the reason the `require` on Mathlib is in
-`lakefile.toml`. `PointSetSemantics` is the only one that uses `ℝ`. `EnumerationDomain`'s
-Part A uses no Mathlib result in substance (its axiom set is `propext`,
-`Quot.sound`); Part B's `Finset`/`Polynomial` reasoning is why the import is
-there.
+
+**Nine** files import Mathlib directly — `LemmaA`, `EnumerationDomain`,
+`DomainCount`, `Exclude42`, `LemmaABridge`, `MainTheorem`, `PointSetSemantics`,
+`IntersectionCount` and `CernyL2Derivation` — and they are the reason the
+`require` on Mathlib is in `lakefile.toml`. `PointSetSemantics` and
+`PolygonSimple` are the only ones that use `ℝ`. `EnumerationDomain`'s Part A
+uses no Mathlib result in substance (its axiom set is `propext`, `Quot.sound`);
+Part B's `Finset`/`Polynomial` reasoning is why the import is there.
+
+> **Corrected 2026-09-14.** This paragraph previously read "eighteen of the
+> twenty-six libraries are Mathlib-free", obtained by adding the files that
+> import nothing to the files whose `import` lines name only local modules.
+> That sum is wrong: importing only local modules does not make a library
+> Mathlib-free, because those modules may themselves import Mathlib. Computed
+> over the **transitive** import closure instead, **14 of the 33 libraries are
+> Mathlib-free** — `LowerBound`, `EndgameDefs`, `Lemma7Bridge`,
+> `CernyL2Interface`, `GeometryDefs`, `EndgameData`, `Endgame`,
+> `SegmentGeometry`, `DisjointnessGraph`, `FilterSoundness`,
+> `ComponentLabelling`, `BipartiteDecision`, `AvoidingFlag` and
+> `AKRL5Derivation` — and the other 19 reach it. In particular
+> `EnumerationComplete`, `CounterexampleCount`, `UpperBoundAssembly` and
+> `IntersectionParity` were listed as Mathlib-free and are not. The quarantine
+> that matters is unaffected and still holds: `GeometryDefs`,
+> `SegmentGeometry` and `DisjointnessGraph` reach neither Mathlib nor
+> `Classical.choice`.
 
 Reading the `autoImplicit` column: **twenty** files set
 `set_option autoImplicit false` — every declared library except the five listed
@@ -420,7 +440,15 @@ list can:
 | `AvoidingFlag.lean` | 3 | 0 | `propext`, `Quot.sound` |
 | `PointSetSemantics.lean` | 17 | 1 | `propext`, `Classical.choice`, `Quot.sound` |
 | `CernyL2Derivation.lean` | 12 | 1 | `propext`, `Quot.sound`, `Classical.choice` |
-| **total** | **740** | **212** | **no project-specific axiom anywhere** |
+| `PolygonSimple.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `ClassDataWitness.lean` | 4 | 0 | `propext`, `Quot.sound`, `Classical.choice` |
+| `ExceptionalClass.lean` | 5 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `AKRL5Derivation.lean` | 12 | 0 | `propext`, `Quot.sound` |
+| `IntersectionCount.lean` | 13 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `ClassInvariant.lean` | 5 | 0 | `propext`, `Quot.sound`, `Classical.choice` |
+| `ClassDataFromChirotope.lean` | 1 | 0 | `propext`, `Classical.choice`, `Quot.sound` |
+| `OrderTypeClassification.lean` | 6 | 2 | `propext`, `Classical.choice`, `Quot.sound` |
+| **total** | **786** | **214** | **no project-specific axiom anywhere** |
 
 Then the per-theorem detail:
 
