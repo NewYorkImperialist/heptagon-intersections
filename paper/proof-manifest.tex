@@ -1550,8 +1550,17 @@ $135\times360=48{,}600$ candidates --- and left unproved. It is true: verified
 outside Lean, $6342$ candidates are simple and exactly $16$ of those are
 exceptional, and the $6342$ is the same number the external \texttt{hamilt07.b08}
 cross-check gives. What blocks it is Lean kernel reduction cost, not doubt about
-the value. Beyond both halves, the completeness of the $135$-representative list
-itself, and any geometric reading of the halfplane test, remain external.
+the value. The completeness of the $135$-representative list, which had been external,
+was closed on 2026-09-15: \texttt{OTComplete.allSurvivors\_eq} proves that
+exactly $1{,}657$ of the $524{,}288$ one-point extensions of the sixteen stored
+six-element representatives satisfy the necessary Grassmann--Pl\"ucker and Radon
+conditions, \texttt{witnesses\_ok} that each is carried onto a stored
+seven-element representative by an explicit permutation and optional sign flip,
+and \texttt{all\_135\_reached} that all $135$ arise --- on \texttt{propext}
+alone. What is \emph{not} proved there is the induction hypothesis: that every
+rank-$3$ chirotope on $7$ elements restricts, by deleting an element, to one of
+the sixteen. That is carried as an explicit hypothesis. Any geometric reading of
+the halfplane and simplicity tests also remains external.
 
 \textbf{\textsf{E6}, discharged.} \texttt{ComponentLabelling.lean} defines a
 concrete labelling of the $14$-vertex disjointness graph by a fuel-bounded

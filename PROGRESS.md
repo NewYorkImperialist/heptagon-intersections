@@ -347,6 +347,25 @@ chirotope on 7 elements restricts to one of the 16 — that is the mathematical
 content of the induction, and it is carried as an explicit hypothesis rather
 than assumed silently.
 
+### It landed, at 10:20
+
+**Completeness of the 135-representative list is proved.** `allSurvivors_eq`
+kernel-checks that exactly 1,657 of the 524,288 candidates survive;
+`witnesses_ok` that each is a relabelled copy of a stored representative;
+`all_135_reached` that all 135 arise. Axioms: **`propext` only** throughout.
+256 slices, 12,672 s, serial. See `verification-status.md` row 34.
+
+The induction hypothesis — that every rank-3 chirotope on 7 elements restricts
+to one of the 16 stored six-element representatives — is **not** proved and is
+carried as an explicit hypothesis. That is the mathematical content of the
+stage-by-stage construction and it is where a reader should push.
+
+Sharding was needed a third time, and by the same margin: `witnesses_ok` went
+from over 20 minutes unsharded to **84 s** in blocks of 100, and the assembly
+from 45+ minutes to **37 s** when split one lemma per base representative. That
+is now three independent confirmations of row 33's finding, and it should be
+treated as the default assumption for any future `decide +kernel` here.
+
 **Next milestone: the geometric half of (E7)**, which is not a computation.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
