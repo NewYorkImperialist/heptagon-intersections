@@ -366,6 +366,38 @@ from 45+ minutes to **37 s** when split one lemma per base representative. That
 is now three independent confirmations of row 33's finding, and it should be
 treated as the default assumption for any future `decide +kernel` here.
 
-**Next milestone: the geometric half of (E7)**, which is not a computation.
+### Three additions after that, to make the results usable rather than just true
+
+* **`OTBridge.stored135_eq_orderSigns`** — the completeness proof packs each
+  chirotope into 35 bits and the enumeration keeps a list of 35 signs. Both are
+  generated from the same JSON, but that is a fact about the *generators*. This
+  proves they are the same 135 representatives, entry by entry. Without it,
+  combining the completeness result with the enumeration would have been an
+  appeal to the reader's memory.
+* **`ClassificationSummary.classification`** — the five results in one citable
+  conjunction, with one header stating what is assumed. Note in particular why
+  the induction hypothesis is a *comment* there rather than a Lean hypothesis:
+  the development has no type of "arbitrary rank-3 chirotope on 7 elements" to
+  quantify over, and that absence is itself part of what is missing. Inventing a
+  hypothesis would have made the gap look smaller than it is.
+* **`SimpleCount.simple_total`** — there are exactly **6,342** simple heptagons.
+  Row 5 quoted that as externally cross-checked and the enumeration evaluated
+  the test on all 48,600 candidates, but nothing made it a theorem. Now the
+  chain **6,342 simple → 16 exceptional → 14 classes** is kernel-checked end to
+  end. `propext` only.
+
+`scripts/verify-all.sh` was re-run over the whole repository afterwards:
+**COMPLETE SUCCESS, exit 0** — Lean build clean with every declared library
+built, all 838 files in `SHA256SUMS.lean` matching, the 225 endgame cases
+re-refuted by the independent checker, the A7 evidence reproduced, and
+Implementation B independently reproducing 13,003,620 → 225. Log in
+`results/validation/2026-09-15_verify_all_after_e7.log`.
+
+**Not pushed.** Everything above is committed locally only; there is no standing
+authorization to push, so that is left as a decision.
+
+**Next milestone: the geometric half of (E7)**, which is not a computation. The
+open items are unchanged in kind: (E3)/A7-EXT needs one discrete geometer,
+`hne40` is a settled negative, and nothing tonight touched either.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
