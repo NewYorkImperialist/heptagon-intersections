@@ -1,5 +1,18 @@
 # AKR Observation 6 / Lemma 7 and the bipartiteness of *H* — note for external review
 
+> # ⇒ DO NOT SEND THIS DOCUMENT. Use [`akr-l7-review-request.md`](akr-l7-review-request.md).
+>
+> **Superseded 2026-09-14.** This was written to obtain an expert judgement on
+> the AKR Lemma 7 reading, and it is no longer fit for that: roughly a third of
+> it is retraction, and §C rests on a definition of `A(e)` that omits the cone
+> dichotomy — which `a7-independent-proof.md` §2.3 shows is **unsound**, so §C's
+> proof of `S(e) ≠ ∅` does not go through and §D's dismissal of the
+> counterexample fails with it.
+>
+> It is kept as the record of what was believed and how it was corrected, not
+> for reading. **§A (the source quotations) is sound**, and is reproduced in the
+> replacement.
+
 > **PARTLY SUPERSEDED — read this before §§B–D and §G. Banner added
 > 2026-09-14; the body below is unedited.**
 >
