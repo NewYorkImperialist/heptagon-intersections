@@ -82,6 +82,12 @@ Untouched: AKR Lemma 5, Černý Lemma 2, the order-type crossing fact, **(HP)**
 between the `Config`-level statement and `f(7,7) = 38` over ℝ.
 **`f(7,7) = 38` remains not a Lean theorem.**
 
+`independent/realizability_sweep/` pushes the same technique much further — every
+one of the 13,003,620 `I = 40` candidate graphs is refuted by the encoding
+alone, and four minimal forbidden patterns cover all of them — but the step that
+would make that part of the proof, coverage in Lean, is not done. See
+`verification-status.md` row 41.
+
 `docs/akr-l7-review-request.md` is **superseded-pending, not withdrawn**: the
 reading still matters to anyone else using that lemma, and AKR's Observation 6
 being false as printed (`docs/known-issues.md` K-14) is worth telling the
