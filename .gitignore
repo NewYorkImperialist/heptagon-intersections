@@ -133,3 +133,6 @@ runs-local/
 # verify.py and digest-checked against SHA256SUMS.txt.  The DRAT proofs ARE
 # committed (8-12 KB and not regenerable without a solver).
 independent/residual_realizability/*.cnf
+
+# drat-trim binary: built from the pinned source by check_all.sh
+independent/drat_trim_crosscheck/drat-trim

@@ -1,0 +1,6 @@
+GATE  empty-clause proof of the satisfiable positive.cnf -> s NOT VERIFIED
+residual_realizability: 5/5
+akr_l7_generic: 20 running total, 20 verified
+akr_l7_coverage25: 130 running total, 130 verified
+TOTAL: 130 of 130 DRAT certificates verified by drat-trim (0 skipped for a missing .cnf)
+ALL VERIFIED
