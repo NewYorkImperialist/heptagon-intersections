@@ -1,6 +1,11 @@
 // Does every candidate disjointness graph contain a forbidden pattern?
 //
-//   c++ -O2 -std=c++17 -o cover cover.cpp && ./cover patterns.txt
+//   c++ -O2 -std=c++17 -o cover cover.cpp && ./cover patterns.txt [--noswap]
+//
+// With --noswap, only the 196 relabellings that do not exchange P with Q are
+// used.  Those are exactly the ones whose support fits in a window of four
+// consecutive sides of P, so the difference between the two runs measures how
+// much of the covering argument needs the transpose.
 //
 // Re-enumerates all 13,003,620 graphs of the I = 40 domain -- 7x7 bipartite,
 // exactly 9 edges, no isolated side -- directly from that definition, and for
@@ -19,6 +24,9 @@
 #include <cstdint>
 #include <vector>
 #include <set>
+#include <string>
+
+static bool NOSWAP = false;
 
 static int PERM[14][7];
 static int MAP[392][49];
@@ -54,6 +62,7 @@ static void rec(int pos, int left, uint64_t g, int rows, int cols) {
 }
 
 int main(int argc, char** argv) {
+    for (int t = 1; t < argc; ++t) if (std::string(argv[t]) == "--noswap") NOSWAP = true;
     for (int s = 0; s < 2; ++s)
         for (int k = 0; k < 7; ++k)
             for (int i = 0; i < 7; ++i)
@@ -61,6 +70,7 @@ int main(int argc, char** argv) {
     for (int a = 0; a < 14; ++a)
         for (int b = 0; b < 14; ++b)
             for (int sw = 0; sw < 2; ++sw) {
+                if (sw && NOSWAP) continue;
                 for (int i = 0; i < 7; ++i)
                     for (int j = 0; j < 7; ++j) {
                         int u = PERM[a][i], v = PERM[b][j];
@@ -69,7 +79,7 @@ int main(int argc, char** argv) {
                 ++NT;
             }
 
-    if (argc < 2) { fprintf(stderr, "usage: cover patterns.txt\n"); return 2; }
+    if (argc < 2) { fprintf(stderr, "usage: cover patterns.txt [--noswap]\n"); return 2; }
     FILE* f = fopen(argv[1], "r");
     if (!f) { perror(argv[1]); return 2; }
     std::set<std::pair<uint64_t, uint64_t>> seen;

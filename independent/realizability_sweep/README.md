@@ -128,8 +128,32 @@ splitting on the degree sequence, or by replacing it with a structural argument
 A structural argument looks plausible: a graph in this domain has 14 vertices
 and 9 edges with all degrees ≥ 1, so its cycle rank is `c - 5` where `c` is its
 number of components, forcing `c ∈ {5, 6}` — it is a 5-component forest, or a
-6-component graph with exactly one cycle. That is a rigid enough shape that a
-proof by hand may be within reach.
+6-component graph with exactly one cycle. Equivalently, since seven row degrees
+are each ≥ 1 and sum to 9, the row-degree multiset is `(3,1,1,1,1,1,1)` or
+`(2,2,1,1,1,1,1)`, and likewise for columns: at most two heavy rows and at most
+two heavy columns.
+
+**The patterns are local in `P` as well**, which narrows where such an argument
+would have to bite. Of the 392 relabellings, the 784 distinct images that do not
+exchange `P` with `Q` all have a **cyclic row span of 2 or 4** — every one fits
+inside a window of four consecutive sides of `P`. Normalising them gives **168
+distinct 4×7 constraint blocks**, and a graph is covered exactly when one of its
+seven row windows, or one of the seven column windows of its transpose, matches
+a block.
+
+One window is not enough on its own: of the **208,887** admissible 4×7 windows
+(four rows, each non-empty, 4 to 6 edges — the other three rows need one each),
+**80,731 match no block**, the simplest being four rows each meeting `Q` only in
+side 0. So coverage is a statement about the *cyclic sequence* of a graph's seven
+windows, not about any one of them — which is the shape of a transfer-matrix or
+automaton argument rather than a case analysis.
+
+`./cover patterns.txt --noswap` measures how far the `P`-local half gets on its
+own: **12,995,192 of the 13,003,620** are covered by a row window, leaving
+**8,428** that are covered only through the transpose. So the covering argument
+splits into a `P`-local statement about cyclic row sequences, which handles all
+but 8,428 graphs, and 8,428 exceptions — a small enough remainder to handle
+by name.
 
 Were that step closed, `I ≠ 40` would be a Lean theorem depending on **no
 published lemma at all** — not AKR Lemma 5, not AKR Lemma 7, not Černý Lemma 2,
