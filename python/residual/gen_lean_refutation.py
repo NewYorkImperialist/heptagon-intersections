@@ -1,10 +1,12 @@
-"""Emit the orbit_000 unsat-core refutation as one Lean theorem; run from the repo root.
+"""Emit one orbit's unsat-core refutation as a Lean theorem; run from the repo root.
 
 Usage: python3 python/residual/gen_lean_refutation.py [dir] [tag] > lean/ResidualCore000.lean
 
-The (core CNF, LRAT) pair in independent/residual_realizability/lean_export was
-produced by drat-trim from the full 162,790-clause encoding; only the 167-clause
-unsat core and its 103-step proof are needed, and both are committed.
+`tag` is `core000`..`core003`.  The (core CNF, LRAT) pairs in
+independent/residual_realizability/lean_export were produced by drat-trim from
+the full 162,790-clause encodings; only the 167/371/242/513-clause unsat cores
+and their 102/164/114/148-step proofs are needed, and all eight are committed.
+See that directory's README for the exact drat-trim invocation.
 
 Each LRAT step becomes a `have`: assume the derived clause false, then walk the
 hint clauses in order.  Every hint is unit under the accumulated assignment, so
@@ -40,10 +42,15 @@ vs = sorted({abs(x) for c in cls.values() for x in c})
 out = []
 out.append("import Mathlib.Tactic")
 out.append("")
-out.append(f"/-- The {NORIG}-clause unsatisfiable core of orbit_000, contradictory.")
+out.append("-- The tail of a long propagation chain elaborates against a context holding")
+out.append("-- every core clause and every clause derived so far, which outruns the default")
+out.append("-- elaboration budget.  Kernel checking is unaffected by this option.")
+out.append("set_option maxHeartbeats 2000000")
+out.append("")
+out.append(f"/-- The {NORIG}-clause unsatisfiable core of orbit_{TAG[-3:]}, contradictory.")
 out.append(f"{len(steps)} steps, transcribed from the LRAT proof: each is unit propagation")
 out.append("in the order the hints give, so no tactic searches. -/")
-out.append("theorem core000_false")
+out.append(f"theorem {TAG}_false")
 out.append("    (" + " ".join(f"v{v}" for v in vs) + " : Prop)")
 for i in range(1, NORIG + 1):
     out.append(f"    (c{i} : {dis(cls[i])})")
