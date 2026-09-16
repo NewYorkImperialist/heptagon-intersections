@@ -1,6 +1,6 @@
 // Does every candidate disjointness graph contain a forbidden pattern?
 //
-//   c++ -O2 -std=c++17 -o cover cover.cpp && ./cover patterns.txt [--noswap]
+//   c++ -O2 -std=c++17 -o cover cover.cpp && ./cover patterns.txt [--noswap] [--dump F]
 //
 // With --noswap, only the 196 relabellings that do not exchange P with Q are
 // used.  Those are exactly the ones whose support fits in a window of four
@@ -38,6 +38,7 @@ static long long HITS[64];
 
 static inline int POS(int i, int j) { return 7 * (6 - i) + j; }
 
+static FILE* DUMP = nullptr;
 static long long TRIES = 0, MAXTRIES = 0;
 static void check(uint64_t g) {
     ++TOTAL;
@@ -49,6 +50,10 @@ static void check(uint64_t g) {
         }
     TRIES += PAT.size();
     if (!FIRSTBAD) FIRSTBAD = g ? g : 1;
+    if (DUMP) {
+        for (int i = 0; i < 7; ++i)
+            fprintf(DUMP, "%d%c", (int)((g >> (7 * (6 - i))) & 127), i == 6 ? '\n' : ' ');
+    }
 }
 
 static void rec(int pos, int left, uint64_t g, int rows, int cols) {
@@ -62,7 +67,10 @@ static void rec(int pos, int left, uint64_t g, int rows, int cols) {
 }
 
 int main(int argc, char** argv) {
-    for (int t = 1; t < argc; ++t) if (std::string(argv[t]) == "--noswap") NOSWAP = true;
+    for (int t = 1; t < argc; ++t) {
+        if (std::string(argv[t]) == "--noswap") NOSWAP = true;
+        if (std::string(argv[t]) == "--dump" && t + 1 < argc) DUMP = fopen(argv[t + 1], "w");
+    }
     for (int s = 0; s < 2; ++s)
         for (int k = 0; k < 7; ++k)
             for (int i = 0; i < 7; ++i)
@@ -117,5 +125,6 @@ int main(int argc, char** argv) {
     fprintf(stderr, "uncovered   : %lld\n", TOTAL - COVERED);
     fprintf(stderr, "images tried: mean %.1f, worst %lld (of %zu)\n",
             (double)TRIES / (double)TOTAL, MAXTRIES, PAT.size());
+    if (DUMP) fclose(DUMP);
     return TOTAL == COVERED ? 0 : 1;
 }

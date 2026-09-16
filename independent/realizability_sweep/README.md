@@ -150,10 +150,20 @@ automaton argument rather than a case analysis.
 
 `./cover patterns.txt --noswap` measures how far the `P`-local half gets on its
 own: **12,995,192 of the 13,003,620** are covered by a row window, leaving
-**8,428** that are covered only through the transpose. So the covering argument
-splits into a `P`-local statement about cyclic row sequences, which handles all
-but 8,428 graphs, and 8,428 exceptions — a small enough remainder to handle
-by name.
+**8,428** that are covered only through the transpose — and
+`--dump` shows those 8,428 fall into just **51 orbits**. Their row-degree
+shapes are `(2,2,1,1,1,1,1)` for 5,096 of them and `(3,1,1,1,1,1,1)` for 3,332.
+
+So the covering argument splits cleanly:
+
+1. a `P`-local statement about the cyclic sequence of a graph's seven row
+   windows, which settles all but 8,428 graphs; and
+2. **51 orbits** of exceptions, which need no new refutation at all — they are
+   covered by a *transposed* pattern, and transposition is `pc_swapS` in
+   `lean/ResidualSymBase.lean`, already proved.
+
+What is still missing is only step 1, and it is missing as an *enumeration*
+problem, not a mathematical one.
 
 Were that step closed, `I ≠ 40` would be a Lean theorem depending on **no
 published lemma at all** — not AKR Lemma 5, not AKR Lemma 7, not Černý Lemma 2,
