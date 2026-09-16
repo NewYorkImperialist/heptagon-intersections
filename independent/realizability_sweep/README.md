@@ -87,6 +87,13 @@ from 154,794 steps against a 1,967-clause core to **59,657 steps against a
 986-clause core** (`coverage_cnf.py`).  Still large, but 2.6x smaller, and the
 gap is now the only thing between this and a lemma-free `I ≠ 40`.
 
+`bestpair.cpp` says this pair cannot be improved from the pool: over the **299**
+distinct minimal patterns collected, **no single pattern covers everything**
+(the best covers 33,689 of 33,743), and among all covering pairs the one above
+has the fewest relabelled images — 588 — which is what drives the size of the
+covering refutation.  A smaller family, if one exists, needs a search that does
+not start from solver cores.
+
 The domain count `13,003,620` is re-derived here twice, and neither time from
 the project's pipeline: once by inclusion–exclusion over zero rows and columns,
 once by the enumeration in `orbits.cpp`.
@@ -103,6 +110,9 @@ once by the enumeration in `orbits.cpp`.
 | `cover.cpp` | re-enumerates all **13,003,620** graphs — not the orbits — and checks that each contains a relabelled pattern; 5 s |
 | `controls.py`, `controls2.py` | see §4 |
 | `patterns.py` | measures how local the solver's own cores are, before minimisation |
+| `minpool.py` | collects minimal patterns by randomised minimisation and finds a small covering subfamily (`pool.json`, `patterns2.txt`) |
+| `bestpair.cpp` | over the whole pool, the best single pattern, the cheapest covering pair, ranked by number of relabelled images |
+| `coverage_cnf.py` | builds the covering claim as a CNF and measures its refutation |
 
 ## 4. Controls
 

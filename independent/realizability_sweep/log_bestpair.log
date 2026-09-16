@@ -1,0 +1,6 @@
+orbits: 33743
+pooled patterns: 299
+best single : size 14, 392 images, covers 33689
+best pair   : 588 images total
+  A: size 14, 392 images, covers 33689
+  B: size 8, 196 images, covers 33672

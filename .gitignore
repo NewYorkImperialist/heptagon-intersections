@@ -145,5 +145,6 @@ independent/drat_trim_crosscheck/drat-trim
 # ---------------------------------------------------------------------------
 independent/realizability_sweep/orbits
 independent/realizability_sweep/cover
+independent/realizability_sweep/bestpair
 independent/realizability_sweep/*.jsonl
 independent/realizability_sweep/__pycache__/
