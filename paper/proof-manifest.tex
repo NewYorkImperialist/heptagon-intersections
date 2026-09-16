@@ -136,7 +136,11 @@ Three facts frame the problem.
 
 We do \emph{not} claim Theorem~\ref{thm:main} is established. We claim that no
 computational gap is currently known, and that the remaining risk is
-concentrated in one identified place (\textsf{A7-EXT}, \S\ref{sec:a7ext}).
+concentrated in the published lemmas the pipeline imports (\textsf{A5-C},
+\textsf{A5-A}, \textsf{C2}) and in the exceptional classification's geometric
+residue. \emph{Changed 2026-09-16:} this sentence named \textsf{A7-EXT}
+(\S\ref{sec:a7ext}) as that one place. It no longer is --- see \textsf{R412},
+\S\ref{sec:r412} --- though the question it raises remains unresolved.
 
 \subsection{What is a Lean theorem today, and what is not}\label{sec:leanmain}
 
@@ -274,7 +278,11 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \addlinespace
 \textsf{A7-EXT} & Under the intended reading of ``associated''/``is hooking'', AKR Lemma 7 gives: adjacent $H$-vertices have disjoint status sets
   & published theorem $+$ interpretation & \cite[Lemma 7]{AckermanKeszeghRote2022}, \cite{AckermanKeszeghRote2020}
-  & \stat{very strongly corroborated} & \textbf{principal open item}; Observation 6 is unproved and \emph{false as printed} (\S\ref{sec:defects}, item 6), though the failure cannot reach $S(e)$; four bridges from the machine checks to the geometry remain prose \\
+  & \stat{very strongly corroborated} & \textbf{no longer load-bearing} (2026-09-16, \textsf{R412}), though still unresolved; Observation 6 is unproved and \emph{false as printed} (\S\ref{sec:defects}, item 6), though the failure cannot reach $S(e)$; four bridges from the machine checks to the geometry remain prose \\
+\addlinespace
+\textsf{R412} & The $412$ disjointness graphs left by the pipeline when \textsf{A7-EXT}'s filter is switched off are not realized by any two simple heptagons in general position
+  & project theorem & this project
+  & \stat{lean-kernel-checked} & discharges the project's \emph{dependence} on \textsf{A7-EXT}; no SAT solver, certificate or proof checker is in its trusted base. Does \textbf{not} formalize the $13{,}003{,}620 \to 412$ pipeline, which remains as unformalized as the $13{,}003{,}620 \to 225$ one \\
 \addlinespace
 \textsf{A7-BRIDGE} & Non-empty status sets $+$ disjoint status sets across edges $\Rightarrow$ $H$ bipartite
   & project inference & this project
@@ -651,9 +659,57 @@ verify \textsc{akr}'s geometric theorem.
 
 \section{Project-original mathematical reductions}
 
-Four items: Lemma~A and the exceptional classification, which feed the
+Five items: \textsf{R412}, which removes the project's dependence on
+\textsf{A7-EXT}; Lemma~A and the exceptional classification, which feed the
 enumeration; parity, which fixes the two branches to be excluded; and the
 exclusion of $I=42$, which is one of them. Nothing here is imported.
+
+\subsection{\texorpdfstring{\textsf{R412} --- the pipeline without \textsf{A7-EXT}}{R412 -- the pipeline without A7-EXT}}\label{sec:r412}
+
+\textsf{A7-EXT} is a reading of a published sentence, and was for a long time
+this project's most exposed dependency. It is now removable.
+
+Switching off the filter that \textsf{A7-EXT} licenses and re-running the
+elimination leaves $2{,}187$ $(\text{class}_P,\text{class}_Q,\text{graph})$
+triples on \textbf{412} distinct disjointness graphs rather than nothing; two
+independent implementations (Python and C\texttt{++}) agree on that set exactly.
+No other ingredient of the pipeline removes any of the 412.
+
+\begin{theorem}[\textsf{R412}; \texttt{lean/ResidualAll.lean}]\label{thm:r412}
+Let $V_0,\dots,V_{13}\in\mathbb{Z}^2$ with no three collinear, let
+$V_0\cdots V_6$ and $V_7\cdots V_{13}$ each trace a simple heptagon, and let
+$g$ record which of the $49$ pairs (side of $P$, side of $Q$) are disjoint.
+Then $g$ is none of the $412$.
+\end{theorem}
+
+The theorem is kernel-checked, with axioms \texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound} and no project axiom. Its route
+is worth stating because of what it leaves \emph{out} of the trusted base. The
+412 fall into four orbits, of sizes $36,144,196,36$, under relabelling
+(rotation or reflection of either polygon's vertex cycle, and exchange of $P$
+with $Q$); the decomposition is recomputed and checked on all $49$ side pairs
+for each graph. For each of the four representatives a SAT solver found a
+refutation of the oriented-matroid encoding; \texttt{drat-trim} reduced it to an
+unsatisfiable core of $167/371/242/513$ clauses with a self-contained LRAT proof
+of $102/164/114/148$ steps; and a generator transcribed that proof into Lean,
+one \texttt{have} per unit propagation, in the order the hints give. A second
+generator discharges each core clause \emph{from the geometry} --- the
+Grassmann--Pl\"ucker and acyclicity clauses as polynomial identities in the
+coordinates, the crossing-pattern clauses from the project's own
+\texttt{ProperCross}. A third carries each representative's refutation across
+its orbit.
+
+Consequently the solver, the CNF files, the DRAT and LRAT files and
+\texttt{drat-trim} are all \emph{outside} the trusted base of
+Theorem~\ref{thm:r412}: they located a proof, and the kernel rechecks it.
+
+Two limits. First, this changes what the project \emph{depends on}, not whether
+the reading of AKR Lemma 7 is correct; that question is still open and still
+worth an expert's answer. Second, Theorem~\ref{thm:r412} says nothing about the
+$13{,}003{,}620 \to 412$ reduction that produces the list, which is as
+unformalized as the $13{,}003{,}620 \to 225$ reduction the argument already
+used.
+
 
 \subsection{Lemma A}
 

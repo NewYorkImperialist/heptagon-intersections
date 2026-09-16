@@ -4,12 +4,20 @@
 intersection points, and 38 is attained.  Hence f(7,7) = 38.
 
 > **Status.** This is a *candidate* proof. It has no known computational gap, and
-> most steps are now kernel-checked or independently cross-checked, but one
-> mathematical review item remains open: the interpretation and application of
-> AKR Observation 6 and Lemma 7 in the deduction that the auxiliary graph `H` is
-> bipartite (Step 7). See [`akr-l7-human-review.md`](akr-l7-human-review.md) and
-> [`verification-status.md`](verification-status.md). Do not read the word
+> most steps are now kernel-checked or independently cross-checked, but it
+> imports unproved published lemmas — **AKR Lemma 5** and **Černý Lemma 2** —
+> and the exceptional classification still has a geometric residue **(HP)**.
+> See [`verification-status.md`](verification-status.md). Do not read the word
 > "Theorem" below as a settled result.
+>
+> **Changed 2026-09-16.** This paragraph named the interpretation of AKR
+> Observation 6 and Lemma 7 (Step 7) as the one open review item. That
+> dependence is gone: running the pipeline without Lemma 7's filter leaves 412
+> disjointness graphs, and all 412 are refuted in Lean
+> ([`residual-412-lean.md`](residual-412-lean.md)). The *question* about the
+> paper is still open — see
+> [`akr-l7-review-request.md`](akr-l7-review-request.md), which is
+> superseded-pending, not withdrawn — but nothing here now turns on it.
 >
 > **Three further limits, so "one review item" is not read as "one gap"
 > (2026-09-14).** (i) `f(7,7) = 38` is **not** a Lean theorem: the strongest Lean
@@ -29,7 +37,11 @@ External results used (statements checked against the papers in
 * **C1** = Černý–Kára–Kráľ–Podbrdský–Sotáková–Šámal 2003, Lemma 1.
 * **C2** = same paper, Lemma 2.
 * **A5** = Ackerman–Keszegh–Rote, DCG 68 (2022), Lemma 5.
-* **A7** = same paper, Lemma 7 — **the open review item**.
+* **A7** = same paper, Lemma 7 — **still an open review item, but no longer
+  load-bearing**: the pipeline run without A7's filter leaves 412 disjointness
+  graphs, and all 412 are refuted in Lean (`lean/ResidualAll.lean`,
+  `docs/residual-412-lean.md`).  A7 can be deleted from the argument at the
+  cost of carrying that Lean theorem instead.
 * **A9** = same paper, §9.1 (and §3), for the general-position reduction of
   Step 0. This dependency replaces a project-specific argument that was found to
   be incorrect; see Step 0.

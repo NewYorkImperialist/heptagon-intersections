@@ -1,14 +1,31 @@
 # One question about Ackerman–Keszegh–Rote, for a discrete geometer
 
+> **Status note, 2026-09-16 — SUPERSEDED-PENDING, NOT WITHDRAWN.**
+> Since this note was written, the project stopped depending on the answer. The
+> elimination pipeline was re-run with this lemma's filter switched off; it
+> leaves 412 disjointness graphs, and all 412 are now refuted by a Lean theorem
+> (`lean/ResidualAll.lean`, `docs/residual-412-lean.md`) whose trusted base
+> contains no SAT solver and no certificate. So the answer no longer changes
+> anything in our upper-bound argument.
+>
+> **The question itself is still open, and we would still very much like an
+> answer.** It matters to anyone else who uses Lemma 7, and separately we
+> believe **Observation 6 is false as printed** (§4 below; the counterexample is
+> a pair of genuine simple polygons), which seems worth telling the authors
+> whichever way the Lemma 7 reading goes. Everything below is unchanged except
+> that "the single unresolved mathematical question" is no longer an accurate
+> description of its place in our project.
+
 **What this asks for:** a judgement about what a published definition licenses.
 Roughly an afternoon. It needs no code, no computation, and nothing else from
 this repository.
 
-**Why you:** this is the single unresolved *mathematical* question in a
-computer-assisted proof of `f(7,7) = 38`. Everything else in the project has been
-checked by machine or by independent reimplementation. Those mechanisms catch
-implementation error; none of them can tell us whether we have read the paper
-correctly. That is the question.
+**Why you:** this was the single unresolved *mathematical* question in a
+computer-assisted proof of `f(7,7) = 38` (see the status note above; it is now
+no longer load-bearing for us, but it is still unresolved). Everything else in
+the project has been checked by machine or by independent reimplementation.
+Those mechanisms catch implementation error; none of them can tell us whether we
+have read the paper correctly. That is the question.
 
 **Please feel free to answer "no".** If the reading below is wrong, the project's
 upper-bound argument is in serious trouble, and we would much rather learn that

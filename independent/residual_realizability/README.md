@@ -1,5 +1,19 @@
 # Residual realizability: 412 graphs excluded, without class restrictions
 
+> **Status note, 2026-09-16 — this directory has been superseded as *evidence*,
+> and is retained as provenance.** The DRAT certificates below are no longer
+> what the project relies on: all 412 graphs are now refuted by a Lean theorem,
+> `ResidualAll.residual_not_realizable`, whose trusted base contains no SAT
+> solver, no certificate and no proof checker. What is still load-bearing here
+> is the *inventory* — the 412 graphs and the four-orbit decomposition — and
+> `verify.py`'s check that they are exactly the pipeline's output. The exported
+> unsat cores that seed the Lean generators are in `lean_export/`. See
+> `docs/residual-412-lean.md`.
+>
+> The closing sentence of §5, "No Lean theorem, published-paper claim, or
+> verification status was updated. No commit was made", was true when written
+> and is no longer; all four have since changed.
+
 **This does not establish f(7,7) = 38 or close the project's proof.** It does
 provide certificate-checked exclusions of **all 412 residual labelled graphs**
 (**all 2,187 residual triples**), using four 14-point CNFs and four checked DRAT

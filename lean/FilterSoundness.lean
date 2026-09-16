@@ -126,6 +126,15 @@
          nonempty status set and adjacent vertices have disjoint status sets.
          Hypotheses `hne`, `hdisj` of `filterB_sound`.  AKR Lemma 7 itself is
          neither stated nor proved here (nor in `Lemma7Bridge.lean`).
+         NOTE (2026-09-16): (E3) is still a hypothesis of `filterB_sound` and
+         nothing below has changed.  What HAS changed is that the elimination
+         no longer needs filter (b) at all: running the pipeline without it
+         leaves 412 disjointness graphs
+         (`independent/no_a7_experiment/`), and all 412 are now refuted by
+         `ResidualAll.residual_not_realizable` -- a Lean theorem, not a
+         certificate.  See `docs/residual-412-lean.md`.  That removes the
+         project's dependence on how AKR Lemma 7 should be READ; it does not
+         discharge (E3), and it does not put the pipeline itself in Lean.
     (E4) The order-type fact behind filter (c): the set of sides of `P` crossed
          by a side of `Q` is contained in a maximal crossing set of `P`'s
          class.  Hypothesis `hcross` of `filterC_sound`.
@@ -244,6 +253,9 @@
   algorithmic half by `BipartiteDecision.lean`, leaving only the transcription
   gap against the shipped C++/Python routine.  (E1)-(E5) and (E7) remain open;
   (E5) was attempted in `CernyL2Derivation.lean` and is BLOCKED.
+
+  STATUS UPDATE (2026-09-16): (E3) is now BYPASSABLE though not discharged --
+  see the note on (E3) above and `docs/residual-412-lean.md`.
 -/
 import DisjointnessGraph
 import Lemma7Bridge

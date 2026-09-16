@@ -296,10 +296,17 @@ class; every such set is `FULL \ {m}` with `m ∈ M_P`, also of size 6; two
 (matching), so all seven sides lie in `M_P`, contradicting `|M_P| = 5`.
 
 Note what this consumes: Černý L1, Lemma A, and the exceptional-class invariants
-only. **Not** AKR Lemma 7. That is deliberate, and it means the one genuinely
-contested import (§3, §6.3) is load-bearing at *exactly one* point in the whole
-proof: the `I = 40` endgame. It cannot simply be dropped there — with that
-filter off, the pipeline ends at 2,187 surviving triples on 412 graphs, not 0.
+only. **Not** AKR Lemma 7. That is deliberate, and it meant the one genuinely
+contested import (§3, §6.3) was load-bearing at *exactly one* point in the whole
+proof: the `I = 40` endgame. With that filter off, the pipeline ends at 2,187
+surviving triples on 412 graphs, not 0.
+
+**Changed 2026-09-16.** Those 412 graphs are now refuted in Lean —
+`ResidualAll.residual_not_realizable`, `docs/residual-412-lean.md` — so AKR
+Lemma 7 can be dropped from the endgame after all, at the price of carrying that
+theorem instead. The 412 are still produced by the unformalized pipeline, and
+the question about the published text is still open (`akr-l7-review-request.md`
+is superseded-pending, not withdrawn).
 
 ---
 
@@ -458,8 +465,12 @@ things separate that from the real-plane statement:
 
 Lemma A's *geometric* premises (`h1` in particular); the exceptional
 classification; the 13,003,620-graph enumeration and the filter pipeline; the
-reading of AKR Lemma 7 as "the graph `H` is bipartite"; the extension of AKR
-Lemma 5 to avoiding pairs via an order-type predicate.
+extension of AKR Lemma 5 to avoiding pairs via an order-type predicate.
+
+*(Updated 2026-09-16: this list also contained "the reading of AKR Lemma 7 as
+'the graph `H` is bipartite'". The proof no longer depends on it — the 412
+graphs the pipeline leaves without that filter are refuted in Lean, §residual —
+though the reading itself is still unsettled.)*
 
 *(Corrected 2026-09-14: this list also contained "the `I = 42` exclusion", which
 contradicted the §3.3 table immediately above — `I ≠ 42` is kernel-checked in
