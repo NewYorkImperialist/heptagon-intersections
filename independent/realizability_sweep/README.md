@@ -161,9 +161,28 @@ encoding:
 | totalizer, four patterns | 4,494 | 607 | 58 s | VERIFIED | 1,970 | 152,726 |
 | sequential counter, **two patterns** | 2,042 | 769 | 18 s | VERIFIED | **986** | **59,657** |
 
-So the same machinery applies in principle — but **59,657 propagation steps
-against a 986-clause context is still one to two orders of magnitude past what
-has been transcribed into Lean here so far** (the largest to date is 420 steps
+Symmetry breaking helps, and the cheap version helps most. The claim is
+invariant under the 392 relabellings, so one may assume the graph is
+lexicographically least in its orbit — which is sound in Lean too, because
+pattern-containment is relabelling-invariant (`ResidualSymBase`) and a finite
+orbit has a least element. Adding lex-leader constraints, with the **two**
+patterns:
+
+| lex-leader constraints | clauses | core | LRAT steps | steps × core |
+|---|---:|---:|---:|---:|
+| none | 2,042 | 986 | 59,657 | 5.9 × 10⁷ |
+| 6 — the rotations of `P` | 2,636 | 976 | **30,149** | **2.9 × 10⁷** |
+| 12 — rotations of `P` and of `Q` | 3,230 | 998 | 27,949 | 2.8 × 10⁷ |
+| all 391 | 40,751 | 2,017 | 22,935 | 4.6 × 10⁷ |
+
+Breaking *all* the symmetry is counter-productive: the proof gets shorter but
+the core nearly doubles, and the cost of transcribing a step grows with the
+context it elaborates against. **Six constraints — "assume the graph is least
+among its seven rotations of `P`" — capture almost the whole gain.**
+
+So the same machinery applies in principle — but the best configuration found,
+**30,149 propagation steps against a 976-clause context, is still about seventy
+times the largest thing transcribed into Lean here so far** (the largest to date is 420 steps
 against 1,233 clauses, `PatternCore003`, and even that needed the elaboration
 budget lifted entirely). Shrinking that proof — by symmetry breaking, by
 splitting on the degree sequence, or by replacing it with a structural argument
