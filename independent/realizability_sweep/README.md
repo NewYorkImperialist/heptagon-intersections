@@ -180,9 +180,44 @@ the core nearly doubles, and the cost of transcribing a step grows with the
 context it elaborates against. **Six constraints — "assume the graph is least
 among its seven rotations of `P`" — capture almost the whole gain.**
 
-So the same machinery applies in principle — but the best configuration found,
-**30,149 propagation steps against a 976-clause context, is still about seventy
-times the largest thing transcribed into Lean here so far** (the largest to date is 420 steps
+### Splitting by degree shape is what actually makes it small
+
+Seven row degrees, each at least 1, summing to 9: the multiset is
+`(3,1,1,1,1,1,1)` or `(2,2,1,1,1,1,1)`. Fixing which rows are heavy removes the
+global cardinality encoding entirely — and that encoding is most of what made
+the single-formula refutation enormous. Up to a rotation of `P` the heavy rows
+can be placed canonically, leaving **four** cases (`coverage_cases.py`):
+
+| | core | LRAT steps |
+|---|---:|---:|
+| one row of degree 3 | 557 | 2,189 |
+| two rows of degree 2, cyclic distance 1 | 610 | 2,915 |
+| two rows of degree 2, cyclic distance 2 | 543 | **2,934** |
+| two rows of degree 2, cyclic distance 3 | 562 | 2,559 |
+| **total** | | **10,597** |
+
+The number that matters is the **largest single case**, because transcription
+cost is per file: **2,934 steps against a 543-clause core**. The largest
+refutation already built here is `lean/PatternCore003.lean` — 420 steps against
+a 1,233-clause core. So the four covering cases are *a few times* the largest
+file in the development, not the one-to-two orders of magnitude the
+single-formula version suggested.
+
+| formulation | files | largest file | total steps |
+|---|---:|---|---:|
+| one formula, four patterns | 1 | 154,794 steps / 1,967 clauses | 154,794 |
+| one formula, two patterns | 1 | 59,657 / 986 | 59,657 |
+| + 6 lex-leader constraints | 1 | 30,149 / 976 | 30,149 |
+| 28 degree shapes | 28 | 2,934 / 614 | 68,884 |
+| **4 shapes, rotation WLOG** | **4** | **2,934 / 543** | **10,597** |
+
+`lean_export/ccase00k.{cnf,lrat}` are the four exported cases, in the form
+`python/residual/gen_lean_refutation.py` consumes.
+
+So the same machinery applies — and with the degree-shape split below it is no
+longer obviously out of reach. The naive single formula, **59,657 propagation
+steps against a 986-clause context, would be one to two orders of magnitude past
+the largest thing transcribed into Lean here so far** (the largest to date is 420 steps
 against 1,233 clauses, `PatternCore003`, and even that needed the elaboration
 budget lifted entirely). Shrinking that proof — by symmetry breaking, by
 splitting on the degree sequence, or by replacing it with a structural argument

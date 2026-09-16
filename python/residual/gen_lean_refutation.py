@@ -47,11 +47,13 @@ out.append("")
 out.append("-- The tail of a long propagation chain elaborates against a context holding")
 out.append("-- every core clause and every clause derived so far, which outruns the default")
 out.append("-- elaboration budget.  Kernel checking is unaffected by this option.")
-# Cost grows with the size of that context, so cores past a thousand clauses --
-# only the largest of the four forbidden patterns, so far -- get no limit at all.
-out.append("set_option maxHeartbeats " + ("0" if NORIG > 1000 else "2000000"))
+# Cost grows with both the context and the length of the chain, so a large core
+# or a long proof gets no limit at all.
+out.append("set_option maxHeartbeats "
+           + ("0" if NORIG > 1000 or len(steps) > 500 else "2000000"))
 out.append("")
-WHAT = (f"forbidden pattern {int(TAG[-3:])}" if TAG.startswith('pcore')
+WHAT = (f"covering case {int(TAG[-3:])}" if TAG.startswith('ccase')
+        else f"forbidden pattern {int(TAG[-3:])}" if TAG.startswith('pcore')
         else f"minimal-cover pattern {int(TAG[-3:])}" if TAG.startswith('qcore')
         else f"orbit_{TAG[-3:]}")
 out.append(f"/-- The {NORIG}-clause unsatisfiable core of {WHAT}, contradictory.")
