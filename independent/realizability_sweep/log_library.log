@@ -1,0 +1,38 @@
+     0  NEW pattern #1 on 16 pairs  (library 1, index 392, 16 s)
+     6  NEW pattern #2 on 15 pairs  (library 2, index 784, 28 s)
+  1000  covered=998  library=2  29 s
+  2000  covered=1998  library=2  29 s
+  3000  covered=2998  library=2  29 s
+  4000  covered=3998  library=2  29 s
+  5000  covered=4998  library=2  29 s
+  5487  NEW pattern #3 on 11 pairs  (library 3, index 1176, 37 s)
+  6000  covered=5997  library=3  37 s
+  7000  covered=6997  library=3  37 s
+  8000  covered=7997  library=3  37 s
+  9000  covered=8997  library=3  37 s
+ 10000  covered=9997  library=3  37 s
+ 11000  covered=10997  library=3  37 s
+ 12000  covered=11997  library=3  37 s
+ 13000  covered=12997  library=3  37 s
+ 14000  covered=13997  library=3  37 s
+ 15000  covered=14997  library=3  37 s
+ 16000  covered=15997  library=3  37 s
+ 17000  covered=16997  library=3  37 s
+ 18000  covered=17997  library=3  37 s
+ 19000  covered=18997  library=3  37 s
+ 20000  covered=19997  library=3  37 s
+ 21000  covered=20997  library=3  37 s
+ 22000  covered=21997  library=3  37 s
+ 23000  covered=22997  library=3  37 s
+ 24000  covered=23997  library=3  37 s
+ 25000  covered=24997  library=3  37 s
+ 26000  covered=25997  library=3  37 s
+ 26335  NEW pattern #4 on 14 pairs  (library 4, index 1568, 50 s)
+ 27000  covered=26996  library=4  50 s
+ 28000  covered=27996  library=4  50 s
+ 29000  covered=28996  library=4  50 s
+ 30000  covered=29996  library=4  50 s
+ 31000  covered=30996  library=4  50 s
+ 32000  covered=31996  library=4  50 s
+ 33000  covered=32996  library=4  50 s
+DONE  33743 orbits, 4 minimal patterns, 33739 covered by an earlier pattern, 50 s

@@ -1,0 +1,30 @@
+[
+ {
+  "pattern": 0,
+  "constraints": 16,
+  "core_clauses": 589,
+  "proof_steps": 189,
+  "minimal_drops_all_sat": 16
+ },
+ {
+  "pattern": 1,
+  "constraints": 15,
+  "core_clauses": 692,
+  "proof_steps": 198,
+  "minimal_drops_all_sat": 15
+ },
+ {
+  "pattern": 2,
+  "constraints": 11,
+  "core_clauses": 275,
+  "proof_steps": 101,
+  "minimal_drops_all_sat": 11
+ },
+ {
+  "pattern": 3,
+  "constraints": 14,
+  "core_clauses": 1233,
+  "proof_steps": 420,
+  "minimal_drops_all_sat": 14
+ }
+]

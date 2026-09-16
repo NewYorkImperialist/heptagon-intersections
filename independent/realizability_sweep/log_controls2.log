@@ -1,0 +1,18 @@
+local search from lower_bound_38 met crossing counts [38, 36, 34, 32, 30, 28, 26, 24, 22, 20, 18, 16, 14, 12, 10]
+ok   38 crossings, graph (8, 8, 8, 4, 4, 4, 115): SAT with its own chirotope as a model
+ok   36 crossings, graph (8, 8, 8, 4, 4, 4, 127): SAT with its own chirotope as a model
+ok   34 crossings, graph (8, 12, 12, 4, 4, 4, 127): SAT with its own chirotope as a model
+ok   32 crossings, graph (8, 12, 12, 4, 4, 100, 127): SAT with its own chirotope as a model
+ok   30 crossings, graph (56, 12, 12, 4, 4, 100, 127): SAT with its own chirotope as a model
+ok   28 crossings, graph (12, 12, 12, 12, 15, 7, 119): SAT with its own chirotope as a model
+ok   26 crossings, graph (12, 12, 12, 12, 15, 103, 119): SAT with its own chirotope as a model
+ok   24 crossings, graph (12, 12, 12, 12, 15, 127, 119): SAT with its own chirotope as a model
+ok   22 crossings, graph (8, 12, 12, 28, 127, 103, 127): SAT with its own chirotope as a model
+ok   20 crossings, graph (56, 60, 60, 124, 124, 28, 115): SAT with its own chirotope as a model
+ok   18 crossings, graph (73, 125, 125, 60, 60, 28, 115): SAT with its own chirotope as a model
+ok   16 crossings, graph (73, 125, 125, 124, 124, 28, 115): SAT with its own chirotope as a model
+ok   14 crossings, graph (121, 60, 60, 127, 127, 28, 115): SAT with its own chirotope as a model
+ok   12 crossings, graph (121, 60, 60, 127, 127, 124, 115): SAT with its own chirotope as a model
+ok   10 crossings, graph (121, 125, 60, 127, 127, 124, 115): SAT with its own chirotope as a model
+
+ALL HIGH-CROSSING CONTROLS PASSED

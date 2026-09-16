@@ -2,11 +2,12 @@
 
 Usage: python3 python/residual/gen_lean_refutation.py [dir] [tag] > lean/ResidualCore000.lean
 
-`tag` is `core000`..`core003`.  The (core CNF, LRAT) pairs in
-independent/residual_realizability/lean_export were produced by drat-trim from
-the full 162,790-clause encodings; only the 167/371/242/513-clause unsat cores
-and their 102/164/114/148-step proofs are needed, and all eight are committed.
-See that directory's README for the exact drat-trim invocation.
+`tag` is `core000`..`core003` (the four residual orbits, exported to
+independent/residual_realizability/lean_export) or `pcore000`..`pcore003` (the
+four forbidden patterns, exported to independent/realizability_sweep/lean_export).
+Each pair was produced by drat-trim from a full 162,790- or 162,000-odd-clause
+encoding; only the unsat core and its proof are needed, and all are committed.
+See those directories' READMEs for the exact drat-trim invocation.
 
 Each LRAT step becomes a `have`: assume the derived clause false, then walk the
 hint clauses in order.  Every hint is unit under the accumulated assignment, so
@@ -45,9 +46,13 @@ out.append("")
 out.append("-- The tail of a long propagation chain elaborates against a context holding")
 out.append("-- every core clause and every clause derived so far, which outruns the default")
 out.append("-- elaboration budget.  Kernel checking is unaffected by this option.")
-out.append("set_option maxHeartbeats 2000000")
+# Cost grows with the size of that context, so cores past a thousand clauses --
+# only the largest of the four forbidden patterns, so far -- get no limit at all.
+out.append("set_option maxHeartbeats " + ("0" if NORIG > 1000 else "2000000"))
 out.append("")
-out.append(f"/-- The {NORIG}-clause unsatisfiable core of orbit_{TAG[-3:]}, contradictory.")
+WHAT = (f"forbidden pattern {int(TAG[-3:])}" if TAG.startswith('pcore')
+        else f"orbit_{TAG[-3:]}")
+out.append(f"/-- The {NORIG}-clause unsatisfiable core of {WHAT}, contradictory.")
 out.append(f"{len(steps)} steps, transcribed from the LRAT proof: each is unit propagation")
 out.append("in the order the hints give, so no tactic searches. -/")
 out.append(f"theorem {TAG}_false")
