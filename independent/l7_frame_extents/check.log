@@ -1,0 +1,83 @@
+{
+  "kind": "exact finite audits; NOT an exhaustive Lemma-7 search",
+  "partial_witness": {
+    "a": [
+      [
+        "-1",
+        "0"
+      ],
+      [
+        "41/20",
+        "61/20"
+      ]
+    ],
+    "b": [
+      [
+        "-1",
+        "0"
+      ],
+      [
+        "1",
+        "0"
+      ]
+    ],
+    "Ap": [
+      [
+        "0",
+        "-1"
+      ],
+      [
+        "0",
+        "2"
+      ]
+    ],
+    "Bp": [
+      [
+        "0",
+        "-1"
+      ],
+      [
+        "11/5",
+        "17/5"
+      ]
+    ],
+    "ap": [
+      [
+        "1",
+        "5/4"
+      ],
+      [
+        "3",
+        "93/20"
+      ]
+    ],
+    "B": [
+      [
+        "1/2",
+        "5/4"
+      ],
+      [
+        "3",
+        "9/2"
+      ]
+    ]
+  },
+  "partial_witness_ap_B_crossing": [
+    "21/8",
+    "321/80"
+  ],
+  "partial_witness_general_position": true,
+  "partial_witness_full_lemma7_counterexample": false,
+  "direction_implication_instances": 322,
+  "pentagon": {
+    "hooking_convex": 4248,
+    "nonhooking_nonconvex": 729,
+    "degenerate_skipped": 108
+  },
+  "face_equivalence_instances": 17328,
+  "verified_quotations": {
+    "10": "It follows that A must intersect three sides of the pentagon, which is impossible.",
+    "28": "The remaining configuration is the one in Fig. 6."
+  },
+  "source_pdf_sha256": "f0ae336e03857766597e5760acaa9c0cc9dbe3ef86d6200334bfad7f8b9c548a"
+}

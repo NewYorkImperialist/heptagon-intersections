@@ -1,0 +1,81 @@
+Discrete & Computational Geometry
+F5
+B′
+a′
+A′
+B
+b′
+F2
+a
+F3
+F1
+F4
+b
+A
+F6
+Fig. 10 Case 3: I (A, B) ∈ F1 and I (a′
+,b′) ∈ F5
+F5
+B′
+F5
+B
+A′
+F1
+a
+F3
+B
+F2
+A′
+F1
+B′
+a
+F3
+F2
+b
+F6
+F4
+F4
+b
+A b′
+A
+a′
+b′
+a′
+F6
+(a) At least one of the sides a and b has
+′ ′ ′ ′
+(b) None of the sides a and b has an endpoint
+an endpoint in F4.
+in F4.
+Fig. 11 Case 4: I (A, B) ∈ F1 (or I (A, B) ∈ F2, which is similar) and I (a′
+,b′) ∈ F6
+F2 ∪ F5. But then I (A, B) ∈ Cone(a′
+,b′) and it follows from Observation 3 that
+neither A nor B can intersect both a′ and b′
+.
+5. I (A, B) ∈ F2 and I (a′
+,b′) ∈ F2, see Fig. 12. Since a′
+,b′ is hooking, I (A′
+, B′) ∈
+Cone(a′
+,b′), and the line segments a′
+,b′
+, A′
+,b, B′ enclose a convex pentagon.
+The polygon side A must intersect b, a′, and b′, but it is restricted to F2 ∪ F4.
+It follows that A must intersect three sides of the pentagon, which is impossible.
+(This is in fact the only place where we need the assumption that a′
+,b′ is hooking.)
+6. I (A, B) ∈ F2 and I (a′
+,b′) ∈ F4. This is symmetric to case 1.
+7. I (A, B) ∈ F2 and I (a′
+,b′) ∈ F5, see Fig. 13 (symmetric to I (A, B) ∈ F3 and
+I (a′
+,b′) ∈ F2). Then A is restricted to F2 ∪ F4, while a′ and b′ do not intersect
+F2 and F4. Therefore A can intersect neither a′ nor b′
+.
+8. I (A, B) ∈ F2 and I (a′
+,b′) ∈ F6. This case is very similar to case 4, where
+I (A, B) ∈ F1 and I (a′
+,b′) ∈ F6, see Fig. 11. If one of the polygon sides a′
+123

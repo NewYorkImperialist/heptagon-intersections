@@ -1,0 +1,43 @@
+Discrete & Computational Geometry
+10.2 Computer-Supported Proofs
+We have independently confirmed Lemma 7 concerning the intersection structure of
+pairs of associated pairs of sides, which is our principal workhorse, by a computer
+enumeration.
+Lemma 7 involves eight polygon sides. Thus, we enumerated all 158830 arrange-
+ments of eight lines. Actually, we enumerated pseudoline arrangements, but it is
+known that all pseudoline arrangements with less than nine lines are stretchable to
+line arrangements. For each arrangement, we tried all possible ways of assigning
+the sides pi , pi +1, p j, p j +1 and qi ′ ,qi ′±1,q j ′ ,q j ′±1 (in the notation of Lemma 7) to
+these lines. Since there are symmetries in the configuration of the eight sides, we did
+not have to try all 8! = 40320 assignments, but only 840. Once this assignment is
+given, we know where the vertices between consecutive sides, like pi , pi +1, are in the
+arrangement. This specifies one endpoint of each side. It is then easy to check whether
+it is possible to realize the required intersection pattern of a perfect matching among
+the eight involved sides. We first took into account the required intersections among
+the sides, for example, between pi and q j ′ . On each line, these required intersection
+points must lie on one side of the vertex that we already know. If this is the case, we get
+a minimum range on the line that the side must cover. We then check if all forbidden
+intersections (for example, between pi and qi ′ , or between pi and p j ) are avoided.
+After a few days of computing (and several weeks of programming), the result was
+that there were, up to isomorphism, 14 configurations with the required intersection
+pattern. In 13 of them, some associated pair did not conform to the hooking/hooked
+pattern of Lemma 5. The remaining configuration is the one in Fig. 6.
+We had some hope to attack the case of three pairs of associated pairs of sides and
+obtain a more powerful statement than Proposition 14. However, since there are too
+many (pseudo-)line arrangements with 12 lines, this is out of reach for the simple
+approach outlined above.
+10.3 The Union of the Polygon Areas
+Instead of polygon boundaries, we can consider polygons as regions and ask about the
+complexity of the union of the polygon areas. The bound on boundary intersections
+gives an upper bound on the boundary of this union: Every boundary intersection
+contributes to the complexity of the union, and in the worst case all the m +n vertices
+of the two polygons contribute to the complexity of the boundary in addition.
+In the examples of Fig. 1, this worst case arises: all polygon vertices contribute to
+the boundary of the union of the polygon areas. This gives a lower bound of mn−3 for
+the maximum complexity of the union of an m-gon and an n-gon and it is conjectured
+that mn− 3 is in fact the exact value. Theorem 1 implies the upper bound mn +C for
+some absolute constant C.
+One can also ask about the intersection of the polygon areas. Here, the relation to
+our problem is not clear.
+Acknowledgements We thank the reviewers for helpful suggestions.
+123

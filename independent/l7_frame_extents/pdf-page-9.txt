@@ -1,0 +1,57 @@
+Discrete & Computational Geometry
+B′
+F5
+ra
+A′
+B
+a
+F3
+F2
+F1
+a′
+rb
+F4
+b
+A
+Fig. 8 Case 1: I (A, B) ∈ F1, I (a′
+, b′) ∈ F2
+F6
+B′
+A′
+B
+F5
+F2 F3
+a
+F1
+rb
+F4
+b
+A
+b′
+F6
+Fig. 9 Case 2: I (A, B) ∈ F1, I (a′
+, b′) ∈ F4
+a′
+only way for a′ to intersect A is by crossing rb. Similarly, in order to intersect B,
+a′ has to cross ra . However, it cannot intersect both ra and rb, by Observation 3.
+Since we did not use the assumption that A, B are hooked, the analysis holds for
+the symmetric case 6, I (A, B) ∈ F2 and I (a′
+,b′) ∈ F4, as well.
+2. I (A, B) ∈ F1 and I (a′
+,b′) ∈ F4, see Fig. 9. Since a′ is not allowed to cross b, the
+only way for a′ to intersect B is by crossing rb. However, in this case a′ cannot
+intersect A.
+3. I (A, B) ∈ F1 and I (a′
+,b′) ∈ F5, see Fig. 10 (symmetric to I (A, B) ∈ F3 and
+I (a′
+,b′) ∈ F4). Both a′ and b′ must intersect A, and they have to go below the line
+ℓ(b) to do so. However, a′ can only cross ℓ(b) to the right of b, and b′ can only
+cross ℓ(b) to the left of b, and therefore they cross A from different sides. This is
+impossible, because a′ and b′ start from the same point.
+4. I (A, B) ∈ F1 and I (a′
+,b′) ∈ F6. If one of the polygon sides a′ and b′ has
+an endpoint in F4 (see Fig. 11a), then this side cannot intersect B. So assume
+otherwise, see Fig. 11b. The side a′ intersects B′ and is disjoint from A′, while b′
+is disjoint from B′ and intersects A′. (Due to space limitation some line segments
+are drawn schematically as curves.) Thus, each of a′ and b′ has an endpoint in
+123

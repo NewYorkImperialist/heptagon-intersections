@@ -1,0 +1,55 @@
+Discrete & Computational Geometry
+B′
+F5
+a
+A′
+F2
+F3
+b′ A
+a′
+F1
+F4
+b
+F6
+Fig. 12 Case 5: I (A, B) ∈ F2, I (a′
+,b′) ∈ F2
+and b′ has an endpoint in F4, then it cannot intersect B. Otherwise, I (A, B) ∈
+Cone(a′
+,b′) and therefore, neither A nor B can intersect both a′ and b′
+.
+9. I (A, B) ∈ F3 and I (a′
+,b′) ∈ F2. This is symmetric to case 7.
+10. I (A, B) ∈ F3 and I (a′
+,b′) ∈ F4. This is symmetric to case 3.
+11. I (A, B) ∈ F3 and I (a′
+,b′) ∈ F5, see Fig. 14. Then the intersection of b′ and A
+can lie only in the lower left quadrant. It follows that the triangle whose vertices
+are I (a′
+,b′), I (a′
+, A), and I (A,b′) contains a and does not contain I (A, B). This
+in turn implies that B cannot intersect both b′ and a, without intersecting B′
+.
+12. I (A, B) ∈ F3 and I (a′
+,b′) ∈ F6, see Fig. 15. As in case 4, we may assume that
+neither a′ nor b′ has an endpoint in F4, since then this side could not intersect B.
+We may also assume that I (A, B) / ∈ Cone(a′
+,b′) for otherwise neither A nor B
+intersects both of a′ and b′, according to Observation 3. If a′ has an endpoint in F2,
+then it cannot intersect B (see Fig. 15a). Otherwise, if a′ has an endpoint in F5,
+then B cannot intersect b′ (Fig. 15b).
+We have finished the case that a,b and a′
+,b′ are hooking. Suppose now that a,b
+and a′
+,b′ are hooked with respect to A, B and A′
+, B′, respectively. Then A, B is
+hooking with respect to a,b and A′
+, B′ is hooking with respect to a′
+,b′. Recall that
+A, B, A′, and B′ belong to four different connected components. Hence, this case can
+be handled as above, after exchanging the capital letters with the small letters (i.e.,
+exchanging P and Q). ⊓ ⊔
+6 A Weaker Bound
+The principal structure lemma is already powerful enough to get an improvement over
+the previous best bound:
+Lemma 8 GD has at most (n + 5)/2 connected components.
+123

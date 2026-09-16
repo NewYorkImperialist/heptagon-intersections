@@ -1,0 +1,49 @@
+Discrete & Computational Geometry
+pi+1
+qj
+qj
+qj
+pi+1
+pi+1
+qj±1 pi
+pi
+qj±1 pi
+qj±1
+(a) (b) (c)
+Fig. 5 Hooking and hooked pairs of consecutive sides. a The pair pi , pi +1 is hooking and the associated
+pair q j,q j ±1 is hooked. b Vice versa. c Both pairs are both hooking and hooked
+pi+1
+pi
+pj
+qi′
+qi′±1
+pj+1
+qj′±1
+qj′
+Fig. 6 The pair pi , pi +1 is hooking with respect to the pair qi ′ ,qi ′±1, and p j, p j +1 is hooked with respect
+to q j ′,q j ′±1
+5 The Principal Structure Lemma About Pairs of Associated Pairs
+Lemma 7 Let pi , pi +1, p j, p j +1 be two pairs of consecutive sides of P that belong to
+four different connected components of GD. Then it is impossible that both pi , pi +1
+and p j, p j +1 are hooked or that both pairs are hooking.
+Figure 6 shows a scenario with four different components, together with the associ-
+ated pairs of Q. The combinatorial structure of such a configuration is unique up to
+relabeling.
+Proof Suppose by contradiction that both pairs pi , pi +1 and p j, p j +1 are hook-
+ing or both of these pairs are hooked. Let qi ′ ,qi ′±1 and q j ′,q j ′±1 be associ-
+ated (hooked or hooking) pairs of pi , pi +1 and p j, p j +1, respectively, such that
+(pi ,qi ′ ),(pi +1,qi ′±1) ∈ ED and (p j,q j ′ ),(p j +1,q j ′±1) ∈ ED. Recall that the exis-
+tence of such pairs follows from Lemma 5.
+For better readability, we rename pi , pi +1 and qi ′ ,qi ′±1 as a,b and A, B, and we
+rename p j, p j +1 and q j ′ ,q j ′±1 as a′
+,b′ and A′
+, B′. The small letters denote sides of
+P and the capital letters denote sides of Q. In the new notation, a,b are consecutive
+sides of P with an associated pair A, B of consecutive sides of Q, and a′
+,b′ are two
+other consecutive sides of P with an associated pair A′
+, B′ of consecutive sides of Q.
+The disjointness graph GD contains the edges (a, A),(b, B),(a′
+, A′),(b′
+, B′). Since
+123

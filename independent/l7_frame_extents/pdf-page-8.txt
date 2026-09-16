@@ -1,0 +1,81 @@
+Discrete & Computational Geometry
+F5
+B′
+a
+I(A′
+, B′)
+b
+A′
+a
+F3
+B′
+B′
+F2
+F1
+I(A′
+, b)
+b
+a
+F4
+b
+I(a, b)
+A′
+A′
+F6
+(a) (b) (c)
+Fig. 7 Normalizing the position of a,b, A′
+, B′
+a,b,a′
+,b′ belong to different connected components of GD, it follows that the nodes
+A, B, A′
+, B′, to which they are connected, belong to the same four different connected
+components. There can be no more edges among these eight nodes, and they induce
+a matching in GD. One can remember as a rule that every side of P intersects every
+side of Q among the eight involved sides, except when their names differ only in their
+capitalization.
+Suppose first that both a,b and a′
+,b′ are hooking. Hence, I (A, B) ∈ Cone(a,b)
+and I (A′
+, B′) ∈ Cone(a′
+,b′). Since each of A′ and B′ intersects each of a and b they
+must lie as in Fig. 7a. To facilitate the future discussion, we will now normalize the
+positions of these four sides.
+We first ensure that the intersection I (A′
+,b) is directly adjacent to the two polygon
+vertices I (a,b) and I (A′
+, B′) in the arrangement of the four sides, as shown in Fig. 7b.
+This can be achieved by swapping the labels a, A with the labels b, B if necessary, and
+by independently swapping the labels a′
+, A′ with b′
+, B′ if necessary. Our assumptions
+are invariant under these swaps.
+By an affine transformation we may finally assume that I (A′
+,b) is the origin; b
+lies on the x-axis and is directed to the right; and A′ lies on the y-axis and is directed
+upwards. Then a has a positive slope and its interior is in the upper half-plane, and B′
+has a positive slope and its interior is to the right of the y-axis, see Fig. 7c.
+The arrangement of the lines through a,b, A′
+, B′ has 11 faces, some of which are
+marked as F1, . . . , F6 in Fig. 7. Our current assumption is that both a,b and a′
+,b′ are
+hooking: The hooking of a,b means that I (A, B) ∈ Cone(a,b)= F1 ∪F2 ∪F3. By the
+Axis Property (Observation 6), the line through I (A′
+, B′) and I (a′
+,b′) must separate
+A′ from B′. Therefore, the vertex I (a′
+,b′) can lie only in F2 ∪ F4 ∪ F5 ∪ F6. Thus,
+based on the faces that contain I (A, B) and I (a′
+,b′), there are 12 cases to consider.
+Some of these cases are symmetric, and all can be easily dismissed, as follows.
+In the figures, the four sides a′
+,b′
+, A′
+, B′, which are associated to the second asso-
+ciated pair are dashed. All dashed sides of one polygon must intersect all solid sides
+of the other polygon.
+1. I (A, B) ∈ F1 and I (a′
+,b′) ∈ F2, see Fig. 8 (symmetric to I (A, B) ∈ F2 and
+I (a′
+,b′) ∈ F4). Let ra (resp., rb) be the ray on ℓ(a) (resp., ℓ(b)) that goes from
+the right endpoint of a (resp., b) to the right. Since a′ is not allowed to cross b, the
+123
