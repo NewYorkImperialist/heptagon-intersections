@@ -214,6 +214,22 @@ single-formula version suggested.
 `lean_export/ccase00k.{cnf,lrat}` are the four exported cases, in the form
 `python/residual/gen_lean_refutation.py` consumes.
 
+**Tried, and it is not enough on its own.** Generating case 2 as a single Lean
+theorem gives a **300,379-line** file — about 100 lines per propagation step,
+the same ratio as `lean/PatternCore003.lean`. On this machine it did not build:
+after an hour the process had physical memory exhausted around it (118 MB
+unused, 3.5 GB in the compressor, 8.2 GB of 9 GB swap in use) and was getting
+about a minute and a half of CPU per twenty minutes of wall clock. It was killed
+rather than left thrashing, and the file is not committed.
+
+So the remaining obstacle is no longer the *size of the proof* — it is that the
+generator emits one theorem per proof, and a 2,934-step proof does not fit in
+one. The development already solves exactly this problem elsewhere: the (E7)
+enumeration is split across 540 `OTEnum*` modules. Sharding a propagation chain
+is a different shape from sharding an enumeration — each shard needs the clauses
+derived by earlier shards as hypotheses, and the shard boundaries have to be
+chosen so that list stays short — and that generator is not written.
+
 So the same machinery applies — and with the degree-shape split below it is no
 longer obviously out of reach. The naive single formula, **59,657 propagation
 steps against a 986-clause context, would be one to two orders of magnitude past
