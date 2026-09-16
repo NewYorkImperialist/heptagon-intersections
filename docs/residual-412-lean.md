@@ -93,7 +93,28 @@ reading still matters to anyone else using that lemma, and AKR's Observation 6
 being false as printed (`docs/known-issues.md` K-14) is worth telling the
 authors regardless.
 
-## 4. Controls
+## 4. The general-position hypothesis is stronger than `Config`'s
+
+`GP V` says **all 364** orientation determinants of the fourteen vertices are
+nonzero. The project's own `DisjointnessGraph.Config` assumes less: `Simple7 Pv`
+and `Simple7 Qv` give the all-`P` and all-`Q` triples, and
+`no_Q_vertex_on_P_side_line` / `no_P_vertex_on_Q_side_line` give the mixed
+triples **whose two same-polygon vertices form a side**. Nothing in `Config`
+rules out a vertex of `Q` lying on the line through two *non-adjacent* vertices
+of `P`.
+
+The eight refutations here use **218** of the 364 triples, and **111 of those
+218 are of exactly the kind `Config` does not supply** — 70 with two
+non-adjacent `Q` vertices and a `P` vertex, 41 the other way round. So these
+theorems are not directly instantiable at an arbitrary `Config`; they need the
+stronger hypothesis.
+
+That is the project's standing "general position as WLOG" bridge (`docs/verification-status.md`
+row 9a lists it among the prose steps), and it is unproved here as elsewhere.
+It is recorded in this file because the gap is easy to miss: `GP` and `Config`
+look like they say the same thing and do not.
+
+## 5. Controls
 
 `lean/ResidualControl.lean`, against the lower-bound certificate's own fourteen
 vertices — a pair of simple heptagons that demonstrably exists, with 38
@@ -108,7 +129,7 @@ crossings:
 `lean/ResidualNonVacuity.lean` keeps the sharper per-orbit version: the
 certificate fails hypothesis `h5_9` of `orbit000_impossible` outright.
 
-## 5. Reproducing
+## 6. Reproducing
 
 ```sh
 # the exported cores and proofs (needs drat-trim)

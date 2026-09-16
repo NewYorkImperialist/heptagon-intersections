@@ -171,6 +171,16 @@ not the exceptional classification.
 
 ## 6. Limits
 
+* **The general-position hypothesis is stronger than the project's `Config`.**
+  `GP V` asks all 364 orientation determinants of the fourteen vertices to be
+  nonzero. `DisjointnessGraph.Config` gives the all-`P` and all-`Q` triples and
+  the mixed triples whose two same-polygon vertices form a *side*, and nothing
+  more. Across the eight refutations in `lean/` (four residual orbits, four
+  patterns) **218** of the 364 triples are used and **111** of them are of the
+  kind `Config` does not supply. These theorems therefore need the project's
+  standing "general position as WLOG" bridge, which is prose. See
+  `docs/residual-412-lean.md` §4.
+
 * **This is not a proof and nothing depends on it.** The candidate proof still
   runs through the pipeline described in `docs/proof-outline.md`.
 * The encoding is a **relaxation**: it asserts the 3-term Grassmann–Plücker
