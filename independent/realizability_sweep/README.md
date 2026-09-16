@@ -54,6 +54,39 @@ The four refutations of the patterns are **Lean theorems**, not certificates:
 axioms `propext`, `Classical.choice`, `Quot.sound`.  `lean/PatternControl.lean`
 checks that none of the four can be applied to the lower-bound certificate.
 
+### Two patterns are enough, and they are much smaller
+
+`library.py` minimises each core in a fixed order, which finds *a* minimal
+pattern, not a good one.  `minpool.py` minimises the same cores in randomised
+orders, pools the results, and looks for a small covering subfamily.  It finds
+**two**:
+
+| | size | images | covers | core | LRAT | Lean build |
+|---|---:|---:|---:|---:|---:|---:|
+| pattern A | **8** | 196 | 33,672 of 33,743 orbits alone | 94 clauses | 71 steps | 74 s |
+| pattern B | 14 | 392 | the other 71 | 410 clauses | 156 steps | 158 s |
+
+`./cover patterns2.txt` confirms the pair covers all **13,003,620**.  Both are
+minimal — every single-constraint drop is satisfiable with a checked model — and
+both are Lean theorems, `Heptagon.MinPatternClauses00k.minpattern00k_impossible`,
+with `lean/MinPatternControl.lean` as the control.
+
+Pattern A is short enough to read.  It concerns three consecutive sides of each
+heptagon and nothing else, and it needs **no simplicity hypothesis at all**:
+
+> Let `P` have consecutive sides `p0, p1, p2` and `Q` consecutive sides
+> `q0, q1, q2`, with the fourteen vertices in general position.  Then it is
+> impossible that `p0` crosses all of `q0, q1, q2`, that `p1` crosses `q0` and
+> `q2` but misses `q1`, and that `p2` crosses `q0` and `q1`.
+
+That single statement rules out **33,672 of the 33,743** orbits, hence all but
+8,428 of the 13,003,620 graphs.
+
+The improvement carries to the covering step: the coverage refutation drops
+from 154,794 steps against a 1,967-clause core to **59,657 steps against a
+986-clause core** (`coverage_cnf.py`).  Still large, but 2.6x smaller, and the
+gap is now the only thing between this and a lemma-free `I ≠ 40`.
+
 The domain count `13,003,620` is re-derived here twice, and neither time from
 the project's pipeline: once by inclusion–exclusion over zero rows and columns,
 once by the enumeration in `orbits.cpp`.
@@ -114,12 +147,13 @@ encoding:
 
 | encoding of "exactly 9" | clauses | variables | solve | drat-trim | core | LRAT |
 |---|---:|---:|---:|---|---:|---:|
-| sequential counter | 3,022 | 769 | 64 s | VERIFIED | 1,967 | 154,794 |
-| totalizer | 4,494 | 607 | 58 s | VERIFIED | 1,970 | 152,726 |
+| sequential counter, four patterns | 3,022 | 769 | 64 s | VERIFIED | 1,967 | 154,794 |
+| totalizer, four patterns | 4,494 | 607 | 58 s | VERIFIED | 1,970 | 152,726 |
+| sequential counter, **two patterns** | 2,042 | 769 | 18 s | VERIFIED | **986** | **59,657** |
 
-So the same machinery applies in principle — but **155,000 propagation steps
-against a 1,967-clause context is one to two orders of magnitude past what has
-been transcribed into Lean here so far** (the largest to date is 420 steps
+So the same machinery applies in principle — but **59,657 propagation steps
+against a 986-clause context is still one to two orders of magnitude past what
+has been transcribed into Lean here so far** (the largest to date is 420 steps
 against 1,233 clauses, `PatternCore003`, and even that needed the elaboration
 budget lifted entirely). Shrinking that proof — by symmetry breaking, by
 splitting on the degree sequence, or by replacing it with a structural argument

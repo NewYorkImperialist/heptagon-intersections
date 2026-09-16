@@ -1,6 +1,6 @@
 """The four patterns: unsatisfiable, minimally so, and not vacuous.
 
-    python3 check_patterns.py patterns.txt
+    python3 check_patterns.py patterns.txt [export-prefix]
 
 For each pattern:
   * UNSAT, with a DRAT proof checked by drat-trim, and an unsat core exported
@@ -37,6 +37,7 @@ def dimacs(cls):
 
 def main():
     from pysat.solvers import Lingeling
+    PRE = sys.argv[2] if len(sys.argv) > 2 else 'pcore'
     pats = read(sys.argv[1])
     print('%d patterns' % len(pats))
     summary = []
@@ -46,8 +47,8 @@ def main():
             sat = s.solve()
             proof = None if sat else s.get_proof()
         assert not sat, 'pattern %d is SAT' % k
-        cnf = '%s/pat%03d.cnf' % (OUT, k); drat = '/tmp/pat%03d.drat' % k
-        core = '%s/pcore%03d.cnf' % (OUT, k); lrat = '/tmp/pat%03d.lrat' % k
+        cnf = '/tmp/full%03d.cnf' % k; drat = '/tmp/pat%03d.drat' % k
+        core = '%s/%s%03d.cnf' % (OUT, PRE, k); lrat = '/tmp/pat%03d.lrat' % k
         lem = '/tmp/pat%03d.lem' % k
         open(cnf, 'wb').write(dimacs(cls))
         open(drat, 'w').write('\n'.join(proof) + '\n')
@@ -58,7 +59,7 @@ def main():
         assert 's VERIFIED' in r2.stdout, r2.stdout[-400:]
         ncore = int(open(core).readline().split()[3])
         steps = sum(1 for l in open(lrat) if ' d ' not in l)
-        with open('%s/pcore%03d.lrat' % (OUT, k), 'w') as f:
+        with open('%s/%s%03d.lrat' % (OUT, PRE, k), 'w') as f:
             for l in open(lrat):
                 if ' d ' not in l: f.write(l)
         os.remove(cnf)
@@ -78,7 +79,8 @@ def main():
         print('pattern %d: %2d constraints, UNSAT (drat-trim VERIFIED), core %d clauses, '
               'LRAT %d steps, all %d single drops SAT with a checked model'
               % (k, len(p), ncore, steps, nsat), flush=True)
-    json.dump(summary, open('patterns_checked.json', 'w'), indent=1)
+    json.dump(summary, open('patterns_checked.json' if PRE == 'pcore'
+                             else 'patterns2_checked.json', 'w'), indent=1)
     print('\nALL PATTERN CHECKS PASSED')
 
 if __name__ == '__main__':

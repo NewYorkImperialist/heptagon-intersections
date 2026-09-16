@@ -1,0 +1,16 @@
+[
+ {
+  "pattern": 0,
+  "constraints": 8,
+  "core_clauses": 94,
+  "proof_steps": 71,
+  "minimal_drops_all_sat": 8
+ },
+ {
+  "pattern": 1,
+  "constraints": 14,
+  "core_clauses": 410,
+  "proof_steps": 156,
+  "minimal_drops_all_sat": 14
+ }
+]

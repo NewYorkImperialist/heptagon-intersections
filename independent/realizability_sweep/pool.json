@@ -1,0 +1,1057 @@
+{
+ "pool": [
+  {
+   "sup": 50055,
+   "val": 256,
+   "size": 8,
+   "covers": 33672,
+   "images": 196
+  },
+  {
+   "sup": 97735,
+   "val": 128,
+   "size": 12,
+   "covers": 33642,
+   "images": 392
+  },
+  {
+   "sup": 253644,
+   "val": 512,
+   "size": 12,
+   "covers": 33629,
+   "images": 392
+  },
+  {
+   "sup": 118513,
+   "val": 0,
+   "size": 11,
+   "covers": 33620,
+   "images": 392
+  },
+  {
+   "sup": 1021,
+   "val": 0,
+   "size": 9,
+   "covers": 33619,
+   "images": 196
+  },
+  {
+   "sup": 2041,
+   "val": 0,
+   "size": 9,
+   "covers": 33619,
+   "images": 196
+  },
+  {
+   "sup": 116473,
+   "val": 0,
+   "size": 11,
+   "covers": 33619,
+   "images": 392
+  },
+  {
+   "sup": 249073,
+   "val": 0,
+   "size": 11,
+   "covers": 33618,
+   "images": 196
+  },
+  {
+   "sup": 126704,
+   "val": 0,
+   "size": 11,
+   "covers": 33618,
+   "images": 196
+  },
+  {
+   "sup": 124664,
+   "val": 0,
+   "size": 11,
+   "covers": 33616,
+   "images": 196
+  },
+  {
+   "sup": 122593,
+   "val": 0,
+   "size": 11,
+   "covers": 33616,
+   "images": 196
+  },
+  {
+   "sup": 124874,
+   "val": 256,
+   "size": 11,
+   "covers": 33612,
+   "images": 196
+  },
+  {
+   "sup": 120275,
+   "val": 128,
+   "size": 11,
+   "covers": 33608,
+   "images": 392
+  },
+  {
+   "sup": 247033,
+   "val": 0,
+   "size": 11,
+   "covers": 33598,
+   "images": 196
+  },
+  {
+   "sup": 55251,
+   "val": 128,
+   "size": 11,
+   "covers": 33598,
+   "images": 392
+  },
+  {
+   "sup": 115453,
+   "val": 0,
+   "size": 11,
+   "covers": 33594,
+   "images": 196
+  },
+  {
+   "sup": 122339,
+   "val": 128,
+   "size": 12,
+   "covers": 33594,
+   "images": 392
+  },
+  {
+   "sup": 6474737,
+   "val": 16384,
+   "size": 13,
+   "covers": 33557,
+   "images": 392
+  },
+  {
+   "sup": 54743,
+   "val": 128,
+   "size": 11,
+   "covers": 33514,
+   "images": 392
+  },
+  {
+   "sup": 7463559,
+   "val": 16384,
+   "size": 12,
+   "covers": 33467,
+   "images": 196
+  },
+  {
+   "sup": 14863246,
+   "val": 256,
+   "size": 13,
+   "covers": 33097,
+   "images": 392
+  },
+  {
+   "sup": 7163,
+   "val": 4098,
+   "size": 11,
+   "covers": 33009,
+   "images": 392
+  },
+  {
+   "sup": 4079,
+   "val": 264,
+   "size": 11,
+   "covers": 32757,
+   "images": 392
+  },
+  {
+   "sup": 50679,
+   "val": 256,
+   "size": 11,
+   "covers": 32464,
+   "images": 392
+  },
+  {
+   "sup": 14862222,
+   "val": 256,
+   "size": 13,
+   "covers": 32405,
+   "images": 196
+  },
+  {
+   "sup": 6103,
+   "val": 132,
+   "size": 10,
+   "covers": 32378,
+   "images": 196
+  },
+  {
+   "sup": 50679,
+   "val": 128,
+   "size": 11,
+   "covers": 32375,
+   "images": 392
+  },
+  {
+   "sup": 346063,
+   "val": 513,
+   "size": 12,
+   "covers": 32313,
+   "images": 392
+  },
+  {
+   "sup": 3999,
+   "val": 264,
+   "size": 10,
+   "covers": 32096,
+   "images": 196
+  },
+  {
+   "sup": 8127,
+   "val": 272,
+   "size": 12,
+   "covers": 31795,
+   "images": 196
+  },
+  {
+   "sup": 247294,
+   "val": 256,
+   "size": 13,
+   "covers": 31448,
+   "images": 392
+  },
+  {
+   "sup": 345591,
+   "val": 128,
+   "size": 12,
+   "covers": 31364,
+   "images": 392
+  },
+  {
+   "sup": 196302,
+   "val": 512,
+   "size": 13,
+   "covers": 31254,
+   "images": 392
+  },
+  {
+   "sup": 31747575,
+   "val": 1,
+   "size": 17,
+   "covers": 30951,
+   "images": 392
+  },
+  {
+   "sup": 118267,
+   "val": 264,
+   "size": 13,
+   "covers": 30547,
+   "images": 392
+  },
+  {
+   "sup": 130462,
+   "val": 264,
+   "size": 13,
+   "covers": 30464,
+   "images": 392
+  },
+  {
+   "sup": 190206,
+   "val": 512,
+   "size": 13,
+   "covers": 30372,
+   "images": 392
+  },
+  {
+   "sup": 390367,
+   "val": 32832,
+   "size": 14,
+   "covers": 29506,
+   "images": 392
+  },
+  {
+   "sup": 6473612,
+   "val": 17408,
+   "size": 11,
+   "covers": 29259,
+   "images": 392
+  },
+  {
+   "sup": 15056534,
+   "val": 65536,
+   "size": 15,
+   "covers": 28936,
+   "images": 392
+  },
+  {
+   "sup": 7427015,
+   "val": 16640,
+   "size": 13,
+   "covers": 28921,
+   "images": 392
+  },
+  {
+   "sup": 7431047,
+   "val": 16640,
+   "size": 12,
+   "covers": 28397,
+   "images": 392
+  },
+  {
+   "sup": 6484922,
+   "val": 16384,
+   "size": 14,
+   "covers": 28081,
+   "images": 392
+  },
+  {
+   "sup": 11781963,
+   "val": 65537,
+   "size": 14,
+   "covers": 27942,
+   "images": 392
+  },
+  {
+   "sup": 24215309,
+   "val": 8,
+   "size": 15,
+   "covers": 26736,
+   "images": 392
+  },
+  {
+   "sup": 6375311,
+   "val": 16648,
+   "size": 12,
+   "covers": 26592,
+   "images": 392
+  },
+  {
+   "sup": 14911115,
+   "val": 65537,
+   "size": 12,
+   "covers": 26432,
+   "images": 196
+  },
+  {
+   "sup": 20768606,
+   "val": 4,
+   "size": 16,
+   "covers": 26150,
+   "images": 392
+  },
+  {
+   "sup": 510957,
+   "val": 32776,
+   "size": 14,
+   "covers": 25930,
+   "images": 392
+  },
+  {
+   "sup": 23185165,
+   "val": 32776,
+   "size": 12,
+   "covers": 25515,
+   "images": 196
+  },
+  {
+   "sup": 510972,
+   "val": 32776,
+   "size": 14,
+   "covers": 25305,
+   "images": 392
+  },
+  {
+   "sup": 23558934,
+   "val": 2097664,
+   "size": 15,
+   "covers": 23828,
+   "images": 392
+  },
+  {
+   "sup": 392287,
+   "val": 34880,
+   "size": 14,
+   "covers": 22949,
+   "images": 392
+  },
+  {
+   "sup": 388077,
+   "val": 16960,
+   "size": 14,
+   "covers": 22863,
+   "images": 392
+  },
+  {
+   "sup": 906717,
+   "val": 524424,
+   "size": 14,
+   "covers": 22713,
+   "images": 392
+  },
+  {
+   "sup": 31882353,
+   "val": 1056,
+   "size": 15,
+   "covers": 22673,
+   "images": 392
+  },
+  {
+   "sup": 90594999,
+   "val": 2099200,
+   "size": 17,
+   "covers": 22218,
+   "images": 392
+  },
+  {
+   "sup": 449533,
+   "val": 262304,
+   "size": 15,
+   "covers": 21953,
+   "images": 392
+  },
+  {
+   "sup": 317398,
+   "val": 768,
+   "size": 12,
+   "covers": 21628,
+   "images": 392
+  },
+  {
+   "sup": 380924,
+   "val": 32776,
+   "size": 14,
+   "covers": 21112,
+   "images": 392
+  },
+  {
+   "sup": 906863,
+   "val": 524800,
+   "size": 14,
+   "covers": 21090,
+   "images": 392
+  },
+  {
+   "sup": 11716302,
+   "val": 17412,
+   "size": 13,
+   "covers": 20641,
+   "images": 392
+  },
+  {
+   "sup": 351667,
+   "val": 2176,
+   "size": 12,
+   "covers": 20011,
+   "images": 392
+  },
+  {
+   "sup": 253898,
+   "val": 768,
+   "size": 13,
+   "covers": 19820,
+   "images": 392
+  },
+  {
+   "sup": 253817,
+   "val": 65552,
+   "size": 14,
+   "covers": 19820,
+   "images": 392
+  },
+  {
+   "sup": 15093646,
+   "val": 4325888,
+   "size": 14,
+   "covers": 19578,
+   "images": 392
+  },
+  {
+   "sup": 186323,
+   "val": 768,
+   "size": 12,
+   "covers": 19560,
+   "images": 392
+  },
+  {
+   "sup": 89999,
+   "val": 640,
+   "size": 12,
+   "covers": 19332,
+   "images": 392
+  },
+  {
+   "sup": 186326,
+   "val": 768,
+   "size": 12,
+   "covers": 19270,
+   "images": 392
+  },
+  {
+   "sup": 196556,
+   "val": 768,
+   "size": 13,
+   "covers": 19115,
+   "images": 392
+  },
+  {
+   "sup": 92039,
+   "val": 640,
+   "size": 10,
+   "covers": 18624,
+   "images": 196
+  },
+  {
+   "sup": 260901,
+   "val": 4608,
+   "size": 12,
+   "covers": 18497,
+   "images": 392
+  },
+  {
+   "sup": 181239,
+   "val": 32770,
+   "size": 12,
+   "covers": 18017,
+   "images": 392
+  },
+  {
+   "sup": 252874,
+   "val": 4352,
+   "size": 12,
+   "covers": 17870,
+   "images": 392
+  },
+  {
+   "sup": 4079,
+   "val": 577,
+   "size": 11,
+   "covers": 17763,
+   "images": 392
+  },
+  {
+   "sup": 6135,
+   "val": 352,
+   "size": 11,
+   "covers": 17762,
+   "images": 392
+  },
+  {
+   "sup": 44222367,
+   "val": 16904,
+   "size": 15,
+   "covers": 17711,
+   "images": 392
+  },
+  {
+   "sup": 384541,
+   "val": 2560,
+   "size": 12,
+   "covers": 17686,
+   "images": 392
+  },
+  {
+   "sup": 253182,
+   "val": 10,
+   "size": 14,
+   "covers": 17421,
+   "images": 392
+  },
+  {
+   "sup": 6079,
+   "val": 168,
+   "size": 11,
+   "covers": 17383,
+   "images": 392
+  },
+  {
+   "sup": 6139,
+   "val": 168,
+   "size": 11,
+   "covers": 17254,
+   "images": 392
+  },
+  {
+   "sup": 6139,
+   "val": 1057,
+   "size": 11,
+   "covers": 17127,
+   "images": 392
+  },
+  {
+   "sup": 4087,
+   "val": 352,
+   "size": 11,
+   "covers": 17083,
+   "images": 392
+  },
+  {
+   "sup": 2047,
+   "val": 280,
+   "size": 11,
+   "covers": 17069,
+   "images": 392
+  },
+  {
+   "sup": 253151,
+   "val": 10,
+   "size": 14,
+   "covers": 16830,
+   "images": 392
+  },
+  {
+   "sup": 3071,
+   "val": 352,
+   "size": 11,
+   "covers": 16379,
+   "images": 392
+  },
+  {
+   "sup": 4091,
+   "val": 336,
+   "size": 11,
+   "covers": 16336,
+   "images": 392
+  },
+  {
+   "sup": 15093149,
+   "val": 2176,
+   "size": 14,
+   "covers": 16249,
+   "images": 392
+  },
+  {
+   "sup": 3999,
+   "val": 10,
+   "size": 10,
+   "covers": 16002,
+   "images": 196
+  },
+  {
+   "sup": 7163,
+   "val": 296,
+   "size": 11,
+   "covers": 15985,
+   "images": 392
+  },
+  {
+   "sup": 323574,
+   "val": 768,
+   "size": 14,
+   "covers": 15665,
+   "images": 392
+  },
+  {
+   "sup": 25142078,
+   "val": 1048840,
+   "size": 17,
+   "covers": 15030,
+   "images": 392
+  },
+  {
+   "sup": 55262,
+   "val": 776,
+   "size": 12,
+   "covers": 14988,
+   "images": 392
+  },
+  {
+   "sup": 24698381,
+   "val": 2097160,
+   "size": 14,
+   "covers": 14414,
+   "images": 196
+  },
+  {
+   "sup": 24759996,
+   "val": 4195328,
+   "size": 16,
+   "covers": 14355,
+   "images": 392
+  },
+  {
+   "sup": 115591,
+   "val": 640,
+   "size": 9,
+   "covers": 13943,
+   "images": 98
+  },
+  {
+   "sup": 15982310,
+   "val": 4259968,
+   "size": 17,
+   "covers": 13817,
+   "images": 392
+  },
+  {
+   "sup": 347541,
+   "val": 2176,
+   "size": 10,
+   "covers": 13749,
+   "images": 98
+  },
+  {
+   "sup": 53243,
+   "val": 776,
+   "size": 13,
+   "covers": 13711,
+   "images": 392
+  },
+  {
+   "sup": 192502,
+   "val": 768,
+   "size": 14,
+   "covers": 13398,
+   "images": 392
+  },
+  {
+   "sup": 57274,
+   "val": 4368,
+   "size": 12,
+   "covers": 13134,
+   "images": 392
+  },
+  {
+   "sup": 31649251,
+   "val": 32960,
+   "size": 16,
+   "covers": 11651,
+   "images": 392
+  },
+  {
+   "sup": 126839,
+   "val": 545,
+   "size": 14,
+   "covers": 11154,
+   "images": 392
+  },
+  {
+   "sup": 3999,
+   "val": 529,
+   "size": 10,
+   "covers": 10675,
+   "images": 196
+  },
+  {
+   "sup": 7691715,
+   "val": 18688,
+   "size": 14,
+   "covers": 10498,
+   "images": 392
+  },
+  {
+   "sup": 124414,
+   "val": 8448,
+   "size": 13,
+   "covers": 10280,
+   "images": 392
+  },
+  {
+   "sup": 118175,
+   "val": 2180,
+   "size": 12,
+   "covers": 10275,
+   "images": 392
+  },
+  {
+   "sup": 24143821,
+   "val": 2106368,
+   "size": 14,
+   "covers": 9950,
+   "images": 392
+  },
+  {
+   "sup": 6462319,
+   "val": 4194560,
+   "size": 14,
+   "covers": 9834,
+   "images": 392
+  },
+  {
+   "sup": 391981,
+   "val": 20992,
+   "size": 13,
+   "covers": 9775,
+   "images": 392
+  },
+  {
+   "sup": 253818,
+   "val": 522,
+   "size": 14,
+   "covers": 9772,
+   "images": 392
+  },
+  {
+   "sup": 19056527,
+   "val": 17409,
+   "size": 13,
+   "covers": 9669,
+   "images": 392
+  },
+  {
+   "sup": 187322,
+   "val": 4368,
+   "size": 12,
+   "covers": 9443,
+   "images": 392
+  },
+  {
+   "sup": 15424407,
+   "val": 8409090,
+   "size": 16,
+   "covers": 9349,
+   "images": 392
+  },
+  {
+   "sup": 247183,
+   "val": 131208,
+   "size": 11,
+   "covers": 9126,
+   "images": 196
+  },
+  {
+   "sup": 163062,
+   "val": 1184,
+   "size": 12,
+   "covers": 9017,
+   "images": 196
+  },
+  {
+   "sup": 249247,
+   "val": 1152,
+   "size": 13,
+   "covers": 8673,
+   "images": 392
+  },
+  {
+   "sup": 908895,
+   "val": 524298,
+   "size": 15,
+   "covers": 8435,
+   "images": 392
+  },
+  {
+   "sup": 257509,
+   "val": 67712,
+   "size": 13,
+   "covers": 6529,
+   "images": 392
+  },
+  {
+   "sup": 15184107,
+   "val": 163904,
+   "size": 15,
+   "covers": 6243,
+   "images": 392
+  },
+  {
+   "sup": 249747,
+   "val": 67714,
+   "size": 12,
+   "covers": 5603,
+   "images": 392
+  },
+  {
+   "sup": 777723,
+   "val": 21520,
+   "size": 16,
+   "covers": 4915,
+   "images": 392
+  },
+  {
+   "sup": 390461,
+   "val": 41000,
+   "size": 13,
+   "covers": 4817,
+   "images": 392
+  },
+  {
+   "sup": 6415299,
+   "val": 49280,
+   "size": 12,
+   "covers": 4631,
+   "images": 392
+  },
+  {
+   "sup": 25015911,
+   "val": 557568,
+   "size": 17,
+   "covers": 4568,
+   "images": 392
+  },
+  {
+   "sup": 65064863,
+   "val": 16777858,
+   "size": 17,
+   "covers": 4362,
+   "images": 392
+  },
+  {
+   "sup": 181135,
+   "val": 32778,
+   "size": 10,
+   "covers": 4009,
+   "images": 392
+  },
+  {
+   "sup": 6483711,
+   "val": 33289,
+   "size": 17,
+   "covers": 3867,
+   "images": 392
+  },
+  {
+   "sup": 182270,
+   "val": 32778,
+   "size": 13,
+   "covers": 3815,
+   "images": 392
+  },
+  {
+   "sup": 48486455,
+   "val": 2162706,
+   "size": 15,
+   "covers": 3777,
+   "images": 392
+  },
+  {
+   "sup": 24423411,
+   "val": 4196512,
+   "size": 16,
+   "covers": 3155,
+   "images": 392
+  },
+  {
+   "sup": 6342543,
+   "val": 49416,
+   "size": 12,
+   "covers": 2044,
+   "images": 392
+  },
+  {
+   "sup": 118677,
+   "val": 2688,
+   "size": 11,
+   "covers": 1958,
+   "images": 392
+  },
+  {
+   "sup": 7165,
+   "val": 664,
+   "size": 11,
+   "covers": 1815,
+   "images": 392
+  },
+  {
+   "sup": 6079,
+   "val": 674,
+   "size": 11,
+   "covers": 1801,
+   "images": 392
+  },
+  {
+   "sup": 6135,
+   "val": 1316,
+   "size": 11,
+   "covers": 1801,
+   "images": 392
+  },
+  {
+   "sup": 8183,
+   "val": 4432,
+   "size": 12,
+   "covers": 1801,
+   "images": 392
+  },
+  {
+   "sup": 23250829,
+   "val": 2228864,
+   "size": 13,
+   "covers": 1758,
+   "images": 392
+  },
+  {
+   "sup": 2047,
+   "val": 170,
+   "size": 11,
+   "covers": 1541,
+   "images": 392
+  },
+  {
+   "sup": 118771,
+   "val": 66304,
+   "size": 13,
+   "covers": 1510,
+   "images": 392
+  },
+  {
+   "sup": 7099,
+   "val": 4369,
+   "size": 10,
+   "covers": 923,
+   "images": 196
+  },
+  {
+   "sup": 3999,
+   "val": 1297,
+   "size": 10,
+   "covers": 911,
+   "images": 196
+  },
+  {
+   "sup": 4091,
+   "val": 1297,
+   "size": 11,
+   "covers": 911,
+   "images": 196
+  },
+  {
+   "sup": 250623,
+   "val": 163936,
+   "size": 14,
+   "covers": 698,
+   "images": 392
+  },
+  {
+   "sup": 10733453,
+   "val": 8552584,
+   "size": 13,
+   "covers": 638,
+   "images": 392
+  },
+  {
+   "sup": 8127,
+   "val": 788,
+   "size": 12,
+   "covers": 593,
+   "images": 392
+  },
+  {
+   "sup": 772843,
+   "val": 81985,
+   "size": 13,
+   "covers": 417,
+   "images": 392
+  },
+  {
+   "sup": 772991,
+   "val": 164376,
+   "size": 15,
+   "covers": 131,
+   "images": 392
+  }
+ ],
+ "cover": [
+  {
+   "sup": 50055,
+   "val": 256,
+   "size": 8,
+   "covers": 33672,
+   "images": 196
+  },
+  {
+   "sup": 15056534,
+   "val": 65536,
+   "size": 15,
+   "covers": 28936,
+   "images": 392
+  }
+ ],
+ "uncovered": 0
+}

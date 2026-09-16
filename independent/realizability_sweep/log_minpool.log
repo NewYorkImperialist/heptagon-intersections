@@ -1,0 +1,15 @@
+  25/300 orbits, pool 14, smallest 8, 179 s
+  50/300 orbits, pool 35, smallest 8, 375 s
+  75/300 orbits, pool 46, smallest 8, 558 s
+ 100/300 orbits, pool 54, smallest 8, 730 s
+ 125/300 orbits, pool 63, smallest 8, 927 s
+ 150/300 orbits, pool 72, smallest 8, 1099 s
+ 175/300 orbits, pool 88, smallest 8, 1304 s
+ 200/300 orbits, pool 109, smallest 8, 1520 s
+ 225/300 orbits, pool 121, smallest 8, 1701 s
+ 250/300 orbits, pool 133, smallest 8, 1897 s
+ 275/300 orbits, pool 145, smallest 8, 2094 s
+ 300/300 orbits, pool 148, smallest 8, 2261 s
+picked size 8 covering 33672 more; 71 orbits left
+picked size 15 covering 71 more; 0 orbits left
+pool 148 patterns, sizes 8..17; greedy cover uses 2 patterns of sizes [8, 15]; uncovered 0

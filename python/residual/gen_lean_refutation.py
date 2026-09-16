@@ -3,8 +3,9 @@
 Usage: python3 python/residual/gen_lean_refutation.py [dir] [tag] > lean/ResidualCore000.lean
 
 `tag` is `core000`..`core003` (the four residual orbits, exported to
-independent/residual_realizability/lean_export) or `pcore000`..`pcore003` (the
-four forbidden patterns, exported to independent/realizability_sweep/lean_export).
+independent/residual_realizability/lean_export), `pcore000`..`pcore003` (the four
+forbidden patterns) or `qcore000`,`qcore001` (the two-pattern minimal cover that
+supersedes them), both exported to independent/realizability_sweep/lean_export.
 Each pair was produced by drat-trim from a full 162,790- or 162,000-odd-clause
 encoding; only the unsat core and its proof are needed, and all are committed.
 See those directories' READMEs for the exact drat-trim invocation.
@@ -51,6 +52,7 @@ out.append("-- elaboration budget.  Kernel checking is unaffected by this option
 out.append("set_option maxHeartbeats " + ("0" if NORIG > 1000 else "2000000"))
 out.append("")
 WHAT = (f"forbidden pattern {int(TAG[-3:])}" if TAG.startswith('pcore')
+        else f"minimal-cover pattern {int(TAG[-3:])}" if TAG.startswith('qcore')
         else f"orbit_{TAG[-3:]}")
 out.append(f"/-- The {NORIG}-clause unsatisfiable core of {WHAT}, contradictory.")
 out.append(f"{len(steps)} steps, transcribed from the LRAT proof: each is unit propagation")
