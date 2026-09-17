@@ -864,11 +864,64 @@ published text supports. That is §6.3.
 
 ## 6. Where I think this is weakest
 
+> **Re-ordered 2026-09-17, and the change is large enough that the old ordering
+> would now send you to the wrong place.**
+>
+> The upper bound no longer goes through the enumeration. There is a second,
+> independent route to it — and it is now the one the project relies on:
+>
+> * every one of the 13,003,620 candidate `I = 40` disjointness graphs, and all
+>   5,040 `I = 42` ones, is refuted by the **oriented-matroid encoding alone**;
+> * two minimal forbidden local crossing patterns cover all of them;
+> * both patterns are impossible, the covering argument is a Lean theorem, and
+>   so is the bridge to the project's `Config`
+>   (`lean/ConfigBridge.lean`, `verification-status.md` rows 41–44).
+>
+> The result is `isGreatest_38_pointCount`: **38 is the greatest number of
+> boundary intersection points**, over integer-coordinate configurations in
+> general position, stated about `boundary P ∩ boundary Q` as a set in `ℝ × ℝ`.
+> Standard axioms only. It imports **no published lemma** — not AKR Lemma 5, not
+> AKR Lemma 7, not Černý Lemma 2, not the order-type crossing fact, not the
+> exceptional classification, and **not the 225-case list**.
+>
+> So **§6.1 below — "completeness of the enumeration", the old number-one item —
+> no longer bears on the upper bound.** Read it for its history, which is still
+> the best evidence in this repository about how this kind of work fails, and
+> because the pipeline material is still in the tree. But do not spend your
+> afternoon auditing a search that nothing now depends on.
+>
+> **Where your time is worth most instead, in order:**
+>
+> 1. **The general-position reduction (AKR §9.1).** The new result holds only
+>    for configurations with no three of the fourteen combined vertices
+>    collinear. Reducing the general case to that one is imported prose
+>    (dependency A9, row 4). The project's *own* earlier attempt at this
+>    reduction was **wrong** (K-10), which is exactly why it is now imported —
+>    and exactly why it deserves your scepticism.
+> 2. **Integer coordinates.** `Config` has integer vertex coordinates;
+>    arbitrary simple heptagons have real ones. That reduction is not
+>    formalized.
+> 3. **Whether the encoding means what it is claimed to mean.** The whole new
+>    route rests on the oriented-matroid encoding faithfully expressing
+>    "two simple heptagons cross like *this*". The SAT solver is *not* in the
+>    trusted base — every refutation is re-proved by the Lean kernel — but the
+>    encoding's *semantics* is a modelling choice. §4 tells you how to attack it.
+> 4. **That no human outside this process has read any of it.** Still true, and
+>    still the single most important open item.
+>
+> Items 1 and 2 are now the **entire** remaining mathematical surface between
+> this repository and `f(7,7) = 38`. That is a much smaller target than it was
+> yesterday, and a much better use of a reviewer's afternoon.
+
 Blunt, in order of where a reviewer's time is worth most. Note the ordering:
 the item with the worst *track record* comes first, not the item that sounds
-scariest.
+scariest. *(That ordering is the pre-2026-09-17 one; see the note above.)*
 
-### 6.1 Completeness of the enumeration — the largest weak point
+### 6.1 Completeness of the enumeration — historically the largest weak point
+
+*(No longer load-bearing for the upper bound — see the note at the head of §6.
+Retained in full because its defect history is the most instructive material in
+this repository, and because the pipeline is still in the tree.)*
 
 Everything after §2.5 is an exhaustive finite search, and **nothing certifies
 that the search was exhaustive.** `Endgame.lean` proves that each of the 225
