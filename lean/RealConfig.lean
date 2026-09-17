@@ -253,4 +253,102 @@ theorem exists_integer_model (V : Fin 14 → ℝ × ℝ)
   rwa [show orientR (W i) (W j) (W k) = ((orient (Z i) (Z j) (Z k) : ℤ) : ℝ) from
     orientR_intCast (Z i) (Z j) (Z k)] at this
 
+/-! ## Towards AKR §3: making a vanishing determinant nonzero
+
+`Config` already forces 168 of the 364 determinants nonzero, and `FullGP` asks
+for the other 196.  Both are instances of AKR **§3**'s clause — "no three
+vertices of `P` and `Q` combined lie on a line" — which the paper asserts *for
+convenience* with a one-sentence sketch (`docs/akr-9-1-obligation.md` §6.1).
+§9, the part AKR actually prove, is a different statement: no vertex of one
+polygon on the *boundary* of the other.
+
+§3's clause is a genericity argument, and this section is its core: a single
+vanishing determinant can be removed by an arbitrarily small move of one vertex.
+Iterating that, while keeping the already-nonzero determinants nonzero (an open
+condition), is what gives the clause.
+
+**What is here and what is not.** The single-determinant step is proved.  The
+iteration over all 364, and the statement that the intersection *count* is
+unchanged, are not — see the note at the end. -/
+
+/-- Moving vertex `k` in the `x` direction changes the determinant by
+`-δ · ((V j).2 - (V i).2)`; in the `y` direction by `+δ · ((V j).1 - (V i).1)`.
+Stated for the raw points. -/
+theorem orientR_shift_x (a b c : ℝ × ℝ) (d : ℝ) :
+    orientR a b (c.1 + d, c.2) = orientR a b c - d * (b.2 - a.2) := by
+  simp only [orientR]; ring
+
+theorem orientR_shift_y (a b c : ℝ × ℝ) (d : ℝ) :
+    orientR a b (c.1, c.2 + d) = orientR a b c + d * (b.1 - a.1) := by
+  simp only [orientR]; ring
+
+/-- Replace vertex `k` of a configuration. -/
+def replace (V : Fin 14 → ℝ × ℝ) (k : Fin 14) (p : ℝ × ℝ) : Fin 14 → ℝ × ℝ :=
+  Function.update V k p
+
+@[simp] theorem replace_self (V : Fin 14 → ℝ × ℝ) (k : Fin 14) (p : ℝ × ℝ) :
+    replace V k p k = p := by simp [replace]
+
+@[simp] theorem replace_other {V : Fin 14 → ℝ × ℝ} {k m : Fin 14} (p : ℝ × ℝ) (h : m ≠ k) :
+    replace V k p m = V m := by simp [replace, h]
+
+/-- **The single-determinant genericity step.**  If two of the three vertices are
+distinct, an arbitrarily small move of the third makes the determinant nonzero —
+and moves nothing else.
+
+This is the atom of AKR §3's clause.  The hypothesis `V i ≠ V j` is supplied in
+context by simplicity, which forces distinct vertices. -/
+theorem exists_near_nonzero {V : Fin 14 → ℝ × ℝ} {i j k : Fin 14}
+    (hne : V i ≠ V j) (hki : k ≠ i) (hkj : k ≠ j) {ε : ℝ} (hε : 0 < ε) :
+    ∃ p : ℝ × ℝ, dist p (V k) < ε ∧ orientR (V i) (V j) p ≠ 0 := by
+  by_cases h0 : orientR (V i) (V j) (V k) ≠ 0
+  · exact ⟨V k, by simpa using hε, h0⟩
+  · push_neg at h0
+    -- `V i ≠ V j` means they differ in some coordinate; move `V k` against it.
+    have hxy : (V j).2 - (V i).2 ≠ 0 ∨ (V j).1 - (V i).1 ≠ 0 := by
+      by_contra hc
+      push_neg at hc
+      exact hne (Prod.ext (by linarith [hc.2]) (by linarith [hc.1]))
+    set d : ℝ := ε / 2 with hd
+    have hdpos : 0 < d := by positivity
+    rcases hxy with hy | hx
+    · refine ⟨((V k).1 + d, (V k).2), ?_, ?_⟩
+      · rw [Prod.dist_eq]
+        simp only [Real.dist_eq, add_sub_cancel_left, sub_self, abs_zero,
+          abs_of_pos hdpos, max_lt_iff]
+        exact ⟨by rw [hd]; linarith, hε⟩
+      · rw [show (((V k).1 + d, (V k).2) : ℝ × ℝ) = ((V k).1 + d, (V k).2) from rfl,
+          orientR_shift_x (V i) (V j) (V k) d, h0]
+        simp only [zero_sub]
+        exact neg_ne_zero.mpr (mul_ne_zero (ne_of_gt hdpos) hy)
+    · refine ⟨((V k).1, (V k).2 + d), ?_, ?_⟩
+      · rw [Prod.dist_eq]
+        simp only [Real.dist_eq, sub_self, abs_zero, add_sub_cancel_left,
+          abs_of_pos hdpos, max_lt_iff]
+        exact ⟨hε, by rw [hd]; linarith⟩
+      · rw [orientR_shift_y (V i) (V j) (V k) d, h0]
+        simp only [zero_add]
+        exact mul_ne_zero (ne_of_gt hdpos) hx
+
+/-! ## What remains of §3's clause
+
+Three further steps, none of them started here:
+
+1. **Iterate.** Apply `exists_near_nonzero` to each vanishing determinant in
+   turn, each time with an `ε` small enough that the determinants already made
+   nonzero stay nonzero — which is possible because being nonzero is an open
+   condition (`continuous_orientR`).  A finite induction over the 364 triples.
+2. **The count is unchanged.** Perturbing a configuration in which no vertex
+   lies on the other polygon's boundary does not change the number of boundary
+   intersection points: disjoint closed segments stay disjoint (positive
+   distance), and two segments meeting at a point interior to both continue to
+   meet nearby (their lines are distinct, hence transversal).  This is the bulk
+   of the work and it is genuinely geometric, not just algebraic.
+3. **Assemble** into the statement AKR §3 asserts.
+
+Even with all three, **AKR §9 remains an import**: nothing here gets from an
+arbitrary pair of simple heptagons to one with no vertex on the other's
+boundary.  That is the step AKR prove in five pages, with one existence claim
+they assert rather than prove. -/
+
 end Heptagon.RealConfig
