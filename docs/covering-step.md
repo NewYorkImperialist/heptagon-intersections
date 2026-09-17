@@ -165,9 +165,11 @@ neither is obvious from the failure:
 > reaching it from an arbitrary pair of simple heptagons needs §9 followed by
 > §3's clause. `RealConfig.exists_near_generic` proves §3's iteration half but
 > **not** that the intersection count survives the perturbation, which is what
-> would license any conclusion about the original configuration. The caveats:
-> there is **no attaining example and no `IsGreatest`** at the real level, so
-> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so
+> would license any conclusion about the original configuration. *(Update,
+> later the same day: the **second** caveat below is closed — `isGreatest_38_real`
+> (row 47) proves the *equality* at the real level, the attaining configuration
+> being the integer lower-bound certificate cast into `ℝ × ℝ`.)* The caveat that
+> remains: `Set.ncard` is `0` on infinite sets, so
 > `pointsR_le_38` says nothing about boundaries sharing a segment — general
 > position excludes that here, but any weakening must re-examine it. No
 > committed `verify-all` log covers this module.

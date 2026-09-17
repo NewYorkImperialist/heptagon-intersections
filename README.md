@@ -37,10 +37,11 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > — **two simple heptagons with real coordinates, in general position, meet in
 > at most 38 boundary points**, `intersectionPointsR R` being
 > `boundaryP R ∩ boundaryQ R` as a genuine set in `ℝ × ℝ` built from Mathlib's
-> `segment ℝ`. It imports no published lemma. Two caveats, both stated in the
-> file: there is **no attaining example and no `IsGreatest`** at the real level,
-> so this is the upper bound alone and `f(7,7) = 38` needs the lower bound
-> restated there; and `Set.ncard` is `0` on infinite sets, so it says nothing
+> `segment ℝ`. It imports no published lemma. **And later the same day, the
+> equality: `isGreatest_38_real` (row 47) is `IsGreatest {n | ∃ R : RConfig,
+> (intersectionPointsR R).ncard = n} 38`** — the attaining configuration is the
+> integer lower-bound certificate cast into `ℝ × ℝ`. One caveat remains, stated
+> in the file: `Set.ncard` is `0` on infinite sets, so it says nothing
 > about boundaries sharing a segment — general position excludes that, but any
 > weakening must re-examine it. No committed `verify-all` log covers the
 > module.
@@ -200,11 +201,11 @@ full table. In brief:
 |---|---|
 | Verified in Lean, **unconditionally, for every configuration** | `I + \|E\| = 49`; minimum degree ≥ 1 (*derived* from a parity proof, not imported); **`I ≤ 42`**; **`I` is even**; the 38-crossing construction; the crossing-pair count **equals** the number of points of `∂P ∩ ∂Q` in `ℝ × ℝ` |
 | **Verified in Lean, for configurations in general position, importing no published lemma** *(new 2026-09-17, rows 42–44)* | **`I ≠ 40`**; **`I ≠ 42`**; **`I ≤ 38`**; and **`isGreatest_38_pointCount`** — 38 is the greatest number of boundary intersection **points**, over *integer*-coordinate configurations. One hypothesis, `FullGP` |
-| **Verified in Lean, for configurations with REAL coordinates in general position** *(new 2026-09-17, row 46)* | **`pointsR_le_38`** — at most **38 boundary intersection points**, as a set in `ℝ × ℝ`. Removes the integer-coordinate restriction for the upper bound. Caveats: no attaining example / `IsGreatest` at this level, and `Set.ncard` is 0 on infinite sets (general position excludes the bad case) |
+| **Verified in Lean, for configurations with REAL coordinates in general position** *(new 2026-09-17, rows 46 and 47)* | **`pointsR_le_38`** — at most **38 boundary intersection points**, as a set in `ℝ × ℝ` — and **`isGreatest_38_real`**, the matching `IsGreatest`, so **38 is exactly the maximum**. Removes the integer-coordinate restriction outright, in both directions. One caveat: `Set.ncard` is 0 on infinite sets (general position excludes the bad case) |
 | Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** — the *historical* proof (`Exclude42`). Superseded by the row above, which needs no class data at all, and which is therefore free of the K-22 entanglement |
 | Verified in Lean (enumeration obligations) | a counterexample lands in the searched domain; the domain has **13,003,620** elements; the search visits every element of it *(of the Lean transcription — there is no extraction)* |
 | Verified in Lean (interfaces) | all 225 endgame cases; the AKR-L5 bridge as an `iff`; the component labelling (both directions); a bipartiteness decision procedure; the 225 stored `avoiding` flags against the class table |
-| **The one open input** *(corrected 2026-09-17, twice)* | The **general-position reduction**, imported as prose: AKR §9, plus the count-preservation half of §3's unproved clause. *(The integer-coordinate input, listed here earlier the same day, was closed for the upper bound by `RealUpperBound.pointsR_le_38`. Separately, `f(7,7) = 38` also needs the lower bound restated over real configurations; the certificate is integer-coordinate, hence real, but that has not been written down.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
+| **The one open input** *(corrected 2026-09-17, twice)* | The **general-position reduction**, imported as prose: AKR §9, plus the count-preservation half of §3's unproved clause. *(The integer-coordinate input, listed here earlier the same day, was closed **outright** — `RealUpperBound.pointsR_le_38` for the upper bound and `RealUpperBound.isGreatest_38_real` for the equality, the attaining configuration being the certificate cast into `ℝ × ℝ`.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR **§9** together with **§3**'s unproved clause — *citation corrected 2026-09-17; this cell said "§9.1", which does not say it*) |
 | **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — a question about the published paper, **no longer a dependency** of anything here. See [`docs/akr-l7-review-request.md`](docs/akr-l7-review-request.md), which supersedes `akr-l7-human-review.md`; *this cell pointed at the superseded document* |

@@ -73,12 +73,14 @@
 > `9b2b926`) proves `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`
 > — two simple heptagons with **real** coordinates, in general position, meet in
 > at most **38 boundary points**, as a genuine set in `ℝ × ℝ` built from
-> Mathlib's `segment ℝ` — importing no published lemma. Two caveats, both in the
-> file: there is no attaining example and no `IsGreatest` at the real level, so
-> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so it
-> says nothing about boundaries sharing a segment (general position excludes
-> that, but any weakening must re-examine it). No committed `verify-all` log
-> covers the module. `verification-status.md` row 46.
+> Mathlib's `segment ℝ` — importing no published lemma. **Later the same day the
+> matching lower bound landed too: `isGreatest_38_real` (row 47) proves the
+> *equality* at the real level**, the attaining configuration being the integer
+> certificate cast into `ℝ × ℝ`. One caveat, in the file: `Set.ncard` is `0` on
+> infinite sets, so the bound says nothing about boundaries sharing a segment
+> (general position excludes that, but any weakening must re-examine it). No
+> committed `verify-all` log covers the module. `verification-status.md` rows 46
+> and 47.
 >
 > Every "AKR §9.1" citation in this file is a **stale citation** for that
 > clause: §9.1 does not contain it. `docs/akr-9-1-obligation.md` is

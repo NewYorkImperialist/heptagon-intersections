@@ -47,9 +47,11 @@ of the document. If you read only one section, read §6.
 >    `(intersectionPointsR R).ncard ≤ 38` for `R : RConfig` — two simple
 >    heptagons with **real** coordinates, in general position, meet in at most
 >    38 boundary points, as a genuine set in `ℝ × ℝ`. It imports no published
->    lemma. **Three things are still worth attacking here**, and they are
->    smaller than item 2: there is no attaining example and no `IsGreatest`
->    over `RConfig`, so the *equality* is not assembled at the real level;
+>    lemma. Later the same day `RealUpperBound.isGreatest_38_real` added the
+>    attaining configuration — the integer certificate cast into `ℝ × ℝ` — so
+>    the **equality** holds at the real level too (row 47).
+>    **Two things are still worth attacking here**, and they are
+>    smaller than item 2:
 >    `Set.ncard` is `0` on infinite sets, which general position rules out but
 >    which any weakening must revisit; and **no committed `verify-all` log
 >    covers that module** — the latest predates it.
@@ -1021,7 +1023,7 @@ published text supports. That is §6.3.
 >    cone-plus-openness argument needing no rationals. The remaining step —
 >    from a shared sign vector to the same crossing pattern and the same point
 >    count — is easy and **not done**.)*
->    *(Update, later on 2026-09-17: **Half closed later the same day:** `lean/RealUpperBound.lean` (commit `9b2b926`) proves `RealUpperBound.pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38` — two simple heptagons with **real** coordinates, in general position, meet in at most **38 boundary points**, `intersectionPointsR R` being `boundaryP R ∩ boundaryQ R` as a genuine set in `ℝ × ℝ` built from Mathlib's `segment ℝ`. It imports **no published lemma**. **This closes the integer-coordinate item outright for the upper bound.** Two caveats remain and both are in the file: there is no attaining example and no `IsGreatest` at the real level, so this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so the statement says nothing about boundaries sharing a segment — general position excludes that, but any weakening of it must re-examine the point. No committed `verify-all` log covers the module. `verification-status.md` row 46.)*
+>    *(Update, later on 2026-09-17: **Half closed later the same day:** `lean/RealUpperBound.lean` (commit `9b2b926`) proves `RealUpperBound.pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38` — two simple heptagons with **real** coordinates, in general position, meet in at most **38 boundary points**, `intersectionPointsR R` being `boundaryP R ∩ boundaryQ R` as a genuine set in `ℝ × ℝ` built from Mathlib's `segment ℝ`. It imports **no published lemma**. **This closes the integer-coordinate item outright for the upper bound.** **And later the same day `isGreatest_38_real` supplied the attaining configuration, so the *equality* holds at the real level too** (row 47). One caveat remains, in the file: `Set.ncard` is `0` on infinite sets, so the statement says nothing about boundaries sharing a segment — general position excludes that, but any weakening of it must re-examine the point. No committed `verify-all` log covers the module. `verification-status.md` row 46.)*
 > 3. **Whether the encoding means what it is claimed to mean.** The whole new
 >    route rests on the oriented-matroid encoding faithfully expressing
 >    "two simple heptagons cross like *this*". The SAT solver is *not* in the
