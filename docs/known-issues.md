@@ -66,6 +66,30 @@
 > this module.")*
 > `verification-status.md` row 46.
 
+> **Update, later on 2026-09-17 — AKR §3's clause is discharged for the
+> crossing-pair count (rows 48–50).** Three modules, in sequence:
+> `RealPerturb` proves a crossing is an **open** condition, so a small enough
+> perturbation loses none of them (`exists_near_generic_keeping`);
+> `SegmentStable` proves **disjoint segments stay disjoint** when their four
+> endpoints move by less than some `ε`, over any real normed space and with no
+> general-position hypothesis — which is the fact simplicity needs, simplicity
+> being a *closed* condition that no openness argument can reach; and
+> `RawConfig` assembles them into
+> `raw_crossPairs_card_le_38 (R : RawPair) : (crossPairsOf R.V).card ≤ 38`,
+> where `RawPair` is two heptagons that are simple **as point sets** and has
+> **no general-position field at all**.
+>
+> **This sharpens where the remaining import sits.** It used to be "the
+> general-position reduction: AKR §9 plus §3's unproved clause". Now:
+> **§3's clause is no longer load-bearing for the *pair* count**, and **§9 is
+> load-bearing specifically for the *point* count** — because at a degenerate
+> configuration a point of `∂P ∩ ∂Q` can lie on **no** crossing pair (two sides
+> merely touching have a common point but vanishing determinants), so the pair
+> bound does not give a point bound. Removing that case is exactly §9's job.
+> `f(7,7) = 38` is still **not** a Lean theorem. `verification-status.md`
+> rows 48, 49 and 50.
+
+
 Nothing in this file is hidden elsewhere in the repository, and nothing here has
 been silently repaired. Where a defect was found in the research record, the
 defective artifact is preserved (see `archive/superseded/`) and the correction

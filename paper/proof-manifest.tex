@@ -202,9 +202,42 @@ The Jordan curve theorem is still neither used nor claimed. And
 \S\ref{sec:remaining}'s item on \textbf{independent expert review} is still the
 binding constraint --- more so, not less, now that the argument is short enough
 to be read. \texttt{docs/verification-status.md} is the authoritative,
-continuously updated version of this ledger; rows $40$--$49$ cover everything in
-this section, and rows $48$--$49$ carry the two pieces of \S3's
-count-preservation step added after this section was first written.
+continuously updated version of this ledger; rows $40$--$50$ cover everything in
+this section.
+
+\subsection*{\texorpdfstring{A later correction to the last item, and it sharpens the statement}{A later correction to the last item}}
+
+Rows $48$--$50$, added after this section was first written, change where the
+remaining import sits, so the fifth bullet above is not the last word.
+\texttt{RawConfig.raw\_crossPairs\_card\_le\_38} proves that two heptagons that
+are simple \emph{as point sets} --- a \texttt{RawPair}, which has \textbf{no
+general-position field at all} --- have at most $38$ crossing side pairs. The
+route is: a crossing is a conjunction of strict inequalities, hence an
+\emph{open} condition, so a small enough perturbation loses none of them
+(\texttt{RealPerturb}); disjoint segments stay disjoint when their endpoints
+move slightly, which is what \emph{simplicity} needs, simplicity being a
+\emph{closed} condition no openness argument can reach
+(\texttt{SegmentStable}); so an arbitrary point-set simple pair is approximated
+by a genuine \texttt{RConfig} that keeps every crossing.
+
+Hence:
+\begin{itemize}[leftmargin=*]
+  \item \textsc{akr} \textbf{\S3's unproved clause is no longer load-bearing
+    for the \emph{pair} count.} It is discharged, by perturbation rather than
+    case analysis, and the bound holds at \emph{degenerate} configurations ---
+    which is exactly what that clause was being assumed to avoid.
+  \item \textsc{akr} \textbf{\S9 is load-bearing specifically for the
+    \emph{point} count.} At a degenerate configuration a point of
+    $\partial P\cap\partial Q$ can belong to \textbf{no} crossing pair: two
+    sides that merely \emph{touch} share a point but have vanishing
+    determinants, so \texttt{ProperCrossR} is false and the pair is not
+    counted. The pair bound therefore does \emph{not} give a point bound, and
+    removing touching-without-crossing is precisely what \S9 does.
+\end{itemize}
+
+That is a more precise localisation of the one remaining input than
+``the general-position reduction'' --- which is how the rest of this document,
+and \S\ref{sec:gp}, describe it.
 
 \section{Claim and current status}
 
@@ -378,7 +411,7 @@ remark read ``\S9.1''; see \S\ref{sec:update} on why that citation is wrong.}
 \textsf{GP} & General-position regime may be assumed w.l.o.g.
   & published thm.\ (\S9) $+$ \textbf{unproved published remark} (\S3)
   & \cite[\S9]{AckermanKeszeghRote2022} for ``no vertex on the other boundary''; \cite[\S3]{AckermanKeszeghRote2022} for ``no three combined vertices collinear''
-  & \stat{source-audited} & \textbf{the \S3 clause is asserted ``for convenience'' and not proved in the source}, and it is the half this development consumes; \S9's own argument has an existence step asserted rather than proved. Project's earlier own proof was wrong and is removed. \textbf{The only remaining input to the upper bound} (\S\ref{sec:update}) \\
+  & \stat{source-audited} & \emph{Split by rows 48--50.} The \S3 clause --- asserted ``for convenience'' and not proved in the source --- is now \textbf{discharged in Lean for the crossing-pair count} (\texttt{RawConfig}), so it is no longer an input there. \textbf{\S9 remains the one input}, and specifically for the \emph{point} count: a point can lie on no crossing pair when two sides merely touch. \S9's own argument has an existence step asserted rather than proved. Project's earlier own proof was wrong and is removed. (\S\ref{sec:update}) \\
 \addlinespace
 \textsf{C1} & A line meets a simple $7$-gon in at most $6$ sides; hence $\delta(\GD)\ge1$
   & published theorem & \cite[Lemma 1]{CernyEtAl2003}
@@ -1369,6 +1402,9 @@ The generated
 \texttt{ConfigBridge} & Mathlib & --- & \texttt{crossCountC\_ne\_40}, \texttt{crossCountC\_ne\_42}, \texttt{crossCountC\_le\_38\_of\_general\_position}, and \texttt{isGreatest\_38\_pointCount} over integer configurations in \texttt{FullGP} \\
 \texttt{RealConfig} & Mathlib & --- & \texttt{exists\_integer\_model}: a real configuration in general position has an integer one with the same $364$ determinant signs (the scale-invariance argument); also \texttt{exists\_near\_generic}, \S3's iteration half \\
 \texttt{RealUpperBound} & Mathlib & \textbf{the headline} & \texttt{pointsR\_le\_38} and \texttt{isGreatest\_38\_real}: $38$ is exactly the greatest size of $\partial P\cap\partial Q$ as a set in $\mathbb{R}^2$, for real simple heptagons in general position, importing no published lemma \\
+\texttt{RealPerturb} & Mathlib & --- & a crossing is an \emph{open} condition, so a small enough perturbation loses none; \texttt{exists\_near\_generic\_keeping} \\
+\texttt{SegmentStable} & Mathlib \emph{only} & --- & disjoint segments stay disjoint when their four endpoints move by less than some $\varepsilon$, over any real normed space. \textbf{Imports nothing from this project} and can be reviewed alone \\
+\texttt{RawConfig} & Mathlib & \textbf{\S3's clause} & \texttt{raw\_crossPairs\_card\_le\_38}: at most $38$ crossing side pairs for two heptagons simple \emph{as point sets}, with \textbf{no general-position hypothesis}. Discharges \S3's unproved clause for the pair count \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Class data and the classification}}\\
 \texttt{ClassInvariant} & Mathlib & \textsf{X1} & $|M|=5$ and the maximal crossing sets are exactly $\{\textsc{full}\setminus\{m\}\}$, decided for the $14$ stored classes, the set equality in both directions \\
@@ -2197,7 +2233,17 @@ open even though the proof no longer depends on them.
     \texttt{docs/akr-9-1-obligation.md} \S4.2), and a minimum over the finitely
     many $\varepsilon$s of a configuration's non-adjacent side pairs. Until both
     are built, \texttt{RealPerturb.SimplePerturbable} is carried as an explicit
-    named hypothesis and never as an axiom.
+    named hypothesis and never as an axiom. \emph{Both were built later the
+    same day} (\texttt{RawConfig}, row 50), so this item is \textbf{closed for
+    the crossing-pair count}: \texttt{raw\_crossPairs\_card\_le\_38} needs no
+    general position whatsoever. What replaced it, and it is item~$2'$ below,
+    is the \emph{counting} step --- see \S\ref{sec:update}.
+  \item[$2'$.] \textbf{Side pairs versus intersection points at a degenerate
+    configuration.} The obstacle that outlived \S3's clause, and the reason
+    \S9 is still an import. A point can lie on no crossing pair at all, so the
+    pair bound does not bound points; and overlapping sides make the
+    intersection infinite, where \texttt{Set.ncard} is $0$ and any bound is
+    vacuous. Finiteness must be hypothesis or conclusion, never assumed.
   \item \textbf{\textsc{akr} \S9 itself.} Recorded, with the audit's own
     recommendation against attempting it: five pages, a quantitative uniform-$\varepsilon$
     step with no Mathlib scaffolding, and an existence step \textsc{akr} assert
@@ -2255,13 +2301,18 @@ hypothesis: general position, a structure field of \texttt{RConfig}.
 \textbf{$f(7,7)=38$ is nonetheless not established, for two reasons, and the
 second is the larger.}
 
-First, that one hypothesis is not discharged. Getting to general position from
-an arbitrary pair of simple heptagons is \textsc{akr} \S9, followed by \S3's
-parenthetical ``for convenience'' clause --- which \textsc{akr} \emph{assert and
-do not prove}, and which is the half this development actually consumes.
-Neither is formalised here. \texttt{RealConfig.exists\_near\_generic} proves
-\S3's iteration half and nothing proves that the intersection count survives the
-perturbation.
+First, that one hypothesis is not discharged --- though as of rows 48--50 it is
+smaller and better localised than ``the general-position reduction''.
+\textsc{akr} \S3's parenthetical ``for convenience'' clause, which \textsc{akr}
+assert and do not prove, is now \textbf{discharged in Lean} for the
+crossing-pair count: \texttt{RawConfig.raw\_crossPairs\_card\_le\_38} bounds the
+crossing pairs of two heptagons simple \emph{as point sets} by $38$ with no
+general-position hypothesis at all. What is \emph{not} discharged is
+\textsc{akr} \S9, and it is needed for one specific thing --- identifying
+crossing \emph{pairs} with intersection \emph{points}. At a degenerate
+configuration a point can belong to no crossing pair, because two sides that
+merely touch share a point but have vanishing determinants; removing that case
+is exactly what \S9 does.
 
 Second, \textbf{no person outside this AI-assisted process has read any of it.}
 The mechanisms this project has used --- independent reimplementation,

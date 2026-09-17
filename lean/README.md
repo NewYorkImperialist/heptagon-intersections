@@ -12,7 +12,7 @@
 > axioms, **importing no published lemma**. Its one hypothesis is general
 > position, a structure field of `RConfig`. `f(7,7) = 38` is still **not** a
 > Lean theorem: discharging general position is AKR §9 plus §3's unproved "for
-> convenience" clause. See `docs/verification-status.md` rows 40–49.
+> convenience" clause. See `docs/verification-status.md` rows 40–50.
 >
 > *This box previously read "forty-five Lean libraries of substance … plus 1,363
 > generated per-shard data modules whose only purpose is to split four `decide

@@ -82,6 +82,22 @@
 > committed `verify-all` log **does** now cover the module —
 > `results/validation/2026-09-17_verify_all_after_real_equality.log`, COMPLETE SUCCESS,
 > exit 0, all 1,756 libraries built. `verification-status.md` rows 46 and 47.
+
+> **Update, later on 2026-09-17 (rows 48–50): AKR §3's clause is discharged for
+> the crossing-pair count.** `RealPerturb` (a crossing is an **open** condition,
+> so a small perturbation loses none), `SegmentStable` (**disjoint segments stay
+> disjoint** under a small perturbation — the fact simplicity needs, simplicity
+> being a *closed* condition) and `RawConfig` (the assembly) together prove
+> `raw_crossPairs_card_le_38 (R : RawPair) : (crossPairsOf R.V).card ≤ 38`,
+> where `RawPair` is two heptagons simple **as point sets** and has **no
+> general-position field at all**. This sharpens the remaining import: **§3's
+> clause is no longer load-bearing for the *pair* count**, and **§9 is
+> load-bearing specifically for the *point* count**, because at a degenerate
+> configuration a point of `∂P ∩ ∂Q` can lie on **no** crossing pair — two
+> sides that merely touch have a common point but vanishing determinants — so
+> the pair bound does not give a point bound. `f(7,7) = 38` is still **not** a
+> Lean theorem.
+
 >
 > Every "AKR §9.1" citation in this file is a **stale citation** for that
 > clause: §9.1 does not contain it. `docs/akr-9-1-obligation.md` is
