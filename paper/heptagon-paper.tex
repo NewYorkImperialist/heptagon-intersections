@@ -326,10 +326,52 @@ We must be equally plain about the other half: \textbf{we offer no
 human-surveyable proof of Theorem~\ref{thm:pat8} or of
 Theorem~\ref{thm:pat14}.} What is small enough to check by hand is the
 \emph{pattern}, not its non-realizability. A reader who wants to attack the
-result should attack $\Pi_8$ --- eight incidences on three consecutive sides of
+result should attack $\Pi_8$: eight incidences on three consecutive sides of
 each polygon is a small enough object that a synthetic argument, or a
-counterexample, may well be findable by a specialist. We could not find
-either.
+counterexample, may well be findable by a specialist. We could not find either.
+
+What we can offer instead is an independent verification by a completely
+different route, described next.
+
+\subsection{An independent check of \texorpdfstring{$\Pi_8$}{Pi 8} by order
+types}\label{sec:ot8}
+
+$\Pi_8$ constrains three consecutive sides of each polygon, so it involves
+exactly \textbf{eight points}, $P_0,\dots,P_3$ and $Q_0,\dots,Q_3$. Whether two
+segments cross is determined by orientation signs, hence by the \emph{order
+type} of those eight points --- and the order types of eight points in general
+position are completely enumerated: there are $3315$ of them
+\cite{AichholzerAurenhammerKrasser2002,OrderTypeDatabase}. So
+Theorem~\ref{thm:pat8} can be decided by enumeration, with no solver and no
+proof assistant.
+
+We did this. Checking every labelling of every one of the $3315$ representatives:
+\begin{quote}
+\textbf{no order type of eight points admits $\Pi_8$ --- $0$ of $3315$.}
+\end{quote}
+Two conventions might have left a gap and neither does. The database identifies
+mirror images, which is harmless here because reflection negates every
+orientation while each crossing test is a \emph{product} of two, so the crossing
+relation is unchanged. And it stores one representative per order type, so the
+search enumerates labellings itself.
+
+\begin{remark}[Controls, and a by-product]\label{rem:ot8controls}
+``We found nothing'' is worth nothing without a control that the search can find
+something. Two were run. The crossing pattern taken from the certificate of
+\S\ref{sec:lower} \emph{is} located in the database. Sharper: dropping any
+single one of $\Pi_8$'s eight conditions yields a pattern that \emph{is}
+realizable, and all eight relaxations are found. That rules out a vacuously
+failing search, and as a by-product it confirms \textbf{$\Pi_8$ is minimal} ---
+a property we had previously established only by randomised minimisation of
+unsatisfiable cores, i.e.\ by the very machinery this check is meant to be
+independent of.
+\end{remark}
+
+This is corroboration, not a second proof: it is independent of the Lean route
+in its source of truth (an externally published database), its algorithm
+(enumeration, not refutation), and its implementation. It does \emph{not} cover
+$\Pi_{14}$, which involves nine points; the $n=9$ database has $158{,}817$ order
+types and the same method would apply, but we have not run it.
 
 \subsection{The larger pattern}
 
@@ -764,7 +806,7 @@ $I+\lvert \ED\rvert=49$, Lemma~\ref{lem:even}, Lemma~\ref{lem:42}
 The $28$ degree shapes (\S\ref{sec:cover})
   & machine-checked & \textbf{yes}; derived above \\
 Theorem~\ref{thm:pat8} ($\Pi_8$ non-realizable)
-  & machine-checked & \textbf{no} --- solver refutation \\
+  & machine-checked & \textbf{no} --- but see \S\ref{sec:ot8} \\
 Theorem~\ref{thm:pat14} ($\Pi_{14}$)
   & machine-checked & \textbf{no} --- solver refutation \\
 Theorem~\ref{thm:cover} (covering)
@@ -901,7 +943,9 @@ machine:
     consecutive sides of each polygon, no simplicity hypothesis
     (Definition~\ref{def:pat8}). This is a question of plane geometry. We offer
     no human proof of it, so a synthetic argument --- or a counterexample ---
-    would be decisive either way. If it is false, the exclusion of $40$ and $42$
+    would be decisive either way. \S\ref{sec:ot8} gives an independent
+    verification by order-type enumeration that a reader can re-run in seconds
+    without Lean, which is the nearest thing to a hand check we can supply. If it is false, the exclusion of $40$ and $42$
     collapses, though \S\ref{sec:prelim}, \S\ref{sec:lower} and
     \S\ref{sec:plane} would survive.
   \item \textbf{Does \cite[\S9]{AckermanKeszeghRote2022} actually deliver

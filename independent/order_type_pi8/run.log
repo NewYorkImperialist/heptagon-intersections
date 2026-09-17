@@ -1,0 +1,15 @@
+order types loaded: 3315
+control pattern (from the 38-certificate): [['X', 'X', 'X'], ['X', 'X', 'X'], ['X', 'X', 'X']]
+CONTROL: realizable pattern found in database? True (first at order type #0)
+Pi_8: order types admitting a realization: 0 / 3315
+
+Minimality control: drop one condition at a time.
+  drop P0-Q0 (cross): realizable at order type #0
+  drop P0-Q1 (cross): realizable at order type #0
+  drop P0-Q2 (cross): realizable at order type #5
+  drop P1-Q0 (cross): realizable at order type #0
+  drop P1-Q1 (miss): realizable at order type #0
+  drop P1-Q2 (cross): realizable at order type #2
+  drop P2-Q0 (cross): realizable at order type #5
+  drop P2-Q1 (cross): realizable at order type #2
+all eight relaxations realizable: True
