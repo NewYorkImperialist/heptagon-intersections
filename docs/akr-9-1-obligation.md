@@ -681,6 +681,33 @@ a bounded one, hundreds of lines rather than thousands. **If any part of A9 is
 ever attacked, this is the part to attack**, and it would reduce A9 to §9 as
 published rather than to nothing.
 
+> **Attacked the same day, and the first half is done — 2026-09-17.**
+> `lean/RealConfig.lean` proves, over `ℝ × ℝ` and kernel-checked:
+>
+> * `exists_near_generic (V : Fin 14 → ℝ × ℝ) (hε : 0 < ε) : ∃ W, dist W V < ε ∧ ∀ distinct i j k, orientR (W i) (W j) (W k) ≠ 0` —
+>   **every configuration is arbitrarily close to one in full general
+>   position.** This is the second bullet of the sketch above, and it did not
+>   need `MvPolynomial`: each single "this determinant is nonzero" set is open
+>   and dense, there are 364 of them, and `Fin 14 → ℝ × ℝ` is a complete metric
+>   space, so `dense_iInter_of_isOpen` finishes it. Density of each set comes
+>   from a trick that removes all case analysis on where the three vertices
+>   sit: move `j` in `x` and `k` in `y` by the same `t`, and the determinant
+>   becomes a **monic** quadratic in `t` whatever the configuration, so it has
+>   at most two roots.
+> * `exists_integer_model` — separately, a real configuration in general
+>   position has an **integer** one with the same 364 determinant signs, by an
+>   openness-plus-homogeneity argument that needs no rationals. That addresses
+>   a different gap (`Config`'s integer coordinates), not this one.
+>
+> **What is still missing is this section's first bullet — and §5.3 correctly
+> identified it as the bulk.** Nothing yet proves that the perturbation leaves
+> the number of boundary intersection points unchanged, nor assembles the two
+> halves into the sentence §3 asserts. `verification-status.md` row 45 records
+> the scope, including that the committed verify-all log predates
+> `exists_near_generic`. And **§9 itself remains entirely untouched**: nothing
+> in the Lean development gets from an arbitrary pair of simple heptagons to
+> one with no vertex on the other's boundary.
+
 ### 5.4 A statement-level trap to avoid, if this is ever formalized
 
 Mathlib's `Set.ncard` is **0** on an infinite set. So if the finiteness
@@ -803,4 +830,15 @@ point model throughout, including `IntersectionCount.crossCountC_eq_pointCount`.
 | Is §9 wrong anywhere? | **Not that I can find.** Two steps are asserted rather than proved (the existence of *E_i*; the uniform ε), but I found no error. |
 | Is it formalizable? | In principle yes, in practice a project of its own. Hardest step: the "One final point" ε-estimate, PDF p. 24. |
 | Is there a softer target? | **Yes** — §3's clause alone (§5.3), which is the part the Lean development actually consumes. |
+| Has any of it been formalized since? | **The genericity half of §3's clause, yes** — `RealConfig.exists_near_generic`, 2026-09-17; see the note in §5.3. The "count is unchanged" half, the assembly, and the whole of §9 have not. |
 | Should A9 stay a hypothesis? | **Yes.** |
+
+> **Added 2026-09-17, after this document was written.** Two things raise the
+> stakes on everything above. First, the upper bound for configurations in
+> general position is now a Lean theorem importing **no published lemma** at all
+> (`lean/ConfigBridge.lean`; `verification-status.md` rows 41–44), so A9 is the
+> **only** remaining published import — which means the strongest results in the
+> repository rest on the one unproved sentence of §3 this document identifies.
+> Second, part of §3's clause has since been proved in Lean (§5.3's note), which
+> narrows the obligation without closing it. The answer to the last row is
+> unchanged: A9 should stay a hypothesis.

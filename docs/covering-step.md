@@ -28,8 +28,18 @@ needs two halves:
 * **the covering** — every candidate graph contains a relabelled copy of one of
   them. **This document.**
 
-Together they would make `I ≠ 40` a Lean theorem resting on no published lemma,
-modulo the general-position gap of `docs/residual-412-lean.md` §4.
+Together they **do** make `I ≠ 40` a Lean theorem resting on no published
+lemma, modulo the general-position gap of `docs/residual-412-lean.md` §4.
+*(Tense corrected 2026-09-17: this read "would make". Both halves are done —
+`ConfigBridge.crossCountC_ne_40`.)*
+
+The **`I = 42` branch fell to the same two patterns**, and it is not in this
+document: `I = 42` leaves seven disjoint side pairs, minimum degree 1 on both
+sides forces a perfect matching, and the two patterns already cover all
+`7! = 5040` of those. See `lean/CoverMatch.lean`, `lean/CoverColDeg.lean`,
+`lean/MCase000*.lean` and `verification-status.md` row 44. So the **whole**
+upper bound for a configuration in general position now imports no published
+lemma, and the `I ≠ 42` half needs no exceptional-class data either.
 
 ## 2. The five layers
 
@@ -112,9 +122,15 @@ neither is obvious from the failure:
 
 ## 4. Limits
 
-* **Nothing here is load-bearing.** The candidate proof runs through the
-  pipeline of `docs/proof-outline.md`; the sweep and this step are parallel
-  work.
+* **Corrected 2026-09-17: this bullet said "Nothing here is load-bearing. The
+  candidate proof runs through the pipeline of `docs/proof-outline.md`; the
+  sweep and this step are parallel work." That is now the reverse of the
+  truth.** This step *is* the upper bound for configurations in general
+  position, and the pipeline of `proof-outline.md` is the parallel work — kept
+  because it is the only argument that covers configurations outside general
+  position, and because it is what produced the patterns in the first place.
+  The bullet is corrected rather than deleted because it was accurate when
+  written, a few hours earlier.
 * It gives `I ≠ 40` only for configurations in **full** general position — all
   364 orientation determinants nonzero. `Config` forces 168 of those; the other
   **196** come from AKR §3's unproved "for convenience" clause, which is
@@ -125,8 +141,37 @@ neither is obvious from the failure:
   from `DisjointnessGraph.exists_disjointO_Pside`, for every `Config`.
 * The two patterns were found by a SAT solver and minimised by search, but they
   are Lean theorems now; the solver is not in the trusted base of A, B or C.
-* `I = 42` and the lower bound are elsewhere, and `f(7,7) = 38` remains not a
-  Lean theorem.
+* `I = 42` and the lower bound are elsewhere — `lean/ConfigBridge.lean` for
+  both, row 44 — and **`f(7,7) = 38` remains not a Lean theorem.** Two things
+  separate the development from it: `Config`'s **integer** coordinates
+  (`lean/RealConfig.lean` gives the sign-vector half; row 45) and the
+  **general-position reduction** (AKR §9, plus the "count is unchanged" half of
+  §3's clause; row 4).
+
+> **Update, later on 2026-09-17: the integer-coordinate item is now
+> CLOSED for the upper bound.** `lean/RealUpperBound.lean` (commit `9b2b926`)
+> proves, in two steps and importing **no published lemma**:
+> `crossingPairsR_card_le_38 (R : RConfig) : (crossingPairsR R).card ≤ 38`, by
+> transporting all 364 determinant signs through
+> `RealConfig.exists_integer_model` into a genuine `Config` in `FullGP`; and
+> then `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`,
+> where `intersectionPointsR R` is `boundaryP R ∩ boundaryQ R` — a genuine set
+> in `ℝ × ℝ`, each boundary a union of Mathlib `segment ℝ`s over the fourteen
+> **real** vertices. **So two simple heptagons with real coordinates, in
+> general position, provably meet in at most 38 boundary points.**
+>
+> **What is left, and it is one thing plus two caveats.** The one thing is
+> **AKR §9**: `RConfig` *assumes* general position as a structure field, and
+> reaching it from an arbitrary pair of simple heptagons needs §9 followed by
+> §3's clause. `RealConfig.exists_near_generic` proves §3's iteration half but
+> **not** that the intersection count survives the perturbation, which is what
+> would license any conclusion about the original configuration. The caveats:
+> there is **no attaining example and no `IsGreatest`** at the real level, so
+> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so
+> `pointsR_le_38` says nothing about boundaries sharing a segment — general
+> position excludes that here, but any weakening must re-examine it. No
+> committed `verify-all` log covers this module.
+> `verification-status.md` row 46.
 
 ## 5. Reproducing
 

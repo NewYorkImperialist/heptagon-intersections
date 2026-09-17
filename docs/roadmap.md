@@ -2,6 +2,93 @@
 
 **Date:** 2026-09-14. Written after the bounded A7/Lean work of 2026-09-13/14.
 
+> **SUPERSEDED, 2026-09-17. Read this whole banner before using any part of
+> this file to plan work.** This roadmap has **not** been revised since
+> 2026-09-14 and it does not mention `lean/ConfigBridge.lean`,
+> `lean/RealConfig.lean`, `lean/CoverAll.lean`, `crossCountC_ne_40`,
+> `crossCountC_ne_42` or `isGreatest_38_pointCount` anywhere. Everything it
+> *measures* is still correct. Everything it *recommends*, and its central
+> conclusion, is not.
+>
+> **What changed.** The whole upper bound — both the `I ≠ 40` and the `I ≠ 42`
+> branch — is now a Lean theorem for configurations in **general position**,
+> importing **no published lemma**: not Černý L2, not AKR L5, not AKR L7, not
+> the order-type crossing fact, not the exceptional classification, not the
+> 225-case list, and not the 13,003,620-graph enumeration. The strongest
+> statement in the development is `ConfigBridge.isGreatest_38_pointCount` — 38
+> is the greatest number of points of `∂P ∩ ∂Q` as a set in `ℝ × ℝ` — and it
+> carries one hypothesis, `FullGP`. `docs/covering-step.md`;
+> `verification-status.md` rows 41–44.
+>
+> **Which of this file's conclusions are now false, item by item.**
+>
+> * §0's "Leaving Černý L2 or AKR L5 external does **not** complete it" — for
+>   the general-position case it does, because neither is used.
+> * §3's Risks 1, 2, 3, 4 and 6 (enumeration completeness, the A7 bridges,
+>   `S(e) ≠ ∅`, the stored `avoiding` flag, external lemmas L2/L5) are **off the
+>   critical path**. Risk 5's note is discussed below.
+> * §4 ("Three routes to A7 in the kernel") is **moot**: A7 is not an input.
+> * §5's "the upper bound rests on exactly two things: parity and `hne40`" — both
+>   are now kernel theorems, the second for general position. Both of §5's
+>   candidate milestones are obsolete.
+> * §5's "Explicitly **not** recommended: point-set semantics (`I2b`, needs ℝ²,
+>   orthogonal)" was **wrong**, and it is worth saying so plainly: point-set
+>   semantics turned out to be exactly the right investment. The strongest
+>   statement in the development is a point-set statement in `ℝ × ℝ`.
+> * §5's "That is not statable in this development: `Pt` is `Int × Int` and
+>   `side P i` is never defined as a set anywhere in the repository" is
+>   contradicted by `lean/PointSetSemantics.lean`, `lean/PolygonSimple.lean`,
+>   `lean/IntersectionCount.lean` and `lean/RealConfig.lean`.
+> * §7's "Component C is the first external dependency replaced by a proof;
+>   nothing else moved" is badly stale.
+> * §8 and §9 — including the headings "§8c … `hne40` is out of reach",
+>   "`hne40` cannot be closed inside the kernel", and the five-route table's
+>   "`hne40` stays outside the kernel … a settled conclusion rather than an open
+>   question" — must be read as scoped to **kernel-evaluating the
+>   13,003,620-graph filter pipeline**, which is what every one of the five
+>   routes did. All five remain dead. The sixth route does not evaluate the
+>   pipeline: it deletes it. §8a/§9's own carve-out, "a mathematical
+>   restructuring that shrinks the 13,003,620-element domain … nobody has one",
+>   is the one that was taken — and the domain was not shrunk, it was bypassed.
+>
+> **The two items that should now drive any roadmap, and neither is in this
+> file:**
+>
+> 1. **Integer coordinates.** `Config` has integer vertices.
+>    `RealConfig.exists_integer_model` proves a real configuration in general
+>    position has an integer one with the same 364 determinant signs. Missing:
+>    the (easy) step from a shared sign vector to the same crossing pattern and
+>    the same point count.
+> 2. **The general-position reduction.** AKR **§9** for "no vertex of one
+>    polygon on the other's boundary" — five pages, not formalized, not
+>    attempted — plus AKR **§3's** unproved one-sentence "for convenience"
+>    clause for the collinearity `FullGP` needs.
+>    `RealConfig.exists_near_generic` proves the perturbation iteration;
+>    missing is that the perturbation leaves the intersection count unchanged
+>    (the bulk), and that the perturbed polygons stay simple (asserted nowhere
+>    in §9 or §3).
+>
+> **Update, later on 2026-09-17: item 1 is CLOSED for the upper bound, and item
+> 2 is therefore the only remaining one.** `lean/RealUpperBound.lean` (commit
+> `9b2b926`) proves `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`
+> — two simple heptagons with **real** coordinates, in general position, meet in
+> at most **38 boundary points**, as a genuine set in `ℝ × ℝ` built from
+> Mathlib's `segment ℝ` — importing no published lemma. Two caveats, both in the
+> file: there is no attaining example and no `IsGreatest` at the real level, so
+> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so it
+> says nothing about boundaries sharing a segment (general position excludes
+> that, but any weakening must re-examine it). No committed `verify-all` log
+> covers the module. `verification-status.md` row 46.
+>
+> Every "AKR §9.1" citation in this file is a **stale citation** for that
+> clause: §9.1 does not contain it. `docs/akr-9-1-obligation.md` is
+> authoritative; `verification-status.md` row 4 carries the correction.
+> Library and job figures in this file (§5's "27 libraries, 1399 jobs, 740
+> theorems", §5's "Twenty-one Lean libraries, 657 theorems") are also stale:
+> **1,756 declared libraries** (commit `d22c313`), with the most recent
+> committed full build at 1,755 libraries / 6,518 jobs. The theorem
+> census has not been re-measured.
+
 ## 0. Two endpoints, kept apart
 
 **Endpoint 1 — a mathematical paper.** May rely on correctly applied published
@@ -117,6 +204,17 @@ being *false*.
 > bounds a region" remains unformalized, as does AKR §9.1's general-position
 > reduction. Those, not side-disjointness, are what still separate the
 > `Config`-level result from `f(7,7) = 38`. See `verification-status.md` row 26.
+>
+> **Corrected 2026-09-17.** Two errors here. (i) The citation: it is AKR **§9**
+> for the vertex-on-boundary clause and **§3's unproved clause** for
+> collinearity, not §9.1 — and the collinearity clause is the half the Lean
+> development consumes. (ii) "The Jordan-curve step … those are what still
+> separate the `Config`-level result from `f(7,7) = 38`" is wrong: the Jordan
+> curve theorem is neither claimed nor needed
+> (`verification-status.md` row 29), and `PolygonSimple.simple_closed_polygon`
+> proves the polygon is a simple closed curve without it. What separates the
+> two is the **integer-coordinate** restriction and the **general-position
+> reduction** — see the banner at the top of this file.
 
 **Risk 6 — external lemmas L2/L5 (I, J).** Audited; consequences identified.
 Following the component-C template is a known path.

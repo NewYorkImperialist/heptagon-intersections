@@ -1,6 +1,14 @@
 # Computational method and reproduction guide
 
-**Last updated:** 2026-09-14 (see the corrections dated 2026-09-14 below)
+**Last updated:** 2026-09-17 (see the corrections dated 2026-09-14 and
+2026-09-17 at the foot of this file; the body is otherwise as of 2026-09-14)
+
+> **Scope note added 2026-09-17.** This is a guide to reproducing the **Python
+> pipeline**, and it remains accurate as that. It is **not** a description of
+> how the upper bound is now proved: since 2026-09-17 the upper bound for
+> configurations in general position is a Lean theorem that touches none of the
+> runs below. Read the "Update, 2026-09-17" block at the end before treating
+> any run here as load-bearing.
 
 Everything below was executed on 2026-09-13 unless explicitly marked otherwise.
 Commands that were **not** run are marked as such; no command in this file is
@@ -111,7 +119,10 @@ Reproduced 2026-09-13 (`results/logs/`):
 
 ## Tier 3 — the labelling-invariant elimination (about 3 minutes)
 
-This is the load-bearing run. It re-derives the 9,702 survivors and then checks
+This is the load-bearing run *of the Python pipeline*. *(Qualifier added
+2026-09-17: it is no longer load-bearing for the upper bound, which does not
+reach this filter — see the update at the foot of this file.)* It re-derives the
+9,702 survivors and then checks
 emptiness **separately for each of the 196 ordered pairs of exceptional
 classes**, under three different representative labellings (as stored;
 rotation 3 + reflection; rotation 5).
@@ -239,6 +250,15 @@ small certificate without rerunning the expensive search:
   certificate establishes that each listed case dies, not that the list is
   complete, so a referee who wants completeness must still rerun the
   13,003,620-graph search and trust the same codebase that produced the claim.
+* **Achieved differently, 2026-09-17, and this supersedes the bullet above for
+  the general-position case.** A referee who accepts the general-position
+  hypothesis does not have to rerun anything, or trust any codebase: the upper
+  bound is a Lean theorem whose trusted base is the Lean kernel plus Mathlib,
+  with no SAT solver, no certificate, no enumeration and no published lemma
+  (`ConfigBridge.crossCountC_le_38_of_general_position`). The 225-case list and
+  its completeness are no longer part of the chain. What a referee must still
+  supply by hand is the general-position reduction itself — which is prose in
+  AKR §9 and an unproved aside in AKR §3.
 
 ## Method summary
 
@@ -280,3 +300,47 @@ on external lemmas. See `verification-status.md`.
 > over `Pt := Int × Int`; the Jordan-curve step and AKR §9.1's general-position
 > reduction are not formalized. See `verification-status.md`, which is
 > authoritative.
+
+> **Update, 2026-09-17 — the enumeration this page describes is no longer
+> needed for the upper bound.** Everything below and above remains a correct
+> description of the Python pipeline, and the pipeline still reproduces. What
+> changed is that it is no longer load-bearing.
+>
+> Both branches of the upper bound are now Lean theorems for configurations in
+> **general position**, importing **no published lemma** and touching **no**
+> enumeration: `ConfigBridge.crossCountC_ne_40`, `crossCountC_ne_42`,
+> `crossCountC_le_38_of_general_position`, and
+> `isGreatest_38_pointCount` — the last stating that 38 is the greatest number
+> of points of `∂P ∩ ∂Q` as a set in `ℝ × ℝ`. It carries one hypothesis,
+> `FullGP`. `verification-status.md` rows 41–44; `docs/covering-step.md`.
+>
+> Four specific corrections to the paragraphs above. (i) `I ≠ 42` **no longer
+> needs the exceptional-class invariants** — `crossCountC_ne_42` takes no class
+> data at all. (ii) The strongest statement is not
+> `IntersectionParity.isGreatest_38_final` but
+> `ConfigBridge.isGreatest_38_pointCount`, and it needs neither of that
+> theorem's two hypotheses. (iii) "`hne40` is a settled negative for the kernel"
+> is scoped to the five routes that tried to kernel-**evaluate** the
+> 13,003,620-graph filter pipeline; `hne40` itself is a kernel theorem for
+> general position, by a route that evaluates no graph. (iv) "Everything is at
+> the orientation level over `Pt := Int × Int`; the Jordan-curve step and AKR
+> §9.1's general-position reduction are not formalized" is wrong three times
+> over: the strongest statements are about point sets in `ℝ × ℝ`; the Jordan
+> curve theorem is neither claimed nor needed (row 29); and the general-position
+> citation is **AKR §9 plus §3's unproved clause**, not §9.1 (row 4,
+> `docs/akr-9-1-obligation.md`).
+>
+> The build figure "25 libraries, 1395 jobs" is also two generations stale:
+> **1,756** declared libraries (commit `d22c313`); the most recent committed
+> full build is **1,755 libraries, 6,518 jobs, exit 0**
+> (`results/validation/2026-09-17_verify_all_after_real_config.log`) and
+> predates the last two committed modules.
+>
+> `f(7,7) = 38` is **still not a Lean theorem.** Two things separate the
+> development from it: `Config` has **integer** coordinates
+> (`RealConfig.exists_integer_model` gives the sign-vector half), and the
+> general-position reduction is imported prose (of which
+> `RealConfig.exists_near_generic` proves the perturbation-iteration half of
+> §3's clause, and AKR §9 is not attempted). *(The integer-coordinate item is
+> **closed for the upper bound** as of commit `9b2b926`: `lean/RealUpperBound.lean` (commit `9b2b926`) proves `RealUpperBound.pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38` — two simple heptagons with **real** coordinates, in general position, meet in at most **38 boundary points**, `intersectionPointsR R` being `boundaryP R ∩ boundaryQ R` as a genuine set in `ℝ × ℝ` built from Mathlib's `segment ℝ`. It imports **no published lemma**. **This closes the integer-coordinate item outright for the upper bound.** Two caveats remain and both are in the file: there is no attaining example and no `IsGreatest` at the real level, so this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so the statement says nothing about boundaries sharing a segment — general position excludes that, but any weakening of it must re-examine the point. No committed `verify-all` log covers the module. `verification-status.md` row 46.)* `verification-status.md`
+> is authoritative.

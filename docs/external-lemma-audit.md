@@ -45,6 +45,34 @@ of this repository is still none**; see `ai-disclosure.md` and
 >    `EXTERNAL PUBLISHED LEMMA` (imported, not reproved), and with
 >    `a7-specification.md` R3, "External to this audit. Not re-derived here."
 >    The authoritative classification is row 4's.
+> **Two more cautions added 2026-09-17.**
+>
+> 3. **Every citation of "AKR §9.1" in this document as the source of the
+>    *general-position clause the project needs* is wrong** — including the two
+>    in the banner above. §9's opening sentence scopes the whole section: it
+>    justifies only *"that no vertex of one polygon lies on the boundary of the
+>    other polygon"*. §9.1 is the vertex-vertex half, §9.2 the vertex-side half,
+>    and **neither touches collinearity of three vertices**. The clause the Lean
+>    development consumes — no three of the fourteen combined vertices collinear,
+>    which is `ConfigBridge.FullGP` — has its only warrant in one sentence of
+>    **§3** (PDF p. 4), asserted *"for convenience"*, with no proof and no lemma
+>    number. Statements below that describe §9.1's own *content* (the parametric
+>    morph, the dependence graph, Lemma 16, Theorem 17, Lemma 18) are accurate;
+>    what is wrong is treating §9.1 as supplying the project's clause.
+>    [`akr-9-1-obligation.md`](akr-9-1-obligation.md) is authoritative and
+>    supersedes this document on the point; `verification-status.md` row 4
+>    carries the correction. A second gap it records: nothing in §9, §9.1, §9.2
+>    or §3 asserts that the perturbed polygons remain **simple**, which the
+>    argument uses.
+> 4. **The remit of this audit is no longer the remit of the proof.** Since
+>    2026-09-17 the upper bound for configurations in general position is a Lean
+>    theorem importing **no published lemma** — not Černý L2, not AKR L5, not
+>    AKR L7 (`lean/ConfigBridge.lean`; `verification-status.md` rows 41–44). So
+>    of the dependencies audited here, **only the general-position reduction is
+>    still load-bearing**, and caution 3 says the citation for it was wrong.
+>    The audit of the other lemmas remains correct and remains relevant to the
+>    historical enumeration route.
+
 **Remit:** the *external* results (Černý Lemmas 1 and 2; AKR Lemmas 5 and 7; AKR's
 general-position reduction) and the project's *use* of them, including the STRICT
 Lemma-A line condition. The internal correctness of the enumeration is audited only

@@ -14,6 +14,17 @@ chirotopes**. Nothing connects those predicates to polygons in the plane.
 This note traces the connection that is missing. The conclusion is that it is
 **one lemma**, and the rest is definitional.
 
+> **Note added 2026-09-17: (E7) is no longer an input to the upper bound.** The
+> whole upper bound, both the `I ≠ 40` and the `I ≠ 42` branch, is now a Lean
+> theorem for configurations in general position importing **no published
+> lemma** and **no exceptional-class data** — `lean/ConfigBridge.lean`;
+> `verification-status.md` rows 41–44. In particular `crossCountC_ne_42` takes
+> no `hclass` at all, so the classification is not needed to exclude 42 either.
+> The analysis below is unchanged and still correct about what discharging (E7)
+> would require; it is simply no longer on the path to `f(7,7) = 38`. The two
+> things that are on that path are `Config`'s integer coordinates (row 45) and
+> the general-position reduction (row 4).
+
 ---
 
 ## 1. The chain, definition by definition

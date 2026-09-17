@@ -4,6 +4,20 @@
 project's trusted set* is narrower than "AKR Lemma 7 is no longer needed"; read
 §3 before quoting this anywhere.
 
+> **Superseded as a route, 2026-09-17.** Everything in this file is still true.
+> But the 412 graphs, and the `13,003,620 → 412` reduction that produces them,
+> are no longer on the path to the upper bound. The same technique was pushed
+> all the way: two minimal forbidden crossing patterns cover **every** one of
+> the 13,003,620 candidate `I = 40` graphs *and* all 5,040 perfect matchings of
+> the `I = 42` branch, the covering argument is a Lean theorem, and
+> `ConfigBridge` instantiates it at `Config`. So both branches of the upper
+> bound hold for configurations in general position importing **no published
+> lemma** — `docs/covering-step.md`, `verification-status.md` rows 41–44.
+>
+> What survives from this file and is still worth reading is **§4**: the `GP`
+> versus `Config` gap it records is exactly the hypothesis the new theorems
+> carry, now named `ConfigBridge.FullGP`.
+
 ## 1. The theorem
 
 `lean/ResidualAll.lean`:
@@ -65,6 +79,12 @@ the kernel rechecks them. Neither the CNFs, the DRAT files, the LRAT files nor
 
 ## 3. What this does and does not remove
 
+*(Section superseded 2026-09-17: the upper bound no longer reaches the
+elimination argument at all, so it removes AKR Lemma 7 along with AKR Lemma 5,
+Černý Lemma 2, the order-type crossing fact, the exceptional classification and
+the 225-case list. The trade described below was the one available on
+2026-09-16.)*
+
 It removes **AKR Lemma 7's reading** from the elimination argument. Before: the
 pipeline *with* the A7 filter reaches nothing, and one must believe A7 says what
 the project reads it as saying. After: the pipeline *without* the A7 filter
@@ -82,11 +102,30 @@ Untouched: AKR Lemma 5, Černý Lemma 2, the order-type crossing fact, **(HP)**
 between the `Config`-level statement and `f(7,7) = 38` over ℝ.
 **`f(7,7) = 38` remains not a Lean theorem.**
 
+> **Corrected 2026-09-17.** The "untouched" list is obsolete: AKR Lemma 5,
+> Černý Lemma 2, the order-type crossing fact, the exceptional classification
+> and the 225-case list are all **off the path** to the upper bound, not merely
+> untouched by *this* theorem. (HP) likewise. `f(7,7) = 38` is indeed still not
+> a Lean theorem — but the reason is now narrow and specific: `Config` has
+> **integer** coordinates (`RealConfig.exists_integer_model` gives the
+> sign-vector half), and the general-position reduction is imported prose (AKR
+> §9, plus the "count is unchanged" half of §3's clause). The "gap between the
+> `Config`-level statement and `f(7,7) = 38` over ℝ" is not one gap but those
+> two — and the pair-count-versus-point-count part of it is **closed**,
+> `IntersectionCount.crossCountC_eq_pointCount` and
+> `ConfigBridge.isGreatest_38_pointCount`.
+
 `independent/realizability_sweep/` pushes the same technique much further — every
 one of the 13,003,620 `I = 40` candidate graphs is refuted by the encoding
 alone, and four minimal forbidden patterns cover all of them — but the step that
 would make that part of the proof, coverage in Lean, is not done. See
 `verification-status.md` row 41.
+
+> **Done, 2026-09-17.** Coverage in Lean *is* now done, and with **two**
+> patterns rather than four: the 154,794-step covering refutation was never
+> transcribed — the covering claim was split by degree shape into 28 ordinary
+> cases instead. `lean/CoverAll.lean`, `lean/CoverShape.lean`,
+> `lean/CoverCase<k><r>.lean`; `docs/covering-step.md`.
 
 `docs/akr-l7-review-request.md` is **superseded-pending, not withdrawn**: the
 reading still matters to anyone else using that lemma, and AKR's Observation 6
@@ -113,6 +152,21 @@ That is the project's standing "general position as WLOG" bridge (`docs/verifica
 row 9a lists it among the prose steps), and it is unproved here as elsewhere.
 It is recorded in this file because the gap is easy to miss: `GP` and `Config`
 look like they say the same thing and do not.
+
+> **Updated 2026-09-17, and this section is the part of the file that still
+> matters.** The gap is no longer unstated: it is the named hypothesis
+> `ConfigBridge.FullGP`, and the count is **196** missing triples out of 364
+> (`Config` forces 168). Two further corrections. Its warrant is **AKR §3's
+> unproved "for convenience" clause**, not §9.1 — §9 justifies only "no vertex
+> of one polygon on the boundary of the other", and this file's pointer to
+> row 9a should now be read as pointing to row 4 and
+> `docs/akr-9-1-obligation.md`. And "unproved here as elsewhere" is no longer
+> quite right: `RealConfig.exists_near_generic` proves, in Lean, that every
+> configuration is arbitrarily close to one in full general position — the
+> perturbation-iteration half of §3's clause. What is **not** proved is that
+> the perturbation leaves the intersection count unchanged, which is the bulk
+> of the clause, nor that the perturbed polygons remain simple, which nothing
+> in §9 or §3 asserts either. Row 45.
 
 ## 5. Controls
 

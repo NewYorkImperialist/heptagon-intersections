@@ -9,10 +9,15 @@ project's status conservatively and are maintained going forward:
 |---|---|
 | [`verification-status.md`](verification-status.md) | **Authoritative.** Trust status of every claim. Overrides every other document and every transcript. |
 | [`roadmap.md`](roadmap.md) | **Dependency roadmap** toward a kernel-checked theorem: current state by component, risks ranked by track record rather than effort, three candidate A7 routes, and the single recommended next milestone. |
-| [`known-issues.md`](known-issues.md) | Every open gap and unresolved question, numbered `K-01`…`K-21`. |
+| [`known-issues.md`](known-issues.md) | Every open gap and unresolved question, numbered `K-01`…`K-22`. *(Range corrected 2026-09-17: it read `K-21`, and `K-22` has existed since 2026-09-14.)* |
+| [`covering-step.md`](covering-step.md) | **The current upper-bound route.** The two minimal forbidden crossing patterns, the five-layer covering argument, and the bridge to `Config`. Added 2026-09-17. |
+| [`akr-9-1-obligation.md`](akr-9-1-obligation.md) | **Authoritative on the general-position citation.** What AKR §9 proves, what §9.1 does *not* say, and why the collinearity clause the development consumes rests on one unproved sentence of §3. |
+| [`residual-412-lean.md`](residual-412-lean.md) | The 412 AKR-Lemma-7-free residual graphs, refuted in Lean. Superseded as a route by `covering-step.md`; §4 remains the clearest statement of the `GP`-versus-`Config` gap. |
+| [`akr-l7-review-request.md`](akr-l7-review-request.md) | **The AKR Lemma 7 question, as it should now be asked.** Supersedes `akr-l7-human-review.md`. Self-contained, with a drafted author question. |
+| [`e7-geometric-residue.md`](e7-geometric-residue.md) | Analysis of what the exceptional classification's geometric residue would require. Nothing proved; and since 2026-09-17 the classification is not an input to the upper bound. |
 | [`a7-independent-resolution.md`](a7-independent-resolution.md) | **The A7-EXT resolution attempt** and its verdict (`VERY STRONGLY CORROBORATED — HUMAN REVIEW STILL DESIRABLE`). Includes the counterexample showing AKR Observation 6 is false as printed. Read with `a7-independent-proof.md`. |
 | [`a7-independent-proof.md`](a7-independent-proof.md) | Direct from-scratch proof attempt: Observation 6′ proved; Lemma 7 reconstruction partial (three of twelve terminal cases). Carries two corrections from hostile review. |
-| [`akr-l7-human-review.md`](akr-l7-human-review.md) | **The one open mathematical review item**, written to be read standalone by a combinatorial geometer in ~3 pages. Start here if you are reviewing the mathematics rather than the code. |
+| [`akr-l7-human-review.md`](akr-l7-human-review.md) | **SUPERSEDED — do not cite.** *(Corrected 2026-09-17. This row read "**The one open mathematical review item**, written to be read standalone by a combinatorial geometer in ~3 pages. Start here if you are reviewing the mathematics rather than the code." Two things were wrong. `verification-status.md` row 9a records this document as having become a third retraction with an unsound central section, superseded by [`akr-l7-review-request.md`](akr-l7-review-request.md) — the status file corrected its own pointer on 2026-09-16 and this index was not updated. And since 2026-09-17 the AKR Lemma 7 question is not a review item for the proof at all: it is an open question about the published paper on which nothing here depends. Retained, not repaired.)* |
 | [`external-lemma-audit.md`](external-lemma-audit.md) | Full hypothesis-by-hypothesis audit of every external lemma against the published papers. |
 | [`computational-method.md`](computational-method.md) | Method summary and the reproduction guide, with what does and does not run. |
 | [`literature-notes.md`](literature-notes.md) | Sources, published bounds, and the imported lemmas. |
@@ -24,12 +29,24 @@ project's status conservatively and are maintained going forward:
 
 *(Index completed 2026-09-14: these five files existed but were not listed.)*
 
+*(Index completed again 2026-09-17: six more files existed but were not listed —
+`covering-step.md`, `akr-9-1-obligation.md`, `residual-412-lean.md`,
+`akr-l7-review-request.md`, `e7-geometric-residue.md` and `proof-outline.md`,
+the last of which is indexed in the second table below. The first two of those
+are the most important documents written since 2026-09-15 and a reader arriving
+at this index would not have found them.)*
+
 **Original research documents.** These were preserved byte-for-byte until
 2026-09-13. **`proof-outline.md` has since been edited**: its Step 0 was found to
-be mathematically incorrect and has been replaced by a citation to AKR §9.1 (see
-`known-issues.md` K-10). The active proof must be correct, so the repair was made
-in place; the failed argument remains in git history and the supersession is
-stated in the file itself.
+be mathematically incorrect and has been replaced by a citation to AKR **§9,
+together with §3's unproved "for convenience" clause** (see `known-issues.md`
+K-10, and `akr-9-1-obligation.md` which is authoritative on the attribution).
+The active proof must be correct, so the repair was made in place; the failed
+argument remains in git history and the supersession is stated in the file
+itself. *(Citation corrected 2026-09-17: this paragraph said "§9.1". §9.1 is
+the vertex-vertex half of "no vertex of one polygon on the boundary of the
+other" and says nothing about collinearity, which is the half the development
+actually consumes.)*
 
 **Correction, 2026-09-14.** This section used to say "the other two remain
 unedited". That is no longer true of either of them, and the claim was left

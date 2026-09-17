@@ -15,8 +15,20 @@
 >   general-position perturbation argument ("a vertex-on-side incidence perturbs
 >   to 0 or 2 crossings, and the direction giving 2 can be chosen"). That
 >   argument was later found **INCORRECT** in the cone-containment sub-case and
->   removed from the active proof, which now cites AKR §9.1 instead. See
->   `known-issues.md` K-10 and `proof-outline.md` Step 0.
+>   removed from the active proof, which now cites AKR **§9, together with §3's
+>   unproved "for convenience" clause**, instead. See `known-issues.md` K-10 and
+>   `proof-outline.md` Step 0. *(Citation corrected 2026-09-17: this banner said
+>   "§9.1", which is the vertex-vertex half of "no vertex of one polygon on the
+>   boundary of the other" and says nothing about collinearity — the half the
+>   Lean development consumes. `docs/akr-9-1-obligation.md` is authoritative.)*
+> * **Added 2026-09-17, because this audit's whole subject has moved.** Every
+>   assumption and every risk this audit weighs concerns the
+>   13,003,620-graph enumeration pipeline. Since 2026-09-17 the upper bound for
+>   configurations in general position is a Lean theorem importing no published
+>   lemma and touching no enumeration
+>   (`lean/ConfigBridge.lean`; `verification-status.md` rows 41–44). This audit
+>   remains a correct and useful record of how that pipeline was stress-tested;
+>   it is no longer an audit of the live argument.
 > * **"Assumptions that remain", item 3** says the result is "Not mitigated by
 >   an independent reimplementation". A C++ second implementation
 >   (`independent/implementation_b/`) was written later and reproduces the

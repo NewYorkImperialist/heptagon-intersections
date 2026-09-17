@@ -1,6 +1,63 @@
 # Known issues, gaps and open verification questions
 
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-17
+
+> **Scope banner added 2026-09-17. Most of this file is now about the
+> historical route.** On 2026-09-17 the whole upper bound, both the `I ≠ 40`
+> and the `I ≠ 42` branch, became a Lean theorem for configurations in
+> **general position**, importing **no published lemma** and touching no
+> enumeration (`lean/ConfigBridge.lean`; `verification-status.md` rows 41–44).
+> The strongest statement in the development is
+> `ConfigBridge.isGreatest_38_pointCount`, carrying one hypothesis, `FullGP`.
+>
+> Consequently **K-01, K-03, K-05, K-06, K-11, K-12, K-15, K-16, K-17, K-19,
+> K-20 and K-21 concern the 13,003,620-graph enumeration pipeline, which the
+> upper bound no longer uses.** They are all still true as written and are
+> retained; none of them now bears on the result. Three entries need their
+> status read differently and carry dated notes below: **K-08** (Lean file
+> counts, and the two claims at the end of its banner), **K-09** (the external
+> lemma translations are no longer imported), **K-10** (its AKR §9.1 citation
+> is **wrong**, and it is now one of only two genuinely open items) and
+> **K-22** (the `hclass` entanglement is absent from the live route).
+>
+> **Two items are open that have no K-number**, and they are the entire
+> remaining surface between this repository and `f(7,7) = 38`:
+>
+> * **`Config` has integer coordinates.** `RealConfig.exists_integer_model`
+>   gives the sign-vector half; the step from a shared sign vector to the same
+>   crossing pattern and the same point count is easy and not done.
+> * **The general-position reduction.** AKR §9 (not formalized, not attempted)
+>   plus AKR §3's unproved "for convenience" clause, of which
+>   `RealConfig.exists_near_generic` proves the perturbation iteration and not
+>   the "count is unchanged" half. Nothing in §9 or §3 asserts that the
+>   perturbed polygons remain simple, which the argument uses. See K-10 and
+>   `docs/akr-9-1-obligation.md`. *(No new K-numbers were opened for these; the
+>   authoritative record is `verification-status.md` rows 4 and 45.)*
+
+> **Update, later on 2026-09-17: the integer-coordinate item is now
+> CLOSED for the upper bound.** `lean/RealUpperBound.lean` (commit `9b2b926`)
+> proves, in two steps and importing **no published lemma**:
+> `crossingPairsR_card_le_38 (R : RConfig) : (crossingPairsR R).card ≤ 38`, by
+> transporting all 364 determinant signs through
+> `RealConfig.exists_integer_model` into a genuine `Config` in `FullGP`; and
+> then `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`,
+> where `intersectionPointsR R` is `boundaryP R ∩ boundaryQ R` — a genuine set
+> in `ℝ × ℝ`, each boundary a union of Mathlib `segment ℝ`s over the fourteen
+> **real** vertices. **So two simple heptagons with real coordinates, in
+> general position, provably meet in at most 38 boundary points.**
+>
+> **What is left, and it is one thing plus two caveats.** The one thing is
+> **AKR §9**: `RConfig` *assumes* general position as a structure field, and
+> reaching it from an arbitrary pair of simple heptagons needs §9 followed by
+> §3's clause. `RealConfig.exists_near_generic` proves §3's iteration half but
+> **not** that the intersection count survives the perturbation, which is what
+> would license any conclusion about the original configuration. The caveats:
+> there is **no attaining example and no `IsGreatest`** at the real level, so
+> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so
+> `pointsR_le_38` says nothing about boundaries sharing a segment — general
+> position excludes that here, but any weakening must re-examine it. No
+> committed `verify-all` log covers this module.
+> `verification-status.md` row 46.
 
 Nothing in this file is hidden elsewhere in the repository, and nothing here has
 been silently repaired. Where a defect was found in the research record, the
@@ -324,6 +381,12 @@ the main argument that the filters are not over-aggressive. A filter that
 wrongly rejects would produce exactly the observed outcome (zero survivors).
 **Re-establishing this evidence is a prerequisite for trusting the upper bound.**
 
+> **Rescoped 2026-09-17.** It is a prerequisite for trusting the **historical
+> enumeration route**. The upper bound for configurations in general position
+> does not use the predicates this evidence guards
+> (`verification-status.md` rows 41–44), so a reader who accepts the
+> general-position hypothesis does not depend on it.
+
 ---
 
 ## K-06 — "Cerny Lemma 3 is unnecessary"  (RESOLVED 2026-09-13)
@@ -391,9 +454,15 @@ UTF-8), commit the file, and hash that.
 > **SNAPSHOT OF 2026-09-13 — the figures below are superseded. Note added
 > 2026-09-14; the entry itself is unedited.**
 >
-> This entry describes a seven-file development. There are now **25 libraries**
-> (`lake build`, 1395 jobs, exit 0), so the "742 jobs", "752 jobs", "seven
-> files" and "six of the seven import nothing" figures below are all historical.
+> This entry describes a seven-file development. There are now **1,756 declared
+> libraries** (commit `d22c313`; the most recent committed full build is 1,755
+> libraries / **6,518 jobs**, exit 0 — log
+> `results/validation/2026-09-17_verify_all_after_real_config.log` — and it
+> predates the last two committed modules), so the
+> "742 jobs", "752 jobs", "seven files" and "six of the seven import nothing"
+> figures below are all historical. *(This sentence read "**25 libraries**
+> (`lake build`, 1395 jobs, exit 0)"; figures re-read 2026-09-17. Almost all of
+> the 1,756 are generated per-shard data modules.)*
 > The current per-claim record is `verification-status.md` row 15; the
 > mechanical per-library axiom census is in `lean/README.md`.
 >
@@ -414,10 +483,23 @@ UTF-8), commit the file, and hash that.
 > still **not** a Lean theorem, and the completeness of the 225-case list is
 > still not formalized. `hne40` is now a *settled negative* for the kernel
 > (`verification-status.md` row 28).
+>
+> **Corrected again 2026-09-17.** `f(7,7) = 38` is indeed still not a Lean
+> theorem. But the two supporting clauses have been overtaken. (i) The
+> completeness of the 225-case list is still unformalized **and is no longer an
+> input to the upper bound**. (ii) "`hne40` is now a settled negative for the
+> kernel" must be scoped: all five routes row 28 measured tried to
+> kernel-*evaluate* the filter pipeline and remain dead, but
+> `ConfigBridge.crossCountC_ne_40` proves `hne40` for a configuration in
+> general position by a route that evaluates no graph at all. Also (iii) the
+> load-bearing published-lemma count for the upper bound is now **zero**, not
+> four, and (iv) the exceptional classification (E7) is still unformalized and
+> also no longer an input.
 
 **Status:** seven Lean files compile with no `sorry` and no project-specific
 axioms. `f(7,7) = 38` is still **not** a Lean theorem, and the completeness of
-the 225-case list is not formalized.
+the 225-case list is not formalized. *(Snapshot of 2026-09-13; see the banner
+above and the 2026-09-17 correction in it.)*
 
 ### What now builds
 
@@ -489,12 +571,25 @@ hypotheses do real work and the conclusion is not free.
 
 ---
 
-## K-09 — External lemma translations  (MATERIALLY DE-RISKED 2026-09-13)
+## K-09 — External lemma translations  (MATERIALLY DE-RISKED 2026-09-13; NOT LOAD-BEARING FROM 2026-09-17)
 
 **Status:** audited hypothesis by hypothesis against the published papers.
 Černý L1, Černý L2 and AKR L5 are now **VERIFIED**; AKR L7 remains **PROBABLY
 CORRECT — HUMAN REVIEW STILL DESIRABLE**, for a reason that lies in the *source*
 rather than in the project's translation.
+
+> **Status qualified 2026-09-17: none of these translations is an input to the
+> upper bound any more.** `ConfigBridge.crossCountC_le_38_of_general_position`
+> imports no published lemma — Černý L1's consequence is *derived* from a
+> parity argument in `lean/SegmentGeometry.lean`, and Černý L2, AKR L5 and AKR
+> L7 are not used. The translations remain load-bearing for the enumeration
+> pipeline of `docs/proof-outline.md`, which is retained as the historical route
+> and is still the only treatment of configurations outside general position.
+> The AKR L7 reading is still an open question about the published paper
+> (`akr-l7-review-request.md`), and answering it is still worth doing; nothing
+> here now turns on the answer. **The one external lemma that is still
+> load-bearing is the general-position clause — see K-10, whose importance this
+> change raises rather than lowers.**
 
 Full audit: [`external-lemma-audit.md`](external-lemma-audit.md).
 
@@ -555,10 +650,55 @@ record. What was corrected is unknown.
 
 ---
 
-## K-10 — General position: the project's Step 0 is INCORRECT  (UPGRADED 2026-09-13)
+## K-10 — General position: the project's Step 0 is INCORRECT  (UPGRADED 2026-09-13; RE-UPGRADED 2026-09-17)
 
 **Status:** open, and upgraded from a completeness caveat to a **correctness
 defect**. The conclusion is still true; the project's own proof of it is not.
+
+> **RE-UPGRADED 2026-09-17, and this is now one of only two open items that
+> stand between the repository and `f(7,7) = 38`.** Three things about this
+> entry have changed.
+>
+> **1. The citation in this entry is wrong, and wrong in the direction that
+> understates the risk.** This entry says the needed statement "is correctly
+> proved in AKR (DCG 2022) §9.1, pp. 1069–1072", and recommends citing §9.1.
+> §9's own opening sentence scopes the whole section: *"We will now justify our
+> general-position assumption that we introduced in Sect. 3 stating that no
+> vertex of one polygon lies on the boundary of the other polygon."* §9.1 is
+> the vertex-vertex half of that and §9.2 the vertex-side half; **neither
+> touches collinearity of three vertices**. The clause the Lean development
+> actually consumes — `ConfigBridge.FullGP`, "no three of the fourteen combined
+> vertices are collinear", including all 196 non-adjacent mixed triples that
+> `Config` does not supply — has its **only** warrant in one sentence of
+> **§3** (PDF p. 4), asserted *"for convenience"*, with no proof and no lemma
+> number. So "the conclusion is not in doubt … correctly proved in §9.1" is
+> false of the needed statement. Cite **§9 (§9.1 + §9.2) together with §3's
+> unproved clause**. Full analysis with verbatim quotations:
+> [`akr-9-1-obligation.md`](akr-9-1-obligation.md), which is authoritative;
+> `verification-status.md` row 4.
+>
+> **2. A second, unsourced consequence.** Step 0 lists "both polygons remain
+> simple" among the consequences it uses. That appears **nowhere** in §9, §9.1,
+> §9.2 or §3, and it is load-bearing: `Simple7`'s fourth conjunct is the one
+> part of `Config` that `FullGP` does not supply
+> (`akr-9-1-obligation.md` §6.2).
+>
+> **3. Partial Lean progress, and only partial.**
+> `RealConfig.exists_near_generic` proves that every configuration in
+> `Fin 14 → ℝ × ℝ` is arbitrarily close to one with all 364 orientation
+> determinants nonzero — the *perturbation-iteration* half of §3's clause, by a
+> Baire argument. `RealConfig.exists_integer_model` separately handles the
+> real-to-integer reduction at the level of determinant signs. **Not** proved:
+> that the perturbation leaves the number of boundary intersection points
+> unchanged (which is the bulk of §3's clause and is genuinely geometric), the
+> assembly into the sentence §3 asserts, or anything at all from §9. See
+> `verification-status.md` row 45.
+>
+> **Why this matters more than it did.** Until 2026-09-17 this entry sat
+> alongside a dozen other open items. Since then the upper bound for
+> configurations in general position imports no published lemma at all, so this
+> clause is the **only** remaining published import — and the strongest results
+> in the repository rest on the thinnest-warranted sentence in the paper.
 
 ### The defect
 
@@ -624,6 +764,11 @@ multiple-degeneracy gap unaddressed.
 **REPAIRED 2026-09-13.** `docs/proof-outline.md` Step 0 now cites AKR §9.1 and
 lists exactly the consequences used downstream; it carries an explicit note that
 the earlier argument was incorrect and superseded.
+
+> **The repair installed the wrong citation, corrected 2026-09-17.** Step 0 now
+> cites **AKR §9 together with §3**, and `proof-outline.md` carries its own
+> dated correction saying so. See point 1 of the status banner at the head of
+> this entry.
 
 This is a deliberate exception to this repository's standing policy of preserving
 original documents unmodified. The policy exists to protect the *research record*,
@@ -1339,10 +1484,29 @@ counts directly, and `lean/FilterSoundness.lean` notes this in its header.
 
 ---
 
-## K-22 — `hclass` is stronger than "the class data is correct", and had no non-vacuity witness  (FOUND AND ADDRESSED 2026-09-14)
+## K-22 — `hclass` is stronger than "the class data is correct", and had no non-vacuity witness  (FOUND AND ADDRESSED 2026-09-14; SUPERSEDED FOR THE LIVE ROUTE 2026-09-17)
 
 **Status:** the vacuity risk is closed; the strength observation stands and
 should be carried forward.
+
+> **Superseded for the live route, 2026-09-17 — by not needing `hclass` at
+> all.** `ConfigBridge.crossCountC_ne_42` proves `I ≠ 42` for a configuration
+> in general position taking **no class data whatever**: no `hclass`, no
+> `hcross`, no (X1), no (X2), and no Lemma A. `I = 42` leaves seven disjoint
+> side pairs, minimum degree 1 on both sides forces a perfect matching, and the
+> two minimal forbidden crossing patterns of `verification-status.md` row 41
+> already cover all `7! = 5040` of them. So the entanglement described in this
+> entry is **absent from the route the upper bound now takes**, rather than
+> resolved within it, and the resolution below ("independence cannot be
+> recovered that way") is not a constraint on the new theorem — it is a true
+> statement about `Exclude42`. Rows 20 and 44.
+>
+> Two further corrections. `IntersectionParity.isGreatest_38_final` is **no
+> longer the project's strongest statement**: `ConfigBridge.isGreatest_38_pointCount`
+> is, and it carries neither `hclass` nor `hne40`. And the closing
+> recommendation of this entry — "the honest resolution is to *discharge* (E7)
+> rather than to restrict it" — is no longer the only option; the third option,
+> taken, was to stop needing it.
 
 `IntersectionParity.isGreatest_38_final` — the project's strongest statement —
 takes a hypothesis `hclass` quantified over **every** `Config`:

@@ -10,6 +10,15 @@ intersection points, and 38 is attained.  Hence f(7,7) = 38.
 > See [`verification-status.md`](verification-status.md). Do not read the word
 > "Theorem" below as a settled result.
 >
+> **Changed 2026-09-17.** The Lean upper bound no longer goes through the
+> argument in this file. For configurations in **general position** it imports
+> **AKR Lemma 5, Černý Lemma 2 and the exceptional classification not at
+> all**, so (HP) and the two published lemmas named above are no longer
+> obstacles to it. They remain obstacles to *this* document's argument, which
+> is retained as the historical route and as the only treatment of
+> configurations outside general position. Read the correction block below the
+> next paragraph before using anything here.
+>
 > **Changed 2026-09-16.** This paragraph named the interpretation of AKR
 > Observation 6 and Lemma 7 (Step 7) as the one open review item. That
 > dependence is gone: running the pipeline without Lemma 7's filter leaves 412
@@ -29,6 +38,52 @@ intersection points, and 38 is attained.  Hence f(7,7) = 38.
 > development is entirely at the **orientation level** over `Pt := Int × Int`;
 > the Jordan-curve step is not formalized. **Independent human verification:
 > none.**
+>
+> **Corrected 2026-09-17 — all three of those limits have moved, and this
+> document no longer describes the route the Lean development takes.**
+> `f(7,7) = 38` is still **not** a Lean theorem, and independent human
+> verification is still **none**. But:
+>
+> * (i) the strongest Lean statement is no longer
+>   `IntersectionParity.isGreatest_38_final` but
+>   `ConfigBridge.isGreatest_38_pointCount` — 38 is the greatest number of
+>   points of `∂P ∩ ∂Q` as a set in `ℝ × ℝ`, over configurations in general
+>   position — and it carries **neither** the class data **nor** `hne40`. Both
+>   `I ≠ 40` and `I ≠ 42` are Lean theorems there, importing **no published
+>   lemma**: not **A5**, not **A7**, not **C2**, not the order-type crossing
+>   fact, not the exceptional classification, not the 225-case list, not the
+>   13,003,620-graph enumeration. Row 28's "settled negative" was scoped to
+>   five routes that all tried to evaluate the filter *pipeline* in the kernel;
+>   the route taken evaluates no graph at all. See `docs/covering-step.md` and
+>   `verification-status.md` rows 41–44.
+> * (ii) Step 0's reduction is AKR **§9** *and* **§3**, not §9.1 — see the
+>   citation correction under Step 0 below. It is still imported.
+> * (iii) "entirely at the orientation level over `Pt := Int × Int`" is no
+>   longer true of the strongest statements: `IntersectionCount`,
+>   `PointSetSemantics`, `PolygonSimple`, `ConfigBridge` and `RealConfig` work
+>   with point sets in `ℝ × ℝ`. The Jordan-curve step is not a gap — it is not
+>   claimed and not needed (`verification-status.md` row 29). What is still
+>   restricted is the *configuration*: `Config` has **integer** coordinates.
+>   `RealConfig.exists_integer_model` closes the sign-vector half of that
+>   reduction (row 45), and `RealUpperBound.pointsR_le_38` (row 46) uses it to
+>   prove that two simple heptagons with **real** coordinates, in general
+>   position, meet in at most **38 boundary points** — a genuine set in
+>   `ℝ × ℝ`, importing no published lemma. **So the integer restriction is
+>   closed for the upper bound.** What is left of Step 0 is AKR §9 and the
+>   count-preservation half of §3's clause; and at the real level there is no
+>   attaining example and no `IsGreatest` yet, so `f(7,7) = 38` needs the lower
+>   bound restated there too (the certificate is integer-coordinate, hence a
+>   real configuration, but that has not been written down).
+>
+> **So: Steps 3 to 9 below are the historical route.** They remain the only
+> argument in this repository that covers configurations *outside* general
+> position, and they are what produced the forbidden patterns; but nothing in
+> the Lean upper bound depends on them. The two things that separate this
+> development from `f(7,7) = 38` were Step 0's import and `Config`'s integer
+> coordinates. **As of commit `9b2b926` the second is closed for the upper
+> bound** (`RealUpperBound.pointsR_le_38`), so Step 0's import — AKR §9, plus
+> the count-preservation half of §3's clause — is what is left, together with
+> restating the lower bound at the real level.
 
 External results used (statements checked against the papers in
 [`external-lemma-audit.md`](external-lemma-audit.md); their internal proofs are

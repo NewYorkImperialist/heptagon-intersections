@@ -11,11 +11,53 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 >
 > Several components **are** now formally verified in Lean, and the finite
 > reduction has been independently reimplemented in a second language — but
-> `f(7,7) = 38` is **not** a Lean theorem, and the interpretation of AKR
-> Observation 6 / Lemma 7 remains an open review item. See
+> `f(7,7) = 38` is **not** a Lean theorem. See
 > [`docs/verification-status.md`](docs/verification-status.md) and
 > [`paper/proof-manifest.tex`](paper/proof-manifest.tex) before citing or relying
 > on anything here.
+>
+> **Updated 2026-09-17, and this page has not caught up below.** The **whole
+> upper bound**, both the `I ≠ 40` and the `I ≠ 42` branch, is now a Lean
+> theorem for configurations in **general position**, importing **no published
+> lemma** — not AKR Lemma 5, not AKR Lemma 7, not Černý Lemma 2, not the
+> exceptional classification, not the 225-case list, not the 13,003,620-graph
+> enumeration (`lean/ConfigBridge.lean`; `verification-status.md` rows 42–44).
+> The strongest statement in the development is
+> `ConfigBridge.isGreatest_38_pointCount`: **38 is the greatest number of points
+> in `∂P ∩ ∂Q` as a set in `ℝ × ℝ`**, over configurations in general position.
+> It carries one hypothesis, `FullGP`.
+>
+> **This is still not `f(7,7) = 38`, and exactly two things stand in the way.**
+>
+> **(a) Integer coordinates — CLOSED for the upper bound, commit `9b2b926`.**
+> The `Config`-level theorems above have **integer** vertices.
+> `lean/RealConfig.lean` transports all 364 orientation-determinant signs from
+> a real configuration to an integer one, and `lean/RealUpperBound.lean` uses
+> that to prove `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`
+> — **two simple heptagons with real coordinates, in general position, meet in
+> at most 38 boundary points**, `intersectionPointsR R` being
+> `boundaryP R ∩ boundaryQ R` as a genuine set in `ℝ × ℝ` built from Mathlib's
+> `segment ℝ`. It imports no published lemma. Two caveats, both stated in the
+> file: there is **no attaining example and no `IsGreatest`** at the real level,
+> so this is the upper bound alone and `f(7,7) = 38` needs the lower bound
+> restated there; and `Set.ncard` is `0` on infinite sets, so it says nothing
+> about boundaries sharing a segment — general position excludes that, but any
+> weakening must re-examine it. No committed `verify-all` log covers the
+> module.
+>
+> **(b) The general-position reduction — not moved.** It is **imported as
+> prose**: AKR §9 for "no vertex of one polygon on the other's boundary" (five
+> pages, not formalized, not attempted), plus §3's unproved "for convenience"
+> clause for the collinearity the development actually consumes. The
+> perturbation-iteration half of §3's clause is now proved in Lean
+> (`RealConfig.exists_near_generic`); the "count is unchanged" half is the bulk
+> and is not.
+>
+> The interpretation of AKR Observation 6 / Lemma 7 is **still an open question
+> about the published paper**, but it is **no longer a dependency** of anything
+> here. Everything below this box that treats the enumeration, the 225-case
+> list or the published lemmas as load-bearing describes the **historical
+> route**. `docs/verification-status.md` is authoritative.
 
 ## Problem
 
@@ -43,15 +85,33 @@ Two halves, with very different levels of support:
 * **`f(7,7) ≥ 38`** — established. An explicit pair of integer-coordinate
   heptagons with 38 crossings, verifiable in under a second with no external
   lemma and no enumeration.
-* **`f(7,7) ≤ 38`** — candidate. A finite case analysis that reproduces exactly,
-  but is conditional on external lemmas. Its Python source was written in one
-  LLM-assisted session; the finite graph/profile reduction down to the 225
-  (class-pair, graph) triples has since been reproduced by a separately written
-  C++ implementation, but the **final avoiding-pair filter has not** been run by
-  any second implementation (K-20), and no step has been checked by a human
-  outside the AI-assisted development process.
+* **`f(7,7) ≤ 38`** — candidate. **For integer-coordinate configurations in
+  general position it is a Lean theorem** as of 2026-09-17, importing no
+  published lemma (`ConfigBridge.crossCountC_le_38_of_general_position`). What
+  remains conditional is the passage from that class to arbitrary simple
+  heptagons: integer → real coordinates, and the general-position reduction.
+  *Historically*, and still for configurations outside general position, the
+  argument is a finite case analysis conditional on external lemmas. Its Python
+  source was written in one LLM-assisted session; the finite graph/profile
+  reduction down to the 225 (class-pair, graph) triples has since been
+  reproduced by a separately written C++ implementation, but the **final
+  avoiding-pair filter has not** been run by any second implementation (K-20).
+  **No step of any of this has been checked by a human outside the AI-assisted
+  development process.**
 
 ## High-level proof idea
+
+> **Read this section as the historical route (note added 2026-09-17).** Steps
+> 2–7 below are how the upper bound was *found*, and they are still the only
+> argument that covers configurations **not** in general position. They are no
+> longer how the Lean development *proves* it. The formalized route is much
+> shorter: a counterexample with `I = 40` (or `I = 42`) has a 7×7 disjointness
+> graph with 9 (or 7) edges and no isolated side; **two** minimal local crossing
+> patterns are impossible for any fourteen points in general position; every
+> such graph contains a relabelled copy of one of them; therefore neither value
+> occurs. With `I ≤ 42` and `I` even — both theorems for every configuration —
+> that gives `I ≤ 38`, importing no published lemma. See
+> `docs/covering-step.md` and `verification-status.md` rows 41–44.
 
 1. **Lower bound.** An explicit 38-crossing construction.
 2. **Lemma A (new).** If some set `S` of sides of `P` is *uncrossable* — no line
@@ -80,7 +140,9 @@ Two halves, with very different levels of support:
 
 **New in this work:** Lemma A; the exceptional classification; the
 "`H` is bipartite" reformulation of AKR Lemma 7; the extension of AKR Lemma 5 to avoiding pairs;
-the final elimination.
+the final elimination. **Added 2026-09-17:** the two minimal forbidden crossing
+patterns and the covering argument, which replace all of the above for
+configurations in general position.
 
 **External, imported as black boxes:** Černý et al. Lemmas 1 and 2, and AKR
 Lemmas 5 and 7. (Černý Lemma 3 was shown redundant on 2026-09-13 — see
@@ -89,13 +151,23 @@ proofs were not re-verified here.** The translations of AKR Lemmas 5 and 7 into
 combinatorial filters are the least secure steps in the argument — see
 [`docs/known-issues.md`](docs/known-issues.md) K-09.
 
+> **Superseded as a dependency list, 2026-09-17.** For the general-position
+> upper bound the load-bearing count of published lemmas is **zero**. Černý
+> Lemma 1's consequence (minimum disjointness degree) is *derived* in
+> `lean/SegmentGeometry.lean` from a parity argument rather than imported;
+> Černý Lemma 2, AKR Lemma 5 and AKR Lemma 7 are not used. The **one**
+> remaining import is the general-position reduction (AKR §9, plus §3's
+> unproved clause), and the least secure step in the argument is now that §3
+> clause — one sentence asserted "for convenience", with no proof and no lemma
+> number. See [`docs/akr-9-1-obligation.md`](docs/akr-9-1-obligation.md).
+
 ## Repository map
 
 | Path | Contents |
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. **25 libraries, all compiling** (`lake build`, 1395 jobs, exit 0): 735 theorems, 212 of them depending on no axioms at all, and **no project-specific `axiom` anywhere**. Five files import literally nothing; eight reach Mathlib. See [`lean/README.md`](lean/README.md). |
+| `lean/` | Formalization. **1,756 declared libraries** (commit `d22c313`), and **no project-specific `axiom` anywhere**. The most recent committed full build is **1,755 libraries, 6,518 jobs, exit 0** (log: `results/validation/2026-09-17_verify_all_after_real_config.log`); it predates the last two committed modules, so "all compiling" is attested two commits behind. Most of the 1,755 are generated per-shard data modules; the hand-written development is a few dozen files. Exactly **five** import literally nothing and compile against an empty `LEAN_PATH`. See [`lean/README.md`](lean/README.md). *(Corrected 2026-09-17: this cell read "25 libraries … 1395 jobs … 735 theorems, 212 of them depending on no axioms at all … eight reach Mathlib". The library and job figures are re-read from the committed build log. The theorem census has **not** been re-measured since 2026-09-15 and is therefore dropped rather than restated; direct `import Mathlib` lines now appear in 240 modules, 13 of them hand-written.)* |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts and validation output from the 2026-09-13 run, plus the 2026-09-14 kernel-enumeration benchmark. See [`results/README.md`](results/README.md). |
 | `independent/` | Separately written re-derivations, each in its own subdirectory: `implementation_b/` (a C++ reimplementation of the finite reduction, written from a written specification), `order_type_audit/` (an order-type/exceptional-classification audit against external data), `akr_l7_reproduction/` (the SAT/DRAT investigation of AKR Observation 6 / Lemma 7), `no_a7_experiment/` (what the pipeline gives with the A7 filter removed). See [`independent/README.md`](independent/README.md). |
@@ -109,12 +181,14 @@ combinatorial filters are the least secure steps in the argument — see
 Key documents:
 
 * [`docs/verification-status.md`](docs/verification-status.md) — **authoritative** trust status, claim by claim.
+* [`docs/covering-step.md`](docs/covering-step.md) — **the current upper-bound route**: the two forbidden patterns, the covering argument, and the bridge to `Config`.
+* [`docs/akr-9-1-obligation.md`](docs/akr-9-1-obligation.md) — **authoritative on the general-position citation**: what AKR §9 does and does not prove, and why the collinearity clause rests on §3.
 * [`docs/known-issues.md`](docs/known-issues.md) — every open gap, numbered.
-* [`docs/proof-outline.md`](docs/proof-outline.md) — the argument in theorem/lemma form.
+* [`docs/proof-outline.md`](docs/proof-outline.md) — the argument in theorem/lemma form (the historical route).
 * [`docs/computational-method.md`](docs/computational-method.md) — method and reproduction guide.
 * [`docs/audit-report.md`](docs/audit-report.md) — the project's adversarial self-audit.
 * [`docs/literature-notes.md`](docs/literature-notes.md) — sources and imported lemmas.
-* [`docs/lean-architecture.md`](docs/lean-architecture.md) — the planned formalization.
+* [`docs/lean-architecture.md`](docs/lean-architecture.md) — the *original* seven-file formalization plan; **superseded**, and not what was built.
 * [`docs/ai-disclosure.md`](docs/ai-disclosure.md) — how this work was produced.
 
 ## Verification status
@@ -124,19 +198,21 @@ full table. In brief:
 
 | | |
 |---|---|
-| Verified in Lean, **unconditionally, for every configuration** | `I + \|E\| = 49`; minimum degree ≥ 1 (*derived* from a parity proof, not imported); **`I ≤ 42`**; **`I` is even**; the 38-crossing construction |
-| Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** |
+| Verified in Lean, **unconditionally, for every configuration** | `I + \|E\| = 49`; minimum degree ≥ 1 (*derived* from a parity proof, not imported); **`I ≤ 42`**; **`I` is even**; the 38-crossing construction; the crossing-pair count **equals** the number of points of `∂P ∩ ∂Q` in `ℝ × ℝ` |
+| **Verified in Lean, for configurations in general position, importing no published lemma** *(new 2026-09-17, rows 42–44)* | **`I ≠ 40`**; **`I ≠ 42`**; **`I ≤ 38`**; and **`isGreatest_38_pointCount`** — 38 is the greatest number of boundary intersection **points**, over *integer*-coordinate configurations. One hypothesis, `FullGP` |
+| **Verified in Lean, for configurations with REAL coordinates in general position** *(new 2026-09-17, row 46)* | **`pointsR_le_38`** — at most **38 boundary intersection points**, as a set in `ℝ × ℝ`. Removes the integer-coordinate restriction for the upper bound. Caveats: no attaining example / `IsGreatest` at this level, and `Set.ncard` is 0 on infinite sets (general position excludes the bad case) |
+| Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** — the *historical* proof (`Exclude42`). Superseded by the row above, which needs no class data at all, and which is therefore free of the K-22 entanglement |
 | Verified in Lean (enumeration obligations) | a counterexample lands in the searched domain; the domain has **13,003,620** elements; the search visits every element of it *(of the Lean transcription — there is no extraction)* |
 | Verified in Lean (interfaces) | all 225 endgame cases; the AKR-L5 bridge as an `iff`; the component labelling (both directions); a bipartiteness decision procedure; the 225 stored `avoiding` flags against the class table |
-| **The one open input** | **`I ≠ 40`** — the 13,003,620-graph enumeration. `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: **memory, not time** |
+| **The one open input** *(corrected 2026-09-17, twice)* | The **general-position reduction**, imported as prose: AKR §9, plus the count-preservation half of §3's unproved clause. *(The integer-coordinate input, listed here earlier the same day, was closed for the upper bound by `RealUpperBound.pointsR_le_38`. Separately, `f(7,7) = 38` also needs the lower bound restated over real configurations; the certificate is integer-coordinate, hence real, but that has not been written down.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
-| Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR §9.1) |
-| **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — see [`docs/akr-l7-human-review.md`](docs/akr-l7-human-review.md) |
-| External published lemmas | Černý L1, L2 and AKR L5, L7 — statements checked, proofs not re-verified. (Černý L3 was audited too, then shown redundant — K-06 — so it is not a dependency.) In Lean they enter as **explicit named hypotheses**, never as axioms |
+| Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR **§9** together with **§3**'s unproved clause — *citation corrected 2026-09-17; this cell said "§9.1", which does not say it*) |
+| **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — a question about the published paper, **no longer a dependency** of anything here. See [`docs/akr-l7-review-request.md`](docs/akr-l7-review-request.md), which supersedes `akr-l7-human-review.md`; *this cell pointed at the superseded document* |
+| External published lemmas | Černý L1, L2 and AKR L5, L7 — statements checked, proofs not re-verified. (Černý L3 was audited too, then shown redundant — K-06 — so it is not a dependency.) In Lean they enter as **explicit named hypotheses**, never as axioms. **Since 2026-09-17 none of them is an input to the upper bound**: the only remaining import is the general-position reduction |
 | Reproduced by a second implementation | the finite graph/profile reduction down to the 225-triple set, exact match (C++, different enumeration). **It does not run the final avoiding-pair filter** — that step has certificate and Lean independence but no second implementation (K-20) |
 | Independently reimplemented and externally cross-checked | the 135 order types (**exact set equality** with the TU Graz `otypes07.b08` database) and the exceptional classification (14/14 on every profile field), by `independent/order_type_audit/` — a fresh audit that does not import `chiro.py`/`geom.py` |
-| Needs independent reproduction | the final avoiding-pair elimination (K-20); the reading of the external lemmas, which every implementation here shares; the upper bound as a whole |
-| Not formalized at all | the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int` |
+| Needs independent reproduction | the final avoiding-pair elimination (K-20); the reading of the external lemmas, which every implementation here shares; the upper bound as a whole. *Each of these concerns the historical route; the general-position upper bound of rows 42–44 depends on none of them* |
+| Not formalized at all | the **general-position reduction** — AKR §9, plus the "count is unchanged" half of §3's clause. *Corrected 2026-09-17: this cell said "the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int`". The §9.1 citation is wrong (see row 4). The Jordan curve theorem is **not claimed and not needed** — row 29 says so, and row 30 proves the polygon is a simple closed curve without it. And "everything is orientation-level" no longer holds: rows 26, 29, 30, 44 and 45 are statements about point sets in `ℝ × ℝ`. What is still restricted to `Int × Int` is the* configuration *(row 45)* |
 
 ## Reproducibility
 

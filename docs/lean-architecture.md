@@ -2,9 +2,11 @@
 
 > **HISTORICAL DESIGN NOTE — SUPERSEDED (2026-09-14).**
 > This seven-file plan was **not followed**. The development that exists has
-> **25 libraries** (`lake build`, 1395 jobs, exit 0, re-verified 2026-09-14;
-> this banner previously said 23), built bottom-up around explicit interfaces
-> rather than
+> **1,756 declared libraries** (commit `d22c313`; the most recent committed
+> full build is 1,755 libraries / **6,518 jobs**, exit 0, and predates the last
+> two modules — this banner previously said 23, then 25 at 1395 jobs),
+> almost all of them generated per-shard data modules, built bottom-up around
+> explicit interfaces rather than
 > around the paper's sections. See [`../lean/README.md`](../lean/README.md) for
 > the actual architecture and
 > [`verification-status.md`](verification-status.md) row 16.

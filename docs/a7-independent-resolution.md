@@ -46,7 +46,21 @@ read "the project's one unresolved mathematical dependency", which overstates.
 AKR §9.1's general-position reduction is imported and not reproved, Černý L1/L2
 and AKR L5 are audited-only, the exceptional classification (E7) is unformalized,
 and `f(7,7) = 38` is not a Lean theorem — the strongest Lean statement still
-carries `hclass` and `hne40`. See `verification-status.md`.)* Five independent lines of attack were run, then a
+carries `hclass` and `hne40`. See `verification-status.md`.)*
+
+> **Corrected again 2026-09-17.** Three things in that 2026-09-14 qualifier are
+> now wrong. (i) **A7-EXT is not a review item for the proof any more** — it is
+> an open question about the published paper, and the upper bound for
+> configurations in general position imports no published lemma at all
+> (`lean/ConfigBridge.lean`; `verification-status.md` rows 41–44). (ii) The
+> citation is **AKR §9 together with §3's unproved "for convenience" clause**,
+> not §9.1; §9 justifies only "no vertex of one polygon on the boundary of the
+> other" (`docs/akr-9-1-obligation.md`). (iii) The strongest Lean statement is
+> `ConfigBridge.isGreatest_38_pointCount`, which carries neither `hclass` nor
+> `hne40` — only `FullGP`. `f(7,7) = 38` is still not a Lean theorem; the two
+> things that separate the development from it are `Config`'s integer
+> coordinates and the general-position reduction. The investigation recorded
+> below is unaffected and remains a correct record of it.* Five independent lines of attack were run, then a
 hostile review adjudicated them. The main agent independently re-verified every
 load-bearing computation reported below.
 

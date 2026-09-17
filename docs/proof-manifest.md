@@ -39,9 +39,85 @@ institution's generative-AI policy; that must be assessed separately.
 > strongest formalised statement still carries two hypotheses. The result should
 > not be treated as established.
 
+> **SUPERSEDED IN PART, 2026-09-17. Read this before anything below.** This
+> document is dated 14 September 2026 and has not been revised since. Three of
+> its structural claims are now wrong, and the LaTeX original
+> (`paper/proof-manifest.tex`) carries the same errors — it has **not** been
+> updated either, and the note at the top of this file that says the LaTeX file
+> is correct where the two differ should not be read as endorsing its status
+> claims.
+>
+> 1. **"the strongest formalised statement still carries two hypotheses"** — it
+>    carries one, and neither of the two named here. The strongest statement is
+>    `ConfigBridge.isGreatest_38_pointCount`, and its only hypothesis is
+>    `FullGP`. See the box immediately below.
+> 2. **"the interpretation of AKR Observation 6 / Lemma 7 remains subject to
+>    external human review"** — still true as a question about the published
+>    paper, but AKR Lemma 7 is **no longer a dependency** of the upper bound,
+>    nor is AKR Lemma 5, Černý Lemma 2, the order-type crossing fact, the
+>    exceptional classification, the 225-case list, or the 13,003,620-graph
+>    enumeration.
+> 3. **Every citation of "AKR §9.1" for the general-position clause is wrong**
+>    (it occurs at least three times below). §9 = §9.1 + §9.2 justifies only
+>    "no vertex of one polygon lies on the boundary of the other"; the
+>    collinearity clause the development consumes has its only warrant in one
+>    unproved sentence of **§3**. `docs/akr-9-1-obligation.md` is authoritative.
+>
+> `f(7,7) = 38` is **still not a Lean theorem**, and **exactly two** things
+> separate the development from it: `Config` has **integer** vertex coordinates
+> (the sign-vector half of that reduction is `RealConfig.exists_integer_model`),
+> and the **general-position reduction** is imported as prose — AKR §9, plus
+> §3's unproved clause, of which the perturbation-iteration half is now proved
+> (`RealConfig.exists_near_generic`) and the "count is unchanged" half is not.
+> `docs/verification-status.md` is authoritative and wins over this file.
+
+> **Update, later on 2026-09-17: the integer-coordinate item is now
+> CLOSED for the upper bound.** `lean/RealUpperBound.lean` (commit `9b2b926`)
+> proves, in two steps and importing **no published lemma**:
+> `crossingPairsR_card_le_38 (R : RConfig) : (crossingPairsR R).card ≤ 38`, by
+> transporting all 364 determinant signs through
+> `RealConfig.exists_integer_model` into a genuine `Config` in `FullGP`; and
+> then `pointsR_le_38 (R : RConfig) : (intersectionPointsR R).ncard ≤ 38`,
+> where `intersectionPointsR R` is `boundaryP R ∩ boundaryQ R` — a genuine set
+> in `ℝ × ℝ`, each boundary a union of Mathlib `segment ℝ`s over the fourteen
+> **real** vertices. **So two simple heptagons with real coordinates, in
+> general position, provably meet in at most 38 boundary points.**
+>
+> **What is left, and it is one thing plus two caveats.** The one thing is
+> **AKR §9**: `RConfig` *assumes* general position as a structure field, and
+> reaching it from an arbitrary pair of simple heptagons needs §9 followed by
+> §3's clause. `RealConfig.exists_near_generic` proves §3's iteration half but
+> **not** that the intersection count survives the perturbation, which is what
+> would license any conclusion about the original configuration. The caveats:
+> there is **no attaining example and no `IsGreatest`** at the real level, so
+> this is the upper bound alone; and `Set.ncard` is `0` on infinite sets, so
+> `pointsR_le_38` says nothing about boundaries sharing a segment — general
+> position excludes that here, but any weakening must re-examine it. No
+> committed `verify-all` log covers this module.
+> `verification-status.md` row 46.
+
 ## What is a Lean theorem today, and what is not
 
+> **Corrected 2026-09-17.** The section below is retained as written on
+> 2026-09-14. The strongest statement in the development is now
+>
+> ```lean
+> theorem ConfigBridge.isGreatest_38_pointCount :
+>     IsGreatest { n | ∃ K : Config, FullGP K ∧
+>       (IntersectionCount.intersectionPoints K).ncard = n } 38
+> ```
+>
+> where `intersectionPoints K` is `boundary K.PV ∩ boundary K.QV` as a set in
+> `ℝ × ℝ`, built from Mathlib's `segment ℝ`. It takes **one** hypothesis,
+> `FullGP` — all 364 orientation determinants of the fourteen combined vertices
+> nonzero, of which `Config` already forces 168 — and imports **no published
+> lemma**. `isGreatest_38_final` below is unchanged and still true; it is simply
+> no longer the best available, and neither of its hypotheses is needed.
+
 Twenty-six Lean libraries is enough to create a false impression of coverage.
+*(Figure stale: `lakefile.toml` declares **1,756** libraries as of commit `d22c313`,
+almost all of them generated per-shard data modules. The point the sentence
+makes is, if anything, sharper now.)*
 The strongest statement in the development is
 
 ```lean
@@ -51,7 +127,8 @@ theorem IntersectionParity.isGreatest_38_final
     : IsGreatest MainTheorem.attained 38
 ```
 
-and neither hypothesis is proved anywhere:
+and neither hypothesis is proved anywhere — *though, since 2026-09-17, both
+are discharged for a configuration in general position:*
 
 * `hclass` is the exceptional-class invariant together with the order-type
   crossing fact (**X1** and **X2**, i.e. **EX** and **E4**), asserted for *every*
@@ -59,6 +136,15 @@ and neither hypothesis is proved anywhere:
   witness is supplied.
 * `hne40` is `I ≠ 40`, i.e. the whole 13,003,620-graph enumeration (**UB40**). It
   is **out of reach of the Lean kernel** — five routes tested, all dead.
+  *(Corrected 2026-09-17. All five routes tried to evaluate the filter pipeline
+  inside the kernel, and they remain dead. A sixth route deletes the pipeline:
+  two minimal local crossing patterns are impossible for fourteen points in
+  general position, every one of the 13,003,620 graphs contains a relabelled
+  copy of one, and the covering argument is a Lean theorem. So
+  `ConfigBridge.crossCountC_ne_40` discharges `hne40` for a configuration in
+  general position, evaluating no graph at all. `crossCountC_ne_42` discharges
+  the other branch with **no class data**, so `hclass` is not needed either.
+  The unconditional `hne40`, over every `Config`, is still not a theorem.)*
 
 Two further gaps sit outside the statement. `Config` is *orientation-level* over
 `Pt := Int × Int`: "simple" is a conjunction of integer orientation predicates.
@@ -67,7 +153,14 @@ Since 2026-09-14 that predicate is *known* to give the point-set property —
 a shared cyclic endpoint or not at all, as subsets of ℝ² — so "simple closed
 polygonal curve" is no longer a gap. What is **not** formalized is the Jordan
 curve theorem itself (separation of the plane), and the reduction to general
-position, **GP** (AKR §9.1), which is cited.
+position, **GP** (AKR **§9**, together with **§3's unproved clause**), which is
+cited. *(Citation corrected 2026-09-17: this said "AKR §9.1". §9.1 is the
+vertex-vertex half of "no vertex of one polygon on the other's boundary" and
+says nothing about collinearity — which is the half `ConfigBridge.FullGP`
+consumes. Also: the Jordan curve theorem is not a gap, because it is neither
+claimed nor needed — `verification-status.md` row 29. The integer-coordinate
+restriction **is** a gap, and `RealConfig.exists_integer_model` closes only its
+sign-vector half.)*
 
 **Unconditional for an arbitrary `Config`:** `I + |E| = 49`; `δ(G^D) ≥ 1`;
 `I ≤ 42`; `I` even; 38 attained. So the answer lies in `{38, 40, 42}` with no
@@ -109,7 +202,7 @@ the `I = 40` endgame. Theorem 4 is corroboration, not an input.
 
 | ID | Claim | Type | Source | Verification | Remaining risk |
 |---|---|---|---|---|---|
-| **GP** | general position may be assumed | published | AKR §9.1, §3 | SOURCE-AUDITED | none known; project's own earlier proof was **wrong**, removed |
+| **GP** | general position may be assumed | published | AKR **§9** (= §9.1 + §9.2) for "no vertex of one polygon on the boundary of the other"; AKR **§3** for "no three combined vertices collinear" and "no two combined sides parallel" | SOURCE-AUDITED | **§3's clause is asserted "for convenience" with no proof and no lemma number**, and it is the half `ConfigBridge.FullGP` consumes; nothing in §9 or §3 states that the perturbed polygons remain simple, which is also used. *(Row corrected 2026-09-17: the source column read "AKR §9.1, §3" and the risk column read "none known", both of which understated it. `docs/akr-9-1-obligation.md` is authoritative. The perturbation-iteration half of §3's clause is now proved in Lean — `RealConfig.exists_near_generic`.)* |
 | **C1** | `δ(G^D) ≥ 1` | published | Černý L1 | SOURCE-AUDITED | none known |
 | **C2** | forbidden local perfect matching | published | Černý L2 | SOURCE-AUDITED | none known |
 | **C2-BRIDGE** | filter fires iff *exact induced* perfect matching | project inference | this project | LEAN-KERNEL-CHECKED | certifies the Lean transcription, not the Python/C++ source |
@@ -183,14 +276,35 @@ Strict is the correct reading: Lemma A is only ever instantiated at the lines
 
 ## Lean trust boundary
 
-Lean 4.33.1, Mathlib `v4.33.1` (`0df444a3`). **Twenty-six libraries, 1,397 jobs,
-exit 0**, re-verified 2026-09-14. No `sorry`, `admit`, project-specific `axiom`,
-`unsafe`, `partial` or `native_decide` in any file (verified by scanning with
-comments stripped). All `decide` calls are ordinary kernel reduction.
+Lean 4.33.1, Mathlib `v4.33.1` (`0df444a3`). **1,756 declared libraries**
+(commit `d22c313`). The most recent committed full build is **1,755 libraries,
+6,518 jobs, exit 0** (log:
+`results/validation/2026-09-17_verify_all_after_real_config.log`) and it
+predates the last two committed modules, `RealConfig`'s `exists_near_generic`
+extension and all of `RealUpperBound`. No `sorry`,
+`admit`, project-specific `axiom`, `unsafe`, `partial` or `native_decide` in any
+file (verified by scanning with comments stripped). All `decide` calls are
+ordinary kernel reduction.
 
-Thirteen of the twenty-six are Mathlib-free, and five import literally nothing
+Exactly five libraries import literally nothing
 (`LowerBound`, `GeometryDefs`, `EndgameDefs`, `Lemma7Bridge`,
-`CernyL2Interface`). Only two — `PointSetSemantics` and `PolygonSimple` — reach ℝ.
+`CernyL2Interface`), and compile against an empty `LEAN_PATH`.
+
+> **Figures corrected 2026-09-17.** This paragraph read "**Twenty-six
+> libraries, 1,397 jobs, exit 0**, re-verified 2026-09-14" and "Thirteen of the
+> twenty-six are Mathlib-free … Only two — `PointSetSemantics` and
+> `PolygonSimple` — reach ℝ." Three problems. The library and job counts are
+> two generations out of date. The Mathlib-free count was measured over 26
+> libraries and has **not** been re-measured; it is dropped rather than
+> guessed, and what can be said is that 240 of the 1,756 modules carry a direct
+> `import Mathlib…` line, 13 of them hand-written. And "only two reach ℝ" is
+> now wrong: `IntersectionCount`, `ConfigBridge` and `RealConfig` all do —
+> `RealConfig` works over `ℝ × ℝ` throughout, and `ConfigBridge`'s strongest
+> theorem is a statement about a point set in `ℝ × ℝ`.
+>
+> The library table below also predates `CoverAll`, `CoverMatch`, `CoverShape`,
+> `CoverColDeg`, `ConfigBridge`, `RealConfig`, the 218 `CCase*` modules and the
+> `Cover*` / `MCase*` families, and does not list them.
 
 | Layer | Libraries | What it gives |
 |---|---|---|
@@ -237,7 +351,18 @@ read "the Lean transcription of the filter". This is one systematic gap, not
 several, and it applies to C2-BRIDGE, to E8, to obligation (3), and to every
 filter-soundness statement.
 
-### `hne40` is out of reach of the kernel
+### `hne40` is out of reach of the kernel *by kernel-evaluating the enumeration*
+
+> **Heading and conclusion rescoped 2026-09-17.** The heading read "`hne40` is
+> out of reach of the kernel". Everything measured below is correct and remains
+> correct: **evaluating the 13,003,620-graph filter pipeline inside the kernel
+> is not feasible**, and five routes to doing so are dead. What is no longer
+> correct is the unqualified conclusion. `hne40` was obtained by a route that
+> evaluates no graph at all — two impossible local crossing patterns plus a
+> covering argument — and `ConfigBridge.crossCountC_ne_40` is a kernel theorem
+> for configurations in general position. The prediction at the end of this
+> section, that UB40 "must first be made smaller", was borne out in a stronger
+> form than intended: the domain was not made smaller, it was bypassed.
 
 `native_decide` is excluded throughout (it adds `Lean.ofReduceBool`). With
 ordinary kernel reduction, five routes were measured and all are dead:
@@ -264,6 +389,13 @@ Not settled by this: a *mathematical* restructuring that shrinks the
 13,003,620-element domain. That is mathematics, not engineering, and nobody has
 one.
 
+> **Corrected 2026-09-17: somebody does.** The restructuring did not shrink the
+> domain, it removed it. Two minimal local crossing patterns are impossible for
+> fourteen points in general position (`MinPatternClauses00k`), every one of the
+> 13,003,620 graphs contains a relabelled copy of one (`CoverAll.no_nine_edges`),
+> and the same two patterns cover all 5,040 perfect matchings of the `I = 42`
+> branch. `docs/covering-step.md`; `verification-status.md` rows 41–44.
+
 > Key finite and combinatorial components are formally verified in Lean; the
 > published geometric lemmas remain external dependencies. `f(7,7) = 38` is
 > **not** a Lean theorem — the strongest formalised statement carries `hclass`
@@ -274,6 +406,18 @@ one.
 > In particular: Lean verifies the project's *implication* A7-BRIDGE, **not**
 > AKR's geometric theorem. The chain is
 > `A7-EXT ⟹ A7-BRIDGE ⟹ H bipartite`, and only the second arrow is machine-checked.
+>
+> **Corrected 2026-09-17.** `f(7,7) = 38` is still not a Lean theorem, but
+> every clause after the dash has been overtaken. The strongest formalised
+> statement is `ConfigBridge.isGreatest_38_pointCount` and carries **neither**
+> `hclass` nor `hne40`. The 225-case list, the eight external inputs E1–E8, and
+> the filter transcriptions are **not inputs to the upper bound** for a
+> configuration in general position — they remain unformalized, and that no
+> longer bears on the result. The A7-BRIDGE / A7-EXT paragraph is likewise
+> about a filter the upper bound does not reach. What *is* not a Lean theorem is
+> the passage from integer-coordinate general-position configurations to
+> arbitrary simple heptagons: two steps, both named in the status box at the top
+> of this file.
 
 ## Known defects found during development
 
@@ -282,7 +426,7 @@ one.
 | 13,484,940 enumeration bug (`\|E\| ∈ {7,8,9}`) | No — a superset was searched | corrected enumeration + closed form |
 | Raw component-ID comparison in a checker | No — checker bug | relabelling-invariant comparison |
 | Lean `Odd` / `autoImplicit` vacuity | No — file had never compiled | `LemmaA.lean` with `autoImplicit false` |
-| Step 0 perturbation argument | No — AKR §9.1 gives the statement | **GP** (citation) |
+| Step 0 perturbation argument | No — AKR §9 gives the vertex-on-boundary statement; §3 gives the collinearity one, *unproved* | **GP** (citation). *Corrected 2026-09-17: this cell said "AKR §9.1 gives the statement". It does not.* |
 | Strict vs loose exceptional condition | Would have been severe if implemented | strict form `(★)` |
 | **AKR Observation 6 is false as printed** (a defect in a published paper) | No — a pair failing the cone dichotomy contributes nothing to `S(e)` | the narrow reading, corrected in the A7-EXT section |
 | **The A7 encoder's coverage argument was wrong** — the combined PQ types split into four orbits, only one was solved, and that one was vacuous. An earlier hostile review had endorsed the orbit argument as sound | Conclusion survived; the *evidence* for it did not | all 25 combined types solved with no symmetry reduction; 125 certificates (110 DRAT + 15 models), hash-bound to their formulas |
@@ -311,6 +455,26 @@ one.
 
 Formalizing all of Černý or all of AKR is **not** required by this architecture.
 
+> **Re-prioritised 2026-09-17.** This list is ordered for the enumeration
+> route. On the current route items 1–4 are no longer binding: A7-EXT, the
+> 225-case list and (E7) are not inputs to the upper bound, and item 7's
+> parenthesis should read "not another attempt at kernel-**evaluating** the
+> 13,003,620-element domain" — `hne40` itself was obtained by other means. The
+> two items that *are* binding are not on the list at all:
+>
+> * **A.** `Config` → real coordinates. `RealConfig.exists_integer_model` gives
+>   the sign-vector half; what is missing is the easy-but-undone step from a
+>   shared sign vector to the same crossing pattern and the same point count.
+> * **B.** The general-position reduction. §3's clause: the perturbation
+>   iteration is proved (`RealConfig.exists_near_generic`), the "intersection
+>   count is unchanged" half is not, and it is the bulk. AKR **§9** is not
+>   attempted at all, and nothing in §9 or §3 asserts that the perturbed
+>   polygons remain simple — which the argument uses.
+>
+> "Formalizing all of AKR is not required" remains true, but **AKR §9 now is**
+> the single remaining published import, so formalizing *that* section is the
+> binding formalization item rather than an optional one.
+
 ## Final trust statement
 
 > The project currently contains a heavily audited **candidate** computer-assisted
@@ -326,7 +490,21 @@ Formalizing all of Černý or all of AKR is **not** required by this architectur
 > **not** a Lean theorem and will not become one by further computation:
 > `isGreatest_38_final` still carries `hclass` and `hne40`, and `hne40` is out of
 > the kernel's reach by roughly 75× even after the fastest re-encoding measured.
-> Second, the mechanisms used here — reimplementation, certificates with
+> Second, the mechanisms used here
+>
+> *(**Corrected 2026-09-17.** Both halves of the first point have moved.
+> `f(7,7) = 38` is still not a Lean theorem, but the reason is no longer this
+> one: the strongest statement is `ConfigBridge.isGreatest_38_pointCount`,
+> carrying only `FullGP`, and the 75× shortfall was a measurement about
+> kernel-evaluating the enumeration, which nothing now does. And "A7-EXT is the
+> principal remaining mathematical issue" is no longer true — A7-EXT is not a
+> dependency of the upper bound. The principal remaining issues are `Config`'s
+> integer coordinates and the general-position reduction, in that order of
+> tractability. The second point — that reimplementation, certificates and
+> kernel verification are checks on implementation error and not on whether the
+> argument is the right argument, and that independent expert review is the
+> binding constraint — stands entirely, and stands more sharply now that the
+> upper bound rests on a single unproved sentence of §3.)* — reimplementation, certificates with
 > standalone checkers, Lean-kernel verification — are all mechanisms against
 > *implementation* error, and the defect list above shows they work. None of them
 > is a check on whether the argument is the right argument. Independent expert

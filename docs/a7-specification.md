@@ -11,6 +11,19 @@ exceptional classification (E7) is unformalized, `known-issues.md` K-04, K-05,
 K-07, K-12 and K-19 are open, and the strongest Lean theorem still carries
 `hclass` and `hne40`.)*
 
+> **Corrected again 2026-09-17.** A7-EXT is **no longer a dependency of the
+> proof**, so it is not "the one remaining human-review item" either: the upper
+> bound for configurations in general position is a Lean theorem importing no
+> published lemma (`lean/ConfigBridge.lean`; `verification-status.md` rows
+> 41–44). The *question* about AKR's published text is still open and still
+> worth an expert's answer (`akr-l7-review-request.md`); nothing here turns on
+> the answer. Two further corrections to the qualifier above: the citation is
+> **AKR §9 plus §3's unproved clause**, not §9.1
+> (`docs/akr-9-1-obligation.md`), and the strongest Lean theorem is
+> `ConfigBridge.isGreatest_38_pointCount`, which carries neither `hclass` nor
+> `hne40`. The specification below is unaffected and remains accurate as a
+> specification of the A7 bridges.*
+
 This file does two things and nothing else.
 
 1. **§§1–7** give a self-contained mathematical specification of the A7 dependency:

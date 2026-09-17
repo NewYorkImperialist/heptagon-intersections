@@ -19,6 +19,18 @@ by Claude.
 This disclosure exists so that a reader can calibrate how much independent human
 checking stands behind each claim. The answer, at present, is: very little.
 
+> **Update, 2026-09-17.** Figures: **1,756 declared libraries** (commit
+> `d22c313`). The most recent committed full build is **1,755 libraries, 6,518
+> jobs, exit 0** (`results/validation/2026-09-17_verify_all_after_real_config.log`)
+> and predates the last two committed modules. Almost all
+> of the 1,756 are generated per-shard data modules; the hand-written
+> development is a few dozen files. The theorem census has not been re-run since
+> 2026-09-15 and no figure for it is given here. **All of the work added since
+> 2026-09-14 was also AI-performed**, including the covering argument, the
+> `Config` bridge and `RealConfig` — which are the steps that made the upper
+> bound for configurations in general position a Lean theorem importing no
+> published lemma. *(The paragraph below is the 2026-09-14 version, retained.)*
+
 > **Update, 2026-09-14.** The Lean formalization roughly tripled on this date —
 > from 9 libraries to **25** (`lake build`, 1395 jobs, exit 0), and from a few
 > dozen theorems to at least 706 (the last mechanical census was taken at 23
@@ -54,8 +66,9 @@ checking stands behind each claim. The answer, at present, is: very little.
 * running the enumerations and the elimination pipeline;
 * conducting an adversarial self-audit that found two real defects in its own
   earlier work (see `known-issues.md` K-01 and K-11);
-* writing **every** Lean file in this repository — all 25 libraries, of which
-  the first seven were `LowerBound.lean`, `LemmaA.lean`, `EndgameDefs.lean`,
+* writing **every** Lean file in this repository — all **1,756** declared
+  libraries as of commit `d22c313` *(figure corrected 2026-09-17; it read "all
+  25 libraries")*, of which the first seven were `LowerBound.lean`, `LemmaA.lean`, `EndgameDefs.lean`,
   `EndgameData.lean`, `Endgame.lean`, `Lemma7Bridge.lean` and
   `CernyL2Interface.lean` — and designing the Lean architecture;
   *(updated 2026-09-14: this list was written when it was exhaustive and was left

@@ -15,6 +15,19 @@
 > whichever way the Lemma 7 reading goes. Everything below is unchanged except
 > that "the single unresolved mathematical question" is no longer an accurate
 > description of its place in our project.
+>
+> **Updated 2026-09-17, and the independence is now much stronger than the
+> paragraph above claims.** It is no longer only Lemma 7's *filter* that we do
+> without: the whole upper bound, both the `I ≠ 40` and the `I ≠ 42` branch,
+> is now a Lean theorem for configurations in general position importing **no
+> published lemma whatever** — not Lemma 7, not Lemma 5, not Černý Lemma 2, and
+> not the 412-graph route this note pointed at either
+> (`lean/ConfigBridge.lean`; `docs/verification-status.md` rows 41–44). The
+> only published result our upper bound still imports is the general-position
+> reduction of AKR **§9** together with **§3's** unproved "for convenience"
+> clause, which is a separate question we describe in
+> `docs/akr-9-1-obligation.md` and would also welcome an answer on. The
+> question below stands exactly as asked.
 
 **What this asks for:** a judgement about what a published definition licenses.
 Roughly an afternoon. It needs no code, no computation, and nothing else from
