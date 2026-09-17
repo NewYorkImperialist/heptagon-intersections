@@ -345,16 +345,21 @@ theorem fullGP_toConfig : FullGP (toConfig R) := by
   simp only [Vcfg_toConfig]
   exact model_orient_ne_zero R i j k hij hjk hik
 
-/-- Membership in the integer model's crossing pairs, in `Fin 7` terms. -/
-theorem mem_crossingPairs_iff (i j : Fin 7) :
-    (i, j) ∈ IntersectionCount.crossingPairs (toConfig R) ↔
-      ProperCross (model R (pP i)) (model R (pP (i+1)))
-        (model R (pQ j)) (model R (pQ (j+1))) := by
+/-- Membership in a `Config`'s crossing pairs, in `Fin 7` terms. -/
+theorem mem_crossingPairs_iff' (K : Config) (i j : Fin 7) :
+    (i, j) ∈ IntersectionCount.crossingPairs K ↔
+      ProperCross (K.Pv i) (K.Pv (i+1)) (K.Qv j) (K.Qv (j+1)) := by
   classical
   simp only [IntersectionCount.crossingPairs, Finset.mem_filter, Finset.mem_univ, true_and,
     EnumerationDomain.disjB, decide_eq_false_iff_not, DisjointO, Decidable.not_not,
     vtx_PV, vtx_PV_succ, vtx_QV, vtx_QV_succ]
-  exact Iff.rfl
+
+/-- Membership in the integer model's crossing pairs. -/
+theorem mem_crossingPairs_iff (i j : Fin 7) :
+    (i, j) ∈ IntersectionCount.crossingPairs (toConfig R) ↔
+      ProperCross (model R (pP i)) (model R (pP (i+1)))
+        (model R (pQ j)) (model R (pQ (j+1))) :=
+  mem_crossingPairs_iff' (toConfig R) i j
 
 /-- **The upper bound, for a real configuration in general position.**
 
@@ -510,6 +515,77 @@ theorem pointsR_le_38 : (intersectionPointsR R).ncard ≤ 38 := by
   rw [pointsR_ncard]
   exact crossingPairsR_card_le_38 R
 
+
+/-! ## The attaining example, and the equality
+
+`pointsR_le_38` is an upper bound.  The lower-bound certificate, cast into the
+reals, is an `RConfig` that attains 38 — so 38 really is the greatest value, not
+merely an upper bound. -/
+
+/-- Real crossing of cast integer points is integer crossing. -/
+theorem properCrossR_realPt (a b c d : Pt) :
+    ProperCrossR (realPt a) (realPt b) (realPt c) (realPt d) ↔ ProperCross a b c d := by
+  simp only [ProperCrossR, ProperCross, orientR_eq_det, det_realPt]
+  constructor
+  · rintro ⟨h1, h2⟩
+    exact ⟨by exact_mod_cast h1, by exact_mod_cast h2⟩
+  · rintro ⟨h1, h2⟩
+    exact ⟨by exact_mod_cast h1, by exact_mod_cast h2⟩
+
+/-- **The lower-bound certificate, as a real configuration.**  Its fourteen
+vertices are the integer certificate's, cast into `ℝ × ℝ`; general position is
+`ConfigBridge.fullGP_certConfig` and simplicity is `LowerBound`'s. -/
+noncomputable def certRConfig : RConfig where
+  V := fun i => realPt (Vcfg certConfig i)
+  gp := by
+    intro i j k hij hjk hik
+    rw [orientR_eq_det, det_realPt]
+    have h := fullGP_certConfig i j k hij hjk hik
+    exact_mod_cast h
+  simpleP := by
+    intro i j hadj hc
+    refine certConfig.P_simple.2.2.2 i j hadj ?_
+    simp only [Vcfg_pP] at hc
+    exact (properCrossR_realPt _ _ _ _).mp hc
+  simpleQ := by
+    intro i j hadj hc
+    refine certConfig.Q_simple.2.2.2 i j hadj ?_
+    simp only [Vcfg_pQ] at hc
+    exact (properCrossR_realPt _ _ _ _).mp hc
+
+/-- The certificate's two boundaries meet in exactly 38 points of `ℝ × ℝ`. -/
+theorem certRConfig_ncard : (intersectionPointsR certRConfig).ncard = 38 := by
+  classical
+  rw [pointsR_ncard]
+  have hEq : crossingPairsR certRConfig = IntersectionCount.crossingPairs certConfig := by
+    ext p
+    obtain ⟨i, j⟩ := p
+    rw [mem_crossingPairs_iff']
+    simp only [crossingPairsR, Finset.mem_filter, Finset.mem_univ, true_and, certRConfig,
+      Vcfg_pP, Vcfg_pQ]
+    exact properCrossR_realPt _ _ _ _
+  rw [hEq, IntersectionCount.pair_card, EnumerationDomain.cert_crossCountC]
+
+/-- The boundary-intersection counts attained by real configurations in general
+position. -/
+def attainedR : Set Nat := { n | ∃ R : RConfig, (intersectionPointsR R).ncard = n }
+
+/-- **38 is the greatest number of boundary intersection points of two simple
+heptagons with real coordinates in general position.**
+
+This is `f(7,7) = 38` with **one** hypothesis left: general position.  It is
+about genuine point sets in `ℝ × ℝ`, real coordinates, and it imports **no
+published lemma**.
+
+What it is not: the general-position hypothesis is carried, and discharging it
+is AKR §9 (no vertex of one polygon on the other's boundary) followed by §3's
+unproved clause.  See `docs/akr-9-1-obligation.md`. -/
+theorem isGreatest_38_real : IsGreatest attainedR 38 := by
+  refine ⟨⟨certRConfig, certRConfig_ncard⟩, ?_⟩
+  rintro n ⟨R, hR⟩
+  rw [← hR]
+  exact pointsR_le_38 R
+
 end Points
 
 /-! ## What remains
@@ -532,3 +608,11 @@ the general-position hypothesis must re-examine it.
 -/
 
 end Heptagon.RealUpperBound
+
+#print axioms Heptagon.RealUpperBound.not_properCrossR_iff_disjoint
+#print axioms Heptagon.RealUpperBound.crossingPairsR_card_le_38
+#print axioms Heptagon.RealUpperBound.pointsR_ncard
+#print axioms Heptagon.RealUpperBound.pointsR_le_38
+#print axioms Heptagon.RealUpperBound.properCrossR_realPt
+#print axioms Heptagon.RealUpperBound.certRConfig_ncard
+#print axioms Heptagon.RealUpperBound.isGreatest_38_real

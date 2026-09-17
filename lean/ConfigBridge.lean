@@ -311,11 +311,17 @@ position**, and this depends on no published lemma.
 Read the scope carefully, because it is **not** `f(7,7) = 38`:
 
 * it is about `Config` — fourteen points with *integer* coordinates, simplicity
-  and crossing taken at the *orientation* level.  The step from there to simple
-  closed curves in the real plane, and the Jordan-curve step, are not
-  formalized anywhere in this development;
+  and crossing taken at the *orientation* level.  *(Updated 2026-09-17: the
+  integer-coordinate restriction is no longer a gap.
+  `RealUpperBound.pointsR_le_38` proves the same bound for **real** coordinates,
+  about the genuine point set `boundaryP ∩ boundaryQ` in `ℝ × ℝ`.  And the
+  Jordan-curve theorem is neither claimed nor needed — see
+  `verification-status.md` row 29.)*
 * it is restricted to **general position**, and the reduction of the general
-  case to that one is AKR §9.1 — imported as prose, not proved here.
+  case to that one is imported as prose, not proved here — **AKR §9** for "no
+  vertex on the other boundary" and **§3's unproved clause** for
+  no-three-collinear.  *(Corrected 2026-09-17: this said "§9.1"; see the
+  header.)*
 
 What it *is*: the combinatorial core of the upper bound, together with the
 lower-bound certificate, as one kernel-checked statement carrying no external
