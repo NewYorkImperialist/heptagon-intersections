@@ -1,6 +1,8 @@
 import GeometryDefs
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Topology.Algebra.Order.Floor
+import Mathlib.Topology.Baire.CompleteMetrizable
+import Mathlib.Topology.Baire.Lemmas
 import Mathlib.Tactic
 
 /-!
@@ -330,14 +332,169 @@ theorem exists_near_nonzero {V : Fin 14 → ℝ × ℝ} {i j k : Fin 14}
         simp only [zero_add]
         exact mul_ne_zero (ne_of_gt hdpos) hx
 
+/-! ### Genericity without case analysis
+
+`exists_near_nonzero` needs `V i ≠ V j`.  For the *density* statement that the
+iteration wants, that hypothesis is a nuisance: one would have to case on
+whether the three vertices coincide.  There is a way round it.
+
+Move `j` in the `x` direction and `k` in the `y` direction, both by the same
+`t`.  The determinant then becomes a **monic** quadratic in `t` — the `t²`
+coefficient is `1` no matter where the three vertices are.  A monic quadratic
+has at most two roots, so arbitrarily small `t` make it nonzero, and no case
+analysis on the vertices is needed at all. -/
+
+/-- The determinant, after moving `b` in `x` and `c` in `y` by `t`, is monic
+quadratic in `t`. -/
+theorem orientR_perturb_quadratic (a b c : ℝ × ℝ) (t : ℝ) :
+    orientR a (b.1 + t, b.2) (c.1, c.2 + t)
+      = t ^ 2 + t * ((b.1 - a.1) + (c.2 - a.2)) + orientR a b c := by
+  simp only [orientR]; ring
+
+/-- A monic quadratic is nonzero at some arbitrarily small positive `t`: among
+three distinct candidates it can vanish at most twice. -/
+theorem exists_small_nonzero (a b c : ℝ × ℝ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ t : ℝ, 0 < t ∧ t < ε ∧ orientR a (b.1 + t, b.2) (c.1, c.2 + t) ≠ 0 := by
+  set A : ℝ := (b.1 - a.1) + (c.2 - a.2) with hA
+  set B : ℝ := orientR a b c with hB
+  have key : ∀ t : ℝ, orientR a (b.1 + t, b.2) (c.1, c.2 + t) = t ^ 2 + t * A + B :=
+    fun t => orientR_perturb_quadratic a b c t
+  by_cases h1 : (ε / 2) ^ 2 + (ε / 2) * A + B ≠ 0
+  · exact ⟨ε / 2, by linarith, by linarith, by rw [key]; exact h1⟩
+  by_cases h2 : (ε / 3) ^ 2 + (ε / 3) * A + B ≠ 0
+  · exact ⟨ε / 3, by linarith, by linarith, by rw [key]; exact h2⟩
+  -- Both vanish, so the quadratic is `(t - ε/2)(t - ε/3)`, which is nonzero at ε/4.
+  push_neg at h1 h2
+  refine ⟨ε / 4, by linarith, by linarith, ?_⟩
+  rw [key]
+  have hAB : A = -(ε / 2 + ε / 3) ∧ B = (ε / 2) * (ε / 3) := by
+    constructor <;> nlinarith [h1, h2, sq_nonneg ε, hε]
+  rw [hAB.1, hAB.2]
+  have : (ε / 4) ^ 2 + (ε / 4) * (-(ε / 2 + ε / 3)) + (ε / 2) * (ε / 3)
+      = (ε / 4 - ε / 2) * (ε / 4 - ε / 3) := by ring
+  rw [this]
+  have hne1 : ε / 4 - ε / 2 ≠ 0 := by intro h; nlinarith
+  have hne2 : ε / 4 - ε / 3 ≠ 0 := by intro h; nlinarith
+  exact mul_ne_zero hne1 hne2
+
+/-! ### Density, and the iteration
+
+With the monic-quadratic lemma, each single "this determinant is nonzero" set is
+open *and dense*.  There are finitely many, and `Fin 14 → ℝ × ℝ` is a complete
+metric space hence a Baire space, so their intersection is dense — which is the
+iteration, with none of the "choose ε small enough to preserve what is already
+fixed" bookkeeping done by hand.
+
+Note that full general position **implies distinct vertices**: if `W a = W b`
+for `a ≠ b` then every determinant through both vanishes.  So no separate
+distinctness condition is needed. -/
+
+/-- The configurations on which one given determinant is nonzero.  Trivially
+everything when the three indices are not distinct. -/
+def NZ (p : Fin 14 × Fin 14 × Fin 14) : Set (Fin 14 → ℝ × ℝ) :=
+  { W | p.1 ≠ p.2.1 → p.2.1 ≠ p.2.2 → p.1 ≠ p.2.2 →
+      orientR (W p.1) (W p.2.1) (W p.2.2) ≠ 0 }
+
+theorem isOpen_NZ (p : Fin 14 × Fin 14 × Fin 14) : IsOpen (NZ p) := by
+  obtain ⟨i, j, k⟩ := p
+  by_cases h : i ≠ j ∧ j ≠ k ∧ i ≠ k
+  · have he : NZ (i, j, k)
+        = (fun W : Fin 14 → ℝ × ℝ => orientR (W i) (W j) (W k)) ⁻¹' {0}ᶜ := by
+      ext W
+      simp only [NZ, Set.mem_setOf_eq, Set.mem_preimage, Set.mem_compl_iff,
+        Set.mem_singleton_iff]
+      exact ⟨fun f => f h.1 h.2.1 h.2.2, fun f _ _ _ => f⟩
+    rw [he]
+    exact (continuous_orientR i j k).isOpen_preimage _ isOpen_compl_singleton
+  · have he : NZ (i, j, k) = Set.univ := by
+      ext W
+      simp only [NZ, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      intro h1 h2 h3; exact absurd ⟨h1, h2, h3⟩ h
+    rw [he]; exact isOpen_univ
+
+theorem dense_NZ (p : Fin 14 × Fin 14 × Fin 14) : Dense (NZ p) := by
+  obtain ⟨i, j, k⟩ := p
+  by_cases h : i ≠ j ∧ j ≠ k ∧ i ≠ k
+  · obtain ⟨hij, hjk, hik⟩ := h
+    rw [Metric.dense_iff]
+    intro V ε hε
+    obtain ⟨t, ht0, htε, hne⟩ := exists_small_nonzero (V i) (V j) (V k) hε
+    refine ⟨Function.update (Function.update V j (((V j).1 + t), (V j).2))
+      k ((V k).1, ((V k).2 + t)), ?_, ?_⟩
+    · rw [Metric.mem_ball, dist_pi_lt_iff hε]
+      intro m
+      by_cases hmk : m = k
+      · subst hmk
+        simp only [Function.update_self, Prod.dist_eq, Real.dist_eq, sub_self,
+          abs_zero, add_sub_cancel_left, max_lt_iff, abs_of_pos ht0]
+        exact ⟨hε, htε⟩
+      · rw [Function.update_of_ne hmk]
+        by_cases hmj : m = j
+        · subst hmj
+          simp only [Function.update_self, Prod.dist_eq, Real.dist_eq, sub_self,
+            abs_zero, add_sub_cancel_left, max_lt_iff, abs_of_pos ht0]
+          exact ⟨htε, hε⟩
+        · rw [Function.update_of_ne hmj]; simpa using hε
+    · simp only [NZ, Set.mem_setOf_eq]
+      intro _ _ _
+      have eWi : Function.update (Function.update V j (((V j).1 + t), (V j).2))
+          k ((V k).1, ((V k).2 + t)) i = V i := by
+        rw [Function.update_of_ne hik, Function.update_of_ne hij]
+      have eWj : Function.update (Function.update V j (((V j).1 + t), (V j).2))
+          k ((V k).1, ((V k).2 + t)) j = (((V j).1 + t), (V j).2) := by
+        rw [Function.update_of_ne hjk, Function.update_self]
+      have eWk : Function.update (Function.update V j (((V j).1 + t), (V j).2))
+          k ((V k).1, ((V k).2 + t)) k = ((V k).1, ((V k).2 + t)) :=
+        Function.update_self _ _ _
+      rw [eWi, eWj, eWk]
+      exact hne
+  · have he : NZ (i, j, k) = Set.univ := by
+      ext W
+      simp only [NZ, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+      intro h1 h2 h3; exact absurd ⟨h1, h2, h3⟩ h
+    rw [he]; exact dense_univ
+
+/-- **AKR §3's clause, at the level of determinants.**  Every configuration is
+approximated arbitrarily well by one in full general position.
+
+This is the iteration the previous section left open.  It is *not* the whole of
+§3: it says nothing yet about the intersection **count** being unchanged, which
+is the remaining step (see below). -/
+theorem exists_near_generic (V : Fin 14 → ℝ × ℝ) {ε : ℝ} (hε : 0 < ε) :
+    ∃ W : Fin 14 → ℝ × ℝ, dist W V < ε ∧
+      ∀ i j k : Fin 14, i ≠ j → j ≠ k → i ≠ k → orientR (W i) (W j) (W k) ≠ 0 := by
+  have hdense : Dense (⋂ p : Fin 14 × Fin 14 × Fin 14, NZ p) :=
+    dense_iInter_of_isOpen isOpen_NZ dense_NZ
+  obtain ⟨W, hWball, hWmem⟩ := (Metric.dense_iff.mp hdense) V ε hε
+  refine ⟨W, Metric.mem_ball.mp hWball, ?_⟩
+  intro i j k hij hjk hik
+  exact (Set.mem_iInter.mp hWmem (i, j, k)) hij hjk hik
+
+/-- General position forces the fourteen vertices to be distinct: if two
+coincided, every determinant through both would vanish. -/
+theorem vertices_distinct_of_generic {W : Fin 14 → ℝ × ℝ}
+    (hgp : ∀ i j k : Fin 14, i ≠ j → j ≠ k → i ≠ k → orientR (W i) (W j) (W k) ≠ 0)
+    {a b : Fin 14} (hab : a ≠ b) : W a ≠ W b := by
+  intro heq
+  -- pick a third index
+  obtain ⟨c, hca, hcb⟩ : ∃ c : Fin 14, c ≠ a ∧ c ≠ b := by
+    have hle : ({a, b} : Finset (Fin 14)).card ≤ 2 :=
+      le_trans (Finset.card_insert_le _ _) (by simp)
+    have hne : (({a, b} : Finset (Fin 14))ᶜ).Nonempty := by
+      rw [← Finset.card_pos, Finset.card_compl, Fintype.card_fin]
+      omega
+    obtain ⟨c, hc⟩ := hne
+    simp only [Finset.mem_compl, Finset.mem_insert, Finset.mem_singleton, not_or] at hc
+    exact ⟨c, hc.1, hc.2⟩
+  exact hgp a b c hab (fun h => hcb h.symm) (fun h => hca h.symm)
+    (by simp only [orientR, heq]; ring)
+
 /-! ## What remains of §3's clause
 
-Three further steps, none of them started here:
+**Step 1, the iteration, is done** — `exists_near_generic`, via Baire rather
+than by hand-managing a shrinking `ε`.  What remains:
 
-1. **Iterate.** Apply `exists_near_nonzero` to each vanishing determinant in
-   turn, each time with an `ε` small enough that the determinants already made
-   nonzero stay nonzero — which is possible because being nonzero is an open
-   condition (`continuous_orientR`).  A finite induction over the 364 triples.
+1. ~~Iterate.~~ Done.
 2. **The count is unchanged.** Perturbing a configuration in which no vertex
    lies on the other polygon's boundary does not change the number of boundary
    intersection points: disjoint closed segments stay disjoint (positive
