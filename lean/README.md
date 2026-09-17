@@ -13,7 +13,7 @@
 > axioms, **importing no published lemma**. Its one hypothesis is general
 > position, a structure field of `RConfig`. `f(7,7) = 38` is still **not** a
 > Lean theorem: discharging general position is AKR §9 plus §3's unproved "for
-> convenience" clause. See `docs/verification-status.md` rows 40–50.
+> convenience" clause. **Narrowed later the same day (row 51):** `AKR9.points_le_38_of_no_vertex_on_boundary` proves the point bound assuming only §9's *conclusion*, carried as the explicit hypothesis `NoVertexOnOther`, so **§3's clause is no longer an input anywhere** and the sole remaining import is AKR §9 as published. See `docs/verification-status.md` rows 40–51.
 >
 > *This box previously read "forty-five Lean libraries of substance … plus 1,363
 > generated per-shard data modules whose only purpose is to split four `decide

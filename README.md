@@ -64,6 +64,30 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > the pair bound does not give a point bound. `f(7,7) = 38` is still **not** a
 > Lean theorem.
 
+> **Update, later on 2026-09-17 (row 51): the remaining import is now AKR §9
+> ALONE.** `lean/AKR9.lean` proves
+> `points_le_38_of_no_vertex_on_boundary (R : Pair9) (h9 : NoVertexOnOther R) :
+> (points9 R).ncard ≤ 38` — the **point** count, for two heptagons simple only
+> *as point sets*, with **no general-position condition anywhere in the
+> structure** and three collinear vertices allowed. The single hypothesis
+> `NoVertexOnOther` is **(E9)**: no vertex of either polygon lies on the other's
+> boundary, which is exactly what AKR §9 delivers, carried as an explicit named
+> hypothesis and never as an axiom.
+>
+> **So AKR §3's unproved "for convenience" clause is no longer an input
+> anywhere** — discharged for the pair count by rows 48–50 and for the point
+> count here. Two further things worth noting: `lean/CollinearSegment.lean`,
+> which does the real work (an interior common point with no endpoint on the
+> other segment is a transversal crossing), **imports only Mathlib and
+> `PointSetSemantics`**, so it is independently reviewable; and **finiteness is
+> now a conclusion rather than a hypothesis** (`points9_finite`), which closes
+> the `Set.ncard`-on-infinite-sets trap of `docs/akr-9-1-obligation.md` §5.4
+> instead of assuming it away. Non-vacuity: every `RConfig` yields a `Pair9`
+> satisfying (E9).
+>
+> `f(7,7) = 38` is still **not** a Lean theorem — nothing proves (E9), and the
+> §9 audit advises against attempting it. `verification-status.md` row 51.
+
 >
 > **(b) The general-position reduction — not moved.** It is **imported as
 > prose**: AKR §9 for "no vertex of one polygon on the other's boundary" (five
@@ -224,7 +248,7 @@ full table. In brief:
 | Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** — the *historical* proof (`Exclude42`). Superseded by the row above, which needs no class data at all, and which is therefore free of the K-22 entanglement |
 | Verified in Lean (enumeration obligations) | a counterexample lands in the searched domain; the domain has **13,003,620** elements; the search visits every element of it *(of the Lean transcription — there is no extraction)* |
 | Verified in Lean (interfaces) | all 225 endgame cases; the AKR-L5 bridge as an `iff`; the component labelling (both directions); a bipartiteness decision procedure; the 225 stored `avoiding` flags against the class table |
-| **The one open input** *(corrected 2026-09-17, twice)* | The **general-position reduction**, imported as prose: AKR §9, plus the count-preservation half of §3's unproved clause. *(The integer-coordinate input, listed here earlier the same day, was closed **outright** — `RealUpperBound.pointsR_le_38` for the upper bound and `RealUpperBound.isGreatest_38_real` for the equality, the attaining configuration being the certificate cast into `ℝ × ℝ`.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
+| **The one open input** *(narrowed 2026-09-17, row 51)* | **AKR §9 alone** — "no vertex of one polygon lies on the boundary of the other" — carried as a single explicit Lean hypothesis, `AKR9.NoVertexOnOther`. *(§3's unproved "for convenience" clause was listed here too; it is now discharged for both the crossing-pair count (rows 48–50) and the point count (row 51) and is no longer an input anywhere.)* *(The integer-coordinate input, listed here earlier the same day, was closed **outright** — `RealUpperBound.pointsR_le_38` for the upper bound and `RealUpperBound.isGreatest_38_real` for the equality, the attaining configuration being the certificate cast into `ℝ × ℝ`.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR **§9** together with **§3**'s unproved clause — *citation corrected 2026-09-17; this cell said "§9.1", which does not say it*) |
 | **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — a question about the published paper, **no longer a dependency** of anything here. See [`docs/akr-l7-review-request.md`](docs/akr-l7-review-request.md), which supersedes `akr-l7-human-review.md`; *this cell pointed at the superseded document* |

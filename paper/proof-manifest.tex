@@ -239,6 +239,23 @@ That is a more precise localisation of the one remaining input than
 ``the general-position reduction'' --- which is how the rest of this document,
 and \S\ref{sec:gp}, describe it.
 
+\medskip
+
+\noindent\textbf{And narrowed again the same day, to \S9 alone (row 51).}
+\texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary} proves the
+\emph{point} count --- $\partial P\cap\partial Q$ as a genuine set in
+$\mathbb{R}^2$ --- for two heptagons simple only \emph{as point sets}, with no
+general-position condition anywhere in the structure and three collinear
+vertices allowed. Its single hypothesis, \texttt{NoVertexOnOther}, is
+\textsc{akr} \S9's conclusion and nothing more. So \textbf{\S3's unproved clause
+is no longer an input anywhere}: discharged for the pair count by
+\texttt{RawConfig} and for the point count here. Two details worth recording:
+\texttt{CollinearSegment.lean}, which does the real work, imports only Mathlib
+and \texttt{PointSetSemantics} and is therefore independently reviewable; and
+finiteness of the intersection is now a \emph{conclusion}
+(\texttt{points9\_finite}), which closes the \texttt{Set.ncard} trap of
+\texttt{docs/akr-9-1-obligation.md} \S5.4 rather than assuming it away.
+
 \section{Claim and current status}
 
 Let $f(m,n)$ denote the maximum number of boundary intersection points of two
@@ -1414,6 +1431,8 @@ The generated
 \texttt{RealPerturb} & Mathlib & --- & a crossing is an \emph{open} condition, so a small enough perturbation loses none; \texttt{exists\_near\_generic\_keeping} \\
 \texttt{SegmentStable} & Mathlib \emph{only} & --- & disjoint segments stay disjoint when their four endpoints move by less than some $\varepsilon$, over any real normed space. \textbf{Imports nothing from this project} and can be reviewed alone \\
 \texttt{RawConfig} & Mathlib & \textbf{\S3's clause} & \texttt{raw\_crossPairs\_card\_le\_38}: at most $38$ crossing side pairs for two heptagons simple \emph{as point sets}, with \textbf{no general-position hypothesis}. Discharges \S3's unproved clause for the pair count \\
+\texttt{CollinearSegment} & Mathlib \emph{only} & --- & an interior common point of two segments, with no endpoint of either on the other, is a transversal crossing. \textbf{Imports nothing from this project} beyond \texttt{PointSetSemantics}; independently reviewable \\
+\texttt{AKR9} & Mathlib & \textbf{(E9)} & \texttt{points\_le\_38\_of\_no\_vertex\_on\_boundary}: the \emph{point} count, assuming only \textsc{akr} \S9's conclusion as a named hypothesis. \S3's clause is not used. Finiteness is a conclusion \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Class data and the classification}}\\
 \texttt{ClassInvariant} & Mathlib & \textsf{X1} & $|M|=5$ and the maximal crossing sets are exactly $\{\textsc{full}\setminus\{m\}\}$, decided for the $14$ stored classes, the set equality in both directions \\
@@ -2310,18 +2329,17 @@ hypothesis: general position, a structure field of \texttt{RConfig}.
 \textbf{$f(7,7)=38$ is nonetheless not established, for two reasons, and the
 second is the larger.}
 
-First, that one hypothesis is not discharged --- though as of rows 48--50 it is
-smaller and better localised than ``the general-position reduction''.
-\textsc{akr} \S3's parenthetical ``for convenience'' clause, which \textsc{akr}
-assert and do not prove, is now \textbf{discharged in Lean} for the
-crossing-pair count: \texttt{RawConfig.raw\_crossPairs\_card\_le\_38} bounds the
-crossing pairs of two heptagons simple \emph{as point sets} by $38$ with no
-general-position hypothesis at all. What is \emph{not} discharged is
-\textsc{akr} \S9, and it is needed for one specific thing --- identifying
-crossing \emph{pairs} with intersection \emph{points}. At a degenerate
-configuration a point can belong to no crossing pair, because two sides that
-merely touch share a point but have vanishing determinants; removing that case
-is exactly what \S9 does.
+First, that one hypothesis is not discharged --- though as of rows 48--51 it is
+\textbf{exactly \textsc{akr} \S9 and nothing else}. \S3's parenthetical ``for
+convenience'' clause, which \textsc{akr} assert and do not prove, is now
+\textbf{discharged in Lean} for the crossing-pair count
+(\texttt{RawConfig.raw\_crossPairs\_card\_le\_38}) \emph{and} for the point
+count (\texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary}), and is no
+longer an input anywhere. What remains is \S9's own conclusion --- no vertex of
+one polygon on the other's boundary --- carried as the single explicit Lean
+hypothesis \texttt{NoVertexOnOther}, which a reader can check against the paper
+directly rather than having to trust a general-position condition baked into a
+structure.
 
 Second, \textbf{no person outside this AI-assisted process has read any of it.}
 The mechanisms this project has used --- independent reimplementation,

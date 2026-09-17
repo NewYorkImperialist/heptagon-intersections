@@ -150,6 +150,30 @@ institution's generative-AI policy; that must be assessed separately.
 > `f(7,7) = 38` is still **not** a Lean theorem. `verification-status.md`
 > rows 48, 49 and 50.
 
+> **Update, later on 2026-09-17 (row 51): the remaining import is now AKR §9
+> ALONE.** `lean/AKR9.lean` proves
+> `points_le_38_of_no_vertex_on_boundary (R : Pair9) (h9 : NoVertexOnOther R) :
+> (points9 R).ncard ≤ 38` — the **point** count, for two heptagons simple only
+> *as point sets*, with **no general-position condition anywhere in the
+> structure** and three collinear vertices allowed. The single hypothesis
+> `NoVertexOnOther` is **(E9)**: no vertex of either polygon lies on the other's
+> boundary, which is exactly what AKR §9 delivers, carried as an explicit named
+> hypothesis and never as an axiom.
+>
+> **So AKR §3's unproved "for convenience" clause is no longer an input
+> anywhere** — discharged for the pair count by rows 48–50 and for the point
+> count here. Two further things worth noting: `lean/CollinearSegment.lean`,
+> which does the real work (an interior common point with no endpoint on the
+> other segment is a transversal crossing), **imports only Mathlib and
+> `PointSetSemantics`**, so it is independently reviewable; and **finiteness is
+> now a conclusion rather than a hypothesis** (`points9_finite`), which closes
+> the `Set.ncard`-on-infinite-sets trap of `docs/akr-9-1-obligation.md` §5.4
+> instead of assuming it away. Non-vacuity: every `RConfig` yields a `Pair9`
+> satisfying (E9).
+>
+> `f(7,7) = 38` is still **not** a Lean theorem — nothing proves (E9), and the
+> §9 audit advises against attempting it. `verification-status.md` row 51.
+
 
 ## What is a Lean theorem today, and what is not
 
