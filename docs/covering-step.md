@@ -172,7 +172,12 @@ neither is obvious from the failure:
 > remains: `Set.ncard` is `0` on infinite sets, so
 > `pointsR_le_38` says nothing about boundaries sharing a segment — general
 > position excludes that here, but any weakening must re-examine it. No
-> committed `verify-all` log covers this module.
+> *(Kernel-check scope, updated later the same day: a committed `verify-all` log
+> now **does** cover this module —
+> `results/validation/2026-09-17_verify_all_after_real_equality.log`,
+> COMPLETE SUCCESS, exit 0, 33 checks passed, all 1,756 declared libraries
+> built. This sentence previously read "No committed `verify-all` log covers
+> this module.")*
 > `verification-status.md` row 46.
 
 ## 5. Reproducing

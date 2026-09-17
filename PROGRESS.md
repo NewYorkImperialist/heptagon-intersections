@@ -426,3 +426,172 @@ open items are unchanged in kind: (E3)/A7-EXT needs one discrete geometer,
 `hne40` is a settled negative, and nothing here touched either.
 
 Status unchanged: **candidate computer-assisted proof that f(7,7) = 38.**
+
+---
+
+## 2026-09-16 — AKR Lemma 7 stops being load-bearing
+
+Written 2026-09-17. The log stopped at 2026-09-15 13:21, in the middle of the
+two days that changed the proof's shape. Appended after the fact; every claim
+below is either a commit or a committed artifact, named.
+
+### The 412, closed (`786f374` → `1d113cd`, 00:21–02:06)
+
+The evening of 09-15 produced certificate-level refutations of all 412 residual
+graphs — the graphs that survive the pipeline once AKR Lemma 7 is *dropped*
+rather than assumed (`db8a496`). Overnight they became Lean theorems.
+
+The method that made it fit: the 412 fall into **4 orbits** under a 392-element
+relabelling group (rotate/reflect each polygon, 14 × 14, times swap P↔Q, times
+2 for reflection). So four refutations plus a symmetry argument, not 412.
+Each refutation is a drat-trim-checked UNSAT proof of an oriented-matroid
+encoding, **transcribed** into Lean as an explicit unit-propagation chain — the
+kernel checks a chain of `Prop` implications and searches for nothing.
+
+`ResidualAll.residual_not_realizable` is the result. **AKR Lemma 7 is no longer
+an input to the upper bound.** It was the project's principal open question for
+weeks; the reviewer guide's weakness list had it at #1.
+
+Two things that mattered mechanically, both now in memory:
+
+- drat-trim's `-c` core plus the *original* DRAT fails for orbits 1–3 ("RAT
+  check on proof pivot failed"). A two-pass extraction works: `-c` for the
+  core, `-l` for trimmed lemmas, then `-L` for LRAT.
+- drat-trim **does not preserve literal order** — 1,998 of 2,272 core clauses
+  came back permuted. A generator that assumes order silently emits garbage.
+
+### The sweep: two patterns cover everything (`afeb58d` → `c7ac89c`, 05:39–08:01)
+
+Then the more consequential result. Rather than filter 13,003,620 candidate
+graphs, ask whether the *encoding alone* refutes each one. It does: **33,743 of
+33,743** orbit representatives, all drat-trim verified.
+
+And the refutations are highly redundant. Minimising the unsat cores turned up
+small **forbidden local crossing patterns**, and then:
+
+> **Two patterns, of sizes 8 and 14, cover all 13,003,620 `I = 40` candidate
+> graphs and all 5,040 `I = 42` perfect matchings.**
+
+Proved optimal among 299 pooled patterns: no single pattern suffices, and the
+8+14 pair is the cheapest pair. The size-8 one is readable
+(`minpattern000_impossible`) and needs no simplicity hypothesis.
+
+The lesson that generalised (now in memory): **randomised minimisation beats
+greedy.** Shuffling the removal order when minimising cores gave patterns of
+size 8 where greedy gave 16 — a 70× faster Lean build.
+
+### The covering step, built in layers (`3a60482` → `93052ce`, 12:57–23:20)
+
+Turning "two patterns cover everything" into Lean took five layers and 218
+generated modules holding 10,597 propagation steps. Measured, not guessed
+(`c950a60`): a 2,934-step proof **does not fit in one Lean theorem**, so the
+chains are sharded — each block takes only the core clauses and
+earlier-derived clauses its own steps cite.
+
+Also that day, honestly: `93052ce` recorded that status row 20's "VERIFIED IN
+LEAN" had overstated its independence, and carried the K-22 caveat upward.
+
+---
+
+## 2026-09-17 — the upper bound stops importing anything
+
+### Both exclusions, in the kernel (`1112e10` → `718c45d`, 00:55–02:30)
+
+`Cover.no_nine_edges` (`I ≠ 40`) and `Cover.no_seven_edges` (`I ≠ 42`), then
+the `Config` bridge: `ConfigBridge.crossCountC_ne_40`, `crossCountC_ne_42`,
+`crossCountC_le_38_of_general_position`, `isGreatest_38_pointCount`.
+
+**`I ≠ 42` needs no class data at all.** That is what removes the `hclass`
+entanglement: `hclass` is ∀-quantified over every `Config` and is in fact
+*false* (it fails for all 5,040 `I = 42` matchings), so it already entailed the
+conclusion `Exclude42` drew from it. The new route never mentions it.
+
+Row 28 had called kernel `hne40` "the decisive engineering question of the
+project… SETTLED NEGATIVE" after five measured routes — and its own closing
+sentence carved out "a mathematical restructuring shrinking the
+13,003,620-element domain." **That carve-out is what happened.** The negative
+result about *computation* stands; it was never a result about mathematics.
+
+### A citation defect of my own (`1facaa8`, 03:17)
+
+I had been citing **AKR §9.1** for `FullGP` all day — in commit messages, in
+status rows, in committed Lean docstrings. An agent checked it against the PDF
+and I was wrong. §9 (both §9.1 vertex–vertex and §9.2 vertex–side) justifies
+only "no vertex of one polygon lies on the boundary of the other". The
+*collinearity* condition the development actually consumes comes from **§3's
+parenthetical "for convenience" remark, which AKR do not prove.**
+
+The error ran in the direction that **understates** the risk, which is the worse
+direction. Root cause: `proof-outline.md` Step 0's *body* attributed it
+correctly to §3 while its *heading* said §9.1, and I conflated the two. Every
+site is corrected; `docs/akr-9-1-obligation.md` (806 lines) is the line-by-line
+audit.
+
+### Integer coordinates, removed (`541234f` → `9b2b926`, 03:45–04:55)
+
+`RealConfig`: real coordinates, and `exists_integer_model` — every real
+configuration in general position has an integer one with the **same 364
+orientation-determinant signs**. Everything between the two sides of this
+development is defined by strict sign conditions on determinants, so that
+suffices.
+
+The route is shorter than the one I had planned and handed to Codex. `orient`
+is homogeneous of degree 2, so the good set is **scale-invariant**: scale a box
+until its sides exceed 1 and it must contain an integer point. No rationals, no
+clearing denominators. (Codex produced nothing on this task in over an hour; I
+stopped waiting, said so, and took it over.)
+
+Also `exists_near_generic` — §3's **iteration** half, that every configuration
+is arbitrarily close to a generic one. The trick that avoided all case analysis:
+moving vertex `j` in x and `k` in y by the same `t` makes the determinant
+`t² + tA + B`, **monic regardless of the configuration**, so it has at most two
+roots.
+
+Then `RealUpperBound.pointsR_le_38`: at most 38 points in
+`∂P ∩ ∂Q` as a genuine subset of `ℝ × ℝ`, built from Mathlib's `segment ℝ`.
+
+### The equality (`2f2d46a`, 05:13)
+
+`certRConfig` is the integer lower-bound certificate cast into `ℝ × ℝ`; its
+general-position field comes from `fullGP_certConfig` through `det_realPt`, and
+its simplicity fields from `LowerBound` through `properCrossR_realPt` (real
+crossing of cast integer points *is* integer crossing — both sides are the same
+two determinant products, one cast). Hence:
+
+```lean
+theorem isGreatest_38_real :
+    IsGreatest { n | ∃ R : RConfig, (intersectionPointsR R).ncard = n } 38
+```
+
+**Three standard axioms. Real coordinates. Genuine point sets. No published
+lemma imported. One hypothesis: general position.**
+
+### Where that leaves it
+
+Gone from the proof entirely: AKR Lemma 5, AKR Lemma 7, Černý Lemma 2, the
+order-type crossing fact, the exceptional classification, the 225-case list,
+the 13,003,620-graph pipeline, `hclass`, `hne40`, and the integer-coordinate
+restriction.
+
+Remaining, in priority order:
+
+1. **Independent expert review.** Nobody outside this AI-assisted process has
+   read any of it. Now *more* tractable, not less — a reader's time goes
+   against one named import and a short combinatorial core.
+2. **§3's second half** — that the intersection count survives the
+   perturbation. `exists_near_generic` gives the iteration and not the
+   invariance. Smallest real gap left; the machinery is already here.
+3. **AKR §9 itself** — recorded with the audit's own recommendation *against*
+   attempting it: five pages, a quantitative uniform-ε step with no Mathlib
+   scaffolding, and an existence step AKR assert rather than prove. That
+   asserted step is close to the sub-case on which this project's own earlier
+   general-position proof broke.
+
+Also noted for whoever picks this up: I suggested at one point handling
+degeneracies *combinatorially* instead of by perturbation. That is worse than I
+implied. With degeneracies one intersection point can belong to several
+side-pairs — a vertex lying on a vertex is one point but four pairs — so the
+**counting** layer breaks, not just the encoding. Do not attempt it on my word.
+
+Status unchanged, and it should stay this way until a person reads it:
+**candidate computer-assisted proof that f(7,7) = 38.**

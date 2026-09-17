@@ -1,6 +1,6 @@
 # A Proof Dependency Manifest for a Candidate Computer-Assisted Proof of `f(7,7) = 38`
 
-**Jayden Lin** — Northeastern University · 14 September 2026
+**Jayden Lin** — Northeastern University · 14 September 2026 *(LaTeX original revised 17 September 2026; this mirror is annotated, not rewritten)*
 
 ## Disclosure of generative-AI use
 
@@ -29,28 +29,50 @@ institution's generative-AI policy; that must be assessed separately.
 
 > **The authoritative version of this document is
 > [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)** (compiled:
-> `paper/proof-manifest.pdf`, 24 pages). This Markdown file is a convenience
-> mirror; where the two differ, the LaTeX file is correct.
+> `paper/proof-manifest.pdf`, 30 pages, rebuilt 2026-09-17). This Markdown file
+> is a convenience mirror; where the two differ, the LaTeX file is correct.
+> **The LaTeX original now opens with a §1 "Update, 17 September 2026" that this
+> mirror does not have**, and its status box, dependency table, trust-boundary
+> figures, remaining-work ordering and final trust statement have all been
+> revised. Prefer the LaTeX.
 
-> **Status.** This describes a *candidate* computer-assisted proof. All currently
-> known computational components have been independently checked or formally
-> verified, but the interpretation of AKR Observation 6 / Lemma 7 remains subject
-> to external human review. **`f(7,7) = 38` is not a Lean theorem**: the
-> strongest formalised statement still carries two hypotheses. The result should
-> not be treated as established.
+> **Status *(as printed 14 September 2026 — superseded; see the block below and
+> the LaTeX §1)*.** This describes a *candidate* computer-assisted proof. All
+> currently known computational components have been independently checked or
+> formally verified, but the interpretation of AKR Observation 6 / Lemma 7
+> remains subject to external human review. **`f(7,7) = 38` is not a Lean
+> theorem**: the strongest formalised statement still carries two hypotheses.
+> The result should not be treated as established.
+
+> **Status, 17 September 2026 — this is the current one.** `f(7,7) = 38` is
+> **not** a Lean theorem. What *is* a Lean theorem, on the three standard axioms
+> and importing no published lemma, is
+> `RealUpperBound.isGreatest_38_real : IsGreatest { n | ∃ R : RConfig, (intersectionPointsR R).ncard = n } 38`
+> — 38 is *exactly* the greatest number of points where the boundaries of two
+> simple heptagons with **real** coordinates meet, as a set in `ℝ × ℝ`. It
+> carries **one** hypothesis: general position, a structure field of `RConfig`.
+> Discharging that is AKR §9 plus §3's unproved "for convenience" clause, and
+> neither is formalised. Separately and more importantly: **no person outside
+> this AI-assisted process has reviewed any of it.** The result should not be
+> treated as established.
 
 > **SUPERSEDED IN PART, 2026-09-17. Read this before anything below.** This
-> document is dated 14 September 2026 and has not been revised since. Three of
-> its structural claims are now wrong, and the LaTeX original
-> (`paper/proof-manifest.tex`) carries the same errors — it has **not** been
-> updated either, and the note at the top of this file that says the LaTeX file
-> is correct where the two differ should not be read as endorsing its status
-> claims.
+> document is dated 14 September 2026 and has not been rewritten since; it is
+> annotated in place. Three of its structural claims are now wrong. *(Correction,
+> later on 2026-09-17: this block used to add that the LaTeX original
+> `paper/proof-manifest.tex` "carries the same errors — it has **not** been
+> updated either". It has since been updated: the LaTeX now opens with a §1
+> recording the new route, and its status box, dependency table, trust-boundary
+> figures, remaining-work list and final trust statement are all revised. The
+> note at the top of this file preferring the LaTeX can be read straightforwardly
+> again.)*
 >
 > 1. **"the strongest formalised statement still carries two hypotheses"** — it
 >    carries one, and neither of the two named here. The strongest statement is
->    `ConfigBridge.isGreatest_38_pointCount`, and its only hypothesis is
->    `FullGP`. See the box immediately below.
+>    `RealUpperBound.isGreatest_38_real`, over **real** coordinates, and its only
+>    hypothesis is general position. *(When this item was first written the
+>    strongest statement was `ConfigBridge.isGreatest_38_pointCount`, over
+>    integer coordinates; `RealUpperBound` superseded it the same day.)*
 > 2. **"the interpretation of AKR Observation 6 / Lemma 7 remains subject to
 >    external human review"** — still true as a question about the published
 >    paper, but AKR Lemma 7 is **no longer a dependency** of the upper bound,
@@ -63,13 +85,15 @@ institution's generative-AI policy; that must be assessed separately.
 >    collinearity clause the development consumes has its only warrant in one
 >    unproved sentence of **§3**. `docs/akr-9-1-obligation.md` is authoritative.
 >
-> `f(7,7) = 38` is **still not a Lean theorem**, and **exactly two** things
-> separate the development from it: `Config` has **integer** vertex coordinates
-> (the sign-vector half of that reduction is `RealConfig.exists_integer_model`),
-> and the **general-position reduction** is imported as prose — AKR §9, plus
-> §3's unproved clause, of which the perturbation-iteration half is now proved
-> (`RealConfig.exists_near_generic`) and the "count is unchanged" half is not.
-> `docs/verification-status.md` is authoritative and wins over this file.
+> `f(7,7) = 38` is **still not a Lean theorem**, and **one** thing separates the
+> development from it: the **general-position reduction**, imported as prose —
+> AKR §9, plus §3's unproved clause, of which the perturbation-iteration half is
+> now proved (`RealConfig.exists_near_generic`) and the "count is unchanged" half
+> is not. *(This paragraph said "exactly two", the second being `Config`'s
+> integer coordinates. That one closed later the same day —
+> `RealUpperBound.pointsR_le_38` and `isGreatest_38_real` are stated over real
+> coordinates.)* `docs/verification-status.md` is authoritative and wins over
+> this file.
 
 > **Update, later on 2026-09-17: the integer-coordinate item is now
 > CLOSED for the upper bound.** `lean/RealUpperBound.lean` (commit `9b2b926`)
@@ -95,7 +119,12 @@ institution's generative-AI policy; that must be assessed separately.
 > remains: `Set.ncard` is `0` on infinite sets, so
 > `pointsR_le_38` says nothing about boundaries sharing a segment — general
 > position excludes that here, but any weakening must re-examine it. No
-> committed `verify-all` log covers this module.
+> *(Kernel-check scope, updated later the same day: a committed `verify-all` log
+> now **does** cover this module —
+> `results/validation/2026-09-17_verify_all_after_real_equality.log`,
+> COMPLETE SUCCESS, exit 0, 33 checks passed, all 1,756 declared libraries
+> built. This sentence previously read "No committed `verify-all` log covers
+> this module.")*
 > `verification-status.md` row 46.
 
 ## What is a Lean theorem today, and what is not

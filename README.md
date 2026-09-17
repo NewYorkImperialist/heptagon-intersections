@@ -43,7 +43,10 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > integer lower-bound certificate cast into `ℝ × ℝ`. One caveat remains, stated
 > in the file: `Set.ncard` is `0` on infinite sets, so it says nothing
 > about boundaries sharing a segment — general position excludes that, but any
-> weakening must re-examine it. No committed `verify-all` log covers the
+> weakening must re-examine it. A committed `verify-all` log now covers the
+> module (`results/validation/2026-09-17_verify_all_after_real_equality.log`,
+> COMPLETE SUCCESS, exit 0). *This sentence previously said no committed log
+> covered the
 > module.
 >
 > **(b) The general-position reduction — not moved.** It is **imported as

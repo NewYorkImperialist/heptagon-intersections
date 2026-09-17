@@ -79,8 +79,9 @@
 > certificate cast into `ℝ × ℝ`. One caveat, in the file: `Set.ncard` is `0` on
 > infinite sets, so the bound says nothing about boundaries sharing a segment
 > (general position excludes that, but any weakening must re-examine it). No
-> committed `verify-all` log covers the module. `verification-status.md` rows 46
-> and 47.
+> committed `verify-all` log **does** now cover the module —
+> `results/validation/2026-09-17_verify_all_after_real_equality.log`, COMPLETE SUCCESS,
+> exit 0, all 1,756 libraries built. `verification-status.md` rows 46 and 47.
 >
 > Every "AKR §9.1" citation in this file is a **stale citation** for that
 > clause: §9.1 does not contain it. `docs/akr-9-1-obligation.md` is

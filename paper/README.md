@@ -14,13 +14,30 @@ Where the two differ, the LaTeX file is correct.
 
 ## What the manifest says, in one line
 
-`f(7,7) = 38` is a **candidate** result and **not** a Lean theorem. The strongest
-formalised statement, `IntersectionParity.isGreatest_38_final`, still carries two
-hypotheses — the exceptional-class data (`hclass`) and `I ≠ 40` (`hne40`) — and
-everything in Lean is orientation-level over `Pt := Int × Int`, with the
-Jordan-curve step and AKR §9.1 not formalized. The manifest's job is to say
-precisely that, and to name the one item on which the mathematics still turns
-(`A7-EXT`).
+`f(7,7) = 38` is a **candidate** result and **not** a Lean theorem. But as of
+2026-09-17 the strongest formalised statement is
+
+```lean
+RealUpperBound.isGreatest_38_real :
+  IsGreatest { n | ∃ R : RConfig, (intersectionPointsR R).ncard = n } 38
+```
+
+— 38 is *exactly* the greatest number of points where the boundaries of two
+simple heptagons with **real** coordinates meet, as a set in `ℝ × ℝ`, on the
+three standard axioms, **importing no published lemma**. It carries **one**
+hypothesis: general position, which `RConfig` assumes as a structure field.
+Discharging that is AKR §9 plus §3's unproved "for convenience" clause.
+
+The manifest's job is to say precisely that. **Read its §1 first** ("Update, 17
+September 2026") — everything after §1 documents the *historical* route, which
+imported AKR Lemma 5, AKR Lemma 7, Černý Lemma 2, the exceptional
+classification and a 13,003,620-graph enumeration. None of those is an input
+any more. The old material is kept because the defect ledger is attached to it.
+
+*This section previously said the strongest statement carried `hclass` and
+`hne40`, that everything was orientation-level over `Pt := Int × Int`, and that
+the mathematics turned on `A7-EXT`. All three are now false; `docs/verification-status.md`
+rows 40–47 record how each changed.*
 
 ## Build
 
@@ -51,10 +68,15 @@ pdflatex proof-manifest.tex
 pdflatex proof-manifest.tex
 ```
 
-Last built 2026-09-14 with Tectonic: **24 pages, 0 errors, 0 undefined
-references, 0 undefined citations, 0 overfull boxes.** A dozen underfull boxes
-remain (loose spacing in the ragged narrow table columns and the bibliography);
-these are cosmetic.
+Last built 2026-09-17 with Tectonic, from a deleted log: **30 pages, 0 errors,
+0 undefined references, 0 undefined citations, 4 overfull boxes, 18 underfull.**
+The four overfull boxes are pre-existing and live in the narrow ragged columns
+of the Lean trust-boundary table (`proof-manifest.tex` lines 1362–1382); all of
+them are under 15 pt and none is new. The underfull boxes are loose spacing in
+the same table columns and in the bibliography. Both are cosmetic.
+
+*Previously: 24 pages, 0 overfull. The page count grew with §1 and the new
+library rows.*
 
 ## Files
 

@@ -34,7 +34,7 @@
 Computer-Assisted Proof of $f(7,7)=38$}
 \author{Jayden Lin\\
 \small Northeastern University}
-\date{14 September 2026}
+\date{17 September 2026}
 
 \begin{document}
 \maketitle
@@ -47,16 +47,39 @@ database checks, certificate verification, Lean-kernel verification, and the
 items still requiring human review. Every claim carries a source and a
 verification status. It is written so that a referee can locate the weakest link
 quickly.
+
+\textbf{Read \S\ref{sec:update} first.} Between 14 and 17 September 2026 the
+upper bound was re-proved along a route that imports \emph{no} published lemma,
+and the published dependencies this manifest spends most of its pages auditing
+--- \textsc{akr} Lemma 5, \textsc{akr} Lemma 7, {\v C}ern{\'y} Lemma 2, the
+exceptional classification, the $13{,}003{,}620$-graph enumeration --- are no
+longer inputs to it. Everything after \S\ref{sec:update} is the \emph{historical}
+route and is retained deliberately: it is where the defect record lives, and the
+new route was found by pushing on it. Section~\ref{sec:update} says which claims
+below are superseded.
 \end{abstract}
 
 \begin{center}
-\fbox{\parbox{0.93\textwidth}{\textbf{Status.} This document describes a
-\emph{candidate} computer-assisted proof. All currently known computational
-components have been independently checked or formally verified, but the
-interpretation of \textsc{akr} Observation~6 / Lemma~7 remains subject to
-external human review. \textbf{$f(7,7)=38$ is not a Lean theorem}: the
-strongest formalised statement still carries two hypotheses
-(\S\ref{sec:leanmain}). The result should not be treated as established.}}
+\fbox{\parbox{0.93\textwidth}{\textbf{Status, 17 September 2026.} This document
+describes a \emph{candidate} computer-assisted proof. \textbf{$f(7,7)=38$ is not
+a Lean theorem.} What \emph{is} a Lean theorem, on the three standard axioms and
+importing no published lemma, is
+\[
+  \texttt{RealUpperBound.isGreatest\_38\_real}:
+\]
+\vspace{-1.6\baselineskip}
+\[
+  \operatorname{IsGreatest}\ \bigl\{\,n \bigm| \exists\,R:\texttt{RConfig},\
+  (\texttt{intersectionPointsR}\ R).\texttt{ncard}=n\,\bigr\}\ \ 38,
+\]
+i.e.\ $38$ is exactly the greatest number of points at which the boundaries of
+two simple heptagons with \emph{real} coordinates meet, as a set in
+$\mathbb{R}^2$ --- carrying \textbf{one} hypothesis, general position, which
+\texttt{RConfig} assumes as a structure field. Discharging that hypothesis is
+\textsc{akr} \S9 followed by \S3's unproved ``for convenience'' clause, and
+neither is formalised. Separately, and more importantly: \textbf{no person
+outside this AI-assisted process has reviewed any of it.} The result should not
+be treated as established. See \S\ref{sec:update}.}}
 \end{center}
 
 \section*{Disclosure of generative-AI use}
@@ -90,6 +113,97 @@ transcripts --- are preserved in the project repository.
 No claim is made here about conformance with any particular publisher's or
 institution's policy on generative-AI use; that must be assessed separately
 against the policy in force.
+
+\section{Update, 17 September 2026: the route below has been superseded}\label{sec:update}
+
+This manifest was written on 14 September 2026 and audits the route that was
+then current. Over the following three days the upper bound was re-proved, and
+the new route shares almost nothing with the old one. Both are kept: the new
+chain is stated here, and the old one survives in
+\S\ref{sec:flow}--\S\ref{sec:hne40} as the historical record --- which is not
+sentiment, because the defect ledger (\S\ref{sec:defects}) is attached to it and
+because the new route was found by pushing on the old one until it broke in a
+useful direction.
+
+\subsection*{The chain as it now stands}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Two forbidden local patterns.} Instead of filtering
+    $13{,}003{,}620$ candidate graphs, one exhibits \emph{two} minimal forbidden
+    local crossing patterns, of sizes $8$ and $14$, and shows that every
+    $I=40$ candidate graph and every $I=42$ perfect matching contains one of
+    them. Each pattern's non-realizability is a proof-checked refutation of an
+    oriented-matroid \textsc{sat} encoding, transcribed into Lean as an explicit
+    propagation chain --- no search runs in the kernel.
+  \item \textbf{The covering step.} A degree argument over
+    \texttt{rowDeg}/\texttt{colDeg} reduces ``$I=40$'' to a $28$-case
+    degree-shape analysis, each case closed by pattern avoidance. This replaces
+    \textsf{A5}, \textsf{C2}, \textsf{A7-EXT}, the exceptional classification,
+    the $225$-case list and the enumeration \emph{outright}.
+  \item \textbf{Both exclusions in the kernel.}
+    \texttt{ConfigBridge.crossCountC\_ne\_40} and
+    \texttt{crossCountC\_ne\_42} --- the second needing no class data at all,
+    which is what removes the \texttt{hclass}/$I=42$ entanglement described in
+    \S\ref{sec:i42}.
+  \item \textbf{Integer coordinates, removed.} \texttt{RealConfig} carries real
+    coordinates; \texttt{exists\_integer\_model} produces an integer
+    configuration with the same $364$ orientation-determinant signs, because
+    \texttt{orient} is homogeneous of degree~$2$ and the good set is therefore
+    scale-invariant --- scale a box until its sides exceed $1$ and it contains an
+    integer point. No rationals and no denominator clearing are needed.
+  \item \textbf{Real point sets, and the equality.}
+    \texttt{RealUpperBound.pointsR\_le\_38} bounds
+    $\partial P\cap\partial Q$ as a genuine subset of $\mathbb{R}^2$ built from
+    Mathlib's \texttt{segment}~$\mathbb{R}$, and
+    \texttt{isGreatest\_38\_real} supplies the attaining configuration --- the
+    integer lower-bound certificate cast into $\mathbb{R}^2$ --- so the
+    \emph{equality} holds at the real level.
+\end{enumerate}
+
+\subsection*{What this manifest says that is now superseded}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{\textsf{A7-EXT} and \textsf{A7-BRIDGE}} (\S\ref{sec:a7ext}) are
+    \emph{not dependencies of the upper bound}. All $412$ residual graphs that
+    \textsf{R412} left over are proved non-realizable in Lean
+    (\texttt{ResidualAll.residual\_not\_realizable}), and the new route does not
+    reach them at all. The Observation~6 reading is still an unresolved question
+    about the published paper; it is no longer this proof's weakest link, and
+    the ``principal remaining mathematical issue'' language in
+    \S\ref{sec:trust} is stale on that point.
+  \item \textbf{\textsf{A5}, \textsf{C2}, the exceptional classification and
+    \textsf{E7}} are likewise not inputs. \S\ref{sec:e7partial} and the
+    \texttt{OTEnum*} shard machinery remain \emph{true} and remain built; they
+    are simply no longer load-bearing. The ``\textsf{E7} is the most plausible
+    next target for formalization'' item in \S\ref{sec:remaining} was written
+    when \textsf{E7} still mattered.
+  \item \textbf{\texttt{hclass} and \texttt{hne40}} no longer appear in the
+    strongest formalised statement. \S\ref{sec:hne40}'s measured conclusion ---
+    that chasing \texttt{hne40} by kernel computation is out of reach --- was and
+    is correct; its own closing sentence carved out ``a mathematical
+    restructuring shrinking the $13{,}003{,}620$-element domain'', and that
+    carve-out is exactly what happened.
+  \item \textbf{The integer-coordinate restriction} (\S\ref{sec:leanmain}) is
+    gone, and it is no longer ``argued and not proved''.
+  \item \textbf{\textsc{akr} \S9.1 is a miscitation} and appears as one in
+    several places below. \S9 (both \S9.1, vertex--vertex, and \S9.2,
+    vertex--side) justifies only ``no vertex of one polygon lies on the boundary
+    of the other''. The \emph{collinearity} condition this development actually
+    consumes --- no three of the fourteen combined vertices collinear --- comes
+    from \S3's parenthetical ``for convenience'' remark, which \textsc{akr} do
+    not prove. The correct citation is therefore \S9 \emph{plus} \S3's unproved
+    clause. Each site is corrected in place below.
+\end{itemize}
+
+\subsection*{What has not changed}
+
+General position is still a hypothesis and \textsc{akr} \S9 is still an import.
+The Jordan curve theorem is still neither used nor claimed. And
+\S\ref{sec:remaining}'s item on \textbf{independent expert review} is still the
+binding constraint --- more so, not less, now that the argument is short enough
+to be read. \texttt{docs/verification-status.md} is the authoritative,
+continuously updated version of this ledger; rows $40$--$47$ cover everything in
+this section.
 
 \section{Claim and current status}
 
@@ -179,12 +293,19 @@ endpoint, or not at all, as subsets of $\mathbb{R}^2$ --- so ``simple closed
 polygonal curve'' is no longer a gap. What is \emph{not} formalised is the Jordan
 curve theorem itself, the separation of the plane into interior and exterior;
 nothing in this development asserts it. And the reduction from arbitrary position
-to general position is \textsf{GP}, \textsc{akr} \S9.1, cited and not formalised.
-Integer coordinates are harmless by scaling, but that too is argued and not
-proved. So even with both hypotheses discharged, the theorem would read ``$38$ is
-the maximum crossing count over integer-coordinate, orientation-level heptagon
-configurations'', and further external steps would be needed to reach
-$f(7,7)=38$.
+to general position is \textsf{GP} --- \textsc{akr} \S9 plus \S3's unproved
+``for convenience'' clause (\S\ref{sec:update}) --- cited and not formalised.
+
+\emph{Superseded 2026-09-17 on the integer-coordinate point.} This paragraph
+continued ``Integer coordinates are harmless by scaling, but that too is argued
+and not proved,'' and concluded that even with both hypotheses discharged the
+theorem would read ``$38$ is the maximum crossing count over integer-coordinate,
+orientation-level heptagon configurations''. Integer coordinates are now
+\emph{proved} harmless: \texttt{RealConfig.exists\_integer\_model} gives every
+real configuration in general position an integer one with the same $364$
+determinant signs, and \texttt{RealUpperBound.isGreatest\_38\_real} states the
+result over real coordinates and genuine point sets in $\mathbb{R}^2$. General
+position is the one hypothesis that remains.
 
 What \emph{is} unconditional, for an arbitrary \texttt{Config}, is the
 following, and it is worth stating because it is a genuine bracket:
@@ -234,7 +355,8 @@ attains $38$. Therefore $f(7,7)=38$.
 
 \begin{remark}
 All of this is conditional on the general-position regime \textsf{GP}, imported
-from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
+from \cite[\S9 and \S3]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}. \emph{This
+remark read ``\S9.1''; see \S\ref{sec:update} on why that citation is wrong.}
 \end{remark}
 
 \section{Dependency table}\label{sec:table}
@@ -253,8 +375,9 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \endfoot
 
 \textsf{GP} & General-position regime may be assumed w.l.o.g.
-  & published theorem & \cite[\S9.1,\S3]{AckermanKeszeghRote2022}
-  & \stat{source-audited} & none known; project's own earlier proof was wrong and is removed \\
+  & published thm.\ (\S9) $+$ \textbf{unproved published remark} (\S3)
+  & \cite[\S9]{AckermanKeszeghRote2022} for ``no vertex on the other boundary''; \cite[\S3]{AckermanKeszeghRote2022} for ``no three combined vertices collinear''
+  & \stat{source-audited} & \textbf{the \S3 clause is asserted ``for convenience'' and not proved in the source}, and it is the half this development consumes; \S9's own argument has an existence step asserted rather than proved. Project's earlier own proof was wrong and is removed. \textbf{The only remaining input to the upper bound} (\S\ref{sec:update}) \\
 \addlinespace
 \textsf{C1} & A line meets a simple $7$-gon in at most $6$ sides; hence $\delta(\GD)\ge1$
   & published theorem & \cite[Lemma 1]{CernyEtAl2003}
@@ -361,9 +484,17 @@ from \cite[\S9.1]{AckermanKeszeghRote2022}; see \S\ref{sec:gp}.
 \textbf{Role.} The whole combinatorial argument is carried out in a
 general-position regime. \textsf{GP} is what licenses that restriction.
 
-\textbf{Source.} \cite[\S9.1, and \S3]{AckermanKeszeghRote2022}. Their
-perturbation removes the relevant degeneracies without decreasing the number of
-boundary intersections.
+\textbf{Source, and a citation correction.} \cite[\S9]{AckermanKeszeghRote2022}
+for (GP2) below --- no vertex of one polygon on the boundary of the other; their
+perturbation removes those degeneracies without decreasing the number of
+boundary intersections. For the \emph{collinearity} condition the development
+actually consumes, the source is \cite[\S3]{AckermanKeszeghRote2022}'s
+parenthetical ``for convenience'' remark, \textbf{which is asserted and not
+proved there}. Several places in this manifest cited ``\S9.1'' for the whole of
+\textsf{GP}; that is wrong in the direction that understates the risk, and is
+corrected in place. See \S\ref{sec:update} and
+\texttt{docs/akr-9-1-obligation.md}, which audits \S9 against the published
+text.
 
 \textbf{Exact consequences used, and nothing stronger.}
 \begin{enumerate}[label=(GP\arabic*),leftmargin=*]
@@ -1112,39 +1243,64 @@ $2{,}016$ of the $4{,}725$ side pairs satisfy it.
 Environment: Lean 4.33.1; Mathlib tag \texttt{v4.33.1}, revision
 \texttt{0df444a3} \cite{MathlibCommunity}. Build: \texttt{lake build}.
 
-\texttt{lakefile.toml} declares $1{,}408$ \texttt{[[lean\_lib]]} targets and all
-of them build, exit $0$, verified 2026-09-15 --- but that number would mislead
-badly if quoted flat. \textbf{Thirty-four} are the libraries of the original
-development; \textbf{eleven} more carry the definitions and assemblies of the
-four results added on 2026-09-14/15; and the remaining $1{,}363$ are
-\emph{generated per-shard data modules}, each holding one \texttt{decide
-+kernel} over one slice and nothing else. They exist only because four
-computations will not run in one piece --- the $48{,}600$-candidate
-classification enumeration, the $524{,}288$-candidate completeness search, the
-simple count and the stratification. Everything below that says ``the
-libraries'' means the forty-five that are not per-shard data. None contains
+\texttt{lakefile.toml} declares $1{,}756$ \texttt{[[lean\_lib]]} targets and all
+of them build, exit $0$, verified 2026-09-17 --- but that number would mislead
+badly if quoted flat, so here is a rule a reader can re-run rather than a figure
+to be taken on trust:
+\begin{quote}\footnotesize
+\texttt{cd lean \&\& grep -c '\^{}\textbackslash[\textbackslash[lean\_lib\textbackslash]\textbackslash]' lakefile.toml} $\to 1756$\\
+\texttt{ls *.lean | while read f; do grep -qi 'gen\_lean|generated by|auto-generated|GENERATED FILE' "\$f" || echo \$f; done | wc -l} $\to 58$
+\end{quote}
+So $1{,}698$ modules carry an explicit generator-provenance marker and $58$ do
+not. \textbf{$58$ is an upper bound on the hand-written count, not the count.}
+At least fifteen of the $58$ are generator output that simply lacks a provenance
+header --- \texttt{ResidualCore000}--\texttt{003},
+\texttt{PatternCore000}--\texttt{003}, \texttt{MinPatternCore000}--\texttt{001},
+\texttt{CCase000All}--\texttt{CCase003All} and \texttt{MCase000All} --- so the
+hand-written figure is at most $43$. Adding the missing headers is a recorded
+follow-up; it is deferred only because a prose-only edit to any
+\texttt{lean/} module invalidates the whole generated shard set and costs a
+multi-hour rebuild. \emph{An earlier version of this paragraph gave ``thirty-four
+plus eleven $=$ forty-five libraries of substance'' against $1{,}408$ targets;
+those figures are from 2026-09-15 and no rule reproduces them now.}
+
+The generated bulk exists because several computations will not run in one piece
+--- the $48{,}600$-candidate classification enumeration, the $524{,}288$-candidate
+completeness search, the simple count, the stratification, and (new on
+2026-09-16/17) the propagation-chain shards and the covering step's $741$
+degree and avoidance lemmas. No module contains
 \texttt{sorry}, \texttt{admit}, a project-specific \texttt{axiom},
 \texttt{unsafe}, \texttt{partial}, or \texttt{native\_decide}; this was verified
 by scanning the sources with comments stripped. All \texttt{decide} calls are
 ordinary kernel reduction, so nothing rests on the compiler.
 
-\begin{remark}[Read \S\ref{sec:leanmain} first]
-Forty-five libraries, or fourteen hundred targets, is enough to create a false
-impression of coverage. The
-target statement is \emph{not} proved; it is \emph{stated}, with two
-hypotheses. The value of the development is that it makes the residue precise
-and machine-readable, not that it closes it.
+\begin{remark}[Read \S\ref{sec:update} and \S\ref{sec:leanmain} first]
+Forty-odd substantive libraries, or seventeen hundred targets, is enough to
+create a false impression of coverage. As of 2026-09-17 the residue is
+\textbf{one} hypothesis rather than two --- general position --- and the bound
+is stated over real coordinates and genuine point sets
+(\texttt{RealUpperBound.isGreatest\_38\_real}). But $f(7,7)=38$ is still
+\emph{not} proved: general position is assumed, not derived. The value of the
+development is that it makes the residue precise and machine-readable, and has
+now made it small; it is not that it closes it.
 \end{remark}
 
-\subsection*{The forty-five libraries of substance}
+\subsection*{The libraries of substance}
 
 Grouped by layer. ``core'' in the \textbf{Base} column means the library and
 everything it imports are Mathlib-free, so Mathlib is outside its trust base;
-fourteen of the forty-five are, and five of those import literally nothing
+five import literally nothing at all
 (\texttt{LowerBound}, \texttt{GeometryDefs}, \texttt{EndgameDefs},
-\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). The other nineteen reach
-Mathlib, and only three --- \texttt{PointSetSemantics}, \texttt{PolygonSimple}
-and \texttt{IntersectionCount} --- reach the reals. The generated
+\texttt{Lemma7Bridge}, \texttt{CernyL2Interface}). \emph{The per-layer tallies
+in this paragraph were counted on 2026-09-15 and the numbers ``fourteen'' and
+``nineteen'' no longer add up; the \texttt{grep} rule above is the reproducible
+figure, and the table below is the list.} Six modules reach the reals ---
+\texttt{PointSetSemantics}, \texttt{PolygonSimple}, \texttt{IntersectionCount},
+\texttt{RealConfig}, \texttt{RealUpperBound} and (through them)
+\texttt{ConfigBridge} --- and the $\mathbb{R}$ reasoning is deliberately
+quarantined there, which is why \texttt{GeometryDefs},
+\texttt{SegmentGeometry} and \texttt{DisjointnessGraph} remain Mathlib-free.
+The generated
 \texttt{OTEnum*} shards are not counted here; they all sit above
 \texttt{OrderTypeClassification} and so reach Mathlib.
 
@@ -1196,11 +1352,22 @@ and \texttt{IntersectionCount} --- reach the reals. The generated
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Upper-bound assembly}}\\
 \texttt{Exclude42} & Mathlib & \textsf{UB42} & $I\neq42$, from \textsf{X1} and \textsf{X2} \\
-\texttt{ClassDataWitness} & Mathlib & --- & non-vacuity of \texttt{Exclude42}'s class hypothesis: an explicit satisfying \texttt{mcs}/$M_P$ pair \\
+\texttt{ClassDataWitness} & Mathlib & --- & an explicit \texttt{mcs}/$M_P$ pair satisfying the \emph{per-configuration} class condition at the certificate. \textbf{Not} non-vacuity of \texttt{hclass} itself, which is $\forall$-quantified over every \texttt{Config} --- and which that file's own header shows is \emph{false}: it fails for all $5{,}040$ $I=42$ matchings and for ${\approx}21\%$ of a $20{,}000$-graph $I=40$ sample \\
 \texttt{ExceptionalClass} & Mathlib & --- & $I=42$ \emph{forces} the configuration to be exceptional, so the $42$ branch cannot be separated from the class data \\
 \texttt{UpperBoundAssembly} & Mathlib & --- & $I\le42$ unconditionally; $I\le38$ from parity, $I\neq42$, $I\neq40$ \\
 \texttt{MainTheorem} & Mathlib & \textsf{LEAN-MAIN} & $38$ is the greatest attained crossing count, given the hypotheses \\
 \texttt{IntersectionParity} & Mathlib & \textsf{PAR} & $I$ is even for an arbitrary configuration; the final assembly \\
+\addlinespace
+\multicolumn{4}{@{}l}{\emph{The 2026-09-17 route --- \S\ref{sec:update}; these supersede everything above for the upper bound}}\\
+\texttt{MinPatternCore/Clauses} ($4$, generated) & core & --- & the two minimal forbidden local patterns, sizes $8$ and $14$, each a transcribed \textsc{lrat} propagation chain; no search in the kernel \\
+\texttt{CoverRowDeg*}, \texttt{CoverColDeg}, \texttt{CoverAvoid*} ($741$ lemmas, generated) & Mathlib & --- & the covering step's degree and pattern-avoidance layers \\
+\texttt{CoverShape} & Mathlib & --- & the $28$ degree shapes, by \texttt{decide} over $4^7$; \textbf{depends on no axioms at all} \\
+\texttt{CoverAll} & Mathlib & --- & \texttt{no\_nine\_edges}: no general-position configuration has $9$ disjointness edges, i.e.\ $I\neq40$ \\
+\texttt{CoverMatch} & Mathlib & --- & \texttt{no\_seven\_edges}: $I\neq42$, \textbf{with no class data} --- this is what frees the $42$ branch from \texttt{hclass} \\
+\texttt{ResidualAll} & Mathlib & --- & all $412$ graphs \textsf{R412} left over are non-realizable, so \textsf{A7-EXT} is not load-bearing \\
+\texttt{ConfigBridge} & Mathlib & --- & \texttt{crossCountC\_ne\_40}, \texttt{crossCountC\_ne\_42}, \texttt{crossCountC\_le\_38\_of\_general\_position}, and \texttt{isGreatest\_38\_pointCount} over integer configurations in \texttt{FullGP} \\
+\texttt{RealConfig} & Mathlib & --- & \texttt{exists\_integer\_model}: a real configuration in general position has an integer one with the same $364$ determinant signs (the scale-invariance argument); also \texttt{exists\_near\_generic}, \S3's iteration half \\
+\texttt{RealUpperBound} & Mathlib & \textbf{the headline} & \texttt{pointsR\_le\_38} and \texttt{isGreatest\_38\_real}: $38$ is exactly the greatest size of $\partial P\cap\partial Q$ as a set in $\mathbb{R}^2$, for real simple heptagons in general position, importing no published lemma \\
 \addlinespace
 \multicolumn{4}{@{}l}{\emph{Class data and the classification}}\\
 \texttt{ClassInvariant} & Mathlib & \textsf{X1} & $|M|=5$ and the maximal crossing sets are exactly $\{\textsc{full}\setminus\{m\}\}$, decided for the $14$ stored classes, the set equality in both directions \\
@@ -1726,14 +1893,33 @@ Non-vacuity is proved rather than asserted at each stage: the certificate pair
 satisfies parity and both exclusions, and the bound is attained there, so the
 assembly is not a statement about the empty set and $38$ is not slack.
 
-\begin{remark}[The one thing \texttt{hclass} is not known to be]
+\begin{remark}[\texttt{hclass} is not merely unwitnessed --- it is false]
 \texttt{hclass} asserts the exceptional-class data for \emph{every}
 \texttt{Config}, not only for the ones the reductio reaches. That is stronger
 than the mathematical claim it stands for, which is conditioned on $I=40$ (or,
-in \texttt{Exclude42}, on $I=42$). Nothing in the development proves
-\texttt{hclass} \emph{satisfiable}, and no non-vacuity witness for it is
-supplied. A reader should therefore treat \texttt{isGreatest\_38\_final} as a
-statement of the residue, not as evidence that the residue is consistent.
+in \texttt{Exclude42}, on $I=42$).
+
+\emph{Sharpened 2026-09-17, and it resolves a contradiction between this remark
+and \texttt{ClassDataWitness}'s row in the table above.} That row lists an
+explicit satisfying \texttt{mcs}/$M_P$ pair; this remark said ``nothing in the
+development proves \texttt{hclass} satisfiable, and no non-vacuity witness for
+it is supplied.'' Both were half right and the table's phrasing overclaimed.
+\texttt{ClassDataWitness} witnesses the \emph{per-configuration} condition, at
+the certificate; it does not witness the $\forall$-quantified \texttt{hclass},
+and its own header explains why nothing could: for $I=42$ the disjointness graph
+is a perfect matching, so the seven sets $N_Q(j)$ are distinct singletons and no
+five-element $M_P$ can meet all seven --- \texttt{hclass} fails for
+\emph{every} $I=42$ configuration, and for about $21\%$ of a $20{,}000$-graph
+$I=40$ sample. So \texttt{hclass} \textbf{already entails $I\neq42$}, which is
+the conclusion \texttt{Exclude42} derives from it, and \textsf{UB42} must not be
+read as an independent argument once \texttt{hclass} is assumed.
+
+A reader should therefore treat \texttt{isGreatest\_38\_final} as a statement of
+the residue and not as evidence that the residue is consistent. \emph{This is
+now moot for the result}: \texttt{CoverMatch.no\_seven\_edges} and
+\texttt{ConfigBridge.crossCountC\_ne\_42} give $I\neq42$ with no class data at
+all, so the current upper bound does not mention \texttt{hclass}
+(\S\ref{sec:update}).
 \end{remark}
 
 \subsection*{\textsf{E5} --- attempted and \textsc{blocked}}\label{sec:e5}
@@ -1872,8 +2058,9 @@ branch touches \textsf{A7-EXT}, and only the right branch is unformalized.
              explicit 38-example (LB38) [Lean: LEAN-LB]
                                  |
                           f(7,7) = 38   (candidate)
-                     -- modulo GP (AKR 9.1) and the Jordan curve
-                        theorem, neither of which is formalized
+                     -- modulo GP (AKR S9 + S3's unproved clause).
+                        The Jordan curve theorem is NOT needed and is
+                        not claimed anywhere in the development.
 
    * A7-EXT: VERY STRONGLY CORROBORATED, HUMAN REVIEW STILL DESIRABLE -- see
      the A7-EXT subsection.  The chain is
@@ -1916,9 +2103,13 @@ Listed because they calibrate how much checking this argument has had.
   \item \textbf{Step 0 perturbation argument.} The project's own
     general-position proof is incorrect when $\Cone_P(v)\subset\Cone_Q(w)$, where
     its rule destroys the intersection point. \emph{Effect on the theorem:} none,
-    because the required statement follows from
-    \cite[\S9.1]{AckermanKeszeghRote2022}. \emph{Repair:} removed from the active
-    proof. \emph{Superseded by:} \textsf{GP}, \S\ref{sec:gp}.
+    because the required statement is imported instead, from
+    \cite[\S9]{AckermanKeszeghRote2022} together with \S3's unproved clause.
+    \emph{Repair:} removed from the active proof. \emph{Superseded by:}
+    \textsf{GP}, \S\ref{sec:gp}. \emph{Worth noting:} the sub-case that broke
+    this project's own proof is close to the existence step \textsc{akr} \S9
+    asserts rather than proves --- so this is a place where the import is doing
+    real work, not merely saving effort.
   \item \textbf{Strict versus loose exceptional condition.} Early phrasing said
     ``no line meets all four sides'', which does not license what the computation
     tests. \emph{Effect if it had been implemented:} severe --- $2{,}268$
@@ -1972,41 +2163,61 @@ Listed because they calibrate how much checking this argument has had.
     read as an artifact of a particular run, and only the final $0$ as a claim.
 \end{enumerate}
 
-\section{Remaining work}
+\section{Remaining work}\label{sec:remaining}
 
-In priority order. The first three are the binding constraint; the rest is
-optional polish.
+\emph{Reordered 2026-09-17.} In priority order for the route that is now
+current (\S\ref{sec:update}). The old ordering, which put \textsf{A7-EXT} first,
+is kept as items 6--8 because those questions about the published paper remain
+open even though the proof no longer depends on them.
 
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{External human review of \textsf{A7-EXT}} (\S\ref{sec:a7ext}),
-    and in particular of the four bridges of Remark~\ref{rem:a7gap}, which are
-    the project's own reasoning and not certified by anything.
   \item \textbf{Independent expert review of the overall proof.} Every
     mechanism this project has --- reimplementation, certificates, Lean --- is a
     mechanism against \emph{implementation} error. None of them is a check on
-    whether the argument is the right argument.
+    whether the argument is the right argument. This was item 2; it is now item
+    1, and it is the binding constraint. It is also \emph{more} tractable than
+    it was: a reader's time now goes against one named import and a short
+    combinatorial core, not against a $13$-million-graph search.
+  \item \textbf{\S3's second half: that the intersection count survives the
+    perturbation.} \texttt{RealConfig.exists\_near\_generic} proves that every
+    configuration is arbitrarily close to a generic one --- the iteration half.
+    What is missing is that the count does not change along the way, which is
+    what would license a conclusion about the original configuration. This is
+    the smallest genuinely mathematical gap left and it uses machinery already
+    in the repository.
+  \item \textbf{\textsc{akr} \S9 itself.} Recorded, with the audit's own
+    recommendation against attempting it: five pages, a quantitative uniform-$\varepsilon$
+    step with no Mathlib scaffolding, and an existence step \textsc{akr} assert
+    rather than prove --- the very sub-case on which this project's own earlier
+    attempt broke (\S\ref{sec:defects}). See
+    \texttt{docs/akr-9-1-obligation.md}. If any part of it is attacked, \S5.3 of
+    that audit says which part and why.
+  \item \textbf{Provenance headers on the fifteen generated modules that lack
+    them}, so the hand-written count is derivable rather than estimated
+    (\S\ref{sec:lean}). Cheap, but it forces a multi-hour rebuild, so it should
+    be batched with other \texttt{lean/} edits.
+  \item \textbf{Conversion of this manifest into a readable paper.} Now
+    substantially easier: the argument to be written up is short.
   \item \textbf{Confirmation from one of the \textsc{akr} authors}, ideally: that
     ``associated'', as used in Observation 6 and Lemma 7, carries the cone
     dichotomy; and, separately, notice of the Observation 6 counterexample and of
-    the two \S10.2 counts that do not reproduce.
-  \item \textbf{The classification, \textsf{E7}.} It is the largest
-    unformalized object in the proof, it is the content of \texttt{hclass}, and
-    it is the most plausible target for the next piece of formalization ---
-    unlike \textsf{UB40}, which is out of reach (\S\ref{sec:hne40}). Two pieces
-    of it were taken on 2026-09-14 (\S\ref{sec:e7partial}): \textsf{X1} is now
-    decided for the fourteen stored classes rather than assumed, and $M$ and the
-    maximal crossing sets are recomputed from each stored chirotope rather than
-    read. The two obvious next steps are the same treatment for
-    \texttt{lemma2\_windows} and \texttt{avoiding\_pairs} --- the latter matters,
-    because \texttt{AvoidingFlag} checks the $225$ certificates against it ---
-    and then exhaustiveness, which is the hard one.
-  \item \textbf{Conversion of this manifest into a readable paper.}
+    the two \S10.2 counts that do not reproduce. \emph{No longer blocking this
+    proof} --- see \S\ref{sec:update} --- but the defect report stands on its own
+    and should be sent.
+  \item \textbf{External human review of \textsf{A7-EXT}} (\S\ref{sec:a7ext}).
+    Was item 1. All $412$ residual graphs are now refuted in Lean, so nothing in
+    the upper bound rests on it.
+  \item \textbf{The classification, \textsf{E7}.} Was item 4, on the grounds
+    that it was ``the most plausible target for the next piece of
+    formalization''. It is no longer an input to anything
+    (\S\ref{sec:update}), so finishing it is now optional.
   \item \textbf{The human author learning the argument well enough to defend
     it.}
   \item Further Lean formalization \emph{only} where it improves the trust
-    boundary. In particular, chasing \texttt{hne40} by kernel computation is
-    settled negative and should not be reattempted without a mathematical
-    reduction of the domain first.
+    boundary. In particular, chasing \texttt{hne40} by kernel \emph{computation}
+    remains settled negative (\S\ref{sec:hne40}) and should not be reattempted.
+    What worked instead was the mathematical restructuring that section's own
+    closing sentence carved out.
 \end{enumerate}
 
 Formalizing all of {\v C}ern{\'y} et al.\ or all of \textsc{akr} is
@@ -2014,38 +2225,53 @@ Formalizing all of {\v C}ern{\'y} et al.\ or all of \textsc{akr} is
 published black boxes, and the appropriate check on them is source auditing and
 expert review, not formalization.
 
-\section{Final trust statement}
+\section{Final trust statement}\label{sec:trust}
 
 \begin{center}
 \fbox{\parbox{0.93\textwidth}{
-The project currently contains a heavily audited \emph{candidate}
-computer-assisted proof of $f(7,7)=38$. The novel finite reductions and the
-terminal elimination have been independently implemented, certificate checked,
-and in key places Lean-kernel verified. The principal remaining mathematical
-issue is \textsf{A7-EXT}: whether the published Observation 6 / Lemma 7 language
-licenses precisely the disjoint-status consequence the argument uses. That
-consequence has since been independently corroborated --- by proof-checked
-unsatisfiability of an oriented-matroid encoding with a verified positive
-control, and by exact-arithmetic search --- but its four bridges to the
-geometric statement remain the project's own reasoning, so it is recorded as
-\stat{very strongly corroborated}, not verified. The same investigation found
-\textsc{akr}'s Observation 6 to be false as printed, a defect that does not reach
-this argument (\S\ref{sec:defects}, item 6). Conditional on \textsf{A7-EXT}, the
-deduction that the auxiliary graph $H$ is bipartite (\textsf{A7-BRIDGE}) is
-formally verified in Lean.
+\textbf{As of 17 September 2026.} The project contains a heavily audited
+\emph{candidate} computer-assisted proof of $f(7,7)=38$.
 
-Two things should be said plainly alongside that. First, $f(7,7)=38$ is
-\textbf{not} a Lean theorem and will not become one by further computation: the
-strongest formalised statement still carries \texttt{hclass} and
-\texttt{hne40}, and \texttt{hne40} is out of the kernel's reach by a factor of
-roughly $75$ even after the fastest re-encoding measured (\S\ref{sec:hne40}).
-Second, the mechanisms this project has used --- independent reimplementation,
+The upper bound is now a Lean theorem on the three standard axioms
+--- \texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound} --- over
+\emph{real} coordinates, about genuine point sets in $\mathbb{R}^2$, with an
+attaining example, and \textbf{importing no published lemma}:
+\texttt{RealUpperBound.isGreatest\_38\_real}. It carries \textbf{one}
+hypothesis: general position, a structure field of \texttt{RConfig}.
+
+\textbf{$f(7,7)=38$ is nonetheless not established, for two reasons, and the
+second is the larger.}
+
+First, that one hypothesis is not discharged. Getting to general position from
+an arbitrary pair of simple heptagons is \textsc{akr} \S9, followed by \S3's
+parenthetical ``for convenience'' clause --- which \textsc{akr} \emph{assert and
+do not prove}, and which is the half this development actually consumes.
+Neither is formalised here. \texttt{RealConfig.exists\_near\_generic} proves
+\S3's iteration half and nothing proves that the intersection count survives the
+perturbation.
+
+Second, \textbf{no person outside this AI-assisted process has read any of it.}
+The mechanisms this project has used --- independent reimplementation,
 certificates with standalone checkers, Lean-kernel verification --- are all
 mechanisms against \emph{implementation} error, and the record in
-\S\ref{sec:defects} shows they work. None of them is a check on whether the
-argument is the right argument. Independent expert review is therefore the
-binding constraint, and it remains required before the result should be treated
-as established.
+\S\ref{sec:defects} shows they work: they caught real defects, including
+defects in this project's own reasoning and one in the published literature.
+None of them is a check on whether the argument is the right argument.
+Independent expert review is the binding constraint and remains required before
+the result should be treated as established.
+
+\emph{What this box said on 14 September, and why it changed:} it named
+\textsf{A7-EXT} --- the reading of \textsc{akr} Observation 6 / Lemma 7 --- as
+``the principal remaining mathematical issue'', and said $f(7,7)=38$ ``will not
+become one by further computation'' because the strongest formalised statement
+carried \texttt{hclass} and \texttt{hne40}. Both hypotheses are gone, and
+\textsf{A7-EXT} is no longer a dependency: all $412$ residual graphs are refuted
+in Lean. The prediction about \emph{computation} was correct --- \textsf{UB40}
+is still out of the kernel's reach by roughly a factor of $75$
+(\S\ref{sec:hne40}) --- and what closed the gap was a mathematical
+restructuring, which is precisely the escape that section's closing sentence had
+left open. The \textsc{akr} Observation 6 defect (\S\ref{sec:defects}, item 6)
+still stands as a finding about the literature.
 }}
 \end{center}
 
