@@ -195,9 +195,17 @@ exhaustively over all 5,040 perfect matchings: 0 survive, on both the shipped an
 the independent profile reconstructions.
 
 (The older route — perfect matching ⟹ H = complement of C₇ ⟹ triangle ⟹ not
-bipartite, contradicting A7 — is correct but unnecessary.  A7 is therefore
-load-bearing at exactly one point: the I = 40 endgame, where it cannot be
-dropped — without it 2,187 triples survive on 412 graphs.)
+bipartite, contradicting A7 — is correct but unnecessary.  A7 was formerly
+load-bearing at exactly one point, the I = 40 endgame: with its filter off,
+2,187 triples survive on 412 disjointness graphs.  **Corrected 2026-09-16:**
+that sentence used to end "where it cannot be dropped", and it no longer holds.
+All 412 of those graphs are refuted in Lean (`lean/ResidualAll.lean`,
+`docs/residual-412-lean.md`), so A7 can be dropped here too, at the cost of
+carrying that theorem instead — which is what the header above says.  The
+*reading* of the published lemma is still an open question
+(`docs/akr-l7-review-request.md`); what is gone is this outline's dependence on
+it.  For the scope limits of the Lean refutation itself — `GP` is stronger than
+`Config` — see `verification-status.md` rows 40 and 41.)
 
 I = 41, 39 are impossible by parity (Step 1, now kernel-checked).
 With the explicit 38-example, **f(7,7) = 38**. ∎
