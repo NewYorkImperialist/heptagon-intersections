@@ -243,20 +243,43 @@ case analysis.
 
 **Not closed, and there are two things.**
 
-*The count, at a degenerate configuration.*  `crossPairsOf` counts side
-**pairs**.  `RealUpperBound.pointsR_ncard` identifies that with the number of
-intersection **points** only in general position.  Without it one point can
-belong to several side pairs — a vertex resting on a vertex is a single point
-belonging to four pairs — so `raw_crossPairs_card_le_38` bounds pairs, and
-bounding *points* by `38` for a `RawPair` needs the counting layer redone.  Note
-the direction: pairs over-count points, so a bound on pairs is the *harder*
-statement, and the missing step is an inequality in the convenient direction.
-It is not written.
+*The count, at a degenerate configuration, and this is the serious one.*
+`crossPairsOf` counts side **pairs** that cross **strictly**.
+`RealUpperBound.pointsR_ncard` identifies that with the number of intersection
+**points** only in general position, and the failure at a degenerate
+configuration runs in the **bad** direction:
+
+> a point of `∂P ∩ ∂Q` need belong to **no** crossing pair at all.
+
+Two sides that merely *touch* — a vertex of `P` resting on a side of `Q`, say —
+have a common point, but every one of their four endpoint determinants that
+matters vanishes, so `ProperCrossR` is false and the pair is not counted.  Such
+a point is in `intersectionPointsR` and contributes nothing to `crossPairsOf`.
+So `crossPairsOf` can **under**-count points, and
+`raw_crossPairs_card_le_38` therefore does **not** bound the number of
+intersection points of a `RawPair`.
+
+(There is *also* over-counting — one point can lie on several crossing pairs, a
+vertex resting on a vertex being one point on four pairs — and that direction is
+harmless.  An earlier version of this section named only the over-counting and
+concluded that the missing step was "an inequality in the convenient
+direction".  That was wrong, and wrong in the direction that understates the
+difficulty.)
+
+Removing the touching-without-crossing case is **exactly what AKR §9 does**.
+So §9 is load-bearing for the *point* count even though §3's clause is no
+longer load-bearing for the *pair* count — which is a sharper statement of
+where the remaining import sits than the development had before.
+
+A third thing the counting layer would have to carry: if two sides overlap in a
+segment the intersection is **infinite**, and `Set.ncard` is `0` on infinite
+sets, so a point-count bound would be true but vacuous there.  Finiteness has
+to be hypothesis or conclusion, never silently assumed.
 
 *AKR §9.*  `RawPair` allows a vertex of one polygon to lie on the other's
-boundary; nothing here removes that, and nothing here needs to, because the
-bound above is about side pairs.  The reason §9 matters is precisely the
-counting layer above.  §9 remains an import, untouched, and
+boundary; nothing here removes that, and nothing here needs to for a statement
+about side pairs.  As the previous item says, that permission is precisely what
+breaks the point count.  §9 remains an import, untouched, and
 `docs/akr-9-1-obligation.md` records why it is not being attempted.
 
 So: `f(7,7) = 38` is still not a Lean theorem.  What changed is that the
