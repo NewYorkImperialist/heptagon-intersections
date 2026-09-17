@@ -6,7 +6,8 @@ import Mathlib.Tactic.FinCases
 /-!
 Closes the crossing-pair versus intersection-point count gap for `Config`.
 The boundary intersection is a `Set (ℝ × ℝ)`; finiteness is proved before its
-`Set.ncard` is used. AKR §9.1's general-position reduction remains external.
+`Set.ncard` is used. AKR's general-position reduction remains external (§9 for "no vertex on
+  the other boundary", §3's unproved clause for no-three-collinear).
 This file does not prove the Jordan curve theorem.
 -/
 set_option autoImplicit false

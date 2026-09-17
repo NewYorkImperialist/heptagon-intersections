@@ -9,8 +9,9 @@ theorem crossCountC_ne_40 (K : Config) (hgp : FullGP K) : crossCountC K ≠ 40
 ```
 
 `FullGP` — no three of the fourteen combined vertices collinear — is a carried
-hypothesis, and it is exactly what AKR §9.1 was already imported to supply
-(`verification-status.md` rows 4 and 43). §9.1 is not formalized, so the
+hypothesis, and it is exactly what AKR **§3**'s unproved "for convenience" clause supplies
+(`verification-status.md` rows 4 and 43 — *not* §9.1; the citation was corrected
+on 2026-09-17, see `docs/akr-9-1-obligation.md`). That clause is not formalized, so the
 *unconditional* `hne40` is still assumed and `f(7,7) = 38` is still not a Lean
 theorem. Read §4 before quoting anything here.
 
@@ -116,7 +117,8 @@ neither is obvious from the failure:
   work.
 * It gives `I ≠ 40` only for configurations in **full** general position — all
   364 orientation determinants nonzero. `Config` forces 168 of those; the other
-  **196** come from AKR §9.1, which is imported prose, not formalized. That is
+  **196** come from AKR §3's unproved "for convenience" clause, which is
+  imported prose, not formalized (corrected 2026-09-17 — it is not §9.1). That is
   now an explicit named hypothesis (`ConfigBridge.FullGP`) rather than an
   unstated mismatch. See `docs/residual-412-lean.md` §4 and row 43.
 * `hcol` is **no longer** a hypothesis — `ConfigBridge.colDeg_pos` discharges it

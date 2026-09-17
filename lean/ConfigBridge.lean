@@ -35,19 +35,48 @@ lying on the line through two **non-adjacent** vertices of `P`, and there are
 **196** such triples.
 
 So `FullGP` is carried as an explicit hypothesis.  It is **not a new
-assumption**.  `docs/proof-outline.md` Step 0, imported from Ackerman–Keszegh–Rote
-§9.1 and carried as dependency **A9** (`docs/verification-status.md` row 4),
-lists among its consequences "*no three vertices of `P` and `Q` combined are
-collinear*" — which is exactly `FullGP`.  The project has always worked in that
-regime; `Config` simply never encoded it.
+assumption** — the project has always worked in that regime, and `Config`
+simply never encoded it.  But *where* the assumption comes from matters, and an
+earlier version of this header got it wrong.
 
-**§9.1 itself is not formalized, here or anywhere in this development**, and
-`crossCountC_ne_40` therefore does **not** discharge the unconditional `hne40`
-that `MainTheorem.isGreatest_38` takes.  What this file changes is which *other*
-things the `I ≠ 40` branch depends on: after it, that branch imports no
-published lemma beyond §9.1 — not AKR Lemma 5, not AKR Lemma 7, not Černý
-Lemma 2, not the order-type crossing fact, not the exceptional classification,
-and not the 13,003,620-graph pipeline.
+> **Corrected 2026-09-17.  `FullGP` comes from AKR §3, not from §9.1.**
+>
+> This header, and `verification-status.md` rows 43–44, previously cited
+> Ackerman–Keszegh–Rote **§9.1** for "no three vertices of `P` and `Q` combined
+> are collinear".  §9.1 does not say that.  §9's own opening sentence scopes it:
+> *"We will now justify our general-position assumption that we introduced in
+> Sect. 3 stating that no vertex of one polygon lies on the boundary of the
+> other polygon."*  §9.1 is the vertex-vertex half of that and §9.2 the
+> vertex-side half; neither touches collinearity of three vertices.
+>
+> The collinearity clause — including exactly the 196 non-adjacent-mixed triples
+> that are the `Config`/`GP` gap — has its only warrant in one sentence of §3
+> (PDF p. 4): *"Furthermore, we assume **for convenience** that no three vertices
+> of P and Q combined lie on a line, and no two sides of P and Q combined are
+> parallel.  Indeed, given that no vertex of one polygon lies on the other
+> polygon, this can be achieved easily by another small perturbation of the
+> sides without changing the intersection pattern."*  No proof, no lemma number.
+>
+> So `FullGP` rests on the **thinnest-warranted sentence in the paper**, and was
+> being cited to the most heavily argued one.  This is not a claim that §3's
+> sentence is false — it is very likely true, and `docs/akr-9-1-obligation.md`
+> §5.3 sketches why — but the citation understated the risk by pointing at a
+> five-page proof when the actual warrant is an aside.  Cite **§9 (§9.1 + §9.2)
+> together with the unproved clause of §3**.
+
+**Neither §9 nor §3's clause is formalized, here or anywhere in this
+development**, so `crossCountC_ne_40` does **not** discharge the unconditional
+`hne40` that `MainTheorem.isGreatest_38` takes.  What this file changes is which
+*other* things the `I ≠ 40` branch depends on: after it, that branch imports no
+published lemma beyond the general-position reduction — not AKR Lemma 5, not AKR
+Lemma 7, not Černý Lemma 2, not the order-type crossing fact, not the
+exceptional classification, and not the 13,003,620-graph pipeline.
+
+A second gap, recorded in `docs/akr-9-1-obligation.md` §6.2: **nobody says the
+perturbed polygons are still simple.**  Step 0 lists that as a consequence, but
+it appears nowhere in §9, §9.1, §9.2 or §3.  It is load-bearing here, because
+`Simple7`'s fourth conjunct is the one part of `Config` that `FullGP` does not
+supply.
 -/
 
 namespace Heptagon.ConfigBridge
@@ -138,8 +167,9 @@ theorem rowDeg_total (K : Config) (h40 : crossCountC K = 40) :
 
 /-! ## General position, and the conclusion -/
 
-/-- **The general position AKR §9.1 supplies**: no three of the fourteen
-combined vertices are collinear.  `Config` forces 168 of these 364
+/-- **General position**: no three of the fourteen combined vertices are
+collinear.  This is AKR **§3**'s "for convenience" clause — *not* §9.1; see the
+correction in the header.  `Config` forces 168 of these 364
 determinants; this asks for the other 196 as well.
 
 See the note at the head of this file: it is an *existing* imported assumption
@@ -153,10 +183,10 @@ No pair of simple heptagons whose fourteen vertices are in general position has
 exactly 40 properly crossing side pairs.
 
 This imports **no published lemma**.  Its one hypothesis beyond `Config` is
-`FullGP`, which is what AKR §9.1 — already dependency A9 — was imported to
-supply.  It does **not** discharge the unconditional `hne40` that
-`MainTheorem.isGreatest_38` takes: that needs §9.1 itself, which is not
-formalized. -/
+`FullGP`, which is the AKR **§3** clause carried by dependency A9 (see the
+header's correction — it is *not* §9.1).  It does **not** discharge the
+unconditional `hne40` that `MainTheorem.isGreatest_38` takes: that needs the
+general-position reduction itself, which is not formalized. -/
 theorem crossCountC_ne_40 (K : Config) (hgp : FullGP K) : crossCountC K ≠ 40 := by
   intro h40
   exact no_nine_edges (Vcfg K) hgp (simpleP_Vcfg K) (simpleQ_Vcfg K)
@@ -266,7 +296,7 @@ every `Config`), `I` even (`IntersectionParity.crossCountC_even`, every
 No published lemma is imported — not AKR Lemma 5, not AKR Lemma 7, not Černý
 Lemma 2, not the order-type crossing fact, not the exceptional classification —
 and no class-data hypothesis is taken.  The single assumption beyond `Config` is
-`FullGP`, which is what AKR §9.1 was already imported to supply. -/
+`FullGP`, which is the AKR §3 clause carried by dependency A9. -/
 theorem crossCountC_le_38_of_general_position (K : Config) (hgp : FullGP K) :
     crossCountC K ≤ 38 :=
   UpperBoundAssembly.crossCountC_le_38 K (IntersectionParity.crossCountC_even K)
@@ -317,7 +347,9 @@ surrogate for it.
 1. `Config` has **integer** vertex coordinates.  Arbitrary simple heptagons have
    real ones, and the reduction is not formalized here.
 2. It is restricted to **general position**, and the reduction of the general
-   case to that one is AKR §9.1 — imported as prose (dependency A9), not proved.
+   case to that one is imported as prose (dependency A9), not proved — AKR §9
+   for "no vertex on the other boundary", and §3's unproved "for convenience"
+   clause for the collinearity `FullGP` actually needs.
 
 Within those two limits it is complete: the upper bound and the attaining
 example, kernel-checked, importing no published lemma. -/

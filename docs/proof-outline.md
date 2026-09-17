@@ -42,8 +42,11 @@ External results used (statements checked against the papers in
   graphs, and all 412 are refuted in Lean (`lean/ResidualAll.lean`,
   `docs/residual-412-lean.md`).  A7 can be deleted from the argument at the
   cost of carrying that Lean theorem instead.
-* **A9** = same paper, §9.1 (and §3), for the general-position reduction of
-  Step 0. This dependency replaces a project-specific argument that was found to
+* **A9** = same paper, §9 (= §9.1 and §9.2) for "no vertex of one polygon on
+  the boundary of the other", **and §3's unproved "for convenience" clause** for
+  "no three combined vertices collinear" — which is the half the Lean
+  development actually consumes (`ConfigBridge.FullGP`). Attribution corrected
+  2026-09-17; see `docs/akr-9-1-obligation.md`. This dependency replaces a project-specific argument that was found to
   be incorrect; see Step 0.
 
 **Černý Lemma 3 is NOT needed.**  Verified: removing it from the pipeline leaves
@@ -52,9 +55,19 @@ to four, though Step 0 now cites AKR §9 in addition.
 
 ---
 
-## Step 0 (reduction to general position — imported from AKR §9.1)
+## Step 0 (reduction to general position — imported from AKR §9 and §3)
 
-By Ackerman–Keszegh–Rote §9.1 (DCG 68 (2022), PDF pp. 22–24, journal pp. 1070–1072), it suffices for the extremal upper-bound argument
+> **Citation corrected 2026-09-17.** This sentence said "§9.1", and the page
+> range below covers §9.1 only. §9 (= §9.1 vertex-vertex, PDF pp. 22–24, **and
+> §9.2** vertex-side, PDF p. 25) justifies only *no vertex of one polygon on the
+> boundary of the other*. The third and fourth bullets below — no three combined
+> vertices collinear, no two combined sides parallel — come from **§3** (PDF
+> p. 4), which asserts them "for convenience" with a one-sentence sketch and no
+> proof. The body of this step already attributed them correctly; the heading
+> and this sentence did not. The third bullet is what `ConfigBridge.FullGP`
+> needs, so this matters. See `docs/akr-9-1-obligation.md`.
+
+By Ackerman–Keszegh–Rote §9 (DCG 68 (2022), PDF pp. 22–25, journal pp. 1069–1073) together with §3 (PDF p. 4, journal 1052), it suffices for the extremal upper-bound argument
 to work in the stated general-position regime: their perturbation removes the
 relevant degeneracies without decreasing the number of boundary intersections.
 
