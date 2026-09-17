@@ -5393,3 +5393,6 @@ name = "RealPerturb"
 
 [[lean_lib]]
 name = "SegmentStable"
+
+[[lean_lib]]
+name = "RawConfig"
