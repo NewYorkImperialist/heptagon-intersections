@@ -35,8 +35,9 @@ of two simple heptagons\\[2mm]
 \large A computer-assisted proof that $f(7,7)=38$,\\
 modulo one imported general-position reduction}
 
-\author{Jayden Lin\thanks{Northeastern University. This work was carried out
-with substantial generative-AI assistance; see \S\ref{sec:ai}.}}
+\author{Jayden Lin\thanks{This work was carried out with substantial
+generative-AI assistance; see \S\ref{sec:ai}.}\\[2pt]
+\normalsize Northeastern University}
 
 \date{17 September 2026}
 
@@ -604,9 +605,11 @@ $\Pi_8$, is small enough to state in a $3\times3$ table
 
 \subsection{How to reproduce}
 
+\begin{sloppypar}
 The development is at
 \url{https://github.com/NewYorkImperialist/heptagon-intersections}, at commit
 \texttt{8e6358a}. With Lean~4.33.1 and its Mathlib pinned by the repository:
+\end{sloppypar}
 
 \begin{center}\small
 \begin{tabular}{@{}ll@{}}
@@ -618,11 +621,26 @@ The development is at
 \end{tabular}
 \end{center}
 \noindent
-Theorem~\ref{thm:pat8} is \texttt{MinPatternClauses000.minpattern000\_impossible};
-Theorem~\ref{thm:main} is \texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary},
-and the equality is \texttt{AKR9.isGreatest\_38\_of\_E9}. Lemma~\ref{lem:simple}
-is \texttt{SegmentStable.exists\_eps\_disjoint\_stable}, in a file importing only
-Mathlib.
+The results of this paper correspond to the following declarations.
+
+\begin{center}\footnotesize
+\begin{tabular}{@{}l@{\quad}l@{}}
+\toprule
+\textbf{In this paper} & \textbf{In the development} \\
+\midrule
+Theorem~\ref{thm:pat8}   & \texttt{MinPatternClauses000.minpattern000\_impossible} \\
+Theorem~\ref{thm:pat14}  & \texttt{MinPatternClauses001.minpattern001\_impossible} \\
+Theorem~\ref{thm:main}   & \texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary} \\
+the equality             & \texttt{AKR9.isGreatest\_38\_of\_E9} \\
+Lemma~\ref{lem:simple}   & \texttt{SegmentStable.exists\_eps\_disjoint\_stable} \\
+Hypothesis~\ref{hyp:e9}  & \texttt{AKR9.NoVertexOnOther} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+\texttt{SegmentStable} imports only Mathlib, so Lemma~\ref{lem:simple} can be
+read on its own.
 
 The solver refutations are shipped as certificates and re-checked by a
 standalone proof checker independent of the proof assistant; that checker is
