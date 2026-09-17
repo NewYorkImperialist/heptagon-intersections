@@ -5396,3 +5396,9 @@ name = "SegmentStable"
 
 [[lean_lib]]
 name = "RawConfig"
+
+[[lean_lib]]
+name = "CollinearSegment"
+
+[[lean_lib]]
+name = "AKR9"
