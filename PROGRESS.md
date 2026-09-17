@@ -595,3 +595,166 @@ side-pairs — a vertex lying on a vertex is one point but four pairs — so the
 
 Status unchanged, and it should stay this way until a person reads it:
 **candidate computer-assisted proof that f(7,7) = 38.**
+
+---
+
+## 2026-09-17, continued — the real level, and AKR §3's clause
+
+Same day as the entry above; written as it happened.
+
+### The equality at the real level (`2f2d46a`)
+
+Row 46 had `pointsR_le_38` — at most 38 boundary points for real heptagons in
+general position — but **no attaining example**, so the equality existed only
+over integer coordinates (row 44). `certRConfig` is the integer certificate
+cast into `ℝ × ℝ`: general position from `fullGP_certConfig` through
+`det_realPt`, simplicity from `LowerBound` through the new
+`properCrossR_realPt` (real crossing of cast integer points *is* integer
+crossing — both sides are the same two determinant products, one cast). Hence
+
+```lean
+isGreatest_38_real :
+  IsGreatest { n | ∃ R : RConfig, (intersectionPointsR R).ncard = n } 38
+```
+
+Eight files were carrying "there is no attaining example and no `IsGreatest` at
+the real level"; all eight updated, the old text kept quoted.
+
+### AKR §3's clause, discharged for the crossing-pair count (rows 48–50)
+
+Three modules, in sequence.
+
+**`RealPerturb` (row 48)** — the openness half. A crossing is a conjunction of
+two strict inequalities between continuous functions of the fourteen points, so
+`{W | side pair (a,b) crosses (c,d)}` is **open**; there are only 49 side
+pairs, so "keeps every crossing `V` has" is a finite intersection of open sets
+containing `V`. Intersect with the dense generic set and you get
+`exists_near_generic_keeping`: every configuration has generic configurations
+arbitrarily close that lose **no** crossing. So the count can only *rise* — the
+direction the bound needs. What that could not give was **simplicity**, which
+is `¬ ProperCrossR`, a *closed* condition. Carried as `SimplePerturbable`.
+
+**`SegmentStable` (row 49)** — the fact simplicity needs. If two segments are
+disjoint, they stay disjoint when their four endpoints move by less than some
+`ε`. Compact disjoint sets are separated by `r > 0`; a point of `[a',b']` and
+the point of `[a,b]` with the **same** convex parameters differ by
+`‖α(a'-a) + β(b'-b)‖ ≤ αε + βε = ε`; take `ε = r/3`. **This file imports only
+Mathlib** — no heptagon, no `Config` — so it can be reviewed on its own.
+
+**`RawConfig` (row 50)** — the assembly, and it closes the obligation.
+`RawPair` is two heptagons with exactly two fields: non-adjacent closed sides
+of each are **disjoint as point sets**. No `gp` field at all. Take `δ` inside
+`ε` and both halves' stability radii; `ball V δ ∩ Keeps V` is open and contains
+`V`, so intersecting with the dense generic set gives a `W` that is generic,
+keeps every crossing, and still has disjoint non-adjacent sides — and *because*
+`W` is generic, `not_properCrossR_iff_disjoint` converts point-set disjointness
+into the determinant-sign form `RConfig` wants. So `W` is a real `RConfig` and
+
+```lean
+raw_crossPairs_card_le_38 (R : RawPair) : (crossPairsOf R.V).card ≤ 38
+```
+
+**with no general-position hypothesis at all.** The bound holds at *degenerate*
+configurations, which is exactly what §3's clause was being assumed to avoid.
+
+### What that changes about the one remaining import
+
+It used to be one thing: "the general-position reduction — AKR §9 plus §3's
+unproved clause". It is now two things with different statuses:
+
+| | |
+|---|---|
+| **§3's clause** | **discharged in Lean** for the crossing-pair count |
+| **§9** | still an import, and now pinned to one job: identifying crossing **pairs** with intersection **points** |
+
+### A correction I had to make to my own writeup (`4e05201`)
+
+When I first wrote row 50 I said the only pairs-versus-points discrepancy was
+**over**-counting — one point lying on several pairs — and concluded the
+missing step was "an inequality in the convenient direction."
+
+That was wrong, and wrong in the direction that **understates** the difficulty.
+At a degenerate configuration a point of `∂P ∩ ∂Q` can belong to **no** crossing
+pair: two sides that merely *touch* share a point but have vanishing
+determinants, so `ProperCrossR` is false and the pair is not counted. So
+`crossPairsOf` can **under**-count points, and the pair bound does *not* bound
+points. Removing touching-without-crossing is exactly §9's job — which is why
+§9 is still load-bearing, and specifically for the point count.
+
+Second time today I've made an error in the direction of understating risk (the
+other was the §9.1 citation). Both were caught, both are recorded in place with
+the wrong text quoted, and the pattern is worth naming: when I summarise a gap
+I am biased toward making it sound smaller. The fix is to state the failure
+*mode* concretely — "a point on no crossing pair" — rather than the failure
+*size*.
+
+### Provenance headers on the generated modules — ATTEMPTED AND REVERTED
+
+The hand-written module count is not derivable from the directory. The rule
+
+```bash
+cd lean && ls *.lean | while read f; do \
+  grep -qi 'gen_lean|generated by|auto-generated|GENERATED FILE' "$f" || echo "$f"; \
+done | wc -l
+```
+
+gives **61** against **1,759** targets, but fifteen of those 61 are generator
+output that simply lacks a provenance header — `ResidualCore000`–`003`,
+`PatternCore000`–`003`, `MinPatternCore000`–`001`,
+`CCase000All`–`CCase003All`, `MCase000All` — so 61 is an **upper bound** and the
+hand-written figure is at most **46**.
+
+I tried to fix it at the source: `gen_lean_refutation.py` and
+`gen_lean_refutation_shards.py` were given a provenance block and the fifteen
+files regenerated. That part worked and was verified in both directions —
+byte-for-byte reproduction of all fifteen confirmed *before* touching the
+generators, and the resulting diff was **215 insertions, 0 deletions**, headers
+only.
+
+**Then I reverted all of it, and the reason is the useful part of this entry.**
+
+Those fifteen files sit near the bottom of the import graph. Walking the
+reverse graph from them reaches **130 modules**, and the expensive tail is the
+~26 `CoverCase*` modules, which reach **~730 MB RSS each**. On this 8 GB
+machine that drives swap to 3 GB of 4 GB with 324,000 swapouts, at which point
+a single `CoverCase` module takes **50+ minutes** instead of 5–12.
+
+The machine **rebooted three times** — 06:42, 09:49, 12:53 — each time during a
+heavy Lean build, with no kernel-panic report, which is what memory exhaustion
+looks like rather than a panic. The serial rebuild (one `lake build <target>`
+per module, in dependency order, with a load guard) got **64 of 130 modules
+with zero failures** before the third reboot took it. Finishing needed roughly
+ten more hours of the same.
+
+So: a cosmetic improvement, against ten hours of thrashing and a fourth reboot
+on someone's working machine. Reverted. `lean/` and `python/` are byte-identical
+to the pushed `62e92a0`; the only cost left behind is a stale `.olean` cache for
+the 64 modules that did rebuild, which the next `lake build` absorbs.
+
+What survives is the *documentation*, which was the actual goal: the rule above,
+the raw count, and the explicit list of the fifteen unheaded files are recorded
+in `lean/README.md`, `docs/verification-status.md` and the LaTeX manifest, so
+the figure is a stated bound with a reproducible derivation rather than a number
+to be taken on trust. Whether to spend the rebuild is the operator's call, not
+one to make unattended.
+
+*(A note on my own reasoning here, because I got it wrong once mid-flight. I
+first argued that reverting was no cheaper than finishing, since both invalidate
+the same 130 modules. That is false. The 66 modules that had not yet been
+rebuilt still carried traces consistent with the original sources, so reverting
+left them untouched and only the 64 already-rebuilt ones went stale. Revert and
+finish cost about the same, which makes the decision turn on value, not on sunk
+cost — and the value here was cosmetic.)*
+
+### Validation
+
+Four full `verify-all` runs, all **COMPLETE SUCCESS, exit 0**, 33 checks each,
+logs committed: after the real equality, after `RealPerturb`, after
+`SegmentStable`, after `RawConfig` (1,759 targets).
+
+One of them failed first time, on the `SHA256SUMS.lean` manifest, because I had
+edited two Lean sources and not re-hashed them. Recorded rather than quietly
+fixed: that is exactly the slip the manifest check exists to catch.
+
+Status unchanged, and it should stay that way until a person reads it:
+**candidate computer-assisted proof that f(7,7) = 38.**
