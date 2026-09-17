@@ -1,6 +1,7 @@
 import RealConfig
 import ConfigBridge
 import PointSetSemantics
+import PolygonSimple
 
 /-!
 # The upper bound for *real* configurations in general position
@@ -24,12 +25,16 @@ So a real configuration whose determinants match an integer one's signs gives a
 real-plane machinery already in this development — `straddle_of_common`,
 `common_of_straddle`, `common_unique` — applies here unchanged.
 
-## Scope
+## What this file reaches
 
-This file bounds the number of **crossing side pairs** of a real configuration.
-Identifying that with the number of boundary intersection *points* in `ℝ × ℝ`
-is the real analogue of `IntersectionCount.crossCountC_eq_pointCount`, and is
-**not** done here — see the note at the end.
+`pointsR_le_38` : two simple heptagons with **real** coordinates, in general
+position, meet in at most **38** boundary points — where the point set is
+`boundaryP R ∩ boundaryQ R`, a genuine subset of `ℝ × ℝ` built from Mathlib's
+`segment ℝ`.  No published lemma is imported.
+
+The one assumption beyond simplicity is general position, which is AKR §3's
+clause.  **AKR §9 remains an import**: nothing here reaches a configuration with
+a vertex on the other polygon's boundary.
 -/
 
 namespace Heptagon.RealUpperBound
@@ -40,6 +45,14 @@ open Heptagon.DisjointnessGraph Heptagon.ConfigBridge Heptagon.ResidualSym
 -- Strict inequalities over `ℝ` are not decidable, so the `Finset.filter` below
 -- needs a classical instance.
 open scoped Classical
+
+/-! ## Small `Fin 7` facts, decided once -/
+
+theorem fin7_ne_succ : ∀ i : Fin 7, i ≠ i + 1 := by decide
+theorem fin7_succ_ne_succ2 : ∀ i : Fin 7, i + 1 ≠ i + 2 := by decide
+theorem fin7_ne_succ2 : ∀ i : Fin 7, i ≠ i + 2 := by decide
+theorem fin7_succ_inj : ∀ i j : Fin 7, i + 1 = j + 1 → i = j := by decide
+
 
 /-- The two real determinants of this development are the same function. -/
 theorem orientR_eq_det (a b c : ℝ × ℝ) : orientR a b c = det a b c := rfl
@@ -66,6 +79,96 @@ theorem mul_neg_iff_of_sameSign {x y x' y' : ℝ}
   · constructor <;> intro _ <;> nlinarith
   · constructor <;> intro hc <;> nlinarith
 
+/-! ## A real simple polygon
+
+The real analogue of `PolygonSimple`.  Every ingredient the integer version uses
+is already real — `PointSetSemantics.straddle_of_common`, `common_of_straddle`
+and `segment_inter_segment` are all stated for `ℝ × ℝ` — so these are the same
+proofs with the casts deleted.
+
+`W : Fin 7 → ℝ × ℝ` is one real heptagon; `hgp` says no three of its vertices
+are collinear and `hsimp` that no two non-adjacent sides cross. -/
+
+/-- Not crossing is the same as being disjoint as point sets, when the four
+endpoint determinants are nonzero.  The integer version is
+`PointSetSemantics.not_properCross_iff_disjoint`; this is the same proof without
+the casts. -/
+theorem not_properCrossR_iff_disjoint (a b c d : ℝ × ℝ)
+    (ha : det a b c ≠ 0) (hb : det a b d ≠ 0)
+    (hc : det c d a ≠ 0) (hd : det c d b ≠ 0) :
+    ¬ ProperCrossR a b c d ↔ Disjoint (segment ℝ a b) (segment ℝ c d) := by
+  constructor
+  · intro h
+    apply Set.disjoint_left.mpr
+    intro x hx hy
+    exact h (straddle_of_common _ _ _ _ x ha hb hc hd hx hy)
+  · intro h hp
+    obtain ⟨x, hx, hy⟩ := common_of_straddle _ _ _ _ hp
+    exact Set.disjoint_left.mp h hx hy
+
+theorem nonadjacent_disjointR {W : Fin 7 → ℝ × ℝ}
+    (hgp : ∀ i j k : Fin 7, i ≠ j → j ≠ k → i ≠ k → det (W i) (W j) (W k) ≠ 0)
+    (hsimp : ∀ i j : Fin 7, ¬ LowerBound.Adjacent i j →
+      ¬ ProperCrossR (W i) (W (i+1)) (W j) (W (j+1)))
+    (i j : Fin 7) (h : ¬ LowerBound.Adjacent i j) :
+    Disjoint (segment ℝ (W i) (W (i+1))) (segment ℝ (W j) (W (j+1))) := by
+  have hi : i ≠ i+1 := fin7_ne_succ i
+  have hj : j ≠ j+1 := fin7_ne_succ j
+  have hij : i ≠ j ∧ i ≠ j+1 ∧ i+1 ≠ j ∧ i+1 ≠ j+1 := by
+    revert h; revert i j; decide
+  exact (not_properCrossR_iff_disjoint _ _ _ _
+    (hgp i (i+1) j hi hij.2.2.1 hij.1)
+    (hgp i (i+1) (j+1) hi hij.2.2.2 hij.2.1)
+    (hgp j (j+1) i hj hij.2.1.symm hij.1.symm)
+    (hgp j (j+1) (i+1) hj hij.2.2.2.symm hij.2.2.1.symm)).mp (hsimp i j h)
+
+theorem adjacent_intersectionR {W : Fin 7 → ℝ × ℝ}
+    (hgp : ∀ i j k : Fin 7, i ≠ j → j ≠ k → i ≠ k → det (W i) (W j) (W k) ≠ 0)
+    (i : Fin 7) :
+    segment ℝ (W i) (W (i+1)) ∩ segment ℝ (W (i+1)) (W ((i+1)+1))
+      = {W (i+1)} := by
+  apply PolygonSimple.segment_inter_segment
+  rw [show (i+1)+1 = i+2 from (by decide : ∀ k : Fin 7, (k+1)+1 = k+2) i]
+  exact hgp i (i+1) (i+2) (fin7_ne_succ i) (fin7_succ_ne_succ2 i) (fin7_ne_succ2 i)
+
+/-- Two distinct sides of a real simple heptagon meet exactly at their shared
+vertex when cyclically adjacent, and not at all otherwise. -/
+theorem simple_closed_polygonR {W : Fin 7 → ℝ × ℝ}
+    (hgp : ∀ i j k : Fin 7, i ≠ j → j ≠ k → i ≠ k → det (W i) (W j) (W k) ≠ 0)
+    (hsimp : ∀ i j : Fin 7, ¬ LowerBound.Adjacent i j →
+      ¬ ProperCrossR (W i) (W (i+1)) (W j) (W (j+1)))
+    (i j : Fin 7) (hij : i ≠ j) :
+    segment ℝ (W i) (W (i+1)) ∩ segment ℝ (W j) (W (j+1))
+      = if j = i+1 then {W j} else if i = j+1 then {W i} else ∅ := by
+  by_cases hf : j = i+1
+  · subst hf
+    rw [if_pos rfl]
+    exact adjacent_intersectionR hgp i
+  · rw [if_neg hf]
+    by_cases hb : i = j+1
+    · rw [if_pos hb]
+      subst hb
+      rw [Set.inter_comm]
+      exact adjacent_intersectionR hgp j
+    · rw [if_neg hb]
+      exact Set.disjoint_iff_inter_eq_empty.mp
+        (nonadjacent_disjointR hgp hsimp i j (by rintro (h | h | h) <;> contradiction))
+
+/-- A point on two distinct sides is a vertex. -/
+theorem shared_is_vertexR {W : Fin 7 → ℝ × ℝ}
+    (hgp : ∀ i j k : Fin 7, i ≠ j → j ≠ k → i ≠ k → det (W i) (W j) (W k) ≠ 0)
+    (hsimp : ∀ i j : Fin 7, ¬ LowerBound.Adjacent i j →
+      ¬ ProperCrossR (W i) (W (i+1)) (W j) (W (j+1)))
+    (i j : Fin 7) (hne : i ≠ j) (x : ℝ × ℝ)
+    (hx : x ∈ segment ℝ (W i) (W (i+1))) (hy : x ∈ segment ℝ (W j) (W (j+1))) :
+    ∃ k, x = W k := by
+  have hm : x ∈ segment ℝ (W i) (W (i+1)) ∩ segment ℝ (W j) (W (j+1)) := ⟨hx, hy⟩
+  rw [simple_closed_polygonR hgp hsimp i j hne] at hm
+  split_ifs at hm
+  · exact ⟨j, Set.mem_singleton_iff.mp hm⟩
+  · exact ⟨i, Set.mem_singleton_iff.mp hm⟩
+  · exact False.elim hm
+
 /-! ## A real configuration
 
 The orientation-level hypotheses a pair of simple heptagons in general position
@@ -90,13 +193,6 @@ decidable. -/
 noncomputable def crossingPairsR (R : RConfig) : Finset (Fin 7 × Fin 7) :=
   Finset.univ.filter fun p =>
     ProperCrossR (R.V (pP p.1)) (R.V (pP (p.1+1))) (R.V (pQ p.2)) (R.V (pQ (p.2+1)))
-
-/-! ## Small `Fin 7` facts, decided once -/
-
-theorem fin7_ne_succ : ∀ i : Fin 7, i ≠ i + 1 := by decide
-theorem fin7_succ_ne_succ2 : ∀ i : Fin 7, i + 1 ≠ i + 2 := by decide
-theorem fin7_ne_succ2 : ∀ i : Fin 7, i ≠ i + 2 := by decide
-theorem fin7_succ_inj : ∀ i j : Fin 7, i + 1 = j + 1 → i = j := by decide
 
 /-! ## The integer model as a `Config` -/
 
@@ -288,27 +384,151 @@ theorem crossingPairsR_card_le_38 : (crossingPairsR R).card ≤ 38 := by
 
 end Model
 
+/-! ## From crossing pairs to intersection points
+
+The last step: the number of points where the two real boundaries meet is the
+number of crossing side pairs.  This mirrors
+`IntersectionCount.crossCountC_eq_pointCount`, and every real-plane ingredient
+it needs is now in place. -/
+
+section Points
+
+variable (R : RConfig)
+
+/-- General position, specialised to the `P` half. -/
+theorem gpP (i j k : Fin 7) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
+    det (R.V (pP i)) (R.V (pP j)) (R.V (pP k)) ≠ 0 :=
+  R.gp _ _ _ (fun h => hij (pP_inj h)) (fun h => hjk (pP_inj h)) (fun h => hik (pP_inj h))
+
+/-- General position, specialised to the `Q` half. -/
+theorem gpQ (i j k : Fin 7) (hij : i ≠ j) (hjk : j ≠ k) (hik : i ≠ k) :
+    det (R.V (pQ i)) (R.V (pQ j)) (R.V (pQ k)) ≠ 0 :=
+  R.gp _ _ _ (fun h => hij (pQ_inj h)) (fun h => hjk (pQ_inj h)) (fun h => hik (pQ_inj h))
+
+/-- Side `i` of `P`, as a real point set. -/
+def sideP (i : Fin 7) : Set (ℝ × ℝ) := segment ℝ (R.V (pP i)) (R.V (pP (i+1)))
+
+/-- Side `j` of `Q`, as a real point set. -/
+def sideQ (j : Fin 7) : Set (ℝ × ℝ) := segment ℝ (R.V (pQ j)) (R.V (pQ (j+1)))
+
+/-- The two boundaries, and their intersection as a set in `ℝ × ℝ`. -/
+def boundaryP : Set (ℝ × ℝ) := ⋃ i : Fin 7, sideP R i
+def boundaryQ : Set (ℝ × ℝ) := ⋃ j : Fin 7, sideQ R j
+def intersectionPointsR : Set (ℝ × ℝ) := boundaryP R ∩ boundaryQ R
+
+/-- A common point of a `P`-side and a `Q`-side exists exactly for a crossing
+pair. -/
+theorem common_iffR (i j : Fin 7) :
+    (∃ x, x ∈ sideP R i ∧ x ∈ sideQ R j) ↔ (i, j) ∈ crossingPairsR R := by
+  classical
+  simp only [crossingPairsR, Finset.mem_filter, Finset.mem_univ, true_and, sideP, sideQ]
+  have h1 := R.gp (pP i) (pP (i+1)) (pQ j)
+    (fun h => fin7_ne_succ i (pP_inj h)) (fun h => pP_ne_pQ (i+1) j h) (fun h => pP_ne_pQ i j h)
+  have h2 := R.gp (pP i) (pP (i+1)) (pQ (j+1))
+    (fun h => fin7_ne_succ i (pP_inj h)) (fun h => pP_ne_pQ (i+1) (j+1) h)
+    (fun h => pP_ne_pQ i (j+1) h)
+  have h3 := R.gp (pQ j) (pQ (j+1)) (pP i)
+    (fun h => fin7_ne_succ j (pQ_inj h)) (fun h => (pP_ne_pQ i (j+1)) h.symm)
+    (fun h => (pP_ne_pQ i j) h.symm)
+  have h4 := R.gp (pQ j) (pQ (j+1)) (pP (i+1))
+    (fun h => fin7_ne_succ j (pQ_inj h)) (fun h => (pP_ne_pQ (i+1) (j+1)) h.symm)
+    (fun h => (pP_ne_pQ (i+1) j) h.symm)
+  constructor
+  · rintro ⟨x, hx, hy⟩
+    exact straddle_of_common _ _ _ _ x h1 h2 h3 h4 hx hy
+  · intro h
+    exact common_of_straddle _ _ _ _ h
+
+/-- A point determines which `P`-side and which `Q`-side it is on. -/
+theorem side_indices_uniqueR (i j k l : Fin 7) (x : ℝ × ℝ)
+    (hi : x ∈ sideP R i) (hj : x ∈ sideQ R j)
+    (hk : x ∈ sideP R k) (hl : x ∈ sideQ R l) : (i, j) = (k, l) := by
+  apply Prod.ext
+  · by_contra hn
+    obtain ⟨v, rfl⟩ := shared_is_vertexR (gpP R) R.simpleP i k hn x hi hk
+    have hz := det_zero_of_mem _ _ _ hj
+    exact R.gp (pQ j) (pQ (j+1)) (pP v) (fun h => fin7_ne_succ j (pQ_inj h))
+      (fun h => (pP_ne_pQ v (j+1)) h.symm) (fun h => (pP_ne_pQ v j) h.symm) hz
+  · by_contra hn
+    obtain ⟨v, rfl⟩ := shared_is_vertexR (gpQ R) R.simpleQ j l hn x hj hl
+    have hz := det_zero_of_mem _ _ _ hi
+    exact R.gp (pP i) (pP (i+1)) (pQ v) (fun h => fin7_ne_succ i (pP_inj h))
+      (fun h => pP_ne_pQ (i+1) v h) (fun h => pP_ne_pQ i v h) hz
+
+/-- The intersection point belonging to a crossing pair. -/
+noncomputable def crossingPointR (p : ↥(crossingPairsR R)) : ℝ × ℝ :=
+  Classical.choose ((common_iffR R p.val.1 p.val.2).mpr p.property)
+
+theorem crossingPointR_mem (p : ↥(crossingPairsR R)) :
+    crossingPointR R p ∈ sideP R p.val.1 ∧ crossingPointR R p ∈ sideQ R p.val.2 :=
+  Classical.choose_spec ((common_iffR R p.val.1 p.val.2).mpr p.property)
+
+theorem crossingPointR_injective : Function.Injective (crossingPointR R) := by
+  intro p q h
+  apply Subtype.ext
+  have hp := crossingPointR_mem R p
+  have hq := crossingPointR_mem R q
+  rw [← h] at hq
+  exact side_indices_uniqueR R _ _ _ _ _ hp.1 hp.2 hq.1 hq.2
+
+theorem pointsR_eq_range : intersectionPointsR R = Set.range (crossingPointR R) := by
+  classical
+  ext x
+  constructor
+  · rintro ⟨hp, hq⟩
+    obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hp
+    obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hq
+    refine ⟨⟨(i, j), (common_iffR R i j).mp ⟨x, hi, hj⟩⟩, ?_⟩
+    have hm := crossingPointR_mem R ⟨(i, j), (common_iffR R i j).mp ⟨x, hi, hj⟩⟩
+    have hc : ProperCrossR (R.V (pP i)) (R.V (pP (i+1))) (R.V (pQ j)) (R.V (pQ (j+1))) := by
+      have := (common_iffR R i j).mp ⟨x, hi, hj⟩
+      simpa only [crossingPairsR, Finset.mem_filter, Finset.mem_univ, true_and] using this
+    exact IntersectionCount.common_unique _ _ _ _ hc.1 _ _ hm ⟨hi, hj⟩
+  · rintro ⟨p, rfl⟩
+    have h := crossingPointR_mem R p
+    exact ⟨Set.mem_iUnion.mpr ⟨p.val.1, h.1⟩, Set.mem_iUnion.mpr ⟨p.val.2, h.2⟩⟩
+
+/-- **The boundary intersection is finite**, with exactly one point per crossing
+pair. -/
+theorem pointsR_ncard : (intersectionPointsR R).ncard = (crossingPairsR R).card := by
+  classical
+  rw [pointsR_eq_range, Set.ncard_range_of_injective (crossingPointR_injective R),
+    Nat.card_eq_fintype_card, Fintype.card_coe]
+
+/-- **`f(7,7) ≤ 38` for real configurations in general position.**
+
+Two simple heptagons with **real** coordinates, in general position, meet in at
+most 38 boundary points — `intersectionPointsR R` being
+`boundaryP R ∩ boundaryQ R`, a genuine set in `ℝ × ℝ` built from Mathlib's
+`segment ℝ`.
+
+This imports **no published lemma**.  The one thing assumed beyond simplicity is
+general position, which is AKR §3's clause; `RealConfig.exists_near_generic`
+proves that clause's iteration half.  **AKR §9 remains an import**: nothing here
+reaches a configuration with a vertex on the other polygon's boundary. -/
+theorem pointsR_le_38 : (intersectionPointsR R).ncard ≤ 38 := by
+  rw [pointsR_ncard]
+  exact crossingPairsR_card_le_38 R
+
+end Points
+
 /-! ## What remains
 
-This file stops at the sign transport.  Two further steps would carry the bound
-`≤ 38` from `ConfigBridge` to a real configuration:
+**AKR §9.**  `RConfig` assumes general position outright.  Getting there from an
+arbitrary pair of simple heptagons is §9 (no vertex of one on the boundary of
+the other) followed by §3's clause (no three combined vertices collinear).
+`RealConfig.exists_near_generic` proves §3's iteration half — every
+configuration is arbitrarily close to a generic one — but **not** that the
+intersection count is preserved along the way, which is what would let one
+conclude anything about the original.  And §9 itself is a five-page constructive
+perturbation with one existence step AKR assert rather than prove; see
+`docs/akr-9-1-obligation.md`.
 
-1. **Assemble the `Config`.**  `Simple7` for `fun i => model R (pP i)` needs its
-   four conjuncts: distinct vertices and the two non-collinearity clauses come
-   from `model_orient_ne_zero`; the fourth is `R.simpleP` transported by
-   `properCross_model_iff`.  Then `FullGP` of that `Config` is
-   `model_orient_ne_zero` again, modulo `Vcfg (toConfig R) = model R`.
-2. **Identify pairs with points.**  `crossingPairsR R` counts crossing *pairs*;
-   the theorem one wants is about the number of *points* of
-   `boundary P ∩ boundary Q` in `ℝ × ℝ`.  That is the real analogue of
-   `IntersectionCount.crossCountC_eq_pointCount`, and its ingredients already
-   exist over `ℝ` — `PointSetSemantics.straddle_of_common`,
-   `common_of_straddle`, and `IntersectionCount.common_unique` are all stated
-   for real points, not for `Config`.  What is missing is the real analogue of
-   `shared_is_vertex` / `side_indices_unique`.
-
-Neither is done.  And AKR §9 remains an import regardless: nothing here reaches
-a configuration that has a vertex on the other polygon's boundary.
+**Finiteness.**  `Set.ncard` is `0` on infinite sets, so `pointsR_le_38` says
+nothing about a configuration whose boundaries share a segment.  General
+position excludes that here (two sides sharing a segment would put three
+vertices on a line), so the statement is not vacuous — but any *weakening* of
+the general-position hypothesis must re-examine it.
 -/
 
 end Heptagon.RealUpperBound
