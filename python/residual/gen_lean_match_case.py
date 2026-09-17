@@ -1,0 +1,161 @@
+"""Assemble the `I = 42` covering case: the perfect matching.
+
+    python3 python/residual/gen_lean_match_case.py > lean/CoverMatch.lean
+
+`MCase000_false` says the `I = 42` covering core is contradictory over 49
+abstract propositions.  This file reads variable `7i + j + 1` as `Miss V i j`
+and supplies every core clause from the geometry.
+
+`I = 42` leaves seven disjoint side pairs, so with minimum degree 1 on both
+sides every row and column degree is exactly 1.  That is a single case — no
+degree-shape split and no rotation WLOG, unlike the `I = 40` side.  Its core
+uses four clause kinds, and the classifier below refuses to emit if one is left
+over:
+
+  pattern-avoidance   `CoverAvoid*.lean`  (the same two forbidden patterns,
+                      which cover all 5040 perfect matchings as well)
+  row at-most-one     `CoverRowDeg*.lean`, the k = 1 family
+  row at-least-one    `CoverRowDeg*.lean`, the k = 1 seven-fold disjunction
+  column at-most-one  `CoverColDeg.lean`
+
+As in `gen_lean_cover_case.py`, `drat-trim` does not preserve literal order
+within a clause, so disjuncts are rearranged explicitly, per clause.
+"""
+import itertools, sys
+
+SWEEP = 'independent/realizability_sweep'
+
+# ------------------------------------------------- the relabelled pattern copies
+PERMS = [[((k - i) % 7 + 7) % 7 if s else (i + k) % 7 for i in range(7)]
+         for s in (0, 1) for k in range(7)]
+SYM = []
+for a in range(14):
+    for b in range(14):
+        for sw in (False, True):
+            m = [0] * 49
+            for i in range(7):
+                for j in range(7):
+                    u, v = PERMS[a][i], PERMS[b][j]
+                    m[i*7+j] = (v*7+u) if sw else (u*7+v)
+            SYM.append(m)
+
+IMGS = set()
+for line in open(f'{SWEEP}/patterns2.txt'):
+    cells = [c for c in line.strip() if c in '.cd']
+    if not cells: continue
+    sup = sum(1 << n for n, c in enumerate(cells) if c != '.')
+    val = sum(1 << n for n, c in enumerate(cells) if c == 'd')
+    for m in SYM:
+        s2 = v2 = 0; x = sup
+        while x:
+            b = (x & -x).bit_length() - 1; x &= x - 1
+            s2 |= 1 << m[b]
+            if val >> b & 1: v2 |= 1 << m[b]
+        IMGS.add((s2, v2))
+
+def clause_of(sup, val):
+    return frozenset((-(b+1) if (val >> b & 1) else (b+1)) for b in range(49) if sup >> b & 1)
+
+AVOID_KEY = {clause_of(s, v): (s, v) for s, v in IMGS}
+
+# The avoid lemmas keep the numbering `gen_lean_avoid.py` gives them: the 548
+# copies the four I = 40 cores cite, sorted, then the 40 the rotations add.
+CITED, seen = [], set()
+for kk in range(4):
+    for l in open(f'{SWEEP}/lean_export/ccase%03d.cnf' % kk):
+        if not l.strip() or l[0] in 'pc': continue
+        cl = frozenset(int(x) for x in l.split() if x != '0')
+        key = AVOID_KEY.get(cl)
+        if key is not None and key not in seen:
+            seen.add(key); CITED.append(key)
+CITED.sort()
+EXTRA = sorted(set(AVOID_KEY.values()) - set(CITED))
+AVOID_IDX = {clause_of(s, v): n for n, (s, v) in enumerate(CITED + EXTRA)}
+
+# ------------------------------------------------------------- the other kinds
+ROWM = {frozenset([-(i*7+a+1), -(i*7+b+1)]): (i, a, b)
+        for i in range(7) for a, b in itertools.combinations(range(7), 2)}
+ROWL = {frozenset(i*7+j+1 for j in range(7)): i for i in range(7)}
+COLM = {frozenset([-(a*7+j+1), -(b*7+j+1)]): (j, a, b)
+        for j in range(7) for a, b in itertools.combinations(range(7), 2)}
+
+core = []
+for l in open(f'{SWEEP}/lean_export/mcase000.cnf'):
+    if not l.strip() or l[0] in 'pc': continue
+    core.append([int(x) for x in l.split() if x != '0'])
+
+allv = set()
+for c in core: allv |= {abs(x) for x in c}
+for line in open(f'{SWEEP}/lean_export/mcase000.lrat'):
+    t = line.split()
+    if len(t) > 1 and t[1] == 'd': continue
+    z = t.index('0', 1)
+    allv |= {abs(int(x)) for x in t[1:z]}
+allv = sorted(allv)
+
+def prop(n): return f"Miss V {(n-1)//7} {(n-1)%7}"
+
+def inject(n, total):
+    inner = "a" if n == total - 1 else "Or.inl a"
+    return "".join("Or.inr (" for _ in range(n)) + inner + ")" * n
+
+def proof(cl):
+    key = frozenset(cl)
+    if key in AVOID_IDX:
+        return f"avoid{AVOID_IDX[key]:04d} V hGP hSP hSQ", sorted(key, key=abs)
+    if key in ROWM:
+        i, a, b = ROWM[key]
+        return f"rowMost1_{a}_{b} V {i} (hrow {i})", [-(i*7+a+1), -(i*7+b+1)]
+    if key in ROWL:
+        i = ROWL[key]
+        return f"rowLeast1_0_1_2_3_4_5_6 V {i} (hrow {i})", [i*7+j+1 for j in range(7)]
+    if key in COLM:
+        j, a, b = COLM[key]
+        return f"colMost1_{a}_{b} V {j} (hcol1 {j})", [-(a*7+j+1), -(b*7+j+1)]
+    raise AssertionError(f"unclassified core clause: {sorted(cl)}")
+
+out = ["import MCase000All", "import CoverColDeg", "import CoverColumn"]
+out += [f"import CoverAvoid{s:02d}" for s in range(30)]
+out += [f"import CoverRowDeg{s:02d}" for s in range(6)]
+out += ["", "set_option maxHeartbeats 2000000", "",
+        "/-!", "# The covering step for `I = 42`: the perfect-matching case", "",
+        "Generated by `python3 python/residual/gen_lean_match_case.py`.", "",
+        "`I = 42` leaves `49 - 42 = 7` disjoint side pairs.  With every side of each",
+        "polygon missing at least one side of the other, seven edges over seven rows",
+        "forces every row and column degree to be exactly 1 — a perfect matching, and",
+        "there are `7! = 5040` of them.  The **same two forbidden patterns** that cover",
+        "the 13,003,620 graphs of the `I = 40` domain cover all 5040, so this case needs",
+        "no new refutation of its own: only the covering argument below.",
+        "",
+        f"Supplies all {len(core)} clauses of the core and applies `MCase000_false`.",
+        "-/", "",
+        "namespace Heptagon.Cover",
+        "open Heptagon.Geometry Heptagon.ResidualSym", ""]
+
+out += ["/-- **The covering step for `I = 42`.**  No configuration of fourteen points in",
+        "general position, tracing two simple heptagons, has exactly seven disjoint side",
+        "pairs — equivalently, none has exactly 42 properly crossing side pairs.",
+        "",
+        "Both degree hypotheses are *equalities*, which is what `|E| = 7` with minimum",
+        "degree 1 forces; `ConfigBridge` derives them. -/",
+        "theorem no_seven_edges (V : Fin 14 → Pt) (hGP : GP V)",
+        "    (hSP : SimpleP V) (hSQ : SimpleQ V)",
+        "    (hrow : ∀ i : Fin 7, rowDeg V i = 1)",
+        "    (hcol1 : ∀ j : Fin 7, colDeg V j = 1) : False :=",
+        "  MCase000_false"]
+for v in allv:
+    out.append(f"    ({prop(v)})")
+for cl in core:
+    term, order = proof(cl)
+    if order == cl:
+        out.append(f"    ({term})")
+    else:
+        pos = {x: n for n, x in enumerate(cl)}
+        out.append("    (by")
+        out.append(f"      rcases {term} with " + " | ".join("a" for _ in order))
+        for x in order:
+            out.append(f"      · exact {inject(pos[x], len(cl))}")
+        out.append("      )")
+out += ["", "end Heptagon.Cover", "",
+        "#print axioms Heptagon.Cover.no_seven_edges"]
+print("\n".join(out))
