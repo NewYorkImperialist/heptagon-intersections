@@ -7,6 +7,8 @@
 \usepackage{array}
 \usepackage{geometry}
 \usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{url}
 \usepackage[hidelinks]{hyperref}
 
 \geometry{margin=1in}
@@ -16,12 +18,13 @@
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{corollary}[theorem]{Corollary}
+
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{hypothesis}[theorem]{Hypothesis}
+
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
-
 \newcommand{\GD}{G^{D}}
 \newcommand{\ED}{E^{D}}
 \newcommand{\orient}{\operatorname{or}}
@@ -77,19 +80,27 @@ $f(m,n)$ for the maximum, over such pairs, of
 $\lvert \partial P \cap \partial Q\rvert$.
 
 \begin{quote}
-\textbf{Problem} (Dillencourt--Mount--Saalfeld, 1993). Determine $f(m,n)$.
+\textbf{Problem} (Dillencourt--Mount--Saalfeld~\cite{DillencourtMountSaalfeld1993}).
+Determine $f(m,n)$.
 \end{quote}
 
 They determined $f(m,n)$ when at least one of $m,n$ is even. The odd--odd cases
-are open. A 2012 preprint of G\"unther claiming $f(n,n)$ for odd $n$ was
-withdrawn by its author, with the stated reason that a counterexample was found
-to a weakened form of one of its lemmas. The smallest open case is
-$m=n=7$.
+are open. A 2012 preprint of G\"unther~\cite{Gunther2012} claiming $f(n,n)$ for
+odd $n$ was withdrawn by its author, the stated reason being ``an unrecoverable
+error in the proof of Lemma 2'', with a counterexample found to a weaker form of
+that lemma. The smallest open case is $m=n=7$.
+
+\begin{remark}[A caution for anyone searching the literature]
+Several web search engines, asked about this problem, return summaries
+asserting that the odd--odd conjecture \emph{is} proved. Those summaries
+paraphrase the \emph{withdrawn} preprint. We mention it because we were
+shown such a summary during preparation.
+\end{remark}
 
 Two elementary facts frame it. Each side of $P$ meets each side of $Q$ at most
 once in general position, so $I\le 49$; and since $\partial P$ and $\partial Q$
-are closed curves meeting transversally, $I$ is even. The published state of the
-art gives $I\le 40$, and $38$ is attained. So the entire question is whether
+are closed curves meeting transversally, $I$ is even. The published state of the art~\cite{CernyEtAl2003} gives $I\le 40$, and $38$ is
+attained. So the entire question is whether
 $40$ is attainable.
 
 \subsection{What is proved here}
@@ -104,7 +115,7 @@ and $38$ is attained. No condition on collinearity of vertices is assumed.
 \end{theorem}
 
 The hypothesis ``no vertex of either lies on the boundary of the other'' is
-exactly the conclusion of Ackerman--Keszegh--Rote \S9. We do not prove it;
+exactly the conclusion of Ackerman--Keszegh--Rote~\cite[\S9]{AckermanKeszeghRote2022}. We do not prove it;
 \S\ref{sec:import} states precisely what we import and why, and
 \S\ref{sec:e9attempt} reports an unsuccessful attempt to remove it.
 
@@ -177,6 +188,15 @@ points and $\lvert \ED\rvert$ for the number of edges of $\GD$,
 $I$ is even.
 \end{lemma}
 
+\begin{proof}[Proof sketch]
+$\partial P$ is a closed curve and, in general position, it meets $\partial Q$
+transversally. Traversing $\partial P$ once returns to the start, so it crosses
+from the inside of $Q$ to the outside an equal number of times as the reverse;
+hence the total number of crossings is even. Formally we argue on the
+orientation data rather than on the Jordan curve theorem, which is nowhere
+used.
+\end{proof}
+
 \begin{lemma}\label{lem:42}
 $\delta(\GD)\ge 1$, and consequently $I\le 42$.
 \end{lemma}
@@ -187,7 +207,7 @@ $\lvert \ED\rvert\ge 7$; with \eqref{eq:link} this gives $I\le 42$.
 \end{proof}
 
 \begin{remark}
-\v{C}ern\'y, Kyn\v{c}l and T\'oth obtain $\delta(\GD)\ge1$ from the fact that a
+\v{C}ern\'y, Kyn\v{c}l and T\'oth~\cite[Lemma~1]{CernyEtAl2003} obtain $\delta(\GD)\ge1$ from the fact that a
 line meets a simple $7$-gon in at most $6$ sides. We do not import that: the
 minimum-degree statement is derived directly and is machine-checked
 unconditionally, so their Lemma~1 is corroboration here, not a dependency.
@@ -226,6 +246,31 @@ $\ast$ is unconstrained. That is eight prescribed incidences: seven crossings
 and one non-crossing.
 \end{definition}
 
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[x=1.1cm,y=1.1cm]
+  \node at (0,0.8) {$Q_0$};
+  \node at (1,0.8) {$Q_1$};
+  \node at (2,0.8) {$Q_2$};
+  \node at (-0.9,0) {$P_0$};
+  \node at (-0.9,-1) {$P_1$};
+  \node at (-0.9,-2) {$P_2$};
+  \node[circle,fill=black,inner sep=1.6pt] at (0,0) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (1,0) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (2,0) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (0,-1) {};
+  \node[circle,draw,inner sep=2.4pt] at (1,-1) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (2,-1) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (0,-2) {};
+  \node[circle,fill=black,inner sep=1.6pt] at (1,-2) {};
+  \node at (2,-2) {$\ast$};
+\end{tikzpicture}
+\caption{The pattern $\Pi_8$. A filled dot means the two sides cross; the open
+circle at $(P_1,Q_1)$ means they do not; $\ast$ is unconstrained. Eight
+prescribed incidences on three consecutive sides of each polygon. No simplicity
+hypothesis is needed.}\label{fig:pat8}
+\end{figure}
+
 \begin{theorem}\label{thm:pat8}
 No configuration realizes $\Pi_8$.
 \end{theorem}
@@ -250,9 +295,16 @@ incidences,
   P_3 & \times & \times & \times & \ast & \ast
 \end{array}
 \]
-together with seven simplicity conditions: $P_0\!\not\times\!P_2$,
-$P_0\!\not\times\!P_3$, $P_1\!\not\times\!P_3$, $Q_0\!\not\times\!Q_2$,
-$Q_0\!\not\times\!Q_3$, $Q_1\!\not\times\!Q_3$, $Q_1\!\not\times\!Q_4$.
+together with seven simplicity conditions: $P_0\!
+ot\times\!P_2$,
+$P_0\!
+ot\times\!P_3$, $P_1\!
+ot\times\!P_3$, $Q_0\!
+ot\times\!Q_2$,
+$Q_0\!
+ot\times\!Q_3$, $Q_1\!
+ot\times\!Q_3$, $Q_1\!
+ot\times\!Q_4$.
 \end{definition}
 
 \begin{theorem}\label{thm:pat14}
@@ -263,7 +315,7 @@ Unlike $\Pi_8$, this one genuinely uses that the polygons do not cross
 themselves; the seven self-non-crossing conditions are part of the hypothesis
 and are supplied by simplicity.
 
-\subsection{How the patterns are proved non-realizable}
+\subsection{How the patterns are proved non-realizable}\label{sec:howproved}
 
 Both theorems are established by encoding realizability as a Boolean
 satisfiability problem over the $364$ orientation variables --- Grassmann--Pl\"ucker
@@ -305,18 +357,39 @@ $\delta(\GD)\ge1$ on both sides the graph is a perfect matching. There are
 $7!=5040$ of these, all equivalent under relabelling to few orbits, and each
 contains one of the two patterns.
 
-\subsection{The $I=40$ case}
+\subsection{The $I=40$ case, and its 28 degree shapes}
 
 Here $\lvert \ED\rvert=9$, so $\GD$ has nine edges with all fourteen degrees at
-least~$1$. Write $r_i=\deg P_i$ and $c_j=\deg Q_j$, so
-$\sum_i r_i=\sum_j c_j=9$ with every $r_i,c_j\ge1$. Since nine edges are spread
-over seven rows each of degree at least one, the multiset $\{r_i\}$ is one of
-few shapes, and likewise for columns; enumerating gives \textbf{28 degree
-shapes}. For each shape a short argument locates a sub-pattern equivalent to
-$\Pi_8$ or $\Pi_{14}$.
+least~$1$. Write $r_i=\deg P_i$, so $\sum_{i}r_i=9$ with every $r_i\ge1$.
+Subtracting one from each, the excess is $2$ distributed over seven rows, so
+either
 
-The point of organising the argument this way is that the $28$ cases are a
-human-sized object, whereas the $13{,}003{,}620$ patterns are not.
+\begin{itemize}[leftmargin=*,nosep]
+  \item one row has degree $3$ and the rest degree $1$ --- $7$ placements; or
+  \item two rows have degree $2$ and the rest degree $1$ --- $\binom{7}{2}=21$
+    placements, which split by the cyclic distance $1$, $2$ or $3$ between the
+    two rows into $7+7+7$.
+\end{itemize}
+
+That is $7+21=\mathbf{28}$ degree vectors, and up to rotation of $P$ they are
+\textbf{four} shapes. The same applies to columns, and the column degrees enter
+through the constraint $\sum_j c_j=9$ with $c_j\ge1$.
+
+\begin{remark}[What is and is not human-sized here]\label{rem:cover-machine}
+The enumeration above is human-checkable and we have just done it. \textbf{The
+discharge of each of the 28 cases is not.} Each case is settled by a machine
+propagation chain in the same style as \S\ref{sec:howproved}, drawing on a
+library of $588$ pattern-avoidance lemmas together with the row- and
+column-degree facts; the four chains total $10{,}597$ propagation steps. We
+state this explicitly because an earlier draft of this paper described each case
+as closed by ``a short argument'', and that was wrong.
+
+So Theorem~\ref{thm:cover} should be read as machine-checked, with the $28$-fold
+case split being the part a reader can survey. What the reduction buys is not
+that the whole argument became hand-checkable, but that its \emph{inputs} did:
+two pattern non-realizability facts, one of which is
+Definition~\ref{def:pat8}.
+\end{remark}
 
 \section{Excluding 40 and 42}\label{sec:exclude}
 
@@ -351,6 +424,21 @@ are simple, are in general position, and their boundaries meet in exactly $38$
 points.
 \end{proposition}
 
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[scale=0.013]
+  \draw[thick]
+    (373,157) -- (132,5) -- (369,182) -- (88,157) -- (327,282) -- (60,272) --
+    (372,298) -- cycle;
+  \draw[thick,dashed]
+    (344,24) -- (89,303) -- (345,19) -- (373,214) -- (270,338) -- (325,93) --
+    (192,284) -- cycle;
+\end{tikzpicture}
+\caption{The configuration of Proposition~\ref{prop:lower}: $P$ solid, $Q$
+dashed. Their boundaries meet in $38$ points. Drawn to scale from the integer
+coordinates.}\label{fig:cert}
+\end{figure}
+
 All three assertions are decided by exact integer arithmetic and verified by
 the kernel. Combined with Corollary~\ref{cor:38} this gives the equality in
 Theorem~\ref{thm:main}.
@@ -378,7 +466,7 @@ exactly one point, and a point determines its pair. Both directions are proved.
 
 \subsection{Removing the collinearity assumption}\label{sec:removecollin}
 
-\textsc{akr} \S3 assumes, ``for convenience'' and without proof, that no three
+\cite[\S3]{AckermanKeszeghRote2022} assumes, ``for convenience'' and without proof, that no three
 of the combined vertices are collinear. We do not assume it. The argument is a
 perturbation, in two halves:
 
@@ -411,8 +499,11 @@ as many crossings, not the same number, and openness gives exactly that.
 No vertex of either polygon lies on the boundary of the other.
 \end{hypothesis}
 
-This is the conclusion of \textsc{akr} \S9, where \S9.1 removes vertex--vertex
-coincidences and \S9.2 vertex--side ones. It is the \emph{only} external
+This is the conclusion of \cite[\S9]{AckermanKeszeghRote2022}, where \S9.1
+removes vertex--vertex coincidences and \S9.2 vertex--side ones. Note that \S9
+and \S10 appear only in the journal version; the arXiv posting is the
+\textsc{socg} version~\cite{AckermanKeszeghRote2020} and does not contain
+them. It is the \emph{only} external
 mathematical input to Theorem~\ref{thm:main}.
 
 Why it is needed, precisely: without it, a point of
@@ -474,6 +565,69 @@ Proposition~\ref{prop:lower}, yield exactly $38$. A wrong definition would have
 to be wrong in a way that still lands on that value.
 \end{remark}
 
+\subsection{Which results a human can check, and which are machine-only}
+
+We think a referee is owed this table explicitly rather than having to infer it.
+
+\begin{center}
+\small
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Result} & \textbf{Status} & \textbf{Checkable by hand?} \\
+\midrule
+$I+\lvert \ED\rvert=49$, Lemma~\ref{lem:even}, Lemma~\ref{lem:42}
+  & machine-checked & \textbf{yes}, and short \\
+The $28$ degree shapes (\S\ref{sec:cover})
+  & machine-checked & \textbf{yes}; derived above \\
+Theorem~\ref{thm:pat8} ($\Pi_8$ non-realizable)
+  & machine-checked & \textbf{no} --- solver refutation \\
+Theorem~\ref{thm:pat14} ($\Pi_{14}$)
+  & machine-checked & \textbf{no} --- solver refutation \\
+Theorem~\ref{thm:cover} (covering)
+  & machine-checked & \textbf{no} --- see Rem.~\ref{rem:cover-machine} \\
+Proposition~\ref{prop:lower} (the $38$ example)
+  & machine-checked & \textbf{yes} in principle; $364$ determinants \\
+\S\ref{sec:plane} (reduction to the plane)
+  & machine-checked & \textbf{yes}; ordinary analysis \\
+Hypothesis~\ref{hyp:e9}
+  & \textbf{imported, not proved} & it is \cite[\S9]{AckermanKeszeghRote2022} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The three ``no'' rows are the substance of the exclusion, and we do not want to
+soften that. What the reduction achieves is that the machine-only part now rests
+on \emph{two} non-realizability facts about small explicit patterns instead of
+on an enumeration of $13{,}003{,}620$ objects --- and one of those two,
+$\Pi_8$, is small enough to state in a $3\times3$ table
+(Figure~\ref{fig:pat8}).
+
+\subsection{How to reproduce}
+
+The development is at
+\url{https://github.com/NewYorkImperialist/heptagon-intersections}, at commit
+\texttt{8e6358a}. With Lean~4.33.1 and its Mathlib pinned by the repository:
+
+\begin{center}\small
+\begin{tabular}{@{}ll@{}}
+\toprule
+\texttt{cd lean \&\& lake build} & builds everything; no \texttt{sorry} \\
+\texttt{bash scripts/verify-all.sh} & full check, exits $0$ \\
+\texttt{\#print axioms} lines & in every module; expect the three standard \\
+\bottomrule
+\end{tabular}
+\end{center}
+\noindent
+Theorem~\ref{thm:pat8} is \texttt{MinPatternClauses000.minpattern000\_impossible};
+Theorem~\ref{thm:main} is \texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary},
+and the equality is \texttt{AKR9.isGreatest\_38\_of\_E9}. Lemma~\ref{lem:simple}
+is \texttt{SegmentStable.exists\_eps\_disjoint\_stable}, in a file importing only
+Mathlib.
+
+The solver refutations are shipped as certificates and re-checked by a
+standalone proof checker independent of the proof assistant; that checker is
+itself first shown to reject non-refutations.
+
 \subsection{Independent corroboration}
 
 Beyond the kernel: the terminal case analysis of an earlier version of this
@@ -486,11 +640,13 @@ argument is the right argument.}
 
 \section{Related work}\label{sec:related}
 
-Dillencourt, Mount and Saalfeld posed the problem and settled the even cases.
-\v{C}ern\'y, Kyn\v{c}l and T\'oth gave bounds for odd cases and solved $k=5$,
-explicitly leaving $k=\ell=7$ open. Ackerman, Keszegh and Rote obtained
-asymptotically optimal bounds; their \S9 is what we import. G\"unther's 2012
-preprint on odd $n$ was withdrawn by its author.
+Dillencourt, Mount and Saalfeld~\cite{DillencourtMountSaalfeld1993} posed the
+problem and settled the even cases. \v{C}ern\'y, Kyn\v{c}l and
+T\'oth~\cite{CernyEtAl2003} gave bounds for odd cases and solved $k=5$,
+explicitly leaving $k=\ell=7$ open. Ackerman, Keszegh and
+Rote~\cite{AckermanKeszeghRote2022} obtained asymptotically optimal bounds;
+their \S9 is what we import. G\"unther's preprint~\cite{Gunther2012} on odd $n$
+was withdrawn by its author.
 
 Both of our tools are standard. Encoding order-type or chirotope realizability
 as a satisfiability problem and refuting it mechanically is well established,
@@ -549,5 +705,8 @@ checker, or kernel verification --- and errors introduced during development
 are catalogued in the project repository rather than quietly repaired. The
 patterns of \S\ref{sec:patterns} were \emph{found} by computer search; what they
 are is small enough to check by hand.
+
+\bibliographystyle{plain}
+\bibliography{references}
 
 \end{document}

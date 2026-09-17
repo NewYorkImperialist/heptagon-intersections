@@ -3,7 +3,7 @@
 ## For a referee: read [`heptagon-paper.tex`](heptagon-paper.tex) first
 
 **[`heptagon-paper.tex`](heptagon-paper.tex)** (compiled:
-[`heptagon-paper.pdf`](heptagon-paper.pdf), 8 pages) is the **mathematical
+[`heptagon-paper.pdf`](heptagon-paper.pdf), 11 pages) is the **mathematical
 write-up** — the argument stated as mathematics, for a reader who has never
 seen this repository. It is the document to send to a mathematician. New
 2026-09-17.
