@@ -5390,3 +5390,6 @@ name = "RealUpperBound"
 
 [[lean_lib]]
 name = "RealPerturb"
+
+[[lean_lib]]
+name = "SegmentStable"

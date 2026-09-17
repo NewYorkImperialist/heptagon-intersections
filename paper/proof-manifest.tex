@@ -202,8 +202,9 @@ The Jordan curve theorem is still neither used nor claimed. And
 \S\ref{sec:remaining}'s item on \textbf{independent expert review} is still the
 binding constraint --- more so, not less, now that the argument is short enough
 to be read. \texttt{docs/verification-status.md} is the authoritative,
-continuously updated version of this ledger; rows $40$--$47$ cover everything in
-this section.
+continuously updated version of this ledger; rows $40$--$49$ cover everything in
+this section, and rows $48$--$49$ carry the two pieces of \S3's
+count-preservation step added after this section was first written.
 
 \section{Claim and current status}
 
@@ -2179,12 +2180,24 @@ open even though the proof no longer depends on them.
     it was: a reader's time now goes against one named import and a short
     combinatorial core, not against a $13$-million-graph search.
   \item \textbf{\S3's second half: that the intersection count survives the
-    perturbation.} \texttt{RealConfig.exists\_near\_generic} proves that every
-    configuration is arbitrarily close to a generic one --- the iteration half.
-    What is missing is that the count does not change along the way, which is
-    what would license a conclusion about the original configuration. This is
-    the smallest genuinely mathematical gap left and it uses machinery already
-    in the repository.
+    perturbation.} \emph{Substantially advanced later the same day, and what is
+    left is no longer mathematics.} \texttt{RealConfig.exists\_near\_generic}
+    gives the iteration half. \texttt{RealPerturb} (row 48) then proves that
+    crossings are \emph{never lost} under a small enough perturbation --- a
+    crossing is a conjunction of strict inequalities, hence an open condition,
+    and there are only $49$ side pairs --- so the count can only rise, which is
+    the direction the bound needs. Preserving \emph{simplicity} is the other
+    half, and it is a \emph{closed} condition, so openness cannot supply it;
+    \texttt{SegmentStable} (row 49) proves the fact that can, namely that two
+    disjoint segments stay disjoint when their four endpoints move by less than
+    some $\varepsilon$, over any real normed space and with no general-position
+    hypothesis. Two pieces of scaffolding remain, neither a mathematical
+    obstacle: a notion of simplicity stated on \emph{point sets} rather than
+    determinant signs (the \texttt{RawPair} sketch of
+    \texttt{docs/akr-9-1-obligation.md} \S4.2), and a minimum over the finitely
+    many $\varepsilon$s of a configuration's non-adjacent side pairs. Until both
+    are built, \texttt{RealPerturb.SimplePerturbable} is carried as an explicit
+    named hypothesis and never as an axiom.
   \item \textbf{\textsc{akr} \S9 itself.} Recorded, with the audit's own
     recommendation against attempting it: five pages, a quantitative uniform-$\varepsilon$
     step with no Mathlib scaffolding, and an existence step \textsc{akr} assert

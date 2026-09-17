@@ -37,7 +37,7 @@ any more. The old material is kept because the defect ledger is attached to it.
 *This section previously said the strongest statement carried `hclass` and
 `hne40`, that everything was orientation-level over `Pt := Int × Int`, and that
 the mathematics turned on `A7-EXT`. All three are now false; `docs/verification-status.md`
-rows 40–47 record how each changed.*
+rows 40–49 record how each changed.*
 
 ## Build
 
@@ -69,7 +69,7 @@ pdflatex proof-manifest.tex
 ```
 
 Last built 2026-09-17 with Tectonic, from a deleted log: **30 pages, 0 errors,
-0 undefined references, 0 undefined citations, 4 overfull boxes, 18 underfull.**
+0 undefined references, 0 undefined citations, 4 overfull boxes, 17 underfull.**
 The four overfull boxes are pre-existing and live in the narrow ragged columns
 of the Lean trust-boundary table (`proof-manifest.tex` lines 1362–1382); all of
 them are under 15 pt and none is new. The underfull boxes are loose spacing in
