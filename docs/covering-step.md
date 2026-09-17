@@ -1,11 +1,20 @@
 # The covering step: what is built, and what is left
 
-**Status: complete, with one carried hypothesis.** All five layers are Lean
-theorems as of 2026-09-17. Nothing in the candidate proof depends on any of it,
-and the result is about a general-position `V`, which is *stronger* than what
-`DisjointnessGraph.Config` supplies. Read §4 before quoting anything here.
+**Status: complete, and connected to `Config`.** All five layers are Lean
+theorems as of 2026-09-17, and `lean/ConfigBridge.lean` instantiates the result
+at the project's own `Config`:
 
-## 1. What the covering step would give
+```lean
+theorem crossCountC_ne_40 (K : Config) (hgp : FullGP K) : crossCountC K ≠ 40
+```
+
+`FullGP` — no three of the fourteen combined vertices collinear — is a carried
+hypothesis, and it is exactly what AKR §9.1 was already imported to supply
+(`verification-status.md` rows 4 and 43). §9.1 is not formalized, so the
+*unconditional* `hne40` is still assumed and `f(7,7) = 38` is still not a Lean
+theorem. Read §4 before quoting anything here.
+
+## 1. What the covering step gives
 
 `independent/realizability_sweep/` establishes, with checked certificates, that
 every one of the **13,003,620** candidate `I = 40` disjointness graphs is
@@ -105,11 +114,13 @@ neither is obvious from the failure:
 * **Nothing here is load-bearing.** The candidate proof runs through the
   pipeline of `docs/proof-outline.md`; the sweep and this step are parallel
   work.
-* It gives `I ≠ 40` for a `V : Fin 14 → Pt` in **full** general position — all
-  364 orientation determinants nonzero — which is strictly more than
-  `DisjointnessGraph.Config` supplies, so it is **not directly instantiable at a
-  `Config`**. See `docs/residual-412-lean.md` §4.
-* `hcol` is a **hypothesis**, not discharged. Same bridge.
+* It gives `I ≠ 40` only for configurations in **full** general position — all
+  364 orientation determinants nonzero. `Config` forces 168 of those; the other
+  **196** come from AKR §9.1, which is imported prose, not formalized. That is
+  now an explicit named hypothesis (`ConfigBridge.FullGP`) rather than an
+  unstated mismatch. See `docs/residual-412-lean.md` §4 and row 43.
+* `hcol` is **no longer** a hypothesis — `ConfigBridge.colDeg_pos` discharges it
+  from `DisjointnessGraph.exists_disjointO_Pside`, for every `Config`.
 * The two patterns were found by a SAT solver and minimised by search, but they
   are Lean theorems now; the solver is not in the trusted base of A, B or C.
 * `I = 42` and the lower bound are elsewhere, and `f(7,7) = 38` remains not a
