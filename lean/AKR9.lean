@@ -356,6 +356,57 @@ theorem points_le_38_of_no_vertex_on_boundary (R : Pair9) (h9 : NoVertexOnOther 
   rw [points9_ncard R h9]
   exact raw_crossPairs_card_le_38 (toRawPair R)
 
+/-! ## The equality
+
+The certificate, viewed as a `Pair9`, attains 38 — so 38 is exactly the
+greatest value, not merely an upper bound.
+
+This doubles as a **faithfulness check**, which is the one risk class the kernel
+does not cover.  Lean proves theorems; it does not check that `points9` means
+"the set of points where the two boundaries meet", or that `SimpleClosed` means
+"simple heptagon".  Those are definitional choices a reader must judge.  Forcing
+the definitions to produce exactly `38` on the known 38-crossing configuration
+is evidence that they mean what they are claimed to mean. -/
+
+/-- The lower-bound certificate as a `Pair9`. -/
+noncomputable def certPair9 : Pair9 := ofRConfig9 certRConfig
+
+/-- `certPair9` and `certRConfig` have the same fourteen vertices. -/
+theorem certPair9_V : certPair9.V = certRConfig.V := rfl
+
+theorem certPair9_card : (crossPairsOf certPair9.V).card = 38 := by
+  rw [certPair9_V, crossPairsOf_RConfig]
+  have h := certRConfig_ncard
+  rw [pointsR_ncard] at h
+  exact h
+
+/-- The certificate's two boundaries meet in exactly 38 points. -/
+theorem certPair9_ncard : (points9 certPair9).ncard = 38 := by
+  rw [points9_ncard certPair9 (noVertexOnOther_ofRConfig _)]
+  exact certPair9_card
+
+/-- The boundary-intersection counts attained by pairs of point-set simple
+heptagons satisfying (E9). -/
+def attained9 : Set Nat :=
+  { n | ∃ R : Pair9, NoVertexOnOther R ∧ (points9 R).ncard = n }
+
+/-- **`f(7,7) = 38` modulo AKR §9 alone.**
+
+38 is exactly the greatest number of points at which the boundaries of two
+simple heptagons meet, where "simple" means simple **as a point set** — three
+collinear vertices allowed, no general-position condition anywhere — and the
+only hypothesis is (E9), AKR §9's conclusion.
+
+This is an **equality**, not a bound, and it imports **no published lemma**.
+AKR §3's unproved "for convenience" clause is not used.
+
+It is **not** `f(7,7) = 38`: (E9) is assumed, not proved, and §9 is what would
+discharge it.  The distinction matters and must not be blurred. -/
+theorem isGreatest_38_of_E9 : IsGreatest attained9 38 := by
+  refine ⟨⟨certPair9, noVertexOnOther_ofRConfig _, certPair9_ncard⟩, ?_⟩
+  rintro n ⟨R, h9, rfl⟩
+  exact points_le_38_of_no_vertex_on_boundary R h9
+
 end AKR9
 end Heptagon
 
@@ -367,3 +418,5 @@ end Heptagon
 #print axioms Heptagon.AKR9.points9_finite
 #print axioms Heptagon.AKR9.noVertexOnOther_ofRConfig
 #print axioms Heptagon.AKR9.points_le_38_of_no_vertex_on_boundary
+#print axioms Heptagon.AKR9.certPair9_ncard
+#print axioms Heptagon.AKR9.isGreatest_38_of_E9
