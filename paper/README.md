@@ -1,5 +1,32 @@
 # Paper
 
+## For a referee: read [`heptagon-paper.tex`](heptagon-paper.tex) first
+
+**[`heptagon-paper.tex`](heptagon-paper.tex)** (compiled:
+[`heptagon-paper.pdf`](heptagon-paper.pdf), 8 pages) is the **mathematical
+write-up** — the argument stated as mathematics, for a reader who has never
+seen this repository. It is the document to send to a mathematician. New
+2026-09-17.
+
+It states the two forbidden patterns explicitly, the covering theorem, the
+reduction to the plane, and — separately and precisely — the one thing that is
+imported rather than proved (AKR §9). It is deliberately short.
+
+The two entry points it nominates for a sceptical reader, because they need the
+least context:
+
+1. **Theorem 3.2** — the size-8 pattern is non-realizable. Eight incidences on
+   three consecutive sides of each polygon, *no simplicity hypothesis*. If it is
+   wrong, everything is wrong.
+2. **Lemma 7.4** — disjoint segments stay disjoint under a small perturbation.
+   Self-contained; its formalization (`lean/SegmentStable.lean`) depends on
+   nothing else in the development.
+
+Everything below is the older, repository-facing material.
+
+---
+
+
 [`proof-manifest.tex`](proof-manifest.tex) — **the authoritative dependency
 manifest.** It states exactly what the candidate proof of `f(7,7) = 38` consists
 of, separating published external mathematics, project-original arguments,

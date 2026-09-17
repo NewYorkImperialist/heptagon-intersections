@@ -1,0 +1,553 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{geometry}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\geometry{margin=1in}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{hypothesis}[theorem]{Hypothesis}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\GD}{G^{D}}
+\newcommand{\ED}{E^{D}}
+\newcommand{\orient}{\operatorname{or}}
+\newcommand{\Cone}{\operatorname{Cone}}
+
+\title{Two forbidden patterns bound the boundary intersections\\
+of two simple heptagons\\[2mm]
+\large A computer-assisted proof that $f(7,7)=38$,\\
+modulo one imported general-position reduction}
+
+\author{Jayden Lin\thanks{Northeastern University. This work was carried out
+with substantial generative-AI assistance; see \S\ref{sec:ai}.}}
+
+\date{17 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $f(m,n)$ be the maximum number of points at which the boundaries of two
+simple polygons with $m$ and $n$ sides can meet. Dillencourt, Mount and
+Saalfeld posed the problem in 1993 and settled the cases where $m$ or $n$ is
+even; the odd--odd cases have resisted. We give a computer-assisted proof that
+$f(7,7)=38$, conditional on one imported statement.
+
+The mathematical content is a reduction. Rather than enumerate the
+$13{,}003{,}620$ candidate crossing patterns with $40$ intersections, we
+exhibit \emph{two} local patterns, involving $8$ and $14$ prescribed
+side-pair incidences, and show that every candidate pattern with $40$
+intersections and every one with $42$ contains one of them. Each of the two is
+non-realizable, and a degree argument over $28$ cases reduces the whole
+exclusion to those two facts.
+
+Everything in this paper except one statement is verified by the Lean~4 kernel
+from primitive definitions, with no appeal to any published lemma. The
+exception is the reduction to general position, for which we import
+Ackerman--Keszegh--Rote \S9 and carry it as an explicit hypothesis. We are
+explicit throughout about which assertions are machine-checked, which are
+imported, and which --- notably the faithfulness of our definitions --- remain
+matters for a human reader.
+\end{abstract}
+
+\tableofcontents
+
+\section{Introduction}
+
+\subsection{The problem}
+
+Two simple polygons in the plane, with $m$ and $n$ sides, are in
+\emph{general position} if no vertex of either lies on the boundary of the
+other and no three of the combined $m+n$ vertices are collinear. Write
+$f(m,n)$ for the maximum, over such pairs, of
+$\lvert \partial P \cap \partial Q\rvert$.
+
+\begin{quote}
+\textbf{Problem} (Dillencourt--Mount--Saalfeld, 1993). Determine $f(m,n)$.
+\end{quote}
+
+They determined $f(m,n)$ when at least one of $m,n$ is even. The odd--odd cases
+are open. A 2012 preprint of G\"unther claiming $f(n,n)$ for odd $n$ was
+withdrawn by its author, with the stated reason that a counterexample was found
+to a weakened form of one of its lemmas. The smallest open case is
+$m=n=7$.
+
+Two elementary facts frame it. Each side of $P$ meets each side of $Q$ at most
+once in general position, so $I\le 49$; and since $\partial P$ and $\partial Q$
+are closed curves meeting transversally, $I$ is even. The published state of the
+art gives $I\le 40$, and $38$ is attained. So the entire question is whether
+$40$ is attainable.
+
+\subsection{What is proved here}
+
+\begin{theorem}[Main, conditional]\label{thm:main}
+Let $P$ and $Q$ be simple heptagons in the plane, each simple as a point set,
+such that no vertex of either lies on the boundary of the other. Then
+\[
+  \lvert \partial P \cap \partial Q\rvert \;\le\; 38 ,
+\]
+and $38$ is attained. No condition on collinearity of vertices is assumed.
+\end{theorem}
+
+The hypothesis ``no vertex of either lies on the boundary of the other'' is
+exactly the conclusion of Ackerman--Keszegh--Rote \S9. We do not prove it;
+\S\ref{sec:import} states precisely what we import and why, and
+\S\ref{sec:e9attempt} reports an unsuccessful attempt to remove it.
+
+\begin{remark}
+Theorem~\ref{thm:main} is \textbf{not} $f(7,7)=38$, and we are careful not to
+write it that way anywhere. It is the statement one obtains after the
+general-position reduction has been applied, and the reduction is imported.
+\end{remark}
+
+\subsection{What is new}
+
+The contribution is a reduction, not a technique. Both ingredients we use ---
+encoding realizability of a crossing pattern as an oriented-matroid
+satisfiability problem, and refuting it mechanically --- are standard; see
+\S\ref{sec:related}. What appears to be new is:
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Two patterns suffice} (Theorem~\ref{thm:cover}). A search that
+    was $13{,}003{,}620$ cases becomes two non-realizability facts plus a
+    degree argument over $28$ cases.
+  \item \textbf{The smaller pattern is human-readable} and needs no simplicity
+    hypothesis: it constrains three consecutive sides of each polygon and
+    prescribes eight incidences (\S\ref{sec:patterns}).
+  \item \textbf{The reduction to the plane is unconditional.} The combinatorial
+    argument is about orientation signs; getting from there to genuine point
+    sets in $\mathbb{R}^2$ --- including removing the collinearity assumption
+    that \textsc{akr} \S3 asserts without proof --- is carried out in full
+    (\S\ref{sec:plane}).
+\end{itemize}
+
+A bounded prior-art search found no previous statement of the covering result.
+We stress in \S\ref{sec:related} that this is weak evidence and not a novelty
+claim.
+
+\section{Preliminaries}\label{sec:prelim}
+
+\subsection{Configurations and the disjointness graph}
+
+Let $P$ have vertices $p_0,\dots,p_6$ and $Q$ have $q_0,\dots,q_6$, indices mod
+$7$, with sides $P_i=[p_i,p_{i+1}]$ and $Q_j=[q_j,q_{j+1}]$. For points
+$a,b,c$ write
+\[
+  \orient(a,b,c)=(b_1-a_1)(c_2-a_2)-(b_2-a_2)(c_1-a_1),
+\]
+twice the signed area. Sides $[a,b]$ and $[c,d]$ \emph{cross} when
+\[
+  \orient(a,b,c)\cdot\orient(a,b,d)<0
+  \quad\text{and}\quad
+  \orient(c,d,a)\cdot\orient(c,d,b)<0 .
+\]
+This is a conjunction of \emph{strict} inequalities, a fact used repeatedly: it
+makes crossing an open condition.
+
+\begin{definition}
+The \emph{disjointness graph} $\GD$ is the bipartite graph on
+$\{P_0,\dots,P_6\}\sqcup\{Q_0,\dots,Q_6\}$ with an edge $P_iQ_j$ when $P_i$ and
+$Q_j$ do \emph{not} cross.
+\end{definition}
+
+In general position each side pair contributes at most one intersection point,
+and exactly one when it crosses, so writing $I$ for the number of intersection
+points and $\lvert \ED\rvert$ for the number of edges of $\GD$,
+\begin{equation}\label{eq:link}
+  I + \lvert \ED\rvert = 49 .
+\end{equation}
+
+\subsection{Two unconditional bounds}
+
+\begin{lemma}\label{lem:even}
+$I$ is even.
+\end{lemma}
+
+\begin{lemma}\label{lem:42}
+$\delta(\GD)\ge 1$, and consequently $I\le 42$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Every side of $P$ fails to cross at least one side of $Q$ and vice versa, so
+$\lvert \ED\rvert\ge 7$; with \eqref{eq:link} this gives $I\le 42$.
+\end{proof}
+
+\begin{remark}
+\v{C}ern\'y, Kyn\v{c}l and T\'oth obtain $\delta(\GD)\ge1$ from the fact that a
+line meets a simple $7$-gon in at most $6$ sides. We do not import that: the
+minimum-degree statement is derived directly and is machine-checked
+unconditionally, so their Lemma~1 is corroboration here, not a dependency.
+\end{remark}
+
+By Lemmas~\ref{lem:even} and~\ref{lem:42}, $I\in\{\dots,38,40,42\}$, and since
+$38$ is attained (\S\ref{sec:lower}) the theorem reduces to excluding $40$ and
+$42$.
+
+\subsection{Orientation data}
+
+All of \S\S\ref{sec:patterns}--\ref{sec:exclude} concerns only the signs of the
+$\binom{14}{3}=364$ determinants $\orient(v_a,v_b,v_c)$ on the combined vertex
+set. A \emph{configuration} is a $14$-tuple of points together with the
+requirement that all $364$ signs be nonzero; a \emph{crossing pattern} is the
+resulting $7\times7$ Boolean matrix of side-pair crossings. Realizability
+questions about patterns are therefore questions about which sign vectors arise
+from actual point sets --- that is, about chirotopes.
+
+\section{Two forbidden patterns}\label{sec:patterns}
+
+\subsection{The small pattern}
+
+\begin{definition}\label{def:pat8}
+Pattern $\Pi_8$ constrains sides $P_0,P_1,P_2$ and $Q_0,Q_1,Q_2$:
+\[
+\begin{array}{c|ccc}
+      & Q_0 & Q_1 & Q_2 \\ \hline
+  P_0 & \times & \times & \times \\
+  P_1 & \times & \cdot   & \times \\
+  P_2 & \times & \times & \ast
+\end{array}
+\]
+where $\times$ means \emph{crosses}, $\cdot$ means \emph{does not cross}, and
+$\ast$ is unconstrained. That is eight prescribed incidences: seven crossings
+and one non-crossing.
+\end{definition}
+
+\begin{theorem}\label{thm:pat8}
+No configuration realizes $\Pi_8$.
+\end{theorem}
+
+Theorem~\ref{thm:pat8} assumes nothing beyond the eight incidences and the
+nondegeneracy of the $364$ determinants: in particular it needs \emph{no}
+hypothesis that $P$ or $Q$ is simple. It is the single most compact statement
+in this work, and we suggest it as the first thing a sceptical reader should
+check.
+
+\subsection{The larger pattern}
+
+\begin{definition}\label{def:pat14}
+Pattern $\Pi_{14}$ constrains $P_0,\dots,P_3$ and $Q_0,\dots,Q_4$ by fourteen
+incidences,
+\[
+\begin{array}{c|ccccc}
+      & Q_0 & Q_1 & Q_2 & Q_3 & Q_4 \\ \hline
+  P_0 & \ast & \times & \times & \ast & \times \\
+  P_1 & \times & \cdot & \times & \times & \times \\
+  P_2 & \times & \times & \ast & \ast & \times \\
+  P_3 & \times & \times & \times & \ast & \ast
+\end{array}
+\]
+together with seven simplicity conditions: $P_0\!\not\times\!P_2$,
+$P_0\!\not\times\!P_3$, $P_1\!\not\times\!P_3$, $Q_0\!\not\times\!Q_2$,
+$Q_0\!\not\times\!Q_3$, $Q_1\!\not\times\!Q_3$, $Q_1\!\not\times\!Q_4$.
+\end{definition}
+
+\begin{theorem}\label{thm:pat14}
+No configuration realizes $\Pi_{14}$.
+\end{theorem}
+
+Unlike $\Pi_8$, this one genuinely uses that the polygons do not cross
+themselves; the seven self-non-crossing conditions are part of the hypothesis
+and are supplied by simplicity.
+
+\subsection{How the patterns are proved non-realizable}
+
+Both theorems are established by encoding realizability as a Boolean
+satisfiability problem over the $364$ orientation variables --- Grassmann--Pl\"ucker
+relations, acyclicity, and the prescribed incidences --- and refuting it. The
+refutation is not trusted:
+
+\begin{enumerate}[leftmargin=*]
+  \item Each clause of the encoding is \emph{derived from the geometry} inside
+    the proof assistant. The Grassmann--Pl\"ucker and acyclicity clauses are
+    polynomial identities in the coordinates; the pattern clauses are the
+    definition of crossing unfolded. Nothing about the encoding is assumed.
+  \item The solver's refutation is checked, then transcribed into an explicit
+    chain of unit-propagation steps. The kernel verifies a chain of
+    implications between propositions; \emph{no search runs inside the
+    proof assistant}.
+\end{enumerate}
+
+\begin{remark}[Positive control]
+A refutation that also covered a configuration which exists would be proving
+something false. Both patterns require $P_1$ to miss $Q_1$; in the
+$38$-crossing configuration of \S\ref{sec:lower} those two sides cross, so
+neither pattern applies to it. This control is itself machine-checked.
+\end{remark}
+
+\section{The covering theorem}\label{sec:cover}
+
+\begin{theorem}\label{thm:cover}
+Every crossing pattern of two simple heptagons with $I=40$, and every one with
+$I=42$, contains $\Pi_8$ or $\Pi_{14}$ after relabelling.
+\end{theorem}
+
+Here ``after relabelling'' refers to the group of order $392$ generated by
+rotating and reflecting each polygon and exchanging $P$ with $Q$.
+
+\subsection{The $I=42$ case}
+
+By \eqref{eq:link}, $I=42$ forces $\lvert \ED\rvert=7$, and with
+$\delta(\GD)\ge1$ on both sides the graph is a perfect matching. There are
+$7!=5040$ of these, all equivalent under relabelling to few orbits, and each
+contains one of the two patterns.
+
+\subsection{The $I=40$ case}
+
+Here $\lvert \ED\rvert=9$, so $\GD$ has nine edges with all fourteen degrees at
+least~$1$. Write $r_i=\deg P_i$ and $c_j=\deg Q_j$, so
+$\sum_i r_i=\sum_j c_j=9$ with every $r_i,c_j\ge1$. Since nine edges are spread
+over seven rows each of degree at least one, the multiset $\{r_i\}$ is one of
+few shapes, and likewise for columns; enumerating gives \textbf{28 degree
+shapes}. For each shape a short argument locates a sub-pattern equivalent to
+$\Pi_8$ or $\Pi_{14}$.
+
+The point of organising the argument this way is that the $28$ cases are a
+human-sized object, whereas the $13{,}003{,}620$ patterns are not.
+
+\section{Excluding 40 and 42}\label{sec:exclude}
+
+\begin{corollary}\label{cor:not4042}
+No configuration has $I=40$ or $I=42$.
+\end{corollary}
+
+\begin{proof}
+Immediate from Theorems~\ref{thm:pat8}, \ref{thm:pat14} and~\ref{thm:cover}.
+\end{proof}
+
+\begin{corollary}\label{cor:38}
+Every configuration has $I\le 38$.
+\end{corollary}
+
+\begin{proof}
+$I\le42$ by Lemma~\ref{lem:42}, $I$ is even by Lemma~\ref{lem:even}, and $40$
+and $42$ are excluded by Corollary~\ref{cor:not4042}.
+\end{proof}
+
+\section{The lower bound}\label{sec:lower}
+
+\begin{proposition}\label{prop:lower}
+The heptagons with vertices
+\[
+\begin{aligned}
+P &: (373,157),\,(132,5),\,(369,182),\,(88,157),\,(327,282),\,(60,272),\,(372,298),\\
+Q &: (344,24),\,(89,303),\,(345,19),\,(373,214),\,(270,338),\,(325,93),\,(192,284)
+\end{aligned}
+\]
+are simple, are in general position, and their boundaries meet in exactly $38$
+points.
+\end{proposition}
+
+All three assertions are decided by exact integer arithmetic and verified by
+the kernel. Combined with Corollary~\ref{cor:38} this gives the equality in
+Theorem~\ref{thm:main}.
+
+\section{From orientation signs to the plane}\label{sec:plane}
+
+Sections~\ref{sec:patterns}--\ref{sec:exclude} are about sign vectors. Three
+further steps are needed to reach Theorem~\ref{thm:main}, and all three are
+carried out unconditionally.
+
+\subsection{Integer coordinates are no restriction}
+
+The combinatorial development uses integer coordinates. This costs nothing:
+$\orient$ is homogeneous of degree~$2$, so the set of point-tuples with a given
+sign vector is invariant under scaling. Scaling a configuration until a box
+around it has side length exceeding~$1$ produces an integer point in that box
+with the same $364$ signs. No rationals and no clearing of denominators are
+required.
+
+\subsection{Counting points, not side pairs}
+
+The combinatorial argument counts crossing \emph{pairs}; the theorem counts
+\emph{points}. In general position these agree: a crossing pair meets in
+exactly one point, and a point determines its pair. Both directions are proved.
+
+\subsection{Removing the collinearity assumption}\label{sec:removecollin}
+
+\textsc{akr} \S3 assumes, ``for convenience'' and without proof, that no three
+of the combined vertices are collinear. We do not assume it. The argument is a
+perturbation, in two halves:
+
+\begin{lemma}\label{lem:open}
+Crossing is an open condition, so for a small enough perturbation of the
+fourteen vertices no existing crossing is lost.
+\end{lemma}
+
+\begin{lemma}\label{lem:simple}
+If two segments are disjoint, they remain disjoint when their four endpoints
+move by less than some $\varepsilon>0$.
+\end{lemma}
+
+Lemma~\ref{lem:open} handles the crossings; Lemma~\ref{lem:simple} handles
+simplicity, which is a \emph{closed} condition and therefore out of reach of any
+openness argument. Since the configurations in general position are dense,
+combining the two lemmas approximates an arbitrary pair of point-set simple
+heptagons by one in general position with at least as many crossings, giving
+the bound for the original. Lemma~\ref{lem:simple} is proved for an arbitrary
+real normed space and is independent of everything else here.
+
+\begin{remark}
+Note the direction: we need the perturbed configuration to have \emph{at least}
+as many crossings, not the same number, and openness gives exactly that.
+\end{remark}
+
+\section{What is imported}\label{sec:import}
+
+\begin{hypothesis}[\textsc{(E9)}]\label{hyp:e9}
+No vertex of either polygon lies on the boundary of the other.
+\end{hypothesis}
+
+This is the conclusion of \textsc{akr} \S9, where \S9.1 removes vertex--vertex
+coincidences and \S9.2 vertex--side ones. It is the \emph{only} external
+mathematical input to Theorem~\ref{thm:main}.
+
+Why it is needed, precisely: without it, a point of
+$\partial P\cap\partial Q$ can lie on \emph{no} crossing pair. Two sides that
+merely touch share a point but have vanishing determinants, so the pair is not
+counted, and the bound on pairs does not bound points. The failure is in the
+unfavourable direction, which is why \S\ref{sec:removecollin} does not also
+dispose of it.
+
+\begin{remark}[Citation]
+It would be an under-citation to attribute all of the usual general-position
+package to \S9. \S9 gives Hypothesis~\ref{hyp:e9} and nothing more; the
+collinearity clause has its only warrant in one unproved sentence of \S3, and
+is discharged here (\S\ref{sec:removecollin}). Additionally, that the perturbed
+polygons remain simple is stated nowhere in that paper. We fold simplicity into
+Hypothesis~\ref{hyp:e9} deliberately, so that the gap is visible.
+\end{remark}
+
+\subsection{An attempt to remove it}\label{sec:e9attempt}
+
+We attempted to prove Hypothesis~\ref{hyp:e9} and did not succeed. The
+decomposition into its vertex--vertex and vertex--side halves is formalized, as
+are two local lemmas, but the global reduction is not. Two negative
+observations came out of the attempt and are worth recording, because they
+close off the obvious routes:
+
+\begin{itemize}[leftmargin=*]
+  \item Generic perturbation preserving proper crossings does \emph{not} imply
+    that the point count is monotone.
+  \item Naive displacement into the interior of a cone does not either.
+\end{itemize}
+
+Explicit coordinates exhibiting both failures are recorded in the project
+repository; they are analytic and \emph{not} machine-checked. This is
+consistent with the known bad case $\Cone_P(v)\subseteq\Cone_Q(w)$, on which an
+earlier attempt of ours broke. None of this is evidence that \textsc{akr}'s
+theorem is false, and we allege no error in it; what remains is substantial
+unfinished work.
+
+\section{Machine verification, and its limits}\label{sec:machine}
+
+Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
+verified by the Lean~4 kernel. There is no \texttt{sorry}, no
+\texttt{native\_decide}, and no project-specific axiom; every theorem depends on
+at most the three standard axioms \texttt{propext},
+\texttt{Classical.choice}, \texttt{Quot.sound}. Hypothesis~\ref{hyp:e9} is a
+hypothesis of the statement, never an axiom.
+
+\begin{remark}[What the kernel does not check]\label{rem:faithful}
+The kernel proves theorems about definitions; it does not certify that the
+definitions mean what we say. That $\partial P\cap\partial Q$ is modelled by the
+right set, and that ``simple heptagon'' is modelled by the right predicate,
+are judgements a human reader must make. This is, in our view, the principal
+remaining risk, and it is not reducible by more computation.
+
+One partial check is available and we have carried it out: the definitions,
+applied to the explicit $38$-crossing configuration of
+Proposition~\ref{prop:lower}, yield exactly $38$. A wrong definition would have
+to be wrong in a way that still lands on that value.
+\end{remark}
+
+\subsection{Independent corroboration}
+
+Beyond the kernel: the terminal case analysis of an earlier version of this
+argument was reproduced by a second, independently written implementation in a
+different language; all solver refutations are re-checked by a standalone
+proof checker, which is itself first shown to reject non-refutations; and all
+generated artifacts are regenerated and compared byte-for-byte. These guard
+against implementation error. \emph{None of them is a check on whether the
+argument is the right argument.}
+
+\section{Related work}\label{sec:related}
+
+Dillencourt, Mount and Saalfeld posed the problem and settled the even cases.
+\v{C}ern\'y, Kyn\v{c}l and T\'oth gave bounds for odd cases and solved $k=5$,
+explicitly leaving $k=\ell=7$ open. Ackerman, Keszegh and Rote obtained
+asymptotically optimal bounds; their \S9 is what we import. G\"unther's 2012
+preprint on odd $n$ was withdrawn by its author.
+
+Both of our tools are standard. Encoding order-type or chirotope realizability
+as a satisfiability problem and refuting it mechanically is well established,
+including in combination with proof assistants. Framing extremal results in
+terms of forbidden configurations is likewise standard. What we have not found
+in the literature is either applied to crossing patterns of two simple
+polygons, or to $f(m,n)$.
+
+\begin{remark}[On novelty]
+We searched for prior statements of the covering result and found none. We
+record plainly that this is \textbf{weak evidence and not a novelty claim}: the
+search was bounded, the journal version of one central reference was not
+reachable, the forward citations of another were not examined, and the relevant
+literature is small enough that a result could sit in it under different
+vocabulary. A domain expert's judgement is not replaced by such a search.
+\end{remark}
+
+\section{Status, and what we ask of a reader}\label{sec:status}
+
+To state the position exactly:
+
+\begin{itemize}[leftmargin=*]
+  \item $f(7,7)=38$ is \textbf{not} proved. Theorem~\ref{thm:main} carries
+    Hypothesis~\ref{hyp:e9}.
+  \item Everything else is machine-checked from primitive definitions with no
+    published lemma imported.
+  \item \textbf{No mathematician outside this process has reviewed any of it.}
+\end{itemize}
+
+The third point is the binding constraint, and it is why this paper exists. Two
+entry points need the least context:
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Theorem~\ref{thm:pat8}.} Eight incidences on three consecutive
+    sides of each polygon, no simplicity hypothesis. If it is wrong, everything
+    here is wrong.
+  \item \textbf{Lemma~\ref{lem:simple}.} A self-contained statement about
+    segments in a normed space, whose formalization depends on nothing else in
+    the development.
+\end{enumerate}
+
+We would also welcome an opinion on Remark~\ref{rem:faithful} --- whether our
+formal definitions capture the intended objects --- and on whether the covering
+result is in fact already known.
+
+\section*{Disclosure of generative-AI use}\label{sec:ai}
+\addcontentsline{toc}{section}{Disclosure of generative-AI use}
+
+Generative-AI systems were used substantially throughout: exploring the
+reduction, generating essentially all software including the formalization,
+auditing the cited sources, and drafting this paper. The named author is
+responsible for the claims. AI output was not treated as trustworthy: each
+major claim is discharged by a separately recorded mechanism --- source audit,
+independent reimplementation, a machine-checkable certificate with a standalone
+checker, or kernel verification --- and errors introduced during development
+are catalogued in the project repository rather than quietly repaired. The
+patterns of \S\ref{sec:patterns} were \emph{found} by computer search; what they
+are is small enough to check by hand.
+
+\end{document}
