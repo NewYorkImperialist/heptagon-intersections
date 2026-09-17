@@ -5387,3 +5387,6 @@ name = "RealConfig"
 
 [[lean_lib]]
 name = "RealUpperBound"
+
+[[lean_lib]]
+name = "RealPerturb"
