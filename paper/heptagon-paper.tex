@@ -856,7 +856,7 @@ terms of forbidden configurations is likewise standard. What we have not found
 in the literature is either applied to crossing patterns of two simple
 polygons, or to $f(m,n)$.
 
-\begin{remark}[On novelty]
+\begin{remark}[On novelty]\label{rem:novelty}
 We searched for prior statements of the covering result and found none. We
 record plainly that this is \textbf{weak evidence and not a novelty claim}: the search was bounded, the forward citations of
 \cite{CernyEtAl2003} were not examined, and the relevant literature is small
@@ -869,28 +869,56 @@ To state the position exactly:
 
 \begin{itemize}[leftmargin=*]
   \item $f(7,7)=38$ is \textbf{not} proved. Theorem~\ref{thm:main} carries
-    Hypothesis~\ref{hyp:e9}.
-  \item Everything else is machine-checked from primitive definitions with no
-    published lemma imported.
+    Hypothesis~\ref{hyp:e9}, and the deduction needs
+    Proposition~\ref{prop:reduction}, which we import.
+  \item Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
+    machine-checked from primitive definitions, with no published result about
+    $f(m,n)$ appealed to.
   \item \textbf{No mathematician outside this process has reviewed any of it.}
 \end{itemize}
 
-The third point is the binding constraint, and it is why this paper exists. Two
-entry points need the least context:
+\subsection{What can be judged without a proof assistant}
+
+The third point is the binding constraint and is why this paper exists. We
+stress that \textbf{no familiarity with Lean, or with formal verification at
+all, is needed to assess the parts where an expert's judgement is
+irreplaceable.} It is worth being precise about why.
+
+The machine-checked proofs in this work are \emph{not} human-readable and are
+not meant to be: they are propagation chains of thousands of steps, generated
+rather than written. Nobody reads them --- a formalization specialist would not
+either. What any reader of a formal development actually inspects is the
+\emph{statements} and the \emph{definitions}, and we have put both into ordinary
+mathematical notation, the definitions in Appendix~\ref{app:defs}. So the
+practical difference between a Lean-literate reader and any other is close to
+nil.
+
+Three questions are the ones we would most value, and none of them involves a
+machine:
 
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Theorem~\ref{thm:pat8}.} Eight incidences on three consecutive
-    sides of each polygon, no simplicity hypothesis. If it is wrong, the exclusion
-of $40$ and $42$ collapses --- though \S\ref{sec:prelim}, \S\ref{sec:lower} and
-\S\ref{sec:plane} would survive.
-  \item \textbf{Lemma~\ref{lem:simple}.} A self-contained statement about
-    segments in a normed space, whose formalization depends on nothing else in
-    the development.
+  \item \textbf{Is Theorem~\ref{thm:pat8} true?} Eight incidences on three
+    consecutive sides of each polygon, no simplicity hypothesis
+    (Definition~\ref{def:pat8}). This is a question of plane geometry. We offer
+    no human proof of it, so a synthetic argument --- or a counterexample ---
+    would be decisive either way. If it is false, the exclusion of $40$ and $42$
+    collapses, though \S\ref{sec:prelim}, \S\ref{sec:lower} and
+    \S\ref{sec:plane} would survive.
+  \item \textbf{Does \cite[\S9]{AckermanKeszeghRote2022} actually deliver
+    Proposition~\ref{prop:reduction}?} This is the one thing we import, and
+    settling it is a matter of reading that paper, not this one. The specific
+    worry we cannot resolve ourselves is recorded in the remark following
+    Proposition~\ref{prop:reduction}: whether \S9's argument depends on AKR's
+    standing non-parallelism assumption.
+  \item \textbf{Is the covering result (Theorem~\ref{thm:cover}) already known?}
+    Our search found nothing, and we make no novelty claim
+    (Remark~\ref{rem:novelty}).
 \end{enumerate}
 
-We would also welcome an opinion on Remark~\ref{rem:faithful} --- whether our
-formal definitions capture the intended objects --- and on whether the covering
-result is in fact already known.
+We would also welcome an opinion on Appendix~\ref{app:defs} --- whether those
+definitions are the intended objects --- which is the risk
+Remark~\ref{rem:faithful} identifies and the one thing no amount of computation
+can settle.
 
 \section*{Disclosure of generative-AI use}\label{sec:ai}
 \addcontentsline{toc}{section}{Disclosure of generative-AI use}
@@ -905,6 +933,59 @@ checker, or kernel verification --- and errors introduced during development
 are catalogued in the project repository rather than quietly repaired. The
 patterns of \S\ref{sec:patterns} were \emph{found} by computer search; what they
 are is small enough to check by hand.
+
+\appendix
+
+\section{The formal definitions, in ordinary notation}\label{app:defs}
+
+Remark~\ref{rem:faithful} identifies definitional faithfulness as the principal
+residual risk: the kernel proves theorems \emph{about} these definitions and
+cannot certify that they are the intended objects. That judgement is a reader's,
+so we set them out here. These are transcriptions of the formal statements, not
+paraphrases; indices are mod $7$ and $[x,y]$ denotes the closed segment.
+
+Let $P,Q:\mathbb{Z}/7\to\mathbb{R}^2$.
+
+\paragraph{Simple as a point set.} $P$ is \emph{simple} if
+\begin{enumerate}[label=(S\arabic*),leftmargin=*,nosep]
+  \item $P_i \ne P_{i+1}$ for every $i$ \quad(no degenerate side);
+  \item $[P_i,P_{i+1}]\cap[P_j,P_{j+1}]=\emptyset$ whenever $P_i$ and $P_j$ are
+    non-adjacent sides;
+  \item $[P_i,P_{i+1}]\cap[P_{i+1},P_{i+2}]=\{P_{i+1}\}$ for every $i$.
+\end{enumerate}
+Nothing here constrains collinearity: three consecutive vertices of $P$ may be
+collinear, and so may any three of the fourteen.
+
+\paragraph{The hypothesis (E9).} Hypothesis~\ref{hyp:e9} is
+\[
+  P_i \notin [Q_j,Q_{j+1}]
+  \quad\text{and}\quad
+  Q_j \notin [P_i,P_{i+1}]
+  \qquad\text{for all } i,j .
+\]
+
+\paragraph{What is counted.} The boundaries and their intersection are
+\[
+  \partial P=\bigcup_{i}[P_i,P_{i+1}],\qquad
+  \partial Q=\bigcup_{j}[Q_j,Q_{j+1}],\qquad
+  X = \partial P\cap\partial Q ,
+\]
+genuine subsets of $\mathbb{R}^2$, and the quantity bounded is the cardinality
+of $X$. Finiteness of $X$ is \emph{proved}, not assumed --- it follows from the
+injection of $X$ into the set of crossing side pairs --- which matters, because
+the formal cardinality function returns $0$ on infinite sets and a bound stated
+without finiteness would be vacuous for overlapping boundaries rather than
+informative.
+
+\paragraph{The theorem.} With $P,Q$ simple in the above sense and (E9) holding,
+$\lvert X\rvert\le 38$; and $38$ is attained, by
+Proposition~\ref{prop:lower}.
+
+\medskip
+\noindent
+The question we are asking is simply whether (S1)--(S3), (E9) and $X$ above are
+the objects a geometer means by ``two simple heptagons whose boundaries meet in
+$k$ points''. If they are not, no amount of machine checking helps.
 
 \bibliographystyle{plain}
 \bibliography{references}
