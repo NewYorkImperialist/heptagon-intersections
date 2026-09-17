@@ -131,9 +131,11 @@ exactly the conclusion of Ackerman--Keszegh--Rote~\cite[\S9]{AckermanKeszeghRote
 \S\ref{sec:e9attempt} reports an unsuccessful attempt to remove it.
 
 \begin{remark}
-Theorem~\ref{thm:main} is \textbf{not} $f(7,7)=38$, and we are careful not to
-write it that way anywhere. It is the statement one obtains after the
-general-position reduction has been applied, and the reduction is imported.
+Theorem~\ref{thm:main} is \textbf{not} $f(7,7)=38$. Wherever that equation
+appears in this paper it is written conditionally, on
+Proposition~\ref{prop:reduction}. Theorem~\ref{thm:main} is the statement one
+obtains after the general-position reduction has been applied, and that
+reduction is imported, not proved.
 \end{remark}
 
 \subsection{What is new}
@@ -224,10 +226,19 @@ of $\GD$ has degree at least~$1$ and $\lvert \ED\rvert\ge 7$. With
 \end{proof}
 
 \begin{remark}
-Simplicity is essential and not a convenience: a line can meet all seven sides
-of a \emph{self-crossing} heptagon, and then the bound fails. The hypothesis is
-therefore carried in Corollaries~\ref{cor:not4042} and~\ref{cor:38} as well.
-Lemma~\ref{lem:even}, by contrast, holds for arbitrary closed curves.
+Simplicity is essential and not a convenience. For a concrete witness, the
+$14$ points
+\[
+\begin{aligned}
+P&:(197,86),(182,258),(152,128),(269,227),(90,125),(278,210),(132,227),\\
+Q&:(149,267),(228,177),(105,155),(278,223),(38,63),(253,284),(184,98)
+\end{aligned}
+\]
+have all $364$ orientation determinants nonzero and satisfy $I=42$; both
+heptagons are star-shaped and self-crossing, and $\GD$ is a perfect matching.
+So the hypothesis is carried in Corollaries~\ref{cor:not4042} and~\ref{cor:38}
+as well. Lemma~\ref{lem:even}, by contrast, holds for arbitrary closed
+curves.
 \end{remark}
 
 \begin{remark}
@@ -308,9 +319,17 @@ No configuration realizes $\Pi_8$.
 
 Theorem~\ref{thm:pat8} assumes nothing beyond the eight incidences and the
 nondegeneracy of the $364$ determinants: in particular it needs \emph{no}
-hypothesis that $P$ or $Q$ is simple. It is the single most compact statement
-in this work, and we suggest it as the first thing a sceptical reader should
-check.
+hypothesis that $P$ or $Q$ is simple. It is the single most compact
+\emph{statement} in this work.
+
+We must be equally plain about the other half: \textbf{we offer no
+human-surveyable proof of Theorem~\ref{thm:pat8} or of
+Theorem~\ref{thm:pat14}.} What is small enough to check by hand is the
+\emph{pattern}, not its non-realizability. A reader who wants to attack the
+result should attack $\Pi_8$ --- eight incidences on three consecutive sides of
+each polygon is a small enough object that a synthetic argument, or a
+counterexample, may well be findable by a specialist. We could not find
+either.
 
 \subsection{The larger pattern}
 
@@ -370,11 +389,14 @@ about arbitrary configurations and they are satisfiable --- the configuration of
 arithmetic. So unsatisfiability cannot come from the general-position part; it
 must come from the prescribed incidences.
 
-A cheaper check: both patterns require $P_1$ to miss $Q_1$, and in the
-$38$-crossing configuration those two sides cross, so neither pattern applies to
-it. It is machine-checked. Note it is a \emph{negative} check that a vacuously
-unsatisfiable encoding would pass trivially; it is the first argument, not this
-one, that addresses that failure mode.
+A cheaper check: the crossing matrix of the $38$-crossing configuration of
+\S\ref{sec:lower} contains \emph{no} relabelled copy of either pattern. Note
+what has to be checked here --- containment in Theorem~\ref{thm:cover} is up to
+the order-$392$ group, so observing that the identity labelling fails would
+establish nothing; all $588$ instances must be excluded, and they are. This is a
+\emph{negative} check that a vacuously unsatisfiable encoding would pass
+trivially; it is the first argument, not this one, that addresses that failure
+mode.
 \end{remark}
 
 \begin{remark}[Soundness, not completeness, is what is needed]
@@ -410,10 +432,13 @@ to $P_{-i-1}$; the shift matters when checking a containment by hand.
 
 By \eqref{eq:link}, $I=42$ forces $\lvert \ED\rvert=7$, and with
 $\delta(\GD)\ge1$ on both sides the graph is a perfect matching. There are
-$7!=5040$ of these. That every one of them contains $\Pi_8$ or $\Pi_{14}$ is
-\emph{machine-checked}, by a propagation chain of the same kind as
-Remark~\ref{rem:cover-machine} describes. It is not a hand argument, and the
-brevity of this paragraph should not suggest otherwise.
+$7!=5040$ of these, falling into $28$ orbits under the order-$392$ group. That
+every one of them contains $\Pi_8$ or $\Pi_{14}$ is \emph{machine-checked}, by a
+propagation chain of the same kind as Remark~\ref{rem:cover-machine} describes.
+It is not a hand argument, and the brevity of this paragraph should not suggest
+otherwise. (The coincidence that $28$ also counts the degree vectors of
+\S\ref{sec:cover} below is exactly that --- the two have nothing to do with each
+other.)
 
 \subsection{The $I=40$ case, and its 28 degree shapes}
 
@@ -443,8 +468,11 @@ state this explicitly because an earlier draft of this paper described each case
 as closed by ``a short argument'', and that was wrong.
 
 \textbf{Those $588$ lemmas are not additional inputs.} Each is a
-\emph{relabelled copy} of $\Pi_8$ or $\Pi_{14}$ under the order-$392$ group. So
-``two patterns suffice'' survives intact: the library is the two theorems of
+\emph{relabelled copy} of $\Pi_8$ or $\Pi_{14}$ under the order-$392$ group, and
+the count decomposes as $588 = 196 + 392$: the incidence matrix of $\Pi_8$ is
+symmetric under transposition, so the $P\leftrightarrow Q$ swap contributes
+nothing new for it, while $\Pi_{14}$ gives the full $392$. So ``two patterns
+suffice'' survives intact: the library is the two theorems of
 \S\ref{sec:patterns} instantiated, not new mathematics.
 
 So Theorem~\ref{thm:cover} should be read as machine-checked, with the $28$-fold
@@ -562,11 +590,24 @@ sides, ``does not cross'' is a closed condition, so it cannot be inherited from
 the openness of crossing that gives Lemma~\ref{lem:open}. Simplicity is
 nonetheless stable, because for a polygon simple as a point set the
 non-adjacent closed sides are disjoint compact sets and hence at positive
-distance --- which is what Lemma~\ref{lem:simple} exploits. Since the configurations in general position are dense,
-combining the two lemmas approximates an arbitrary pair of point-set simple
-heptagons by one in general position with at least as many crossings, giving
-the bound for the original. Lemma~\ref{lem:simple} is proved for an arbitrary
-real normed space and is independent of everything else here.
+distance --- which is what Lemma~\ref{lem:simple} exploits. The configurations in general position are dense: the complement is the zero
+set of finitely many nonzero polynomials in the $28$ coordinates, hence a finite
+union of hypersurfaces. Combining this with the two lemmas approximates an
+arbitrary pair of point-set simple heptagons by one in general position with at
+least as many crossings, giving the bound for the original. A single
+$\varepsilon$ must serve every crossing, every disjoint side pair and all $364$
+determinants at once; since there are finitely many conditions, one takes the
+minimum.
+
+One case deserves separate mention, since Lemma~\ref{lem:simple} does not cover
+it: \emph{adjacent} sides share an endpoint and so are never disjoint.
+Simplicity constrains them too --- they must meet only at that shared vertex ---
+and this is exactly the delicate case, because three consecutive collinear
+vertices are what \S\ref{sec:removecollin} exists to permit. In the formal
+development the adjacent case is handled separately, by the observation that
+once the perturbed configuration is in general position its adjacent sides
+cannot overlap. Lemma~\ref{lem:simple} itself is proved for an arbitrary real
+normed space and is independent of everything else here.
 
 \begin{remark}
 Note the direction: we need the perturbed configuration to have \emph{at least}
@@ -585,15 +626,52 @@ removes vertex--vertex coincidences and \S9.2 vertex--side ones.
 \begin{remark}[What is conditional, exactly]
 Theorem~\ref{thm:main} is itself \emph{unconditional}: like any theorem it has
 hypotheses, and Hypothesis~\ref{hyp:e9} is one of them. What is conditional is
-the \emph{deduction} of $f(7,7)=38$ from it, which needs the reduction
-\begin{quote}
-every pair of simple heptagons can be replaced by one satisfying
-Hypothesis~\ref{hyp:e9} without decreasing
-$\lvert\partial P\cap\partial Q\rvert$,
-\end{quote}
-and it is that reduction, not the property, that we import. Stating it this way
-also says exactly what a referee would have to check in
-\cite{AckermanKeszeghRote2022} to certify the whole result.
+the \emph{deduction} of $f(7,7)=38$, and that needs a \emph{reduction}, not a
+property. We state it with explicit quantifiers, since this is the precise
+object we import.
+\end{remark}
+
+\begin{proposition}[Imported; \protect{\cite[\S9]{AckermanKeszeghRote2022}}]\label{prop:reduction}
+For every pair $(P,Q)$ of simple heptagons with finitely many boundary
+intersections there is a pair $(P',Q')$ of simple heptagons satisfying
+Hypothesis~\ref{hyp:e9} with
+$\lvert\partial P'\cap\partial Q'\rvert \ge \lvert\partial P\cap\partial Q\rvert$.
+\end{proposition}
+
+\begin{corollary}
+Proposition~\ref{prop:reduction} together with Theorem~\ref{thm:main} gives
+$f(7,7)=38$.
+\end{corollary}
+
+\begin{proof}
+Given any pair, Proposition~\ref{prop:reduction} produces one satisfying
+Hypothesis~\ref{hyp:e9} with at least as many intersection points, and
+Theorem~\ref{thm:main} bounds that by $38$; the bound is attained by
+Proposition~\ref{prop:lower}.
+\end{proof}
+
+\noindent
+Proposition~\ref{prop:reduction} is the \emph{only} thing we take on trust, and
+we do not prove it. Three things should be said about it plainly.
+
+\begin{remark}[Provenance]
+We read \cite{AckermanKeszeghRote2022} in its journal version, which is the only
+version containing \S9: the SoCG/arXiv version \cite{AckermanKeszeghRote2020}
+ends at \S8 and contains no treatment of degeneracies at all. A referee checking
+our citation against arXiv will not find the section.
+\end{remark}
+
+\begin{remark}[AKR's standing assumption is broader than collinearity]
+\cite{AckermanKeszeghRote2022} assume throughout that no three of the combined
+vertices are collinear \emph{and that no two of the combined sides are
+parallel}. Our development uses neither: \S\ref{sec:removecollin} discharges the
+collinearity clause, and non-parallelism is never used. But we must be careful
+about what that buys. If the argument of \S9 itself runs under the full standing
+assumption, then Proposition~\ref{prop:reduction} as we have stated it is
+stronger than what \S9 literally delivers, and our removal of the collinearity
+hypothesis does not by itself remove it from the \emph{final} claim. We have not
+resolved this, and we flag it as the sharpest question a referee should put to
+us.
 \end{remark}
 
 \begin{remark}[The import is slightly more than \S9 states]
@@ -780,11 +858,9 @@ polygons, or to $f(m,n)$.
 
 \begin{remark}[On novelty]
 We searched for prior statements of the covering result and found none. We
-record plainly that this is \textbf{weak evidence and not a novelty claim}: the
-search was bounded, the journal version of one central reference was not
-reachable, the forward citations of another were not examined, and the relevant
-literature is small enough that a result could sit in it under different
-vocabulary. A domain expert's judgement is not replaced by such a search.
+record plainly that this is \textbf{weak evidence and not a novelty claim}: the search was bounded, the forward citations of
+\cite{CernyEtAl2003} were not examined, and the relevant literature is small
+enough that a result could sit in it under different vocabulary. A domain expert's judgement is not replaced by such a search.
 \end{remark}
 
 \section{Status, and what we ask of a reader}\label{sec:status}
