@@ -70,3 +70,36 @@ representative in both files must be in general position.
 
 O. Aichholzer, F. Aurenhammer, H. Krasser, *Enumerating order types for small
 point sets with applications*, Order 19 (2002) 265-281.
+
+---
+
+## Why this does not extend to $\Pi_{14}$
+
+$\Pi_{14}$ constrains four consecutive sides of $P$ and five of $Q$, so it
+involves $5+6 = \mathbf{11}$ points and $21$ conditions (14 $P$–$Q$, 3 $P$-self,
+4 $Q$-self). This was determined by parsing the Lean statement
+(`lean/MinPatternClauses001.lean`), not by inspection.
+
+Eleven points puts the method permanently out of reach, not merely un-run:
+
+* the TU Graz enumeration is complete only to $n=10$, and already
+  $14{,}309{,}547$ order types there; the database readme states that no $n=11$
+  files exist (there are $2{,}334{,}512{,}907$ of them).
+* **Minimality gives no way round.** Every proper subset of $\Pi_{14}$'s
+  conditions is realizable, so there is no smaller non-realizable sub-pattern
+  that would surface on eight, nine or ten points.
+
+**A second route was attempted and did not settle it.** Realizability of
+$\Pi_{14}$ is a semialgebraic feasibility problem: $22$ real coordinates, cut to
+$18$ by an orientation-preserving affine normalisation, with each crossing a
+conjunction of two strict inequalities between degree-$2$ determinants. That
+formulation is *encoding-independent* of the chirotope/SAT route — no Boolean
+variables, no Grassmann–Plücker clauses — so deciding it would be genuine
+corroboration. Handed to z3's nonlinear-real-arithmetic solver (`qfnra-nlsat`),
+it did not terminate within 15 minutes; a longer run is recorded in
+`nra14_long.log` if present. Degree-4 polynomials in 18 variables is well past
+where CAD-based methods are practical, and we do not expect this to succeed.
+
+**So the two patterns have asymmetric support.** $\Pi_8$ has an independent
+exhaustive check; $\Pi_{14}$ has none, and Theorem 3.4 of the paper rests on the
+Lean route alone. A reader weighing the result should know that.
