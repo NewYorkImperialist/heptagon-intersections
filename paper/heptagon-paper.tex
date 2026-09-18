@@ -214,8 +214,7 @@ theorem is not used --- neither here nor anywhere else in this paper.
 \end{proof}
 
 \begin{lemma}\label{lem:42}
-If $P$ and $Q$ are \emph{simple}, then $\delta(\GD)\ge 1$, and consequently
-$I\le 42$.
+$\delta(\GD)\ge 1$, and consequently $I\le 42$.
 \end{lemma}
 
 \begin{proof}
@@ -227,8 +226,17 @@ of $\GD$ has degree at least~$1$ and $\lvert \ED\rvert\ge 7$. With
 \eqref{eq:link} this gives $I\le 42$.
 \end{proof}
 
-\begin{remark}
-Simplicity is essential and not a convenience. For a concrete witness, the
+\begin{remark}[Where simplicity is and is not needed]
+Lemma~\ref{lem:42} does \emph{not} need simplicity, and it is worth being
+precise about why, because the neighbouring corollaries do.
+
+The argument above uses only that $\partial Q$ is a \emph{closed} walk, which is
+true whether or not it crosses itself. So $\delta(\GD)\ge1$ and $I\le 42$ hold for
+any closed polygons in general position.
+
+What does need simplicity is the \emph{exclusion} of $40$ and $42$, because
+Theorem~\ref{thm:pat14}'s seven self-non-crossing conditions are supplied by it.
+Here is a witness, and note carefully what it does and does not show: the
 $14$ points
 \[
 \begin{aligned}
@@ -237,10 +245,11 @@ Q&:(149,267),(228,177),(105,155),(278,223),(38,63),(253,284),(184,98)
 \end{aligned}
 \]
 have all $364$ orientation determinants nonzero and satisfy $I=42$; both
-heptagons are star-shaped and self-crossing, and $\GD$ is a perfect matching.
-So the hypothesis is carried in Corollaries~\ref{cor:not4042} and~\ref{cor:38}
-as well. Lemma~\ref{lem:even}, by contrast, holds for arbitrary closed
-curves.
+heptagons are self-crossing, and $\GD$ is a perfect matching. This does
+\emph{not} contradict Lemma~\ref{lem:42} --- it \emph{attains} the bound. What it
+contradicts is Corollary~\ref{cor:not4042} read without a simplicity hypothesis,
+which is why that hypothesis appears there and in Corollary~\ref{cor:38}.
+Lemma~\ref{lem:even}, like Lemma~\ref{lem:42}, needs no simplicity at all.
 \end{remark}
 
 \begin{remark}

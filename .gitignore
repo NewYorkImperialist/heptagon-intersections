@@ -148,3 +148,7 @@ independent/realizability_sweep/cover
 independent/realizability_sweep/bestpair
 independent/realizability_sweep/*.jsonl
 independent/realizability_sweep/__pycache__/
+
+# Personal study guide -- not part of the published artifact.
+# Remove this line if it is ever made public.
+studyguide/

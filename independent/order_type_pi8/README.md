@@ -52,8 +52,13 @@ is independent of that route in every component: different source of truth
 of our own), different algorithm (enumeration rather than refutation), different
 language, no solver, no proof assistant.
 
-It does **not** cover $\Pi_{14}$, which involves 9 points --- the =9$ database
-has 158,817 order types and the same method would apply, but we have not run it.
+It does **not** cover $\Pi_{14}$, and cannot. $\Pi_{14}$ involves **eleven**
+points, not nine, and the order-type enumeration is complete only to $n=10$.
+See "Why this does not extend to $\Pi_{14}$" below.
+
+*(This paragraph previously said nine points and that the $n=9$ database "would
+apply, but we have not run it" — suggesting a cheap follow-up that does not
+exist. Both halves were wrong; corrected 2026-09-17.)*
 
 ## Provenance of the database
 
