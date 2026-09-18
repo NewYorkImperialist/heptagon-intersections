@@ -369,9 +369,17 @@ independent of.
 
 This is corroboration, not a second proof: it is independent of the Lean route
 in its source of truth (an externally published database), its algorithm
-(enumeration, not refutation), and its implementation. It does \emph{not} cover
-$\Pi_{14}$, which involves nine points; the $n=9$ database has $158{,}817$ order
-types and the same method would apply, but we have not run it.
+(enumeration, not refutation), and its implementation.
+
+\begin{remark}[The same check cannot be run for $\Pi_{14}$]\label{rem:no14}
+$\Pi_{14}$ constrains four consecutive sides of $P$ and five of $Q$, so it
+involves $5+6=\mathbf{11}$ points, not eight. The enumeration of order types is
+complete only to $n=10$ --- and already $14{,}309{,}547$ there --- so this route
+is unavailable for $\Pi_{14}$ and we do not have an independent exhaustive check
+of Theorem~\ref{thm:pat14}. Nor does the minimality of $\Pi_{14}$ offer a way
+round: every proper subset of its conditions is realizable, so there is no
+smaller non-realizable sub-pattern to catch on fewer points.
+\end{remark}
 
 \subsection{The larger pattern}
 
