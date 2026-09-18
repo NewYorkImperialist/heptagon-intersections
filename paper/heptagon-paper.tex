@@ -68,9 +68,10 @@ non-realizable, and a degree argument over $28$ cases, itself discharged by
 machine, reduces the whole exclusion to those two facts. That discharge is not
 hand-checkable (Remark~\ref{rem:cover-machine}).
 
-Every mathematical assertion in \S\S2--6 is verified by the Lean~4 kernel from
-primitive definitions, with no published result about $f(m,n)$ appealed to. Two
-negative observations in \S7.1 are analytic and are \emph{not} machine-checked.
+Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
+verified by the Lean~4 kernel from primitive definitions, with no published
+result about $f(m,n)$ appealed to. Two negative observations in
+\S\ref{sec:e9attempt} are analytic and are \emph{not} machine-checked.
 The statement we do not prove is the reduction to general position, for which we
 import Ackerman--Keszegh--Rote \S9 and carry it as an explicit hypothesis. We are
 explicit throughout about which assertions are machine-checked, which are
@@ -155,8 +156,9 @@ satisfiability problem, and refuting it mechanically --- are standard; see
   \item \textbf{The reduction to the plane is unconditional.} The combinatorial
     argument is about orientation signs; getting from there to genuine point
     sets in $\mathbb{R}^2$ --- including removing the collinearity assumption
-    that \textsc{akr} \S3 asserts without proof --- is carried out in full
-    (\S\ref{sec:plane}).
+    that \cite[\S3]{AckermanKeszeghRote2022} assume ``for convenience'' and say
+    can ``be achieved easily'', without proof (quoted in full in
+    \S\ref{sec:import}) --- is carried out in full (\S\ref{sec:plane}).
 \end{itemize}
 
 A bounded prior-art search found no previous statement of the covering result.
@@ -711,17 +713,53 @@ ends at \S8 and contains no treatment of degeneracies at all. A referee checking
 our citation against arXiv will not find the section.
 \end{remark}
 
-\begin{remark}[AKR's standing assumption is broader than collinearity]
+\begin{remark}[What \S9 says, in its own words]\label{rem:akrquote}
+Since we ask the reader to accept that Hypothesis~\ref{hyp:e9} is what \S9
+delivers, we quote it. \cite[\S9]{AckermanKeszeghRote2022} opens:
+
+\begin{quote}
+``We will now justify our general-position assumption that we introduced in
+Sect.~3 stating that \emph{no vertex of one polygon lies on the boundary of the
+other polygon}. That is, we will show that one can get rid of such degenerate
+cases \emph{without decreasing the number of intersection points}.''
+\end{quote}
+
+\noindent
+The second clause is exactly the inequality of
+Proposition~\ref{prop:reduction}: the Proposition is their sentence, not our
+paraphrase of it.
+\end{remark}
+
+\begin{remark}[Their standing assumption is broader, and why that is harmless]
 \cite{AckermanKeszeghRote2022} assume throughout that no three of the combined
-vertices are collinear \emph{and that no two of the combined sides are
-parallel}. Our development uses neither: \S\ref{sec:removecollin} discharges the
-collinearity clause, and non-parallelism is never used. But we must be careful
-about what that buys. If the argument of \S9 itself runs under the full standing
-assumption, then Proposition~\ref{prop:reduction} as we have stated it is
-stronger than what \S9 literally delivers, and our removal of the collinearity
-hypothesis does not by itself remove it from the \emph{final} claim. We have not
-resolved this, and we flag it as the sharpest question a referee should put to
-us.
+vertices are collinear \emph{and} that no two of the combined sides are
+parallel. We use neither. One might worry that \S9's own argument runs under
+that full assumption, in which case Proposition~\ref{prop:reduction} would be
+stronger than what \S9 delivers, and \S\ref{sec:removecollin} would buy nothing
+at the level of the final claim.
+
+It does not, and their \S3 is explicit about the order. It first states the
+vertex condition, ``justified in Sect.~9 by a non-trivial perturbation''; and
+only then, \emph{given} that condition,
+
+\begin{quote}
+``we assume \emph{for convenience} that no three vertices of $P$ and $Q$
+combined lie on a line, and no two sides of $P$ and $Q$ combined are parallel.
+Indeed, given that no vertex of one polygon lies on the other polygon, this can
+be achieved easily by another small perturbation of the sides without changing
+the intersection pattern.''
+\end{quote}
+
+\noindent
+So \S9 is \emph{prior} to the collinearity and non-parallelism clauses rather
+than dependent on them, and \S\ref{sec:removecollin} does remove the former from
+the final claim. The latter we never use.
+
+The quotation also shows that this second perturbation is \textbf{asserted and
+not proved}: ``for convenience'', ``can be achieved easily'', no lemma number
+and no argument. That is the clause \S\ref{sec:removecollin} discharges, and it
+is why we treat it separately from \S9 rather than lumping both under ``general
+position''.
 \end{remark}
 
 \begin{remark}[The import is slightly more than \S9 states]
