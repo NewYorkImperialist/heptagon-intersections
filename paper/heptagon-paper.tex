@@ -913,6 +913,70 @@ record plainly that this is \textbf{weak evidence and not a novelty claim}: the 
 enough that a result could sit in it under different vocabulary. A domain expert's judgement is not replaced by such a search.
 \end{remark}
 
+\section{Further work: the family \texorpdfstring{$f(7,n)$}{f(7,n)}}\label{sec:further}
+
+We record an observation which suggests that the natural sequel to this work is
+not $f(9,9)$ but the whole family $f(7,n)$, and which costs two lines.
+
+$\GD$ has $m+n$ vertices and, by Lemma~\ref{lem:42}, no isolated ones. A graph
+on $N$ vertices with $c$ connected components has at least $N-c$ edges, so
+$\lvert \ED\rvert \ge (m+n)-c$ and, with \eqref{eq:link},
+\[
+  I \;\le\; mn-(m+n)+c .
+\]
+For $m,n$ both odd, $mn-(m+n)$ is odd while $I$ is even. Hence $c\le 4$ already
+forces $I\le mn-(m+n)+3$, the conjectured value: \textbf{to prove the conjecture
+for a given $(m,n)$ it suffices to bound the number of components of $\GD$
+by~$4$.}
+
+Now fix $m=7$. Every component of $\GD$ contains an edge and therefore a side of
+$P$, and there are only seven of those, so $c\le 7$ \emph{automatically, for
+every $n$}. Consequently
+\[
+  f(7,n)=6n-4 \text{ for all odd } n
+  \quad\text{would follow from ruling out } c\in\{5,6,7\},
+\]
+three cases whose number does not grow with $n$. Theorems~\ref{thm:pat8},
+\ref{thm:pat14} and~\ref{thm:cover} of this paper do exactly that for $n=7$:
+$I=42$ forces $c\ge7$ and $I=40$ forces $c\ge5$.
+
+This places the problem on a visible ladder. At $m=5$ only $c=5$ has to be
+excluded --- a single case --- and that is precisely the range
+\cite{CernyEtAl2003} settle, obtaining $f(5,\ell)=4\ell-2$ for every $\ell$. So
+$m=7$ is the next rung above a solved problem, at three cases rather than one,
+and this paper supplies its base case.
+
+Two further remarks, one encouraging and one not.
+
+\begin{remark}[The patterns are not about heptagons]
+Neither Definition~\ref{def:pat8} nor Definition~\ref{def:pat14} mentions the
+number of sides: $\Pi_8$ is a statement about eight points and three consecutive
+sides of each polygon, and $\Pi_{14}$ about eleven. Theorems~\ref{thm:pat8}
+and~\ref{thm:pat14} are therefore already theorems about $n$-gons for every $n$,
+and would be reused unchanged. What does not transfer is
+Theorem~\ref{thm:cover}, the covering claim, which is verified by enumeration
+over a domain that depends on $n$.
+\end{remark}
+
+\begin{remark}[Why a single pattern cannot suffice, for any fixed $n$-free
+argument]\label{rem:diagonal}
+The case $c=7$ is rigid: each component holds exactly one side of $P$, so every
+side of $Q$ fails to cross \emph{exactly one} side of $P$, giving a surjection
+$\sigma$ from the sides of $Q$ onto those of $P$. Suppose $\sigma(j)\equiv j
+\pmod 7$. Then in any window of three consecutive sides of each polygon, the
+neighbouring non-crossing already falls inside the window, and $\Pi_8$ never
+occurs. So no argument for all $n$ can rest on $\Pi_8$ alone; it would need a
+family of patterns closed under this kind of structure, or a different idea
+altogether. We do not know whether a \emph{finite} family suffices for all $n$,
+and if the number required grows with $n$ then this route fails.
+\end{remark}
+
+\noindent
+We make no claim that any of this is easy. The point is only that the
+obstruction is identifiable and the target is a single, finitely stated
+combinatorial question, and that a general argument --- not an enumeration ---
+would be needed, since ``all $n$'' is not something a computation reaches.
+
 \section{Status, and what we ask of a reader}\label{sec:status}
 
 To state the position exactly:
