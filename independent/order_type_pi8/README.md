@@ -97,7 +97,21 @@ Eleven points puts the method permanently out of reach, not merely un-run:
 **A second route was attempted and did not settle it.** Realizability of
 $\Pi_{14}$ is a semialgebraic feasibility problem: $22$ real coordinates, cut to
 $18$ by an orientation-preserving affine normalisation, with each crossing a
-conjunction of two strict inequalities between degree-$2$ determinants. That
+conjunction of two strict inequalities between degree-$2$ determinants.
+
+*Refined 2026-09-18 by parsing `lean/MinPatternClauses001.lean` directly.* Of the
+$21$ hypotheses, only **13** are crossings and so conjunctions; the other **8**
+are `¬ProperCross` — one $P$–$Q$ miss (cell $(1,1)$), three $P$-self and four
+$Q$-self — and a negated crossing is a *disjunction* of two strict inequalities
+once general position rules out zero determinants. The prescribed $P$–$Q$
+incidences therefore number $13 + 1 = 14$, which is where the subscript comes
+from. This matters for the paragraph below rather than contradicting it: those
+$8$ disjunctions are precisely the Boolean structure `nlsat`'s SAT layer must
+search, which makes the problem harder, not easier. The vertex indices used are
+$\{0,1,2,3,4\} \cup \{7,\dots,12\}$ — **eleven** points, confirming the count
+above.
+
+That
 formulation is *encoding-independent* of the chirotope/SAT route — no Boolean
 variables, no Grassmann–Plücker clauses — so deciding it would be genuine
 corroboration. Handed to z3's nonlinear-real-arithmetic solver (`qfnra-nlsat`),

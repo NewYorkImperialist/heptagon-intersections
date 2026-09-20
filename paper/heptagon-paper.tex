@@ -85,11 +85,22 @@ matters for a human reader.
 
 \subsection{The problem}
 
-Two simple polygons in the plane, with $m$ and $n$ sides, are in
+Write $f(m,n)$ for the maximum of
+$\lvert \partial P \cap \partial Q\rvert$ over \emph{all} pairs of simple
+polygons with $m$ and $n$ sides whose boundaries meet in finitely many points.
+The finiteness restriction cannot be dropped --- two collinear overlapping sides
+share infinitely many points --- but no further restriction is imposed.
+
+We will also need a technical condition. Two simple polygons are in
 \emph{general position} if no vertex of either lies on the boundary of the
-other and no three of the combined $m+n$ vertices are collinear. Write
-$f(m,n)$ for the maximum, over such pairs, of
-$\lvert \partial P \cap \partial Q\rvert$.
+other and no three of the combined $m+n$ vertices are collinear. This is
+\emph{not} part of the definition of $f$, and the distinction is load-bearing:
+Theorem~\ref{thm:main} assumes only the first half of general position, so if
+$f$ were defined as a maximum over general-position pairs alone, that theorem
+would already determine $f(7,7)$ outright and
+Proposition~\ref{prop:reduction} --- the statement we import and do not prove
+--- would have nothing to do. It is precisely because $f$ ranges over all
+simple pairs that the reduction is needed.
 
 \begin{quote}
 \textbf{Problem} (Dillencourt--Mount--Saalfeld~\cite{DillencourtMountSaalfeld1993}).
@@ -705,7 +716,9 @@ $f(7,7)=38$.
 \end{corollary}
 
 \begin{proof}
-Given any pair, Proposition~\ref{prop:reduction} produces one satisfying
+Given any pair of simple heptagons whose boundaries meet in finitely many
+points --- which is the range over which $f(7,7)$ is defined ---
+Proposition~\ref{prop:reduction} produces one satisfying
 Hypothesis~\ref{hyp:e9} with at least as many intersection points, and
 Theorem~\ref{thm:main} bounds that by $38$; the bound is attained by
 Proposition~\ref{prop:lower}.
@@ -771,7 +784,7 @@ is why we treat it separately from \S9 rather than lumping both under ``general
 position''.
 \end{remark}
 
-\begin{remark}[The import is slightly more than \S9 states]
+\begin{remark}[The import is slightly more than \S9 states]\label{rem:simplicity}
 Theorem~\ref{thm:main} assumes \emph{both} that the polygons are simple as point
 sets \emph{and} Hypothesis~\ref{hyp:e9}, so the reduction must deliver both. That
 the perturbed polygons remain \emph{simple} is, as far as we can tell, not
@@ -779,10 +792,9 @@ stated in \cite{AckermanKeszeghRote2022}. What we import is therefore \S9's
 conclusion \emph{together with} simplicity-preservation, and the latter has no
 published warrant we can point to. We flag it rather than absorb it silently:
 it is the joint at which a previous attempt on this problem failed.
-\end{remark} Note that \S9
-and \S10 appear only in the journal version; the arXiv posting is the
-\textsc{socg} version~\cite{AckermanKeszeghRote2020} and does not contain
-them. It is the \emph{only} external
+\end{remark}
+
+Proposition~\ref{prop:reduction}, so understood, is the \emph{only} external
 mathematical input to Theorem~\ref{thm:main}.
 
 Why it is needed, precisely: without it, a point of
@@ -939,7 +951,7 @@ argument is the right argument.}
 \section{Related work}\label{sec:related}
 
 Dillencourt, Mount and Saalfeld~\cite{DillencourtMountSaalfeld1993} posed the
-problem and settled the even cases. \v{C}ern\'y, K\'ara, Kr\'al', Podbrdsk\'y, Sotakov\'a and
+problem and settled the even cases. \v{C}ern\'y, K\'ara, Kr\'al', Podbrdsk\'y, Sot\'akov\'a and
 \v{S}\'amal~\cite{CernyEtAl2003} gave bounds for odd cases and solved $k=5$,
 explicitly leaving $k=\ell=7$ open. Ackerman, Keszegh and
 Rote~\cite{AckermanKeszeghRote2022} obtained asymptotically optimal bounds;
@@ -1009,10 +1021,47 @@ over a domain that depends on $n$.
 argument]\label{rem:diagonal}
 The case $c=7$ is rigid: each component holds exactly one side of $P$, so every
 side of $Q$ fails to cross \emph{exactly one} side of $P$, giving a surjection
-$\sigma$ from the sides of $Q$ onto those of $P$. Suppose $\sigma(j)\equiv j
-\pmod 7$. Then in any window of three consecutive sides of each polygon, the
-neighbouring non-crossing already falls inside the window, and $\Pi_8$ never
-occurs. So no argument for all $n$ can rest on $\Pi_8$ alone; it would need a
+$\sigma$ from the sides of $Q$ onto those of $P$, where $\sigma(j)$ is the
+unique side of $P$ that $Q_j$ misses. Consider the diagonal
+$\sigma(j)\equiv j\pmod 7$, with $j$ taken in $\{0,\dots,n-1\}$.
+
+Suppose $\Pi_8$ occurred on $P_i,P_{i+1},P_{i+2}$ and $Q_j,Q_{j+1},Q_{j+2}$.
+The prescribed non-crossing at the centre gives $\sigma(j+1)=i+1$. If
+$\sigma(j+1)=\sigma(j)+1$ in $\mathbb{Z}/7$, this forces $i=\sigma(j)$, so
+$(P_i,Q_j)$ is a non-crossing as well --- contradicting the crossing that
+$\Pi_8$ prescribes in that corner. \textbf{That last step is where an earlier
+version of this remark overreached: $\sigma(j+1)=\sigma(j)+1$ holds for every
+window except the one in which $j$ wraps from $n-1$ to $0$, and at that seam it
+holds precisely when $7\mid n$.} So the argument kills every window except the
+one at $j=n-1$ unconditionally, and that one only under a hypothesis on $n$.
+
+The seam window is small enough to settle outright. There $j=n-1$ and
+$\sigma(0)=0$, so the centre condition forces $i=6$; the remaining prescribed
+crossings reduce to the single requirement $\sigma(n-1)\notin\{6,0,1\}$: the
+remaining cells ask $\sigma(0)\notin\{6,1\}$ and $\sigma(1)\notin\{6,0\}$, and
+$\sigma(0)=0$, $\sigma(1)=1$ satisfy those automatically, while the corner
+$(P_1,Q_1)$ is the unconstrained $\ast$ of Definition~\ref{def:pat8}. Hence
+\[
+  \text{the diagonal avoids } \Pi_8
+  \iff n\equiv 0,1,2 \pmod 7 .
+\]
+In particular the obstruction does hold whenever $7\mid n$, and it happens to
+hold at $n=9$; but it \textbf{fails} at $n=11$ and at $n=13$, where the
+diagonal does contain $\Pi_8$ --- in a single window read in the increasing
+direction, the one straddling the seam, at $(i,j)=(6,10)$ and $(6,12)$
+respectively. (Reading windows in the decreasing direction instead yields one
+further copy at each of those $n$, also across the seam, and none at all when
+$n\equiv 0,1,2$.) We confirmed the equivalence by direct enumeration for every
+$n\le 120$ and both reading directions, with two independent implementations
+and with controls confirming the search is not vacuous. The experiment recorded
+in \texttt{independent/pattern\_scaling/} tests exactly this claim and reaches
+the same conclusion; it adds that the $n=9$ diagonal, which $\Pi_8$ does miss,
+is caught by $\Pi_{14}$.
+
+The conclusion of the remark survives this repair, but on a restricted family
+rather than at every $n$: the diagonal avoids $\Pi_8$ for every
+$n\equiv 0,1,2\pmod 7$, which is infinitely many $n$ and infinitely many odd
+$n$, so no argument for all $n$ can rest on $\Pi_8$ alone. It would need a
 family of patterns closed under this kind of structure, or a different idea
 altogether. We do not know whether a \emph{finite} family suffices for all $n$,
 and if the number required grows with $n$ then this route fails.
@@ -1069,10 +1118,15 @@ machine:
     \S\ref{sec:plane} would survive.
   \item \textbf{Does \cite[\S9]{AckermanKeszeghRote2022} actually deliver
     Proposition~\ref{prop:reduction}?} This is the one thing we import, and
-    settling it is a matter of reading that paper, not this one. The specific
-    worry we cannot resolve ourselves is recorded in the remark following
-    Proposition~\ref{prop:reduction}: whether \S9's argument depends on AKR's
-    standing non-parallelism assumption.
+    settling it is a matter of reading that paper, not this one. One worry we
+    were able to resolve ourselves: \S9 does \emph{not} depend on AKR's
+    standing non-parallelism assumption, because their \S3 introduces \S9's
+    vertex condition \emph{before} that clause and derives the clause from it
+    (see the remark on their standing assumption in
+    \S\ref{sec:import}). What remains open is narrower and is recorded in
+    Remark~\ref{rem:simplicity}: \S9 delivers the intersection-count
+    inequality, but that the perturbed polygons remain \emph{simple} is not
+    stated there, and we import it alongside.
   \item \textbf{Is the covering result (Theorem~\ref{thm:cover}) already known?}
     Our search found nothing, and we make no novelty claim
     (Remark~\ref{rem:novelty}).

@@ -149,6 +149,14 @@ independent/realizability_sweep/bestpair
 independent/realizability_sweep/*.jsonl
 independent/realizability_sweep/__pycache__/
 
+# ---------------------------------------------------------------------------
+# independent/pattern_scaling -- the compiled search binary only.  Everything
+# else in that directory (run.py, search.cpp, patterns.json, input.txt,
+# run.log, README.md) is committed; `search` is rebuilt by run.py from
+# search.cpp with a single `c++ -O3 -std=c++17` invocation.
+# ---------------------------------------------------------------------------
+independent/pattern_scaling/search
+
 # Personal study guide -- not part of the published artifact.
 # Remove this line if it is ever made public.
 studyguide/

@@ -1,0 +1,18 @@
+order types loaded: 3315
+
+CONTROL  full Pi_8 realized by 0 / 3315 order types   (PASS)
+
+Relaxations: how many order types realize Pi_8 minus one condition
+  (small = the other seven nearly suffice; that condition is the last obstacle)
+
+  drop P0xQ0 cross  ->    427 / 3315 order types realize the rest
+  drop P0xQ1 cross  ->   2461 / 3315 order types realize the rest
+  drop P0xQ2 cross  ->   1306 / 3315 order types realize the rest
+  drop P1xQ0 cross  ->   2461 / 3315 order types realize the rest
+  drop P1xQ1 MISS    ->   1571 / 3315 order types realize the rest
+  drop P1xQ2 cross  ->   1651 / 3315 order types realize the rest
+  drop P2xQ0 cross  ->   1306 / 3315 order types realize the rest
+  drop P2xQ1 cross  ->   1651 / 3315 order types realize the rest
+
+TIGHTEST relaxation: drop P0xQ0 cross -> only 427 order types.
+LOOSEST  relaxation: drop P1xQ0 cross -> 2461 order types.
