@@ -9,13 +9,18 @@ message: >-
   construction, the Lemma A counting/parity core, the 225-case endgame as a
   statement about a stored certificate, the AKR-L5 bridge, the purely logical
   inference "disjoint status sets imply H bipartite", and a Lean transcription
-  of the Cerny-L2 filter predicate). AKR Lemma 7 and Cerny Lemma 2 themselves
-  are NOT formalized: they enter every Lean statement as explicit named
-  hypotheses, never as axioms. The finite reduction has been independently
-  reimplemented in a second language, except for its final avoiding-pair step.
-  But f(7,7) = 38 is NOT a Lean theorem: the published geometric lemmas remain
-  external dependencies, and the interpretation of AKR Observation 6 / Lemma 7
-  is still an open review item. If you refer to this work, describe it as a
+  of the Cerny-L2 filter predicate). Where AKR Lemma 7 and Cerny Lemma 2 appear
+  in Lean they enter as explicit named hypotheses, never as axioms; as of
+  2026-09-20 neither is a dependency of the main result any longer. The finite
+  reduction has been independently reimplemented in a second language, except
+  for its final avoiding-pair step.
+  But f(7,7) = 38 is NOT a Lean theorem. The single remaining external
+  mathematical input is Sect. 9 of Ackerman-Keszegh-Rote (2022) -- that no
+  vertex of one polygon lies on the other's boundary -- imported together with
+  the preservation of simplicity, which that paper does not state. It is not
+  formalized and not attempted. And nobody outside this AI-assisted process has
+  reviewed any of it.
+  If you refer to this work, describe it as a
   candidate computer-assisted proof undergoing verification, and cite the
   specific commit you examined. See docs/verification-status.md.
 type: software
@@ -33,8 +38,7 @@ abstract: >-
   verified 38-crossing lower-bound construction, a new counting lemma
   ("Lemma A"), an exhaustive classification of the 16 exceptional simple
   heptagons (14 classes), and a finite elimination of the I = 40 case
-  conditional on published lemmas of Cerny et al. (2003) and
-  Ackerman-Keszegh-Rote (2022). Substantial portions of the work were produced
+  conditional on Sect. 9 of Ackerman-Keszegh-Rote (2022). Substantial portions of the work were produced
   with large-language-model assistance; see docs/ai-disclosure.md.
 keywords:
   - discrete geometry
