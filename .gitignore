@@ -157,6 +157,25 @@ independent/realizability_sweep/__pycache__/
 # ---------------------------------------------------------------------------
 independent/pattern_scaling/search
 
+# ---------------------------------------------------------------------------
+# independent/pi8_human -- the compiled probe binaries only.  Every .c source
+# and NOTES.md are committed; each binary is rebuilt from the source beside it
+# with a single `cc -O2 -o <name> <name>.c`.  They read the TU Graz order-type
+# database at independent/order_type_audit/external/otypes08.b08.
+# ---------------------------------------------------------------------------
+independent/pi8_human/pat
+independent/pi8_human/sigtypes
+independent/pi8_human/lemma_probe
+independent/pi8_human/lemma_probe2
+independent/pi8_human/probe2
+independent/pi8_human/probe3
+independent/pi8_human/probe4
+independent/pi8_human/probe5
+independent/pi8_human/probe6
+independent/pi8_human/probe7
+independent/pi8_human/probe8
+independent/pi8_human/probe9
+
 # Personal study guide -- not part of the published artifact.
 # Remove this line if it is ever made public.
 studyguide/

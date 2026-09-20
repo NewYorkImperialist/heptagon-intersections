@@ -38,10 +38,11 @@ centre non-crossing — the condition that makes `Pi_8` interesting to state —
 middling at 1,571. So the obstruction is not concentrated in the miss; it is
 concentrated in the corner diagonally opposite the unconstrained `*` cell.
 
-The 427 is corroborated from the opposite direction by a separate search over
-the same database: fixing all six off-diagonal cells to cross and the centre to
-miss leaves 427 order types, and in every one of them both corners `(0,0)` and
-`(2,2)` also miss. That search is still in progress and is not committed here.
+The 427 is corroborated from the opposite direction by
+[`../pi8_human/`](../pi8_human/), which reaches the same number over the same
+database: fixing all six off-diagonal cells to cross and the centre to miss
+leaves 427 order types, and in every one of them both corners `(0,0)` and
+`(2,2)` also miss.
 
 ## What this is not
 
