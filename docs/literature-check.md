@@ -213,9 +213,12 @@ AKR's own use of the disjointness graph is structurally the opposite of this
 project's: they bound the number of *connected components* in order to get an
 additive constant, and their Lemma 8 rules out one configuration of four
 components. Their argument is asymptotic in shape and, in their own words,
-yields `C ≈ 2^(2^67)` (arXiv v1; `2^(2^70)` is quoted in
-`literature-notes.md` from the journal version). **Nothing in the SoCG text
-specialises to small `m`, `n`.**
+yields `C ≈ 2^(2^67)`. (This previously read "arXiv v1; `2^(2^70)` is quoted
+in `literature-notes.md` from the journal version". That is **wrong** and has
+been corrected: the journal version says `2^(2^67)` too — verified 2026-09-20
+against `../references/akr-dcg-2022.pdf` §1 and `../references/akr-socg-2020.pdf`,
+which carry the identical sentence. See `literature-notes.md`.) **Nothing in the
+SoCG text specialises to small `m`, `n`.**
 
 Programmatic scan of the AKR arXiv v1 full text: `heptagon` — **0
 occurrences**; `oriented matroid` — **0**; `SAT` — **0**; `exhaustive` — **0**.

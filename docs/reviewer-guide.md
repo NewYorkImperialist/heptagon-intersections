@@ -162,7 +162,7 @@ conjectured `mn − m − n + 3`.) The same paper states explicitly that
 * *Upper:* Černý et al., Theorem 4, give `f(k,l) ≤ kl − ⌈k/6⌉ − l` for odd
   `7 ≤ k ≤ l`; at `k = l = 7` that is `49 − 2 − 7 = 40`.
 * Ackerman–Keszegh–Rote (SoCG 2020; DCG 68 (2022) 1049–1077) prove
-  `mn − (m+n) + C` with an explicit but astronomical `C ≈ 2^(2^70)` —
+  `mn − (m+n) + C` with an explicit but astronomical `C ≈ 2^(2^67)` —
   asymptotically optimal, and **vacuous** at `m = n = 7`.
 
 Two closed curves in general position cross an even number of times, so `39` and

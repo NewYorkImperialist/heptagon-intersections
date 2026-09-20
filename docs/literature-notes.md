@@ -90,10 +90,26 @@ the `≤ 40` bound used here, and of Lemmas 1, 2, 3 below.
 **E. Ackerman, B. Keszegh, G. Rote**, *An almost optimal bound on the number of
 intersections of two simple polygons*, SoCG 2020; **Discrete Comput. Geom. 68
 (2022) 1049–1077**, arXiv:2002.05680.
-Proves `mn − (m+n) + C` with an explicit but astronomical `C ≈ 2^(2^70)` —
+Proves `mn − (m+n) + C` with an explicit but astronomical `C ≈ 2^(2^67)` —
 asymptotically optimal, and **vacuous at `m = n = 7`**. Source of Lemmas 5 and 7
 below, and of the sharp local tools (associated pairs, the axis property,
 hooking/hooked).
+
+> **Corrected 2026-09-20.** This line previously read `C ≈ 2^(2^70)`, and
+> `literature-check.md` explained the disagreement by attributing `2^(2^67)` to
+> the arXiv/SoCG version and `2^(2^70)` to the journal version. That explanation
+> was wrong: **both** versions say `2^(2^67)`. Checked directly against the two
+> PDFs in `../references/`. The journal text (`akr-dcg-2022.pdf`, §1, just after
+> Theorem 1) reads *“The value of the constant C that we obtain in our proof is
+> around 2^(2^67). We did not make a large effort to optimize this value”*, and
+> the SoCG/arXiv text (`akr-socg-2020.pdf`) carries the identical sentence.
+> The constant chain in DCG §8.1 confirms it: `C₆ := 6`, `C₅ := C₆² + 1 = 37`,
+> `C₄ := ES(C₅,C₅) + 1 = C(70,35) + 1 = 112,186,277,816,662,845,433 < 2^67`,
+> `C₃ := 2^(C₄) − 1`, `C₂ := C₃ + 5`, `C₁ := 8^(C₂)`, `C := C₁ − 1 < 2^(2^67)`.
+> The stray `70` is almost certainly the `70` of the binomial coefficient
+> `C(70,35)`, transcribed into the wrong position. A separate remark in the DCG
+> concluding section derives a *different*, weaker bound from a tournament
+> argument and is not the headline constant; do not quote it as `C`.
 
 **F. Günther**, arXiv:1207.0996. Claims the full conjecture. **Withdrawn by the
 author**; AKR confirm the proof is faulty. Several secondary sources still
