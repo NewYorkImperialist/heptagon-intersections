@@ -5405,3 +5405,9 @@ name = "AKR9"
 
 [[lean_lib]]
 name = "AKR9Reduction"
+
+[[lean_lib]]
+name = "SimplicityStable"
+
+[[lean_lib]]
+name = "SimplicityBridge"
