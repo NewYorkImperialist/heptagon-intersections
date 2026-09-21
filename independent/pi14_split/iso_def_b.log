@@ -1,0 +1,7 @@
+# arm=default branches 32-64 timeout=20000ms seeds=[0, 1, 2, 3, 5]
+  40 unsat=3 sat=0 unknown=5 (109s)
+  48 unsat=7 sat=0 unknown=9 (194s)
+  56 unsat=11 sat=0 unknown=13 (295s)
+  64 unsat=13 sat=0 unknown=19 (420s)
+RESULT arm=default range=32-64 unsat=13 sat=0 unknown=19 total=420s
+refuted: [32, 33, 36, 40, 44, 45, 46, 48, 49, 52, 53, 56, 60]

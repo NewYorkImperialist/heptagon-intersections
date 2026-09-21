@@ -1,0 +1,8 @@
+# branches 64-128, portfolio ['seed0', 'seed1', 'seed2', 'seed3', 'seed5', 'rand0'] @ 4000ms each
+  80 unsat=3 sat=0 unknown=13 (343s)
+  96 unsat=6 sat=0 unknown=26 (682s)
+ 112 unsat=9 sat=0 unknown=39 (1016s)
+ 128 unsat=12 sat=0 unknown=52 (1355s)
+RESULT range=64-128 unsat=12 sat=0 unknown=52 total=1355s
+refuted: [65, 69, 77, 81, 85, 93, 97, 101, 109, 112, 113, 125]
+first solver to close them: {'seed2': 5, 'seed3': 1, 'seed5': 2, 'seed0': 1, 'seed1': 3}

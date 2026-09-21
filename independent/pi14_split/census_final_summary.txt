@@ -1,0 +1,16 @@
+TOTAL  unsat=76  sat=0  unknown=180
+which configuration was first to close each: {'seed1': 20, 'rand0': 3, 'seed0': 32, 'seed5': 5, 'seed3': 7, 'seed2': 9}
+
+Q1-Q3 disjunct split (bit at the 2s place):
+  bit 0:  74 of 128 refuted (58%)
+  bit 1:   2 of 128 refuted (2%)
+  exceptions with bit 1: [30, 46]
+
+  P0-P2   refuted-with-bit0  40/ 76 ( 53%)
+  P0-P3   refuted-with-bit0  54/ 76 ( 71%)
+  P1-P3   refuted-with-bit0  35/ 76 ( 46%)
+  P1-Q1   refuted-with-bit0  40/ 76 ( 53%)
+  Q0-Q2   refuted-with-bit0  45/ 76 ( 59%)
+  Q0-Q3   refuted-with-bit0  30/ 76 ( 39%)
+  Q1-Q3   refuted-with-bit0  74/ 76 ( 97%)
+  Q1-Q4   refuted-with-bit0  33/ 76 ( 43%)

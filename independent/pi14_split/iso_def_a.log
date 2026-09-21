@@ -1,0 +1,7 @@
+# arm=default branches 0-32 timeout=20000ms seeds=[0, 1, 2, 3, 5]
+   8 unsat=3 sat=0 unknown=5 (109s)
+  16 unsat=5 sat=0 unknown=11 (229s)
+  24 unsat=8 sat=0 unknown=16 (338s)
+  32 unsat=11 sat=0 unknown=21 (452s)
+RESULT arm=default range=0-32 unsat=11 sat=0 unknown=21 total=452s
+refuted: [0, 4, 5, 12, 13, 16, 17, 20, 24, 28, 29]

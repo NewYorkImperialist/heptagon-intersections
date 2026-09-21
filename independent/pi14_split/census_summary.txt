@@ -1,0 +1,12 @@
+TOTAL: unsat=57 sat=0 unknown=199
+refuted branches: [0, 1, 4, 5, 12, 13, 14, 16, 18, 20, 21, 28, 32, 33, 40, 44, 45, 48, 52, 60, 61, 65, 69, 77, 93, 96, 97, 109, 112, 113, 117, 128, 129, 132, 133, 140, 141, 144, 145, 148, 156, 160, 161, 164, 172, 173, 176, 177, 181, 188, 205, 209, 213, 225, 229, 237, 241]
+
+per-bit: how often is bit 0 among the 57 refuted vs the 199 undecided
+  P0-P2   refuted bit0  31/ 57 (  54%)   undecided bit0  97/199 (  49%)
+  P0-P3   refuted bit0  40/ 57 (  70%)   undecided bit0  88/199 (  44%)
+  P1-P3   refuted bit0  29/ 57 (  51%)   undecided bit0  99/199 (  50%)
+  P1-Q1   refuted bit0  33/ 57 (  58%)   undecided bit0  95/199 (  48%)
+  Q0-Q2   refuted bit0  37/ 57 (  65%)   undecided bit0  91/199 (  46%)
+  Q0-Q3   refuted bit0  24/ 57 (  42%)   undecided bit0 104/199 (  52%)
+  Q1-Q3   refuted bit0  55/ 57 (  96%)   undecided bit0  73/199 (  37%)
+  Q1-Q4   refuted bit0  27/ 57 (  47%)   undecided bit0 101/199 (  51%)

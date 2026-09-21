@@ -1,0 +1,7 @@
+# arm=rand0 branches 0-32 timeout=20000ms 
+   8 unsat=2 sat=0 unknown=6 (123s)
+  16 unsat=3 sat=0 unknown=13 (263s)
+  24 unsat=5 sat=0 unknown=19 (384s)
+  32 unsat=5 sat=0 unknown=27 (544s)
+RESULT arm=rand0 range=0-32 unsat=5 sat=0 unknown=27 total=544s
+refuted: [1, 5, 13, 16, 20]
