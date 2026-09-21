@@ -5417,3 +5417,6 @@ name = "UniformEps"
 
 [[lean_lib]]
 name = "DependentSystem"
+
+[[lean_lib]]
+name = "DegBound"
