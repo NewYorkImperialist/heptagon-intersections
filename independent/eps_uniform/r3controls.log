@@ -1,0 +1,34 @@
+
+========================================================================
+C1  all four rays at the apex mutually parallel: the checker must report that NO admissible direction exists
+========================================================================
+P simple True Q simple True
+rays (Fraction(-3, 1), Fraction(0, 1)) (Fraction(3, 1), Fraction(0, 1)) (Fraction(-6, 1), Fraction(0, 1)) (Fraction(5, 1), Fraction(0, 1))  all mutually parallel: True
+cones_at -> []  (empty = criterion unsatisfiable)
+RESULT: samples reporting "no admissible direction": 25/25  <- fires
+and AKR's standing hypothesis (F) is indeed violated here: infinite intersection
+
+========================================================================
+C2  target strengthened to Z(E) = empty  (AKR's literal sentence).  On configurations that carry a forced zero the answer must be NO, always.
+========================================================================
+configurations                                  : 25
+  ... carrying at least one FORCED zero         : 25
+  admissible directions achieving Z(E) = {}      : 0   <- must be 0
+  admissible directions achieving Z(E) = Zforced : 251   <- the (R3) target, must be > 0
+
+========================================================================
+C3  objection (2) applied to the coincident vertex itself: set E=0 for the moved P-vertex.  Then the bad set really does contain the whole subspace and the checker must report (R1) FORCED-broken on every configuration.
+========================================================================
+configurations: 25   reporting (R1) forced-broken: 25   <- must be 25
+
+========================================================================
+C4  drop AKR's "we leave Q_j stationary" and let Q_j be dragged with the same direction as P_i.  Delta_ij == 0 for every tuple; must report FORCED.
+========================================================================
+configurations: 25   reporting (R1) forced-broken: 25   <- must be 25
+
+========================================================================
+C5  verify_end_to_end must be able to say FAIL: re-run attackF's two bad directions through it.
+========================================================================
+  E = (Fraction(2, 1), Fraction(0, 1))   ->  FAIL ['infinite-intersection']
+  E = (Fraction(1, 1), Fraction(-1, 1))   ->  FAIL ['count-dropped 4->3']
+  E = (Fraction(2, 1), Fraction(2, 1))   ->  PASS

@@ -1,0 +1,24 @@
+--- base, seed 606 ---
+configurations                                       : 30
+  with a non-empty "AKR gives it no direction" class  : 30   (total 31 such vertices)
+  reading (i)  clean / dirty admissible directions    : 292 / 68
+  reading (i)  configs with a FORCED requirement break : 0
+  reading (ii) clean / dirty admissible directions    : 266 / 94
+  reading (ii) configs with a FORCED requirement break : 0
+  configs where reading (ii) has a SMALLER Zforced    : 26
+--- deep, seed 707 ---
+configurations                                       : 25
+  with a non-empty "AKR gives it no direction" class  : 25   (total 53 such vertices)
+  reading (i)  clean / dirty admissible directions    : 249 / 51
+  reading (i)  configs with a FORCED requirement break : 0
+  reading (ii) clean / dirty admissible directions    : 241 / 59
+  reading (ii) configs with a FORCED requirement break : 0
+  configs where reading (ii) has a SMALLER Zforced    : 24
+--- antidep, seed 808 ---
+configurations                                       : 25
+  with a non-empty "AKR gives it no direction" class  : 25   (total 27 such vertices)
+  reading (i)  clean / dirty admissible directions    : 252 / 48
+  reading (i)  configs with a FORCED requirement break : 0
+  reading (ii) clean / dirty admissible directions    : 238 / 62
+  reading (ii) configs with a FORCED requirement break : 0
+  configs where reading (ii) has a SMALLER Zforced    : 25

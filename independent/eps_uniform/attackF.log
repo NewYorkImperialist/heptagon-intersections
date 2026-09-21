@@ -1,0 +1,42 @@
+P simple: True   Q simple: True
+|dP n dQ| at eps=0 : 4  infinite: False
+coincidences: [(0, 7)]   vertex-side deps: {3: (9, 10, Fraction(1, 2))}
+a1,a2,b1,b2 = (Fraction(-3, 1), Fraction(0, 1)) (Fraction(0, 1), Fraction(-3, 1)) (Fraction(4, 1), Fraction(0, 1)) (Fraction(2, 1), Fraction(-1, 1))
+cross(a1,b1) = 0   <- 0 means the two sides are collinear
+all four mutually parallel? False
+AKR standing hypotheses violated: none
+
+=== E = 2*b1/4 = (2,0)  [parallel to b1] ===
+  (R2): AKR criterion "at least one nondegenerate intersection"  -> True (1, 1)
+  eps_0 = 1/25
+  eps = eps_0/2^1    |dP n dQ| = INFINITE
+  eps = eps_0/2^2    |dP n dQ| = INFINITE
+  eps = eps_0/2^20   |dP n dQ| = INFINITE
+  eps = eps_0/2^60   |dP n dQ| = INFINITE
+  end-to-end: FAIL ['infinite-intersection']  counts [6]
+  at eps=1/1000: P-side [P_6,P_0(eps)] = ((Fraction(-3, 1), Fraction(0, 1)), (Fraction(1, 500), Fraction(0, 1)))   Q-side [Q_6,Q_0] = ((Fraction(4, 1), Fraction(0, 1)), (Fraction(0, 1), Fraction(0, 1)))
+  seg_inter -> ('seg',)
+
+=== E = (1,-1)          [generic, inside a cone] ===
+  (R2): AKR criterion "at least one nondegenerate intersection"  -> False None
+  eps_0 = 1/9
+  eps = eps_0/2^1    |dP n dQ| = 3
+  eps = eps_0/2^2    |dP n dQ| = 3
+  eps = eps_0/2^20   |dP n dQ| = 3
+  eps = eps_0/2^60   |dP n dQ| = 3
+  end-to-end: FAIL ['count-dropped 4->3']  counts [3]
+  at eps=1/1000: P-side [P_6,P_0(eps)] = ((Fraction(-3, 1), Fraction(0, 1)), (Fraction(1, 1000), Fraction(-1, 1000)))   Q-side [Q_6,Q_0] = ((Fraction(4, 1), Fraction(0, 1)), (Fraction(0, 1), Fraction(0, 1)))
+  seg_inter -> ('none',)
+
+=== is E=(2,0) inside an e9_directions cone? ===
+  cone from a=(Fraction(-3, 1), Fraction(0, 1)), b=(Fraction(2, 1), Fraction(-1, 1)):  t=0, s=2/3  -> outside
+  cone from a=(Fraction(0, 1), Fraction(-3, 1)), b=(Fraction(4, 1), Fraction(0, 1)):  t=1/2, s=0  -> outside
+  cone from a=(Fraction(0, 1), Fraction(-3, 1)), b=(Fraction(2, 1), Fraction(-1, 1)):  t=1, s=1/3  -> INSIDE (s,t>0)
+
+=== sweep every integer direction in [-8,8]^2 on this configuration ===
+  directions tested                : 288
+  fail AKR criterion (R2)          : 204
+  AKR-admissible                   : 84
+    ... destroy FINITENESS         : 8   [(Fraction(1, 1), Fraction(0, 1)), (Fraction(2, 1), Fraction(0, 1)), (Fraction(3, 1), Fraction(0, 1)), (Fraction(4, 1), Fraction(0, 1)), (Fraction(5, 1), Fraction(0, 1)), (Fraction(6, 1), Fraction(0, 1)), (Fraction(7, 1), Fraction(0, 1)), (Fraction(8, 1), Fraction(0, 1))]
+    ... other end-to-end failure   : 0   []
+    ... fully good                 : 76   e.g. [(Fraction(1, 1), Fraction(1, 1)), (Fraction(1, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(3, 1)), (Fraction(1, 1), Fraction(4, 1)), (Fraction(1, 1), Fraction(5, 1)), (Fraction(1, 1), Fraction(6, 1))]

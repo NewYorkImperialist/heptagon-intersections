@@ -1,0 +1,21 @@
+--- generator anti, seed 16180 ---
+breaks           {'SAMPLE:Fsh': 13}
+cfg_all_dirty    0
+cfg_with_clean   40
+cfgs             40
+clean            702
+dirty            98
+e2e_ok           116
+e2e_tot          120
+e2e_why          {'dirty/infinite-intersection': 4}
+forced_break     0
+nZf              1217
+ncoinc           40
+ndep             5
+nocone           0
+other_forced     {}
+req_fires        {'R1': 40, 'Fsh': 40}
+sample_break     13
+samples          800
+singular         0
+tries            40

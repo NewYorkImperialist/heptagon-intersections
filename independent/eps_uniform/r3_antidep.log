@@ -1,0 +1,21 @@
+--- generator antidep, seed 31415 ---
+breaks           {'SAMPLE:Fsh': 7}
+cfg_all_dirty    0
+cfg_with_clean   40
+cfgs             40
+clean            662
+dirty            138
+e2e_ok           120
+e2e_tot          120
+e2e_why          {}
+forced_break     0
+nZf              449
+ncoinc           80
+ndep             82
+nocone           0
+other_forced     {}
+req_fires        {'R1': 80, 'Fsh': 43}
+sample_break     7
+samples          800
+singular         0
+tries            43

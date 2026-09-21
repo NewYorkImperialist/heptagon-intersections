@@ -1,0 +1,21 @@
+--- generator base, seed 20260921 ---
+breaks           {}
+cfg_all_dirty    0
+cfg_with_clean   60
+cfgs             60
+clean            975
+dirty            225
+e2e_ok           120
+e2e_tot          120
+e2e_why          {}
+forced_break     0
+nZf              650
+ncoinc           122
+ndep             123
+nocone           0
+other_forced     {}
+req_fires        {'R1': 122}
+sample_break     0
+samples          1200
+singular         0
+tries            502

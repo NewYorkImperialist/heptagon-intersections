@@ -1,0 +1,4 @@
+base      configs   60  coincidences  121   Delta identity 121/121   orient identity 242/242   eps^1 coeff nonzero 242/242
+deep      configs   40  coincidences   80   Delta identity 80/80   orient identity 160/160   eps^1 coeff nonzero 160/160
+anti      configs   40  coincidences   40   Delta identity 40/40   orient identity 80/80   eps^1 coeff nonzero 80/80
+antidep   configs   40  coincidences   80   Delta identity 80/80   orient identity 160/160   eps^1 coeff nonzero 160/160
