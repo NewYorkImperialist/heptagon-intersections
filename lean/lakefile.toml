@@ -5411,3 +5411,9 @@ name = "SimplicityStable"
 
 [[lean_lib]]
 name = "SimplicityBridge"
+
+[[lean_lib]]
+name = "UniformEps"
+
+[[lean_lib]]
+name = "DependentSystem"
