@@ -1,0 +1,19 @@
+branch 113: fixed 3 bits {0: 0, 3: 1, 6: 0}  free=5  (19s)
+branch 125: fixed 7 bits {1: 1, 2: 1, 3: 1, 4: 1, 5: 1, 6: 0, 7: 1}  free=1  (126s)
+branch 128: fixed 4 bits {0: 1, 3: 0, 5: 0, 7: 0}  free=4  (58s)
+branch 132: fixed 4 bits {1: 0, 2: 0, 3: 0, 6: 0}  free=4  (12s)
+branch 133: fixed 3 bits {0: 1, 3: 0, 6: 0}  free=5  (31s)
+branch 136: fixed 8 bits {0: 1, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0}  free=0  (69s)
+branch 140: fixed 3 bits {0: 1, 3: 0, 6: 0}  free=5  (61s)
+branch 141: fixed 4 bits {1: 0, 2: 0, 3: 0, 6: 0}  free=4  (25s)
+branch 144: fixed 5 bits {0: 1, 2: 0, 3: 1, 5: 0, 7: 0}  free=3  (72s)
+branch 145: fixed 4 bits {3: 1, 4: 0, 6: 0, 7: 1}  free=4  (72s)
+branch 148: fixed 3 bits {0: 1, 3: 1, 6: 0}  free=5  (46s)
+branch 149: fixed 6 bits {1: 0, 3: 1, 4: 0, 5: 1, 6: 0, 7: 1}  free=2  (76s)
+branch 152: NOT reproduced
+branch 156: fixed 4 bits {0: 1, 1: 0, 3: 1, 7: 0}  free=4  (62s)
+branch 157: NOT reproduced
+branch 160: fixed 3 bits {0: 1, 3: 0, 7: 0}  free=5  (28s)
+branch 161: fixed 5 bits {0: 1, 2: 1, 3: 0, 4: 0, 6: 0}  free=3  (79s)
+branch 164: NOT reproduced
+branch 165: fixed 3 bits {0: 1, 3: 0, 6: 0}  free=5  (12s)

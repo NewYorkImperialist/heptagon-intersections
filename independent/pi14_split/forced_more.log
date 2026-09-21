@@ -1,0 +1,40 @@
+line V10V11: 1/36 pairs forced
+    or(10,11,1)*or(10,11,2) : OPP
+line V11V12: 10/36 pairs forced
+    or(11,12,0)*or(11,12,1) : OPP
+    or(11,12,0)*or(11,12,2) : SAME
+    or(11,12,0)*or(11,12,3) : OPP
+    or(11,12,0)*or(11,12,9) : OPP
+    or(11,12,1)*or(11,12,2) : OPP
+    or(11,12,1)*or(11,12,3) : SAME
+    or(11,12,1)*or(11,12,9) : SAME
+    or(11,12,2)*or(11,12,3) : OPP
+    or(11,12,2)*or(11,12,9) : OPP
+    or(11,12,3)*or(11,12,9) : SAME
+line V9V10: 15/36 pairs forced
+    or(9,10,0)*or(9,10,1) : OPP
+    or(9,10,0)*or(9,10,2) : SAME
+    or(9,10,0)*or(9,10,3) : SAME
+    or(9,10,0)*or(9,10,4) : OPP
+    or(9,10,0)*or(9,10,8) : SAME
+    or(9,10,1)*or(9,10,2) : OPP
+    or(9,10,1)*or(9,10,3) : OPP
+    or(9,10,1)*or(9,10,4) : SAME
+    or(9,10,1)*or(9,10,8) : OPP
+    or(9,10,2)*or(9,10,3) : SAME
+    or(9,10,2)*or(9,10,4) : OPP
+    or(9,10,2)*or(9,10,8) : SAME
+    or(9,10,3)*or(9,10,4) : OPP
+    or(9,10,3)*or(9,10,8) : SAME
+    or(9,10,4)*or(9,10,8) : OPP
+line V7V8: 10/36 pairs forced
+    or(7,8,1)*or(7,8,2) : OPP
+    or(7,8,1)*or(7,8,3) : SAME
+    or(7,8,1)*or(7,8,4) : OPP
+    or(7,8,1)*or(7,8,9) : SAME
+    or(7,8,2)*or(7,8,3) : OPP
+    or(7,8,2)*or(7,8,4) : SAME
+    or(7,8,2)*or(7,8,9) : OPP
+    or(7,8,3)*or(7,8,4) : OPP
+    or(7,8,3)*or(7,8,9) : SAME
+    or(7,8,4)*or(7,8,9) : OPP

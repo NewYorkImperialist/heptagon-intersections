@@ -722,3 +722,53 @@ What this session contributes:
 **What the paper should say is unchanged**: $\Pi_8$ has an independent
 exhaustive check, $\Pi_{14}$ does not, and a reader weighing the result should
 know that.
+
+---
+
+## 14. Addendum, 2026-09-21 — §12's asymmetry explained, and §12's *numbers*
+partly retracted. See [`ASYMMETRY.md`](ASYMMETRY.md)
+
+Nothing above is edited; this section records what a later session found and
+which of the claims above it corrects.
+
+**Explained.** The $Q_1 \not\times Q_3$ asymmetry of §12 has a structural cause.
+$\Pi_{14}$ has exactly **one** prescribed $P$–$Q$ non-crossing, $P_1\not\times
+Q_1$, and it sits in a configuration — $Q_0,Q_1$ sharing $V_8$ and both crossing
+$P_2$; $Q_1,Q_2$ sharing $V_9$ and both crossing $P_0$; $P_1$ crossing $Q_0$ and
+$Q_2$ — where the Core Lemma of `../pi8_human/` fires twice at the two ends of
+$Q_1$. The consequence (LEMMA 1, four steps, no case analysis, verified over all
+3,315 order types and all $8!$ labellings with 0 violations) is that **the line
+$V_8V_9$ is completely determined by the rest of the pattern**: 35 of its 36
+pair-products against the other nine vertices are forced, against 1 of 36 for
+the line $V_{10}V_{11}$. The first disjunct of $Q_1\not\times Q_3$ is a
+statement about the determined line and is refutable outright; the second is a
+statement about the undetermined one.
+
+**Retracted: the size of the effect, and the branch counts.**
+
+* §12's table reports 74/128 against 2/128. The correct figures are
+  **128/128 against 64/128**: *every* branch taking the first disjunct of
+  $Q_1\not\times Q_3$ is refutable, and the 74-vs-2 was that fact seen through a
+  solver that was timing out. The six "secondary" conditions §12 reports at
+  39–71 % are at exactly 96/128 each — no effect at all.
+* §12's branches 30 and 46 are described as the exceptions on the hard side.
+  They are not exceptional: both are refuted by a 12-condition core that never
+  mentions $Q_1\not\times Q_3$, and both lie in a 32-branch subcube all of whose
+  members are unsat.
+* The census total **76 refuted / 0 realizable / 180 undecided** is superseded by
+  **192 / 0 / 64**, with no new hard solver work — 116 of the 116 new
+  refutations follow from cores already implicit in the census by monotonicity,
+  plus the fact that the two disjuncts of $P_1\not\times Q_1$ are *equivalent*
+  given six of the prescribed crossings, which makes one of the eight branch
+  coordinates redundant. The 256-branch enumeration is really 128 branches.
+
+**Added to the method.** The constraint **order** handed to `nlsat` is a
+randomisation dimension roughly as strong as `nlsat.seed`, and the two compose.
+§6b's advice ("restart, don't derandomise") stands and should be read as
+"restart over seeds *and orders*".
+
+**Unchanged.** $\Pi_{14}$ is still not independently refuted — 64 branches
+remain open, all of them the case where $Q_1\not\times Q_3$ and
+$Q_1\not\times Q_4$ both take their second disjunct — no branch has ever
+returned `sat`, and nothing here changes Theorem 3.4's status or the status of
+$f(7,7)=38$.
