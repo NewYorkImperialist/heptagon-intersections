@@ -1,0 +1,7 @@
+configs 300 D hist {1: 153, 2: 93, 3: 42, 4: 11, 5: 1}
+NAIVE  tilt       {'cleared': 300}
+NAIVE  translate  {'DID NOT TERMINATE in 60 rounds': 58, 'cleared': 242}
+NAIVE  akr        {'cleared': 261, 'undefined (G fails)': 39}
+2-PASS tilt       {'P-pass alone sufficed': 300, 'cleared': 300}
+2-PASS translate  {'P-pass alone sufficed': 300, 'cleared': 300}
+2-PASS akr        {'*** P0 undefined: undefined (G fails)': 6, '*** P1 undefined: undefined (G fails)': 11, '*** P2 undefined: undefined (G fails)': 10, '*** P3 undefined: undefined (G fails)': 5, '*** P4 undefined: undefined (G fails)': 5, '*** P5 undefined: undefined (G fails)': 3, '*** P6 undefined: undefined (G fails)': 1, 'P-pass alone sufficed': 259, 'cleared': 259}

@@ -1,0 +1,13 @@
+CONTROL 7.2: same STRICT checker at delta NOT small. usable configs 45 of 405 drawn
+  tilt       delta=2^-1  {'IDENTITY': 38, 'NEW DEG (strict)': 35, 'NEW VV': 9, 'count rose': 21, 'skip:infinite': 6, 'skip:not-simple+': 110, 'skip:not-simple-': 92, 'tested': 107}
+  tilt       delta=2^-2  {'IDENTITY': 56, 'NEW DEG (strict)': 37, 'count rose': 21, 'skip:infinite': 2, 'skip:not-simple+': 60, 'skip:not-simple-': 49, 'tested': 204}
+  tilt       delta=2^-3  {'IDENTITY': 31, 'NEW DEG (strict)': 7, 'count rose': 3, 'skip:not-simple+': 20, 'skip:not-simple-': 19, 'tested': 276}
+  tilt       delta=2^-4  {'IDENTITY': 8, 'NEW DEG (strict)': 2, 'count rose': 1, 'skip:not-simple+': 7, 'skip:not-simple-': 6, 'tested': 302}
+  tilt       delta=2^-6  {'tested': 315}
+  tilt       delta=2^-20 {'tested': 315}
+  translate  delta=2^-1  {'IDENTITY': 38, 'NEW DEG (strict)': 35, 'NEW VV': 9, 'count rose': 21, 'skip:infinite': 6, 'skip:not-simple+': 109, 'skip:not-simple-': 92, 'tested': 108}
+  translate  delta=2^-2  {'IDENTITY': 54, 'NEW DEG (strict)': 36, 'count rose': 21, 'skip:infinite': 2, 'skip:not-simple+': 60, 'skip:not-simple-': 49, 'tested': 204}
+  translate  delta=2^-3  {'IDENTITY': 31, 'NEW DEG (strict)': 7, 'count rose': 3, 'skip:not-simple+': 20, 'skip:not-simple-': 19, 'tested': 276}
+  translate  delta=2^-4  {'IDENTITY': 8, 'NEW DEG (strict)': 2, 'count rose': 1, 'skip:not-simple+': 7, 'skip:not-simple-': 6, 'tested': 302}
+  translate  delta=2^-6  {'tested': 315}
+  translate  delta=2^-20 {'tested': 315}
