@@ -1,0 +1,56 @@
+========================================================================
+CONTROL 0 -- the intersection counter itself, on hand-checked inputs
+========================================================================
+  square x touching-V   count = 1  (hand value: 1)
+  square x crossing-V   count = 2  (hand value: 2: Q meets the bottom side at (1,0) and at the vertex (2,0))
+  two disjoint squares  count = 0  (hand value: 0)
+  overlapping sides -> None  (must be None = infinite)
+
+========================================================================
+CONTROL 1 -- explicit touching: shift must give 2 one way and 0 the other
+========================================================================
+  delta=1*2^-20  count = 2
+  delta=-1*2^-20  count = 0
+  sum = 2, 2*original = 2  -> averaging holds: True
+
+========================================================================
+CONTROL 2 -- FALSE claim A: 'the shift never changes the count'
+   (i.e. count(+d) == count(0)).  Must be reported FALSE.
+========================================================================
+   count(+d) = 2  count(0) = 1  equal? False
+   PASS (control fired)
+
+========================================================================
+CONTROL 3 -- FALSE claim B: 'some direction STRICTLY increases the count'
+   Must be reported FALSE on the crossing configuration.
+========================================================================
+   crossing config: count(0)=2 count(+d)=2 count(-d)=2
+   PASS (control fired)
+
+========================================================================
+CONTROL 4 -- the 9.1-first ORDERING is load-bearing:
+   averaging FAILS when a vertex-vertex degeneracy is still present.
+   Same code, same delta; the only change is that Q is translated so
+   that one of its vertices coincides with a vertex of P.
+========================================================================
+   tested=301 violations=161   examples (c0,c+,c-): [(2, 3, 2), (3, 2, 5), (3, 2, 3)]
+   PASS (control fired)
+
+========================================================================
+CONTROL 5 -- FALSE claim D: averaging at a NOT-small shift
+   The same code, same configurations, delta = 2^-3 instead of 2^-20.
+========================================================================
+   tested=403 violations=81
+   PASS (control fired)
+
+========================================================================
+CONTROL 6 -- the construction is UNDEFINED at a straight vertex
+   P has three consecutive collinear vertices; shifting the side that
+   follows them has no Fig.-28 endpoint.  shift_side must return None,
+   and the 'translate' repair must not.
+========================================================================
+   P simple? True
+   akr  shift of side 1 = [(2,0),(4,0)] -> None
+   PASS (control fired)
+   translate shift of side 1 -> defined
+   PASS (control fired)

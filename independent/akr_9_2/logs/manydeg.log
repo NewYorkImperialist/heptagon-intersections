@@ -1,0 +1,6 @@
+G=9 |Q|=10 trials=20000 usable=287 deltas=2^-[20, 35]
+  2 simultaneous degeneracies on the shifted side: tested=320    violations=0
+  3 simultaneous degeneracies on the shifted side: tested=178    violations=0
+  4 simultaneous degeneracies on the shifted side: tested=74     violations=0
+  5 simultaneous degeneracies on the shifted side: tested=2      violations=0
+  TOTAL tested=574 violations=0

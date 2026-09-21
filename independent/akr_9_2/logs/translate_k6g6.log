@@ -1,0 +1,6 @@
+rule=translate k=6 grid=6 pairs=8000 seed=55 deltas=2^-[20, 30] require=None
+  class E  tested=3782    violations=0
+  class I  tested=1788    violations=0
+  class IE tested=206     violations=0
+  class N  tested=10940   violations=0
+  TOTAL    tested=16716   violations=0

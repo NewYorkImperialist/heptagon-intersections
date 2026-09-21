@@ -1,0 +1,5 @@
+rule=translate k=6 grid=6 configurations=1500 seed=101
+  count increased: 1016
+  count preserved: 484
+  terminated: 1500
+  steps-to-termination histogram: {1: 1034, 2: 410, 3: 53, 4: 2, 5: 1}

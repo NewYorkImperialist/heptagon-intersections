@@ -1,0 +1,6 @@
+rule=akr k=6 grid=6 configurations=1500 seed=101
+  UNDEFINED: three consecutive collinear vertices: 266
+  count increased: 805
+  count preserved: 429
+  terminated: 1234
+  steps-to-termination histogram: {1: 877, 2: 317, 3: 38, 4: 2}

@@ -1,0 +1,7 @@
+rule=akr k=7 grid=7 pairs=8000 seed=22 deltas=2^-[20, 30] require=None
+  class E  tested=3836    violations=0
+  class I  tested=1786    violations=0
+  class IE tested=184     violations=0
+  class N  tested=13238   violations=0
+  TOTAL    tested=19044   violations=0
+  skipped: undefined (adjacent side parallel to s): 1816

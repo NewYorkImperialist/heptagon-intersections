@@ -1,0 +1,8 @@
+rule=akr k=6 grid=6 trials=1500 seed=20260920
+{'pairs': 1500, 'with_vs': 256, 'tested': 7788, 'ok': 7539, 'bad': 249, 'skip': 1428, 'bad_small': 0, 'tested_small': 3978, 'nonsimple': 168, 'undefined': 1260}
+  delta=1/1099511627776  tested=1326  violations=0
+  delta=1/16777216  tested=1326  violations=0
+  delta=1/65536  tested=1326  violations=0
+  delta=1/1024  tested=1326  violations=0
+  delta=1/64  tested=1322  violations=10
+  delta=1/8  tested=1162  violations=239

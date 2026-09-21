@@ -1,0 +1,6 @@
+rule=akr k=5 grid=4 pairs=30000 seed=33 deltas=2^-[20, 30] require=['I', 'E', 'IE']
+  class E  tested=3868    violations=0
+  class I  tested=2040    violations=0
+  class IE tested=202     violations=0
+  TOTAL    tested=6110    violations=0
+  skipped: undefined (adjacent side parallel to s): 1408

@@ -184,6 +184,15 @@ superseded argument got wrong (K-10):
 > where they are.** Theorem 17 below shows that we can perform such a motion in a
 > continuous way while simultaneously maintaining all vertex-side degeneracies (1)."
 
+> **Correction 2026-09-20 — the paper's parameter is α, not ε.** The
+> quotations in this subsection write ε; the journal writes **α** ("depending
+> linearly on some parameter α", PDF p. 23; "*P_i* = *P*⁰_i + α*E_i*", PDF
+> p. 24; Fig. 27's label reads "α*E_i*"). Read off a 4× PDFKit raster —
+> the ligature-lossy extractor used for this document drops the α glyph, so
+> the ε was supplied, contrary to §0's "no other character has been changed".
+> **No mathematical content changes.** See
+> [`akr-9-2-obligation.md`](akr-9-2-obligation.md) §1.5.
+
 The abstract machinery (PDF p. 23, journal 1071). A system of points
 *A*_1,…,*A*_N split into dependent (*D*) and free (*F* = [N]∖*D*), with
 *A_i* = Σ_{j≠i} λ_ij *A_j* (2), Σ_j λ_ij = 1, and *A_i* = *A⁰_i* + ε*E_i* for
@@ -257,6 +266,16 @@ Fig. 28's caption:
 
 > "Perturbing a blue polygon side to get rid of collinear vertices without
 > decreasing the number of intersection points: **a** before, **b** after"
+
+> **Update 2026-09-20 — §9.2 now has its own document.** See
+> [`akr-9-2-obligation.md`](akr-9-2-obligation.md) and
+> `independent/akr_9_2/`. Three corrections to this subsection: the quoted
+> argument is **four** sentences, not five (count them — the fifth sentence
+> above is this document's own); the *first* of the four is at the foot of
+> **PDF p. 24**, not p. 25; and Fig. 28 carries a step the text omits
+> entirely, namely that the shifted side's **endpoints slide along the lines
+> of the two adjacent sides**, which is undefined when those sides are
+> collinear with it.
 
 ### 1.6 §9.3 *The Combinatorial Counting Model* — PDF p. 25 (journal 1073)
 
@@ -621,6 +640,20 @@ Section by section:
 | existence of the directions *E_i* | **hard, and unproved in the paper** | see §5.2 |
 | the "One final point" ε-estimate | **hardest** | see §5.2 |
 | §9.2 averaging | moderate–hard | needs "for small enough shift, the count in direction +*n* plus the count in direction −*n* equals twice the old count", which is a local analysis at every degeneracy on the shifted side simultaneously |
+
+> **Update 2026-09-20 — this is now proved too, and the rating should be
+> "moderate", below §9.1's hardest steps.** See
+> [`akr-9-2-obligation.md`](akr-9-2-obligation.md) §4 and
+> `independent/akr_9_2/`. The identity is a four-case local analysis; 47 346
+> exact-rational tests found no violation. But §9.2 turns out to contain a
+> *fourth* case its own text does not describe (the shifted side's moving
+> endpoints), to be **undefined** when the shifted side has a collinear
+> neighbour — which §9.2 may not assume away, since §3's clause is justified
+> only after §9 — and to become **false** if its opening clause "Once there
+> are no more coincident vertices" is dropped, for which there is an explicit
+> exact counterexample. As with `e9_directions/`, **this does not close §9**:
+> §9.2's hypothesis is §9.1's conclusion, and the "One final point" estimate
+> below remains the blocker.
 
 ### 5.2 The single hardest step
 
