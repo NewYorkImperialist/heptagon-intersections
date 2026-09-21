@@ -529,7 +529,7 @@ argument.
 
 ## 3. The reduction theorem — the whole remaining obligation on one page
 
-> **Theorem A9-RED.** Assume (1)–(12) below. Then **(A9)** holds: for every
+> **Theorem A9-RED.** Assume (1)–(14) below. *(It read "(1)–(12)" until 2026-09-21; two hypotheses were missing — see 13 and 14, and the retraction of 5.)* Then **(A9)** holds: for every
 > `R : Pair9` with `points9 R` finite there is `R' : Pair9` with
 > `NoVertexOnOther R'` and `(points9 R').ncard ≥ (points9 R).ncard`.
 >
@@ -551,8 +551,9 @@ non-negative integer. ∎
 | **1** | **(Fin)** `∂P ∩ ∂Q` finite | **hypothesis of (A9)**, not a gap — but it must be *carried*, or `ncard = 0` makes the statement vacuous | `akr-9-1-obligation.md` §5.4 |
 | **2** | **(Simp)** each heptagon is `SimpleClosed`, in particular `W i ≠ W (i+1)` | **hypothesis of (A9)** | `lean/AKR9.lean` |
 | **3** | **(Thm17)** AKR Obs. 15, Lemma 16, **Theorem 17**, Lemma 18: the dependence system has a unique solution, **affine in α**, maintaining every relation (1) | **IMPORTED.** AKR give proofs; this project has neither reviewed nor formalised them. Everything downstream is conditional on this | AKR §9.1, PDF pp. 23–24; `akr-9-1-obligation.md` §1.4 |
-| **4** | **(E-exists)** at each vertex-vertex coincidence a direction `E_i` exists giving ≥ 1 proper crossing for all small α | **PROVED ON PAPER** (sharp iff; failure case excluded by (Fin)) | `independent/e9_directions/README.md`; Lean instance for `E = b − a` tolerating moving neighbours: `AKR9Reduction.coincidence_crossing_linear` |
-| **5** | **(E-clean)** `E_i` can additionally be chosen with no local degeneracy | **PROVED ON PAPER.** Not in AKR, and load-bearing | `e9_directions` "Nondegeneracy"; `eps_uniform` Finding 2 |
+| **4** | **(E-exists)** at each vertex-vertex coincidence a direction `E_i` exists giving ≥ 1 proper crossing for all small α | **PROVED ON PAPER** (sharp iff; failure case excluded by **(Simp)**, not (Fin) — corrected 2026-09-21) | `independent/e9_directions/README.md`; Lean instance for `E = b − a` tolerating moving neighbours: `AKR9Reduction.coincidence_crossing_linear` |
+| **5** | ~~**(E-clean)** `E_i` can additionally be chosen with no local degeneracy~~ | **REFUTED 2026-09-21.** Not merely unproved — **unsatisfiable** on inputs §9.1 must handle: if a *fixed* neighbour of the apex already lies on a `Q`-side, no `E` clears it (45 of 3,980 sampled configurations). §9.1 deliberately leaves vertex-side degeneracies for §9.2, so such inputs are normal. **Replace every use of this hypothesis by 5′ below.** | retraction in `independent/e9_directions/README.md`; `apexonly_nondegeneracy_check.py` |
+| **5′** | **(Fin-pres)** the direction `E_i` can be chosen so that finiteness is *preserved*: no P-side and Q-side acquire a positive-length overlap | **PROVED ON PAPER**, with a sharp criterion — the bad directions are exactly the positive multiples of a `b_l` parallel to some `a_k`, finitely many open rays, so a safe direction survives inside the cone | `independent/e9_directions/antiparallel.py`, `global_finiteness.py`; `verification-status.md` row 62 |
 | **6** | **(U)** Theorem U: the sign vector of the witness family is constant on `(0, ε₀)` with `ε₀` explicit; and the bootstrapping principle | **IN LEAN.** `lemmaU_sign`, `theoremU_sameSign`, `bootstrap`, `properCrossR_move_iff`, `rho_orient_ge`. I read the statements; no `sorry` in the file; I did not build it | `lean/UniformEps.lean`; `eps_uniform` Finding 3 |
 | **7** | **(R2)** at every apex, some incident side pair has all four `D`'s `≢ 0` with the straddle leading-sign pattern | **PROVED ON PAPER** (per-apex, and the per-apex choices provably do not interfere) | `eps_uniform` Finding 1 + Finding 4; `e9_directions` |
 | **8** | **(CI)** the count inequality for the §9.1 motion | **PROVED ON PAPER — §2 of this document.** 285/285 with two firing controls | §2.3, §2.4; `independent/akr_9_assembly/` |
@@ -560,6 +561,8 @@ non-negative integer. ∎
 | **10** | **(Sign-exp)** `SimpleClosed` is a Boolean function of the sign vector of the witness family `W` | **NOT PROVED.** Small, and needed to bootstrap (9) from "for small enough α" to "on all of `(0,ε₀)`" | `eps_uniform` Finding 4's table asserts it; `SimplicityStable.meet_eq_singleton_of_cornerVec_ne_zero` supplies the corner half |
 | **11** | **(Avg)** §9.2's averaging identity, plus clauses 1–4 (simplicity, no new degeneracy, termination monovariant) | **PROVED ON PAPER**; 47 346 exact tests, 0 violations | `docs/akr-9-2-obligation.md` §4, §5 |
 | **12** | **(NC)** at every side §9.2 must shift, that side's two endpoint-triples are non-collinear | **OPEN — and §2.5 shows §9.1 cannot supply it** | §2.5; `akr-9-2-obligation.md` §3.1 |
+| **13** | **(Fin-out)** Phase 1's *output* pair still has finite boundary intersection | **ADDED 2026-09-21 — this was missing, and the theorem above was false without it.** Hypothesis 1 gives finiteness of the *input*; hypothesis 11, §9.2's averaging identity, needs it of the *intermediate* pair, and nothing carried it there. It is **not automatic**: `R3.md` Finding R3-1 is an exact certificate of an AKR-admissible direction making `∂P(α) ∩ ∂Q(α)` infinite for every `α>0`. It follows from 5′, and from (R3) below | `independent/eps_uniform/R3.md` Finding R3-1 and Theorem R3-F; `e9_directions` finiteness section |
+| **14** | **(R3)** no *removable* witness polynomial is identically zero | **OPEN — this is (O1).** It had no row in this list until 2026-09-21 even though the proof of 13 uses it, so the list was not "the whole remaining obligation on one page" | `independent/eps_uniform/R3.md` Findings R3-2, R3-3 |
 
 ### The two genuinely open items, stated precisely
 
@@ -617,6 +620,18 @@ non-negative integer. ∎
 * **The existence of the directions `E_i`.** Gone: hypothesis 4.
 * **A quantitative sine-law O(α²) estimate.** Not needed. Hypotheses 6 and 7
   replace it; see §1.2(i).
+
+**And what came back onto it, 2026-09-21.** Hypothesis 5 (E-clean) was listed
+here as proved and load-bearing; it is **refuted**, and unsatisfiable on normal
+inputs. Its job is done instead by 5′ (Fin-pres), which is weaker and true. Two
+hypotheses the theorem's proof actually uses — 13 (Fin-out) and 14 (R3) — were
+absent from the list entirely, so the claim that it showed "the entire
+remaining obligation on one page" was wrong. Both omissions trace to the same
+cause: this document was written without reading `independent/eps_uniform/R3.md`,
+finished thirteen hours earlier, and still contains no reference to it outside
+the rows added today. That is this project's recorded failure mode — completed
+work in `independent/` being invisible to the document assembling it — and this
+time it cost a hypothesis in a reduction theorem.
 
 ---
 
