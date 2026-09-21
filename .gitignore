@@ -188,6 +188,8 @@ independent/pi8_human/proofcheck
 independent/pi14_split/__pycache__/
 independent/pi14_split/shard_census_*.log
 independent/pi14_split/census4_*.log
+independent/pi14_split/lemma1
+independent/pi14_split/sampler
 
 # Personal study guide -- not part of the published artifact.
 # Remove this line if it is ever made public.
