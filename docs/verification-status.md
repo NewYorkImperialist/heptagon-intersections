@@ -24,11 +24,15 @@ Many components are kernel-checked — see rows 1, 2, 3, 7, 9b,
 development from it, after 2026-09-17, is this — and it is now a short list:
 
 1. **AKR §9, and nothing else.** The one remaining external input is §9 — "no
-   vertex of one polygon lies on the boundary of the other" — five pages, not
-   formalized and **not attempted**. It is now carried as a single explicit
+   vertex of one polygon lies on the boundary of the other" — five pages,
+   **imported as a whole and not proved here**, though no longer unexamined:
+   parts of it are now formalized and two defects in its published procedure
+   have been found (see the note below). It is carried as a single explicit
    Lean hypothesis, `AKR9.NoVertexOnOther` (row 51), rather than as a
    general-position condition baked into a structure, so a reader can check it
-   against the paper directly.
+   against the paper directly. *(This sentence read "not formalized and **not
+   attempted**" until 2026-09-21; that is no longer true and the note below
+   says what replaced it.)*
 
    *(**Rewritten 2026-09-21**, superseding a 2026-09-20 note that is now itself
    out of date. "Not formalized and not attempted" is no longer accurate, and
