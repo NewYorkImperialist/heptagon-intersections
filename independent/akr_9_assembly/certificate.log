@@ -1,0 +1,39 @@
+P simple : (True, 'simple')
+Q simple : (True, 'simple')
+|dP n dQ| = 4  infinite: False
+coincident vertices: []
+vertex-side degeneracies: [('Q', 3, 0)]
+
+the three sides whose AKR shift could remove the degeneracy (Q3 interior to P-side 0):
+   P-side 0: NC = False   triples det = 20, 0
+   Q-side 2: NC = False   triples det = 4, 0
+   Q-side 3: NC = False   triples det = 0, 2
+
+every side of P and of Q, with (NC) and whether its shift removes a degeneracy:
+   P0: NC=False removes-a-degeneracy=True
+   P1: NC=False removes-a-degeneracy=False
+   P2: NC=True  removes-a-degeneracy=False
+   P3: NC=True  removes-a-degeneracy=False
+   P4: NC=True  removes-a-degeneracy=False
+   P5: NC=True  removes-a-degeneracy=False
+   P6: NC=True  removes-a-degeneracy=False
+   Q0: NC=True  removes-a-degeneracy=False
+   Q1: NC=True  removes-a-degeneracy=False
+   Q2: NC=False removes-a-degeneracy=True
+   Q3: NC=False removes-a-degeneracy=True
+   Q4: NC=True  removes-a-degeneracy=False
+   Q5: NC=True  removes-a-degeneracy=False
+   Q6: NC=True  removes-a-degeneracy=False
+
+INVARIANCE: a collinear consecutive triple survives every defined AKR shift.
+  Shift of side k replaces Z_k by a point of aff(Z_{k-1},Z_k) and Z_{k+1} by a
+  point of aff(Z_{k+1},Z_{k+2}); both LINES are unchanged.  A collinear triple
+  (k-2,k-1,k) lies in aff(Z_{k-1},Z_k), so its moved member stays on it;
+  likewise (k+1,k+2,k+3).  The triples (k-1,k,k+1) and (k,k+1,k+2) cannot be
+  collinear, since that is exactly (NC) and the shift would be undefined.
+  Shifts of the OTHER polygon do not move Z at all.
+
+CONTROL (the checker can say no): a generic pair with a degeneracy
+  Pg simple: True  Qg simple: True
+  degeneracies: [('P', 4, 5), ('Q', 0, 0)]
+  usable (NC-defined, degeneracy-removing) sides: [('P', 0), ('P', 3), ('P', 4), ('Q', 0), ('Q', 5), ('Q', 6)]

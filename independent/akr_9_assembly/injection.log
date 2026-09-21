@@ -1,0 +1,53 @@
+--- ARM B (AKR criterion R2)
+    built=60 tested=168 skipped=12
+    Phi total   : 168/168
+    Phi injective: 168/168
+    Phi lands in target: 168/168
+    count did not drop : 168/168
+    source points by class  a=474 b=177 c=336
+
+--- ARM A (bare, control)
+    built=60 tested=168 skipped=12
+    Phi total   : 108/168
+    Phi injective: 108/168
+    Phi lands in target: 108/168
+    count did not drop : 138/168
+    source points by class  a=474 b=177 c=336
+    first failures: [('c-lost (0, 0)', 6, 5), ('c-lost (0, 0)', 6, 5), ('c-lost (0, 0)', 6, 5), ('c-lost (0, 0)', 4, 3), ('c-lost (0, 0)', 4, 3)]
+
+--- BAD E parallel to edge (control)
+    built=60 tested=168 skipped=12
+    Phi total   : 0/168
+    Phi injective: 0/168
+    Phi lands in target: 0/168
+    count did not drop : 69/168
+    source points by class  a=474 b=177 c=336
+    first failures: [('c-lost (1, 3)', 5, 5), ('c-lost (1, 3)', 5, 5), ('c-lost (1, 3)', 5, 5), ('c-lost (0, 0)', 4, 3), ('c-lost (0, 0)', 4, 3)]
+
+===== SECOND SEED =====
+--- ARM B (AKR criterion R2)
+    built=40 tested=117 skipped=3
+    Phi total   : 117/117
+    Phi injective: 117/117
+    Phi lands in target: 117/117
+    count did not drop : 117/117
+    source points by class  a=411 b=123 c=234
+
+--- ARM A (bare, control)
+    built=40 tested=117 skipped=3
+    Phi total   : 66/117
+    Phi injective: 66/117
+    Phi lands in target: 66/117
+    count did not drop : 93/117
+    source points by class  a=411 b=123 c=234
+    first failures: [('c-lost (1, 3)', 7, 7), ('c-lost (1, 3)', 7, 7), ('c-lost (1, 3)', 7, 7), ('c-lost (1, 3)', 4, 3), ('c-lost (1, 3)', 4, 3)]
+
+--- BAD E parallel to edge (control)
+    built=40 tested=117 skipped=3
+    Phi total   : 0/117
+    Phi injective: 0/117
+    Phi lands in target: 0/117
+    count did not drop : 60/117
+    source points by class  a=411 b=123 c=234
+    first failures: [('c-lost (0, 0)', 4, 3), ('c-lost (0, 0)', 4, 3), ('c-lost (0, 0)', 4, 3), ('c-lost (0, 0)', 7, 6), ('c-lost (0, 0)', 7, 6)]
+
