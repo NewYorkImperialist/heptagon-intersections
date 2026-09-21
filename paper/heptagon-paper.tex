@@ -344,15 +344,95 @@ nondegeneracy of the $364$ determinants: in particular it needs \emph{no}
 hypothesis that $P$ or $Q$ is simple. It is the single most compact
 \emph{statement} in this work.
 
-We must be equally plain about the other half: \textbf{we offer no
-human-surveyable proof of Theorem~\ref{thm:pat8} or of
-Theorem~\ref{thm:pat14}.} What is small enough to check by hand is the
-\emph{pattern}, not its non-realizability. A reader who wants to attack the
-result should attack $\Pi_8$: eight incidences on three consecutive sides of
-each polygon is a small enough object that a synthetic argument, or a
-counterexample, may well be findable by a specialist. We could not find either.
+An earlier version of this paper said that we offered no human-surveyable
+proof of Theorem~\ref{thm:pat8}, and invited a specialist to find one. That is
+no longer accurate for $\Pi_8$, and we give the argument here. It rests on a
+single general observation about two segments sharing an endpoint.
 
-What we can offer instead is an independent verification by a completely
+\begin{lemma}[Shared endpoint]\label{lem:shared}
+Let $A,B,C,D,E$ be points with no three collinear. If the segments $[B,A]$ and
+$[B,C]$, which share the endpoint $B$, \emph{both} properly cross $[D,E]$, then
+\[
+  \orient(A,B,D)\cdot\orient(B,C,D) < 0
+  \qquad\text{and}\qquad
+  \orient(A,B,E)\cdot\orient(B,C,E) < 0 .
+\]
+\end{lemma}
+
+\begin{proof}
+Let $T$ be the unique affine map with $TB=(0,0)$, $TA=(1,0)$, $TC=(0,1)$; it
+multiplies every orientation determinant by the same nonzero constant, so both
+displayed inequalities are unchanged by applying it, and we may assume
+$B,A,C$ are those three points. Then for every $X=(X_1,X_2)$ we have
+$\orient(A,B,X)=-X_2$ and $\orient(B,C,X)=-X_1$, so the claim is exactly that
+$D$ and $E$ each have coordinates of opposite signs.
+
+Since $[B,A]$ is the unit segment on the first axis and properly crosses
+$[D,E]$, the line through $D$ and $E$ meets that axis at a point $(t,0)$ with
+$t\in(0,1)$, and that point lies strictly between $D$ and $E$. Likewise
+$[B,C]$ gives a point $(0,s)$, $s\in(0,1)$, strictly between $D$ and $E$.
+Parametrise the line as $\lambda\mapsto(1-\lambda)(0,s)+\lambda(t,0)$, so that
+$\lambda=0$ and $\lambda=1$ are those two interior points. As both are interior
+to $[D,E]$, one of $D,E$ has $\lambda<0$ and the other $\lambda>1$. The point
+at parameter $\lambda$ is $(\lambda t,\,(1-\lambda)s)$ with $s,t>0$; for
+$\lambda>1$ its coordinates are $(+,-)$ and for $\lambda<0$ they are $(-,+)$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:pat8}]
+Suppose some configuration realizes $\Pi_8$. Write
+\[
+  v_k=\orient(q_0,q_1,p_k),\qquad
+  w_k=\orient(q_1,q_2,p_k),\qquad
+  u_k=\orient(p_1,p_2,q_k),\qquad
+  s_k=\orient(p_0,p_1,q_k),
+\]
+all nonzero by the nondegeneracy hypothesis.
+
+\emph{Step 1.} $P_0$ crosses $Q_0$ and $Q_1$, so the segments $[q_1,q_0]$ and
+$[q_1,q_2]$ share the endpoint $q_1$ and both cross $P_0=[p_0,p_1]$. Applying
+Lemma~\ref{lem:shared} with $(A,B,C)=(q_0,q_1,q_2)$ and $[D,E]=P_0$ gives
+$v_1w_1<0$.
+
+\emph{Step 2.} $P_2$ crosses $Q_0$ and $Q_1$, so those \emph{same} two segments
+both cross $P_2=[p_2,p_3]$. Lemma~\ref{lem:shared} at the same vertex $q_1$,
+now with $[D,E]=P_2$, gives $v_2w_2<0$.
+
+\emph{Step 3.} $P_1$ crosses $Q_0$, so $p_1$ and $p_2$ lie strictly on opposite
+sides of the line $q_0q_1$, i.e.\ $v_1v_2<0$. Combining with Steps 1 and 2,
+$w_1$ and $w_2$ have opposite signs:
+\begin{equation}\label{eq:pat8a}
+  w_1w_2<0 .
+\end{equation}
+
+\emph{Step 4.} $P_0$ crosses all three of $Q_0,Q_1,Q_2$, which gives
+$s_0s_1<0$, $s_1s_2<0$ and $s_2s_3<0$; in particular $s_0$ and $s_2$ have the
+same sign. Now $[p_1,p_0]$ and $[p_1,p_2]$ share $p_1$, and both cross $Q_0$
+(because $P_0$ and $P_1$ each cross $Q_0$) and both cross $Q_2$ (because $P_0$
+and $P_1$ each cross $Q_2$). Two applications of Lemma~\ref{lem:shared} at
+$p_1$ therefore give $s_0u_0<0$ and $s_2u_2<0$, whence $u_0$ and $u_2$ have the
+same sign. Since $P_1$ crosses $Q_0$ we have $u_0u_1<0$, so
+\begin{equation}\label{eq:pat8b}
+  u_1u_2<0 .
+\end{equation}
+
+\emph{Step 5.} $P_1$ does \emph{not} cross $Q_1$. By definition $P_1$ properly
+crosses $Q_1$ precisely when $u_1u_2<0$ and $w_1w_2<0$. By \eqref{eq:pat8b} the
+first holds, so the second must fail: $w_1w_2>0$, contradicting
+\eqref{eq:pat8a}.
+\end{proof}
+
+The proof uses each of the eight prescribed incidences and never the
+unconstrained cell $(P_2,Q_2)$, which is what one would hope to see. Each of
+its inferences has additionally been checked as a universally quantified
+statement over all $3{,}315$ order types of eight points and all $8!$
+labellings, with no violation; see \texttt{independent/pi8\_human/}.
+
+\textbf{For $\Pi_{14}$ we still offer no human proof}, and it is the weaker of
+the two pillars for exactly that reason: eleven points puts the order-type
+check of \S\ref{sec:ot8} permanently out of reach as well. A reader who wants
+to attack this work should attack $\Pi_{14}$.
+
+For $\Pi_8$ we can also offer an independent verification by a completely
 different route, described next.
 
 \subsection{An independent check of \texorpdfstring{$\Pi_8$}{Pi 8} by order
@@ -873,7 +953,7 @@ $I+\lvert \ED\rvert=49$, Lemma~\ref{lem:even}, Lemma~\ref{lem:42}
 The $28$ degree shapes (\S\ref{sec:cover})
   & machine-checked & \textbf{yes}; derived above \\
 Theorem~\ref{thm:pat8} ($\Pi_8$ non-realizable)
-  & machine-checked & \textbf{no} --- but see \S\ref{sec:ot8} \\
+  & machine-checked & \textbf{yes} --- proof via Lem.~\ref{lem:shared} \\
 Theorem~\ref{thm:pat14} ($\Pi_{14}$)
   & machine-checked & \textbf{no} --- solver refutation \\
 Theorem~\ref{thm:cover} (covering)
@@ -1107,15 +1187,16 @@ Three questions are the ones we would most value, and none of them involves a
 machine:
 
 \begin{enumerate}[leftmargin=*]
-  \item \textbf{Is Theorem~\ref{thm:pat8} true?} Eight incidences on three
-    consecutive sides of each polygon, no simplicity hypothesis
-    (Definition~\ref{def:pat8}). This is a question of plane geometry. We offer
-    no human proof of it, so a synthetic argument --- or a counterexample ---
-    would be decisive either way. \S\ref{sec:ot8} gives an independent
-    verification by order-type enumeration that a reader can re-run in seconds
-    without Lean, which is the nearest thing to a hand check we can supply. If it is false, the exclusion of $40$ and $42$
-    collapses, though \S\ref{sec:prelim}, \S\ref{sec:lower} and
-    \S\ref{sec:plane} would survive.
+  \item \textbf{Is Theorem~\ref{thm:pat14} true?} Twenty-one incidences on
+    eleven points (Definition~\ref{def:pat14}). This is a question of plane
+    geometry, and it is now the \emph{only} one of the two patterns without a
+    human proof: Theorem~\ref{thm:pat8} acquired one via
+    Lemma~\ref{lem:shared}, but eleven points puts both that argument and the
+    order-type check of \S\ref{sec:ot8} out of reach here. A synthetic
+    argument --- or a counterexample --- would be decisive either way. If it is
+    false, the exclusion of $40$ and $42$ collapses, though
+    \S\ref{sec:prelim}, \S\ref{sec:lower} and \S\ref{sec:plane} would
+    survive.
   \item \textbf{Does \cite[\S9]{AckermanKeszeghRote2022} actually deliver
     Proposition~\ref{prop:reduction}?} This is the one thing we import, and
     settling it is a matter of reading that paper, not this one. One worry we
