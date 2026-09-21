@@ -25,7 +25,20 @@ assumption.
 
 At a coincidence `P_i = Q_j`, put the apex at the origin. Each boundary is
 locally a "V": `P`'s two edges run to `a₁, a₂` and `Q`'s to `b₁, b₂`. `Q` stays
-put and `P`'s V is translated by `εE`.
+put and the apex of `P`'s V moves to `εE`.
+
+> **Correction, 2026-09-20.** The first version of `sweep.py`, `criterion.py`,
+> `controls.py` and `nondegenerate.py` translated **the whole V** — apex and
+> both neighbours — by `εE`. That is *not* what AKR do: they move only the
+> vertex `P_i` ("we leave `Q_j` stationary but we move
+> `P_i = P⁰_i + εE_i`"), so `P`'s two edges pivot about their far endpoints
+> instead of translating. `apexonly.py` re-runs the experiment in the correct
+> model. **The result is unchanged** — 11,856 configurations, zero with no
+> working direction — and the cone construction still produces a crossing on
+> every one of 2,981 trials. The proof below is written for the apex-only
+> model and the explicit parameters are given, so it is not affected either.
+> The original scripts are kept; read them as a check of a related but
+> different statement.
 
 ## The lemma
 
@@ -61,6 +74,16 @@ then the meeting point is interior to both *segments*. Since `a_k ∦ b_l` the
 lines are transversal, so each segment has its endpoints strictly on opposite
 sides of the other's line — which is exactly `ProperCross`. ∎
 
+*In the apex-only model the same `E` works, with the parameters written out.*
+The segment from the moved apex `εE` to the fixed neighbour `a_k` meets the
+segment from `O` to `b_l` where `ε(1−μ)E + μ·a_k = ν·b_l`. Substituting
+`E = t₀b_l − s₀a_k` and matching coefficients in the basis `{b_l, a_k}` gives
+
+    μ = ε·s₀ / (1 + ε·s₀),        ν = ε·t₀ / (1 + ε·s₀),
+
+both in `(0,1)` for every `ε > 0`. So the crossing exists for all small `ε`
+here too, and the intersection point approaches the apex like `O(ε)`.
+
 **(1) ⟹ (2).** If all four are parallel, both V's lie in lines parallel to a
 common direction, and so does every translate. Segments on parallel lines never
 properly cross: the straddle test fails when the lines are distinct, and
@@ -91,6 +114,7 @@ would be infinite — contradicting the finiteness assumption stated in AKR §1.
 | `criterion.py` | 8,628 configurations **including degenerate ones**, testing the sharp iff | **0** mismatches; 66 genuine "no direction" cases present |
 | `controls.py` | non-vacuity and adversarial controls | all pass — see below |
 | `nondegenerate.py` | 3,980 configurations, demanding a direction that crosses **and** leaves no local degeneracy | **0** failures |
+| `apexonly.py` | 11,856 configurations in the **correct apex-only model**, plus a direct test of the cone parameters | **0** with no working direction; **0** cone failures in 2,981 trials |
 
 `orient` and `ProperCross` are transcribed from `lean/GeometryDefs.lean` lines
 59 and 73. All arithmetic is exact `Fraction`; nothing is floating point.

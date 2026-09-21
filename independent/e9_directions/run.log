@@ -36,3 +36,11 @@ $ python3 controls.py
 $ python3 nondegenerate.py
 configurations tested                                  : 3980
   no crossing-AND-nondegenerate direction found        : 0
+  cone directions giving a proper crossing: 2981 ok, 0 failed
+
+--- the eps_uniform agent's certificate, apex-only ---
+  E = -2*a1 = (Fraction(-2, 1), Fraction(6, 1))   (parallel to a1: True)
+  eps=1e-3: orient(apex,a1,Q_j)=0  Q_j on P-edge interior: True   proper crossings elsewhere: 2
+  eps=1e-6: orient(apex,a1,Q_j)=0  Q_j on P-edge interior: True   proper crossings elsewhere: 2
+  eps=1e-9: orient(apex,a1,Q_j)=0  Q_j on P-edge interior: True   proper crossings elsewhere: 2
+  eps=1e-12: orient(apex,a1,Q_j)=0  Q_j on P-edge interior: True   proper crossings elsewhere: 2
