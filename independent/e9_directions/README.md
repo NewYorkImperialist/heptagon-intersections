@@ -135,6 +135,53 @@ A checker that always answers "found" would prove nothing, so:
 * **The count is stable as `ε → 0`** — checked down to `ε = 10⁻²⁰`, consistent
   with the cone being scale-invariant.
 
+## Finiteness is preserved too — closing the gap R3-1 opened
+
+`../eps_uniform/R3.md` Finding R3-1 showed that a direction satisfying AKR's
+*stated* criterion can make `∂P(ε) ∩ ∂Q(ε)` **infinite**, destroying AKR's own
+standing finiteness assumption, which every later step of §9 inherits as a
+hypothesis and cannot repair. On that certificate this directory's
+degeneracy-free clause happened to reject the bad direction. Luck, or a
+theorem? It is a theorem, and here is the sharp form.
+
+> **Lemma (which directions destroy finiteness).** At a coincidence with
+> `P`-rays `a₁,a₂` and `Q`-rays `b₁,b₂`, assuming finiteness holds at `ε = 0`,
+> moving the apex to `εE` makes `∂P(ε) ∩ ∂Q(ε)` infinite **iff** there are
+> `k, l` with `a_k ∥ b_l` and `E` a **positive multiple of `b_l`**.
+
+Parallelism alone is not enough — of that line's two rays, only the one
+pointing *into* the opposing side creates the overlap. The bad set is therefore
+a finite union of open **rays**, and an open 2-dimensional cone minus finitely
+many rays is still nonempty. So a direction that both creates a proper crossing
+at the apex and preserves finiteness always exists.
+
+**Verified on the family where the risk is real.** Random heptagon pairs are
+useless here: in 113 of them, *no* direction destroyed finiteness, so the test
+was vacuous. R3-1's mechanism needs two opposing rays to be collinear, which
+random generation does not produce. `antiparallel.py` builds that family
+deliberately:
+
+| | |
+|---|---|
+| configurations (collinear opposing rays, finite at `ε = 0`) | 2,652 |
+| directions that **do** destroy finiteness | **2,675** — not vacuous |
+| mismatches against the characterisation above | **0** |
+| configurations with no safe crossing direction | **0** |
+
+`global_finiteness.py` runs the whole-heptagon version.
+
+**Three corrections happened on the way here, and they are the point.** The
+condition was first written as "no vertex of either polygon on the other's
+boundary", which is far too strong — §9.1 deliberately *leaves* vertex-side
+degeneracies for §9.2, so a pre-existing one makes that condition unsatisfiable
+for every `E`. Narrowing it to the two moved sides was still too strong, for
+the same reason one level down: a moved side has an endpoint that does not
+move, and that endpoint may already sit on a `Q`-side. The right condition is
+not a proxy at all — it is finiteness itself. Then the characterisation of the
+bad directions was wrong twice more (missing the "positive multiple" half, then
+missing the second ray pair) before the mismatch counter reached zero. Both
+scripts are kept as they ended, with the superseded predicate described.
+
 ## What this does not do
 
 It does **not** close §9, and `f(7,7) = 38` remains a candidate.

@@ -1,0 +1,17 @@
+antiparallel-ray configurations tested        : 2652
+  directions destroying finiteness, total     : 2675   <- non-vacuous
+  mismatches vs the general characterisation  : 0
+  configurations with NO safe crossing dir    : 0
+heptagon pairs with a coincidence, finite at eps=0 : 380
+  some direction gives a crossing near the apex    : 380
+  some direction gives crossing AND globally       : 378
+    degeneracy-free
+  moved-sides-clean but NOT finite (want 0)        : 0
+  CONTROL: LOCAL-only clause admits a NON-finite   : 0
+           direction (if >0, local is NOT enough)
+
+--- the R3-1 certificate ---
+  a direction with a crossing exists              : True
+  a globally degeneracy-free such direction exists: (Fraction(1, 1), Fraction(1, 1))
+  global degeneracy-free ever gave infinite       : False
+  the bad E=(2,0): moved-sides-clean=False  finite=False
