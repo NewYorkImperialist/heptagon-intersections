@@ -1,0 +1,9 @@
+mode=translate k=6 grid=6 configs=500 delta=2^-24 disc radius^2 = 2^-20
+  (P3-i) moving endpoint  : {'P3 agree': 452}  observed local counts: {0: 148, 1: 156, 2: 148}
+  (P2-i) rotating nbr side: {'P2 agree': 398}  observed local counts: {0: 103, 1: 192, 2: 103}
+mode=tilt k=6 grid=6 configs=500 delta=2^-24 disc radius^2 = 2^-20
+  (P3-i) moving endpoint  : {'P3 agree': 510}  observed local counts: {0: 163, 1: 184, 2: 163}
+  (P2-i) rotating nbr side: {'P2 agree': 398}  observed local counts: {0: 103, 1: 192, 2: 103}
+mode=akr k=6 grid=6 configs=500 delta=2^-24 disc radius^2 = 2^-20
+  (P3-i) moving endpoint  : {'P3 agree': 472}  observed local counts: {0: 156, 1: 160, 2: 156}
+  (P2-i) rotating nbr side: {}  observed local counts: {}

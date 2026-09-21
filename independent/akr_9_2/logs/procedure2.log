@@ -1,0 +1,41 @@
+mode=akr k=6 grid=6 configs=500 seed=31  (bound m+n = 12)
+  UNDEFINED: 91
+  cleared: 409
+  count increased: 302
+  count preserved: 107
+  shifts-used histogram: {1: 259, 2: 118, 3: 27, 4: 5}
+  max initial degeneracy count D observed: 4
+mode=translate k=6 grid=6 configs=500 seed=31  (bound m+n = 12)
+  *** DEGENERACIES LEFT AFTER TWO PASSES ***: 1
+  cleared: 499
+  count increased: 362
+  count preserved: 138
+  shifts-used histogram: {1: 301, 2: 151, 3: 41, 4: 5, 5: 2}
+  max initial degeneracy count D observed: 4
+mode=tilt k=6 grid=6 configs=500 seed=31  (bound m+n = 12)
+  *** DEGENERACIES LEFT AFTER TWO PASSES ***: 1
+  cleared: 499
+  count increased: 360
+  count preserved: 140
+  shifts-used histogram: {1: 330, 2: 138, 3: 29, 4: 3}
+  max initial degeneracy count D observed: 4
+mode=akr k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  *** DEGENERACIES LEFT AFTER TWO PASSES ***: 1
+  UNDEFINED: 57
+  cleared: 342
+  count increased: 251
+  count preserved: 92
+  shifts-used histogram: {1: 226, 2: 87, 3: 24, 4: 3, 5: 3}
+  max initial degeneracy count D observed: 5
+mode=translate k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  cleared: 400
+  count increased: 293
+  count preserved: 107
+  shifts-used histogram: {1: 232, 2: 119, 3: 45, 4: 4}
+  max initial degeneracy count D observed: 5
+mode=tilt k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  cleared: 400
+  count increased: 293
+  count preserved: 107
+  shifts-used histogram: {1: 253, 2: 109, 3: 36, 4: 2}
+  max initial degeneracy count D observed: 5

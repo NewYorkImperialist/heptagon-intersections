@@ -1,0 +1,19 @@
+mode=akr k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  UNDEFINED: 56
+  cleared: 344
+  count increased: 253
+  count preserved: 91
+  shifts-used histogram: {1: 233, 2: 84, 3: 25, 4: 2}
+  max initial degeneracy count D observed: 5
+mode=translate k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  cleared: 400
+  count increased: 292
+  count preserved: 108
+  shifts-used histogram: {1: 244, 2: 115, 3: 38, 4: 3}
+  max initial degeneracy count D observed: 5
+mode=tilt k=7 grid=7 configs=400 seed=41  (bound m+n = 14)
+  cleared: 400
+  count increased: 292
+  count preserved: 108
+  shifts-used histogram: {1: 267, 2: 105, 3: 27, 4: 1}
+  max initial degeneracy count D observed: 5

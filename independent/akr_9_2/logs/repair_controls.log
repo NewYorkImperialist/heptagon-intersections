@@ -1,0 +1,86 @@
+==========================================================================
+CONTROL R1 -- FALSE claim: the averaging identity at a NOT-small shift.
+   Same code, same configurations, delta = 2^-3 instead of 2^-20.
+==========================================================================
+   akr        tested=364    violations=73
+   translate  tested=427    violations=40
+   tilt       tested=426    violations=41
+   PASS (control fired)
+
+==========================================================================
+CONTROL R2 -- the 9.1-BEFORE-9.2 ordering is load-bearing for the REPAIR
+   too: averaging FAILS when a vertex-vertex degeneracy is still there.
+   Q is translated so one of its vertices coincides with a P-vertex.
+   delta = 2^-20, i.e. genuinely small.
+==========================================================================
+   translate  tested=313    violations=35
+   tilt       tested=313    violations=35
+   akr        tested=281    violations=49
+   PASS (control fired)
+
+==========================================================================
+CONTROL R3 -- FALSE rule: 'skew', which moves A by delta*n and B by
+   2*delta*n, so the shifted side is NOT parallel to s and does not lie
+   on any single l_delta.  Identity must FAIL.  delta = 2^-20.
+==========================================================================
+   skew       tested=600    violations=0
+   tilt       tested=600    violations=0
+   *** FAIL (control silent) ***
+
+==========================================================================
+CONTROL R4 -- the clause-3 checker is not vacuous: it must report
+   NOT CLEARED for the pure translation on the perpendicular witness,
+   and CLEARED for the tilt on the same input.
+==========================================================================
+   akr        status=undefined  identity=None cleared=None degcount=None
+   translate  status=ok         identity=True cleared=False degcount=(1, 1, 1)
+   tilt       status=ok         identity=True cleared=True degcount=(1, 0, 0)
+   PASS (control fired)
+==========================================================================
+CONTROL R1 -- FALSE claim: the averaging identity at a NOT-small shift.
+   Same code, same configurations, delta = 2^-3 instead of 2^-20.
+==========================================================================
+   akr        tested=364    violations=73
+   translate  tested=427    violations=40
+   tilt       tested=426    violations=41
+   PASS (control fired)
+
+==========================================================================
+CONTROL R2 -- the 9.1-BEFORE-9.2 ordering is load-bearing for the REPAIR
+   too: averaging FAILS when a vertex-vertex degeneracy is still there.
+   Q is translated so one of its vertices coincides with a P-vertex.
+   delta = 2^-20, i.e. genuinely small.
+==========================================================================
+   translate  tested=313    violations=35
+   tilt       tested=313    violations=35
+   akr        tested=281    violations=49
+   PASS (control fired)
+
+==========================================================================
+CONTROL R3 -- FALSE rule: 'skew', which moves A by delta*n and B by
+   2*delta*n, so the shifted side is NOT parallel to s and does not lie
+   on any single l_delta.  Identity must FAIL.  delta = 2^-20.
+==========================================================================
+   skew       tested=600    violations=0
+   tilt       tested=600    violations=0
+   *** FAIL (control silent) ***
+
+==========================================================================
+CONTROL R4 -- the clause-3 checker is not vacuous: it must report
+   NOT CLEARED for the pure translation on the perpendicular witness,
+   and CLEARED for the tilt on the same input.
+==========================================================================
+   akr        status=undefined  identity=None cleared=None degcount=None
+   translate  status=ok         identity=True cleared=False degcount=(1, 1, 1)
+   tilt       status=ok         identity=True cleared=True degcount=(1, 0, 0)
+   PASS (control fired)
+
+==========================================================================
+CONTROL R3b -- FALSE rule 'even': A and B are both displaced by |delta|*n,
+   so the two 'directions' are the SAME configuration.  'The average over
+   the two possible directions' then has only one direction in it and the
+   identity must FAIL.  delta = 2^-20.
+==========================================================================
+   even       tested=600    violations=176
+   tilt       tested=600    violations=0
+   PASS (control fired)

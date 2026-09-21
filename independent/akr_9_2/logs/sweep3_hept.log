@@ -1,0 +1,18 @@
+mode=akr k=7 grid=7 pairs=2000 seed=23 deltas=2^-[20, 30] require=None vv_ok=False
+  class E   {'tested': 1088, 'skip:undefined': 104}
+  class I   {'tested': 496, 'skip:undefined': 56}
+  class IE  {'tested': 30, 'skip:undefined': 6}
+  class N   {'tested': 3552, 'skip:undefined': 338}
+  TOTAL {'tested': 5166, 'skip:undefined': 504}
+mode=translate k=7 grid=7 pairs=2000 seed=23 deltas=2^-[20, 30] require=None vv_ok=False
+  class E   {'tested': 1192, 'NOT CLEARED': 168}
+  class I   {'tested': 552}
+  class IE  {'tested': 36, 'NOT CLEARED': 14}
+  class N   {'tested': 3890}
+  TOTAL {'tested': 5670, 'NOT CLEARED': 182}
+mode=tilt k=7 grid=7 pairs=2000 seed=23 deltas=2^-[20, 30] require=None vv_ok=False
+  class E   {'tested': 1192}
+  class I   {'tested': 552}
+  class IE  {'tested': 36}
+  class N   {'tested': 3890}
+  TOTAL {'tested': 5670}
