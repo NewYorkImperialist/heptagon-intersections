@@ -242,6 +242,34 @@ the honest position: `f(7,7) = 38` still rests entirely on §9, because 52 is no
 lines reusing the existing `cp9` machinery, and it would be the project's first
 upper bound on `f(7,7)` with **no external input whatsoever**.
 
+> **Correction, 2026-09-21 — `≤ 52` is weaker than a triviality, and should not
+> be formalized as stated.**
+>
+> If `∂P ∩ ∂Q` is finite then **`|∂P ∩ ∂Q| ≤ 49`**, immediately and with no
+> input at all: `∂P` is a union of 7 closed segments and `∂Q` of 7, so the
+> intersection is the union of the 49 sets `S_i ∩ T_j`; two closed segments
+> meet in `∅`, a point, or a subsegment, and a subsegment of positive length
+> would make the intersection infinite. So each of the 49 pairs contributes at
+> most one point. No simplicity, no general position, no AKR — and `49 < 52`.
+>
+> So U52 as stated adds nothing, and "the project's first upper bound with no
+> external input whatsoever" is not right: that bound is `49`, it is one
+> paragraph, and the project's own `I + |E^D| = 49` identity already encodes it.
+>
+> **What does have content is the parametrised form the proof passes through:**
+>
+> > `|∂P ∩ ∂Q| ≤ 38 + d`, where `d` is the number of points that are a vertex
+> > of either polygon.
+>
+> That beats 49 exactly when `d ≤ 10`, and it degrades gracefully: at `d = 0` it
+> recovers the general-position bound of 38. **This is the statement worth
+> formalizing**, and the `≤ 52` packaging obscures it, because `d ≤ 14` is the
+> one case where the trivial bound wins.
+>
+> Checked on 596 random finite heptagon pairs (`independent/akr_9_assembly/u52_check.py`):
+> 0 violations of `≤ 49`, and `38 + d` was the better of the two bounds in all
+> 596. Largest intersection observed: 10.
+
 ### 2.3 The count inequality for §9.1
 
 > **Theorem CI.** Let `P⁰, Q⁰ : Fin 7 → ℝ × ℝ` be `SimpleClosed` with
