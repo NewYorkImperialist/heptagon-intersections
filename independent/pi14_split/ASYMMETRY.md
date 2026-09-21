@@ -479,3 +479,52 @@ Lean result.** A hill-climber that misses is a hill-climber that missed.
 | `theorem_grid.py`, `forced_pairs.py`, `forced_89.py`, `forced_more.py`, `probe_q1line.py` | the probes quoted above |
 | `drop_q1q3.py`, `push64.py` | the two solver sweeps |
 | `chiro.py`, `chiro_gen.py`, `gp_check.py` | a chirotope/Grassmann-Plucker relaxation — **a dead end, kept deliberately**: the validated 3-term GP relations are too weak, they leave even $\Pi_8$ satisfiable |
+
+---
+
+## 13. Addendum, 2026-09-21 (later) — the synthetic half is finished, and the
+## census moves to 224/0/32. See [`SYNTHETIC.md`](SYNTHETIC.md)
+
+Nothing above is edited; this section records what a later session found and
+which of the claims above it extends.
+
+**§10's item 1 is done.** "A synthetic proof of the $V_{11},V_{12}$ half of the
+Theorem" is **LEMMA 2** of `SYNTHETIC.md` §3. Its hypothesis set is exactly the
+12-condition core z3 finds by randomised minimisation, for all four disjunct
+combinations of the two non-crossings and three minimisation seeds.
+
+**§10's stated obstruction is dissolved, not worked around.** §10 records that
+"the parity of how often a segment meets the Jordan curve depends on cells
+$\Pi_{14}$ leaves FREE — $P_0\times Q_0$ and $P_0\times Q_3$ among them".
+**LEMMA 3** (`SYNTHETIC.md` §4) shows $P_0\times Q_0$ is not free at all: Lemma
+1's seven conditions force $P_0 \not\times Q_0$ and $P_2\not\times Q_2$, checked
+over all 3,315 order types with a leave-one-out control on every hypothesis. And
+the proof does not count parities: the Jordan curve of §10 is recognised as the
+boundary of a **convex quadrilateral** — its four vertices are $P_0\cap Q_1$,
+$V_1$, $V_2$, $P_2\cap Q_1$, two on each boundary ray of the wedge
+$\{$one side of $V_1V_2\} \cap \{$one side of $V_8V_9\}$, simple because
+$P_0\not\times P_2$ — so "a straight segment meets it at most twice" replaces
+the parity count, and no free cell can affect that.
+
+**New: LEMMA 4, and 32 of the 64 open branches.** The same construction with the
+roles of $P$ and $Q$ exchanged gives a second convex quadrilateral
+$P_1\cap Q_0 \to V_8 \to V_9 \to P_1\cap Q_2$, simple because $Q_0\not\times
+Q_2$. $P_3$ crosses three of its four sides, which forces
+$\operatorname{or}(1,2,4) = -\operatorname{or}(1,2,8)$ — the first fact anything
+in this project has pinned about $V_4$. With
+$\operatorname{or}(1,2,3)=+\operatorname{or}(1,2,8)$ that **refutes the first
+disjunct of $P_1\not\times P_3$ in every branch**, so the 32 open branches with
+bit 5 of the index zero are refuted. Verified exhaustively on the order-type
+database (266 cases, 0 violations) with a non-vacuous leave-one-out control on
+all nine hypotheses.
+
+**§10's counts are therefore superseded**: **224 of 256 branches refuted, 0
+realizable, 32 undecided** (16 distinct systems), from 192 / 0 / 64. The 32 new
+refutations are a hand proof plus an exhaustive 8-point check, not solver runs —
+a direct z3 attempt on Lemma 4's branch consequence returned `unknown`.
+
+**Unchanged.** $\Pi_{14}$ is still not independently refuted, no branch has ever
+returned `sat`, and nothing here changes Theorem 3.4's status or the status of
+$f(7,7)=38$. The residual problem is now a single inequality, stated exactly in
+`SYNTHETIC.md` §7: can $V_1$ and $V_2$ lie on the same side of the line
+$V_3V_4$?

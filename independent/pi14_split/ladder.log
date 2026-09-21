@@ -1,0 +1,12 @@
+derived facts: ON (48)
+L0  17 conds (base)          : sat      order#0     (0s)
+   SAT model found -- must be re-verified outside z3
+L1  + Q0/xQ2                 : sat      order#3     (15s)
+   SAT model found -- must be re-verified outside z3
+L2  + Q0/xQ2,Q0/xQ3          : sat      order#11    (55s)
+   SAT model found -- must be re-verified outside z3
+L3  + ..,P0/xP2              : sat      order#8     (40s)
+   SAT model found -- must be re-verified outside z3
+L4  + ..,P0/xP3              : sat      order#2     (10s)
+   SAT model found -- must be re-verified outside z3
+L5  full Pi_14 (+P1/xP3)     : unknown  order#None  (120s)

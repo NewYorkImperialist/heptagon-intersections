@@ -1,0 +1,7 @@
+CONTROL A  hypotheses alone                    : unknown (64s)
+CONTROL B  hypotheses + all 48 derived facts   : unknown (85s)
+
+per-fact check: hypotheses + NOT(phi) should be unsat
+  or(1,2,11) +1 [S3] : unknown
+  or(1,2,12) -1 [straddle P1xQ4] : unknown
+  or(1,2,4) -1 [L4] : unknown

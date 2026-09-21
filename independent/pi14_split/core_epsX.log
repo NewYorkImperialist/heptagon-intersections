@@ -1,0 +1,52 @@
+[X] P0/P2=0 P1/Q1=0 : unsat    (0s)
+   drop P3xQ0    (14 left)
+   drop P3xQ1    (13 left)
+   drop P3xQ2    (12 left)
+  CORE(12) seed0: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ1    (14 left)
+   drop P3xQ2    (13 left)
+   drop P3xQ0    (12 left)
+  CORE(12) seed1: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ2    (14 left)
+   drop P3xQ0    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed2: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+[X] P0/P2=0 P1/Q1=1 : unsat    (0s)
+   drop P3xQ0    (14 left)
+   drop P3xQ1    (13 left)
+   drop P3xQ2    (12 left)
+  CORE(12) seed0: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ2    (14 left)
+   drop P3xQ0    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed1: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ2    (14 left)
+   drop P3xQ1    (13 left)
+   drop P3xQ0    (12 left)
+  CORE(12) seed2: P0/P2[0], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+[X] P0/P2=1 P1/Q1=0 : unsat    (0s)
+   drop P3xQ2    (14 left)
+   drop P3xQ0    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed0: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ2    (14 left)
+   drop P3xQ0    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed1: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ0    (14 left)
+   drop P3xQ2    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed2: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[0], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+[X] P0/P2=1 P1/Q1=1 : unsat    (20s)
+   drop P3xQ2    (14 left)
+   drop P3xQ0    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed0: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ0    (14 left)
+   drop P3xQ1    (13 left)
+   drop P3xQ2    (12 left)
+  CORE(12) seed1: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4
+   drop P3xQ0    (14 left)
+   drop P3xQ2    (13 left)
+   drop P3xQ1    (12 left)
+  CORE(12) seed2: P0/P2[1], P0xQ1, P0xQ2, P0xQ4, P1xQ0, P1/Q1[1], P1xQ2, P1xQ3, P1xQ4, P2xQ0, P2xQ1, P2xQ4

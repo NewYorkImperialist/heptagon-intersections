@@ -1,0 +1,2 @@
+or(8,9,12) +1 [L2] : unsat  order#2 (17s)
+or(3,4,9) -1 [CL at V3 w/ Q1] : unsat  order#6 (54s)

@@ -1,0 +1,10 @@
+CONTROL A  hypotheses alone                    : sat (0s)
+CONTROL B  hypotheses + all 48 derived facts   : sat (0s)
+
+per-fact check: hypotheses + NOT(phi) should be unsat
+  or(8,9,12) +1 [L2] : unknown
+  or(3,4,9) -1 [CL at V3 w/ Q1] : unknown
+  P0/xQ0 : unsat
+  P2/xQ2 : unsat
+
+per-fact summary: 46 confirmed unsat, 0 WRONG, 2 unknown

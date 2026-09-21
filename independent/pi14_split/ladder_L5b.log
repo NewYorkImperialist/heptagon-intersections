@@ -1,0 +1,9 @@
+  ...order #0, 8s elapsed
+  ...order #5, 48s elapsed
+  ...order #10, 88s elapsed
+  ...order #15, 128s elapsed
+  ...order #20, 168s elapsed
+  ...order #25, 208s elapsed
+  ...order #30, 248s elapsed
+  ...order #35, 289s elapsed
+L5 unknown after 40 orders (321s)

@@ -190,6 +190,10 @@ independent/pi14_split/shard_census_*.log
 independent/pi14_split/census4_*.log
 independent/pi14_split/lemma1
 independent/pi14_split/sampler
+independent/pi14_split/chirocheck
+independent/pi14_split/lemma2
+independent/pi14_split/lemma3_loo
+independent/pi14_split/lemma4
 
 # Personal study guide -- not part of the published artifact.
 # Remove this line if it is ever made public.

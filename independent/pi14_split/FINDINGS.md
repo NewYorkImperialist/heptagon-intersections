@@ -772,3 +772,29 @@ remain open, all of them the case where $Q_1\not\times Q_3$ and
 $Q_1\not\times Q_4$ both take their second disjunct — no branch has ever
 returned `sat`, and nothing here changes Theorem 3.4's status or the status of
 $f(7,7)=38$.
+
+---
+
+## 15. Addendum, 2026-09-21 (later than §14) — see [`SYNTHETIC.md`](SYNTHETIC.md)
+
+Nothing above is edited. `ASYMMETRY.md` §13 is the dated pointer with the
+detail; in one paragraph:
+
+The $V_{11},V_{12}$ half of §14's Theorem now has a **synthetic proof** (LEMMA
+2), so §14's 192 refutations no longer rest on the solver. The free-cell
+obstruction that stopped the previous session is dissolved: two of $\Pi_{14}$'s
+six free $P\times Q$ cells are in fact **forced** (LEMMA 3), and the tool that
+does it is a convexity bound, not a parity count. A fourth lemma, from the same
+construction with $P$ and $Q$ exchanged, pins $V_4$ and **refutes the first
+disjunct of $P_1\not\times P_3$ in every branch**, closing 32 more branches by
+hand.
+
+**Census: 224 of 256 refuted, 0 realizable, 32 undecided**, superseding §14's
+192 / 0 / 64 and §12's 76 / 0 / 180. Twenty of $\Pi_{14}$'s 21 conditions are
+simultaneously realizable (213 exact non-degenerate configurations from a
+solver-free search), so the whole residual problem is one disjunct of
+$P_1\not\times P_3$: whether $V_1$ and $V_2$ can lie on the same side of the
+line $V_3V_4$.
+
+**$\Pi_{14}$ is still not independently refuted**, no branch has ever returned
+`sat`, and Theorem 3.4 and $f(7,7)=38$ are unaffected.
