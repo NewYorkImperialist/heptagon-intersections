@@ -1,13 +1,13 @@
 # Independent re-derivations and experiments
 
-Twelve separate investigations, each in its own subdirectory, each written to
+Thirteen separate investigations, each in its own subdirectory, each written to
 check something the main pipeline in `../python/` asserts, or to probe a claim
 the paper makes. They differ sharply in how independent they actually are, and
 the difference is the whole point of keeping them apart — read each
 subdirectory's own README before quoting it.
 
 > This index said "Four separate investigations" and tabled four until
-> 2026-09-20, while eight further directories sat here uncited. If you have
+> 2026-09-20, while nine further directories sat here uncited. If you have
 > quoted this file before that date, you were reading a partial list.
 
 **None of this is human verification.** Every directory here was produced
@@ -28,6 +28,7 @@ See `../docs/ai-disclosure.md`.
 | [`pattern_scaling/`](pattern_scaling/) | whether the two-pattern covering result scales past `n = 7` — i.e. the `f(7,n)` hope of the paper's §11 | re-parses the two pattern statements from the authoritative Lean sources rather than from prose, then searches in C++; a fresh implementation, but of this project's own claim | **Zero escapers.** Exhaustive at `n = 9` (2,328,480 surjections) and `n = 11` (322,494,480); 1,000,000 uniform samples at `n = 13`; in every case every `c = 7` surjection is covered by `Pi_8` or `Pi_14`. Also the direct test of the paper's `rem:diagonal`: it confirms the diagonal `sigma(j) = j mod 7` **does** contain `Pi_8` at `n = 11` and `n = 13`, at the cyclic seam. **Not a proof for `n = 13` or for any larger `n`** |
 | [`pi8_tightness/`](pi8_tightness/) | which of `Pi_8`'s eight conditions carries the obstruction | an experiment on the project's own claim, against the same external order-type database as `order_type_pi8/`; **not** independent evidence that `Pi_8` is unrealizable | Dropping each condition in turn and counting realizable order types gives a profile that is **exactly transpose-symmetric**, independently reproducing why `Pi_8` has 196 images and not 392. The corner crossing `P0 x Q0` is load-bearing (427 realizable without it); the centre miss is middling (1,571). A pointer for a hand attack, nothing more |
 | [`pi8_human/`](pi8_human/) | a **human** proof of `Pi_8`, which the paper explicitly invites and which nobody had attempted | not a check of anything — an attempt at the synthetic argument the machine result lacks, against the same external order-type database | **Incomplete, and says so.** A reformulation of `Pi_8` that is strictly stronger and symmetric, plus a general Core Lemma proved by coordinates (if two segments share an endpoint and both cross a third, two orientations are forced opposite). From it `u1 != u2` follows unconditionally, collapsing the case split that stopped the first attempt. The remainder is one isolated case split, closed 330/4842/610/0 by two different mechanisms; all 56 triples and 1,540 XOR-pairs searched for a deciding sign, none found. **Not a proof**; nothing depends on it |
+| [`pi14_split/`](pi14_split/) | `Pi_14`, the one pattern with **no** independent check — eleven points puts the order-type route permanently out of reach | **Encoding-independent of the SAT/chirotope proof** (semialgebraic feasibility, no Boolean variables, no Grassmann-Plücker clauses), with ground truth transcribed from the Lean source and diffed against it | **Does not close.** The 256-branch disjunct census completed at `unsat=11, sat=0, unknown=245`; sign-splitting, full affine normalisation and adaptive refinement all run correctly and none finishes (~10^9 consistent assignments). Controls pass, including a vacuity check in exact `Fraction` arithmetic outside z3. Key caveat for anyone continuing: `qfnra-nlsat` returns `unknown` on **20 of 24** systems that are satisfiable by construction, so `unknown` means almost nothing here. It never returned `unsat` on a satisfiable system, so the 11 refutations stand. **`Pi_14` is not independently refuted** |
 
 ## How to read the "independent" in the directory name
 

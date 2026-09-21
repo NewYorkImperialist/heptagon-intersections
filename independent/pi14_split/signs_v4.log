@@ -1,0 +1,26 @@
+# PI_14 phase1_vars=61 refine_pool=104 node_ms=300 leaf_ms=5000 refine_ms=2000 max_refine=20
+[       0s] pi14 prog 0/16384 nodes=17 z3=16 unsat=0 comb=1 leaves_closed=0 refines=0 undecided=0 sat=0 
+[      60s] pi14 prog 244/16384 nodes=3207 z3=2021 unsat=396 comb=1192 leaves_closed=6 refines=0 undecided=0 sat=0 
+[     120s] pi14 prog 244/16384 nodes=3739 z3=2355 unsat=452 comb=1402 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     181s] pi14 prog 244/16384 nodes=4108 z3=2580 unsat=491 comb=1546 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     242s] pi14 prog 244/16384 nodes=4506 z3=2800 unsat=513 comb=1724 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     320s] pi14 prog 244/16384 nodes=4705 z3=2953 unsat=545 comb=1812 leaves_closed=38 refines=20 undecided=0 sat=0 
+[     391s] pi14 prog 244/16384 nodes=4711 z3=3022 unsat=578 comb=1812 leaves_closed=68 refines=50 undecided=0 sat=0 
+[     467s] pi14 prog 244/16384 nodes=4741 z3=3103 unsat=611 comb=1824 leaves_closed=98 refines=80 undecided=0 sat=0 
+[     539s] pi14 prog 244/16384 nodes=4747 z3=3172 unsat=644 comb=1824 leaves_closed=128 refines=110 undecided=0 sat=0 
+[     599s] pi14 prog 244/16384 nodes=4977 z3=3323 unsat=670 comb=1924 leaves_closed=138 refines=120 undecided=0 sat=0 
+[     673s] pi14 prog 244/16384 nodes=5018 z3=3411 unsat=703 comb=1940 leaves_closed=169 refines=151 undecided=0 sat=0 
+[     741s] pi14 prog 244/16384 nodes=5022 z3=3476 unsat=735 comb=1942 leaves_closed=200 refines=182 undecided=0 sat=0 
+[     808s] pi14 prog 244/16384 nodes=5025 z3=3542 unsat=767 comb=1942 leaves_closed=231 refines=213 undecided=0 sat=0 
+[     874s] pi14 prog 244/16384 nodes=5026 z3=3606 unsat=799 comb=1942 leaves_closed=262 refines=244 undecided=0 sat=0 
+[     941s] pi14 prog 244/16384 nodes=5028 z3=3671 unsat=831 comb=1942 leaves_closed=293 refines=275 undecided=0 sat=0 
+[    1008s] pi14 prog 244/16384 nodes=5029 z3=3735 unsat=863 comb=1942 leaves_closed=324 refines=306 undecided=0 sat=0 
+[    1079s] pi14 prog 244/16384 nodes=5054 z3=3813 unsat=895 comb=1952 leaves_closed=355 refines=337 undecided=0 sat=0 
+[    1146s] pi14 prog 244/16384 nodes=5058 z3=3878 unsat=927 comb=1954 leaves_closed=386 refines=368 undecided=0 sat=0 
+[    1213s] pi14 prog 244/16384 nodes=5061 z3=3944 unsat=959 comb=1954 leaves_closed=417 refines=399 undecided=0 sat=0 
+[    1279s] pi14 prog 244/16384 nodes=5062 z3=4008 unsat=991 comb=1954 leaves_closed=448 refines=430 undecided=0 sat=0 
+[    1347s] pi14 prog 244/16384 nodes=5064 z3=4073 unsat=1023 comb=1954 leaves_closed=479 refines=461 undecided=0 sat=0 
+[    1414s] pi14 prog 244/16384 nodes=5065 z3=4137 unsat=1055 comb=1954 leaves_closed=510 refines=492 undecided=0 sat=0 
+[    1494s] pi14 prog 244/16384 nodes=5119 z3=4230 unsat=1088 comb=1978 leaves_closed=540 refines=522 undecided=0 sat=0 
+[    1566s] pi14 prog 244/16384 nodes=5123 z3=4297 unsat=1121 comb=1978 leaves_closed=570 refines=552 undecided=0 sat=0 
+[    1643s] pi14 prog 244/16384 nodes=5155 z3=4380 unsat=1154 comb=1990 leaves_closed=600 refines=582 undecided=0 sat=0 

@@ -1,0 +1,9 @@
+# PI_14 phase1_vars=61 refine_pool=104 node_ms=500 leaf_ms=5000 refine_ms=3000 max_refine=14
+[       0s] pi14 prog 0/16384 nodes=17 z3=16 unsat=0 comb=1 leaves_closed=0 refines=0 undecided=0 sat=0 
+[      63s] pi14 prog 244/16384 nodes=3072 z3=1947 unsat=388 comb=1131 leaves_closed=6 refines=0 undecided=0 sat=0 
+[     123s] pi14 prog 244/16384 nodes=3289 z3=2086 unsat=408 comb=1221 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     184s] pi14 prog 244/16384 nodes=3696 z3=2325 unsat=443 comb=1389 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     244s] pi14 prog 244/16384 nodes=3915 z3=2460 unsat=470 comb=1473 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     304s] pi14 prog 244/16384 nodes=4142 z3=2596 unsat=490 comb=1564 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     368s] pi14 prog 244/16384 nodes=4389 z3=2731 unsat=502 comb=1676 leaves_closed=18 refines=0 undecided=0 sat=0 
+[     428s] pi14 prog 244/16384 nodes=4625 z3=2865 unsat=518 comb=1778 leaves_closed=18 refines=0 undecided=0 sat=0 

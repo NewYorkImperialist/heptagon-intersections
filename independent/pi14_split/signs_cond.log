@@ -1,0 +1,6 @@
+# PI_14 order=cond node_ms=1500 z3_every=1 vars=61
+[       0s] prefixes 4/16384  nodes=14 z3=12 unsat_prune=0 comb_prune=2 unknown_leaves=0 sat_leaves=0 
+[      49s] prefixes 2188/16384  nodes=9820 z3=6036 unsat_prune=1106 comb_prune=3785 unknown_leaves=1 sat_leaves=0 
+[      86s] prefixes 2188/16384  nodes=9827 z3=6043 unsat_prune=1106 comb_prune=3787 unknown_leaves=3 sat_leaves=0 
+[     121s] prefixes 2188/16384  nodes=9830 z3=6048 unsat_prune=1106 comb_prune=3787 unknown_leaves=5 sat_leaves=0 
+[     165s] prefixes 2188/16384  nodes=9843 z3=6062 unsat_prune=1109 comb_prune=3788 unknown_leaves=7 sat_leaves=0 
