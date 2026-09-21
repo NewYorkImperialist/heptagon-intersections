@@ -1,0 +1,11 @@
+trials                   3813
+skipped                  187
+t_lead_matches           3813
+t_lead_mismatches        0
+s_lead_matches           3813
+s_lead_mismatches        0
+k_positive               3813
+k_zero                   0
+k_negative               0
+second_order_differs     3757
+second_order_same        56

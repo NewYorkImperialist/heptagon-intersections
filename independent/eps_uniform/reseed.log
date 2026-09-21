@@ -1,0 +1,6 @@
+FIG27 reseed: {'trials': 3830, 'skipped': 170, 't_lead_matches': 3830, 't_lead_mismatches': 0, 's_lead_matches': 3830, 's_lead_mismatches': 0, 'k_positive': 3830, 'k_zero': 0, 'k_negative': 0, 'second_order_differs': 3765, 'second_order_same': 65}
+worst: None
+ARMS reseed, built 40
+A {'found': 40, 'const': 40, 'sep': 40, 'simple': 40, 'dep': 40, 'nodrop': 33, 'ccon': 40} drops: 7
+B {'found': 40, 'const': 40, 'sep': 40, 'simple': 40, 'dep': 40, 'nodrop': 40, 'ccon': 40} drops: 0
+eps0 min/max 2/2121 2/79

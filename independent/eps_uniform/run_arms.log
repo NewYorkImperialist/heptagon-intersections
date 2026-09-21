@@ -1,0 +1,16 @@
+configurations built: 60
+
+            found  sign-const  separated  simple  rel(1)  no drop  count const
+ARM A bare     60          60         60      60      60       40           60
+ARM B  AKR     60          60         60      60      60       60           60
+
+ARM A: 20 count drops out of 60
+    count at eps=0: 8  ->  [7]   E0=(Fraction(-1, 1), Fraction(-4, 1)) E1=(Fraction(-4, 1), Fraction(-1, 1))
+    count at eps=0: 4  ->  [3]   E0=(Fraction(-3, 1), Fraction(4, 1)) E1=(Fraction(5, 1), Fraction(-7, 1))
+    count at eps=0: 5  ->  [4]   E0=(Fraction(5, 1), Fraction(0, 1)) E1=(Fraction(-7, 1), Fraction(5, 1))
+    count at eps=0: 8  ->  [7]   E0=(Fraction(-3, 1), Fraction(-4, 1)) E1=(Fraction(3, 1), Fraction(-5, 1))
+    count at eps=0: 6  ->  [5]   E0=(Fraction(4, 1), Fraction(-3, 1)) E1=(Fraction(7, 1), Fraction(-1, 1))
+    count at eps=0: 5  ->  [4]   E0=(Fraction(4, 1), Fraction(7, 1)) E1=(Fraction(-2, 1), Fraction(3, 1))
+ARM B: 0 count drops out of 60
+
+ARM B eps_0: min 3/3680  max 8/237  median 1/89

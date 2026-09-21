@@ -1,0 +1,15 @@
+=== ATTACK A: AKR's literal criterion met, degeneracy persists forever ===
+configurations found: 3
+    {'a1': (Fraction(4, 1), Fraction(-5, 1)), 'a2': (Fraction(3, 1), Fraction(-2, 1)), 'b1': (Fraction(-5, 1), Fraction(-4, 1)), 'b2': (Fraction(1, 1), Fraction(1, 1)), 'c': Fraction(1, 1), 'E': (Fraction(-4, 1), Fraction(5, 1)), 'crossings': [None, None, False, True]}
+    {'a1': (Fraction(4, 1), Fraction(4, 1)), 'a2': (Fraction(1, 1), Fraction(-5, 1)), 'b1': (Fraction(-2, 1), Fraction(-5, 1)), 'b2': (Fraction(3, 1), Fraction(-3, 1)), 'c': Fraction(3, 1), 'E': (Fraction(-12, 1), Fraction(-12, 1)), 'crossings': [None, None, True, False]}
+    {'a1': (Fraction(1, 1), Fraction(-3, 1)), 'a2': (Fraction(3, 1), Fraction(-4, 1)), 'b1': (Fraction(4, 1), Fraction(-1, 1)), 'b2': (Fraction(3, 1), Fraction(5, 1)), 'c': Fraction(2, 1), 'E': (Fraction(-2, 1), Fraction(6, 1)), 'crossings': [None, None, True, True]}
+
+=== ATTACK B: non-vacuity of k > 0 (E drawn at random, not from the cone) ===
+    {'pos': 1826, 'zero': 131, 'neg': 1852, 'skip': 191}
+
+=== ATTACK C: smallest local root-free radius vs coordinate bound N ===
+    N=  2  min radius = 1/29  ~ 1/29.0   at ((Fraction(-2, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(2, 1)), (Fraction(2, 1), Fraction(-1, 1)), (Fraction(-1, 1), Fraction(-1, 1)), (Fraction(6, 1), Fraction(-5, 1)))
+    N=  4  min radius = 1/225  ~ 1/225.0   at ((Fraction(3, 1), Fraction(-3, 1)), (Fraction(3, 1), Fraction(2, 1)), (Fraction(-2, 1), Fraction(4, 1)), (Fraction(-4, 1), Fraction(-3, 1)), (Fraction(-14, 1), Fraction(22, 1)))
+    N=  8  min radius = 1/998  ~ 1/998.0   at ((Fraction(3, 1), Fraction(-8, 1)), (Fraction(-5, 1), Fraction(-8, 1)), (Fraction(-4, 1), Fraction(5, 1)), (Fraction(3, 1), Fraction(5, 1)), (Fraction(-33, 1), Fraction(71, 1)))
+    N= 16  min radius = 1/6445  ~ 1/6445.0   at ((Fraction(-13, 1), Fraction(1, 1)), (Fraction(14, 1), Fraction(-1, 1)), (Fraction(-14, 1), Fraction(-16, 1)), (Fraction(-13, 1), Fraction(-1, 1)), (Fraction(-144, 1), Fraction(-228, 1)))
+    N= 32  min radius = 2/64427  ~ 1/32213.5   at ((Fraction(-32, 1), Fraction(25, 1)), (Fraction(14, 1), Fraction(-11, 1)), (Fraction(-32, 1), Fraction(-25, 1)), (Fraction(17, 1), Fraction(20, 1)), (Fraction(-416, 1), Fraction(-1075, 1)))

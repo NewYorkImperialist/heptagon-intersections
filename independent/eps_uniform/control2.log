@@ -1,0 +1,38 @@
+configurations analysed (with at least one removable degeneracy): 30
+
+ #removable  #AKR-ok E  #fully good  #AKR-ok but leaves one  #E||edge  #those leaving one  #E||edge AND AKR-ok  ..leaving one
+         17        216          186                      30         4                   4                    3              3
+         15        119           95                      24         4                   4                    2              2
+         16        154          133                      21         0                   0                    0              0
+         19        168          139                      29         2                   2                    1              1
+         16         59           45                      14         6                   6                    2              2
+         20        102           83                      19         8                   8                    4              4
+         20        132          103                      29         6                   6                    3              3
+         16        221          186                      35         2                   2                    1              1
+         16        224          184                      40         0                   0                    0              0
+         15        126          100                      26         2                   2                    1              1
+         21        221          186                      35         6                   6                    3              3
+         17         90           69                      21         2                   2                    1              1
+         18        182          150                      32         4                   4                    2              2
+         15        222          186                      36         2                   2                    1              1
+         15        221          170                      51         2                   2                    1              1
+         16        133          107                      26         4                   4                    2              2
+         20        149          120                      29         2                   2                    1              1
+         21        221          184                      37         2                   2                    1              1
+         17        214          166                      48         8                   8                    5              5
+         15        156          131                      25         2                   2                    1              1
+         18        132          106                      26        12                  12                    6              6
+         17        163          138                      25         2                   2                    1              1
+         17        221          184                      37         2                   2                    1              1
+         17        223          174                      49         2                   2                    2              2
+         16        224          180                      44         0                   0                    0              0
+         16        224          174                      50         0                   0                    0              0
+         20        216          178                      38         0                   0                    0              0
+         15        129           99                      30         6                   6                    3              3
+         16        153          131                      22         2                   2                    1              1
+         17        183          146                      37         2                   2                    1              1
+
+TOTALS  removable keys 514;  AKR-admissible directions 5198, of which 965 (18.6%) leave a removable degeneracy behind.
+        directions parallel to an incident edge: 96 tested, 96 (100.0%) leave one behind;
+        of those that are ALSO AKR-admissible: 50 tested, 50 (100.0%) leave one behind.
+        configurations with a fully good direction: 30/30
