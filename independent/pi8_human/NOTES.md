@@ -282,3 +282,101 @@ computational verification.
   `probe6`, `probe7`), which ask a sharper question. Left in place as a
   record of what didn't work, per the "negative result recorded precisely"
   rule.
+
+---
+
+# Session 3 — Π₈ is proved
+
+The gap left at the end of session 2 is closed. **Π₈ now has a human proof.**
+It is four steps, uses each of the eight prescribed cells exactly where you
+would expect, and never touches the free cell `(2,2)`.
+
+The route that worked was not the one session 2 was pushing. Session 2 applied
+the Core Lemma at `p`-vertices and got stuck trying to pin `x₂`. The Core Lemma
+applies at **`q`-vertices** too, and there it lands directly on the quantity the
+centre-miss condition constrains.
+
+## Notation
+
+    v_k = or(q0,q1,p_k)      w_k = or(q1,q2,p_k)      u_k = or(p1,p2,q_k)
+
+`P_i = [p_i,p_{i+1}]`, `Q_j = [q_j,q_{j+1}]`, cell `(i,j)` is `P_i × Q_j`.
+Π₈ prescribes all of `(0,0),(0,1),(0,2),(1,0),(1,2),(2,0),(2,1)` crossing and
+`(1,1)` missing; `(2,2)` is free.
+
+## The proof
+
+Assume a realization of Π₈ exists.
+
+**(A)** Cells `(0,0)` and `(0,1)` cross, i.e. both `Q₀=[q0,q1]` and `Q₁=[q1,q2]`
+cross `P₀`. These two segments **share the endpoint `q1`**, so the Core Lemma
+applies with `B=q1, A=q0, C=q2` and `[D,E]=P₀`:
+
+        v₁ = −w₁.
+
+**(B)** Cells `(2,0)` and `(2,1)` cross, i.e. both `Q₀` and `Q₁` cross `P₂`.
+The Core Lemma applies **at the same vertex `q1`**, now with `[D,E]=P₂`:
+
+        v₂ = −w₂.
+
+**(C)** Cell `(1,0)` crosses: `P₁=[p1,p2]` properly crosses `Q₀=[q0,q1]`, so in
+particular `p1` and `p2` lie strictly on opposite sides of the line `q0q1`:
+
+        v₁ ≠ v₂.
+
+Combining (A), (B), (C):  `w₁ = −v₁ ≠ −v₂ = w₂`, so **`w₁ ≠ w₂`**.
+
+**(D)** The five cells `(0,0),(0,1),(0,2),(1,0),(1,2)` force `u₁ ≠ u₂`
+(session 2, Consequence 1: two Core Lemma applications at `p1` give `s₀=−u₀`
+and `s₂=−u₂`; row 0 crossing all three of `Q₀,Q₁,Q₂` gives `s₀=s₂`, hence
+`u₀=u₂`; and `(1,0)`, `(1,2)` give `u₀≠u₁`, `u₂≠u₃`).
+
+**(E)** Cell `(1,1)` misses. By definition `P₁` properly crosses `Q₁` iff
+`u₁≠u₂` **and** `w₁≠w₂`. Since `u₁≠u₂` holds by (D), missing forces
+
+        w₁ = w₂.
+
+(C) and (E) contradict. Hence no realization exists. **∎**
+
+## Why session 2 stalled
+
+Session 2 was trying to pin `x₂ = or(p2,p3,q2)` and ran into a genuine
+330/4842 split between two mechanisms. That split is real, but it was an
+artifact of attacking the conclusion `(2,1)` **misses** from the `p`-side.
+Assuming `(2,1)` *crosses* and deriving a contradiction from the `q`-side costs
+one Core Lemma application and no case analysis at all. The exhaustive searches
+session 2 ran — all 56 triples, all 1,540 XOR-pairs — were looking for a single
+sign to decide `x₁≠x₂ ∧ w₂≠w₃`, and could not have found this, because the
+proof does not decide that disjunction; it never forms it.
+
+## Verification (`proofcheck.c`)
+
+Each inference is checked as a universally quantified statement over its **own**
+hypothesis set, across all 3,315 order types and all 8! labellings:
+
+| step | statement | cases | violations |
+|---|---|---|---|
+| A | `(0,0)&(0,1)` cross ⟹ `v₁ = −w₁` | 7,122,240 | **0** |
+| B | `(2,0)&(2,1)` cross ⟹ `v₂ = −w₂` | 7,122,240 | **0** |
+| C | `(1,0)` crosses ⟹ `v₁ ≠ v₂` | 22,085,952 | **0** |
+| D | the five cells ⟹ `u₁ ≠ u₂` | 311,148 | **0** |
+| — | A&B&C hypotheses ⟹ `w₁ ≠ w₂` | 311,148 | **0** |
+| — | full Π₈ pattern realizable | — | **0** |
+
+(E) is not geometry: it is the definition of `ProperCross` unfolded, so it needs
+no check beyond the `ProperCross` transcription itself.
+
+## Scope, honestly
+
+* This proves **Π₈**, which was already a kernel-checked theorem by the
+  SAT/chirotope route and already independently confirmed by order-type
+  enumeration. What is new is that it now has a **human-checkable proof**, which
+  is exactly what the paper asks for and says it could not supply.
+* It also proves the session-1 reformulation's `(0,0)` half directly; the
+  `(2,2)` half follows by the reversal symmetry `i↦2−i, j↦2−j`, which maps the
+  six off-diagonals to themselves, fixes `(1,1)`, and swaps the two corners.
+* **Not formalized in Lean.** Not peer-reviewed.
+* **This does not change `f(7,7) = 38`'s status.** Π₈ was already established
+  by machine; a second, human route to the same theorem strengthens confidence
+  in the encoding but removes no hypothesis. Π₁₄ is untouched, and AKR §9
+  remains the one open import.

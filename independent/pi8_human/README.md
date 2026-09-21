@@ -6,9 +6,15 @@ human proof behind it, and the paper says so in as many words — *"a synthetic
 argument, or a counterexample, may well be findable by a specialist. We could
 not find either."* This directory is an attempt at the synthetic argument.
 
-**It did not succeed.** Roughly half the mechanism is proved unconditionally and
-the remainder is isolated to one precisely-stated case split. Nothing in the
-repository depends on anything here.
+**It succeeded.** Π₈ now has a complete human proof: four steps, using each of
+the eight prescribed cells and never touching the free cell `(2,2)`. Every
+inference is verified as a universally quantified statement across all 3,315
+order types and all 8! labellings, with zero violations.
+
+This does **not** change `f(7,7) = 38`'s status — Π₈ was already a
+kernel-checked theorem by the SAT route, and a second human route to the same
+statement removes no hypothesis. What it supplies is the synthetic argument the
+paper asks for and reports it could not find.
 
 The mathematics is in [`NOTES.md`](NOTES.md); this file is orientation only.
 
@@ -40,15 +46,31 @@ first attempt. The centre miss stops being a disjunction and becomes the single
 forced equality `w1 = w2`. Two further quantities, `x0` and `x1`, are pinned the
 same way.
 
-## What is open
+## The proof
 
-Finishing needs `x1 != x2 AND w2 != w3` ruled out. Over the 5,782 qualifying
-labellings that condition is closed **330** times by `x1 = x2` alone, **4,842**
-times by `w2 = w3` alone, **610** times by both, and **0** times by neither —
-so the theorem holds, but two different mechanisms are doing the work and
-neither covers the whole range. An exhaustive search over all 56 orientation
-triples and all 1,540 XOR-pairs of triples found nothing that decides it, so
-the missing ingredient is not a single sign that was overlooked.
+Write `v_k = or(q0,q1,p_k)` and `w_k = or(q1,q2,p_k)`. Suppose Π₈ is realized.
+
+1. `(0,0)` and `(0,1)` cross, so `Q₀` and `Q₁` — which **share the endpoint
+   `q1`** — both cross `P₀`. Core Lemma at `q1`: `v₁ = −w₁`.
+2. `(2,0)` and `(2,1)` cross, so `Q₀` and `Q₁` both cross `P₂`. Core Lemma at
+   **the same vertex** `q1`: `v₂ = −w₂`.
+3. `(1,0)` crosses, so `p1` and `p2` lie strictly on opposite sides of the line
+   `q0q1`: `v₁ ≠ v₂`. With 1 and 2, this gives **`w₁ ≠ w₂`**.
+4. The five cells `(0,0),(0,1),(0,2),(1,0),(1,2)` force `u₁ ≠ u₂`. Since `P₁`
+   crosses `Q₁` iff `u₁≠u₂` **and** `w₁≠w₂`, the prescribed miss at `(1,1)`
+   forces **`w₁ = w₂`**.
+
+Steps 3 and 4 contradict. ∎
+
+The earlier attempt stalled because it worked from the `p`-side, trying to pin
+`x₂ = or(p2,p3,q2)`, and hit a real 330/4842 split between two mechanisms.
+Assuming `(2,1)` *crosses* and arguing from the `q`-side costs one extra Core
+Lemma application and no case analysis. The exhaustive searches over all 56
+orientation triples and all 1,540 XOR-pairs could not have found this: they were
+looking for a sign to decide a disjunction the proof never forms.
+
+Full derivation and the verification table are in [`NOTES.md`](NOTES.md),
+session 3; the checker is `proofcheck.c`.
 
 ## Running it
 
@@ -66,6 +88,10 @@ kept deliberately.
 
 ## What this is not
 
-Not a proof of `Pi_8`, and not independent evidence for it either — the control
-lines simply re-run `order_type_pi8/`'s check. It is a partial human argument
-plus the exact statement of what is missing, for whoever attacks this next.
+Not independent evidence *that* Π₈ holds — the control lines simply re-run
+`order_type_pi8/`'s check, and the theorem was already machine-established. It
+is a human proof of an already-known theorem, which is valuable precisely
+because the machine proof is not human-checkable.
+
+It says nothing about Π₁₄, and nothing about AKR §9, which remains the one open
+import behind `f(7,7) = 38`.

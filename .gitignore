@@ -175,6 +175,9 @@ independent/pi8_human/probe6
 independent/pi8_human/probe7
 independent/pi8_human/probe8
 independent/pi8_human/probe9
+independent/pi8_human/forced
+independent/pi8_human/forced2
+independent/pi8_human/proofcheck
 
 # ---------------------------------------------------------------------------
 # independent/pi14_split -- pycache, and the sharded re-run logs, which were
