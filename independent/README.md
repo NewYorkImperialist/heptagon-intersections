@@ -1,13 +1,13 @@
 # Independent re-derivations and experiments
 
-Thirteen separate investigations, each in its own subdirectory, each written to
+Fourteen separate investigations, each in its own subdirectory, each written to
 check something the main pipeline in `../python/` asserts, or to probe a claim
 the paper makes. They differ sharply in how independent they actually are, and
 the difference is the whole point of keeping them apart — read each
 subdirectory's own README before quoting it.
 
 > This index said "Four separate investigations" and tabled four until
-> 2026-09-20, while nine further directories sat here uncited. If you have
+> 2026-09-20, while nine further directories sat here uncited (a tenth, `e9_directions/`, was added the same day). If you have
 > quoted this file before that date, you were reading a partial list.
 
 **None of this is human verification.** Every directory here was produced
@@ -29,6 +29,7 @@ See `../docs/ai-disclosure.md`.
 | [`pi8_tightness/`](pi8_tightness/) | which of `Pi_8`'s eight conditions carries the obstruction | an experiment on the project's own claim, against the same external order-type database as `order_type_pi8/`; **not** independent evidence that `Pi_8` is unrealizable | Dropping each condition in turn and counting realizable order types gives a profile that is **exactly transpose-symmetric**, independently reproducing why `Pi_8` has 196 images and not 392. The corner crossing `P0 x Q0` is load-bearing (427 realizable without it); the centre miss is middling (1,571). A pointer for a hand attack, nothing more |
 | [`pi8_human/`](pi8_human/) | a **human** proof of `Pi_8`, which the paper explicitly invites and which nobody had attempted | not a check of anything — an attempt at the synthetic argument the machine result lacks, against the same external order-type database | **Incomplete, and says so.** A reformulation of `Pi_8` that is strictly stronger and symmetric, plus a general Core Lemma proved by coordinates (if two segments share an endpoint and both cross a third, two orientations are forced opposite). From it `u1 != u2` follows unconditionally, collapsing the case split that stopped the first attempt. The remainder is one isolated case split, closed 330/4842/610/0 by two different mechanisms; all 56 triples and 1,540 XOR-pairs searched for a deciding sign, none found. **Not a proof**; nothing depends on it |
 | [`pi14_split/`](pi14_split/) | `Pi_14`, the one pattern with **no** independent check — eleven points puts the order-type route permanently out of reach | **Encoding-independent of the SAT/chirotope proof** (semialgebraic feasibility, no Boolean variables, no Grassmann-Plücker clauses), with ground truth transcribed from the Lean source and diffed against it | **Does not close.** Three successive censuses of the 256-branch disjunct split ended at 11, then 57, then **76 of 256 refuted, 0 realizable, 180 undecided**. No branch ever returned `sat`. The one durable result: refuted branches cluster ~30-to-1 on which disjunct is taken for `Q1 ⊁ Q3` — 74/128 against 2/128, replicated across all three censuses under three solver configurations. Caveat for anyone continuing: `qfnra-nlsat` returns `unknown` on systems that provably have solutions, so `unknown` means almost nothing here; no configuration ever returned `unsat` on a satisfiable system, so the refutations stand. **`Pi_14` is not independently refuted** |
+| [`e9_directions/`](e9_directions/) | the existence of the directions `E_i` in AKR §9.1 — asserted by the authors with no argument, and rated *"hard, and unproved in the paper"* by this project's own audit | **Independent of this repository.** The statement comes from the AKR journal text; only `orient`/`ProperCross` are taken from `lean/GeometryDefs.lean`. Exact rational arithmetic throughout | **Proved, with a sharp criterion.** A direction exists **iff** the four edge directions at the apex are not all mutually parallel — and that failure case would force `∂P ∩ ∂Q` to be infinite, which AKR's own standing assumption excludes. The direction can also be chosen degeneracy-free. Verified on 19,765 + 8,628 + 3,980 configurations with zero failures, 66 genuine "no" cases present so the criterion is not vacuous, and controls that reproduce the K-10 failure exactly. **Does not close §9** — the uniform-ε₀ step is untouched |
 
 ## How to read the "independent" in the directory name
 

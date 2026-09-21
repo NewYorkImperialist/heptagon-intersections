@@ -95,3 +95,17 @@
 [    6333s] pi14 prog 340/16384 nodes=8890 z3=10690 unsat=3530 comb=3412 leaves_closed=2556 refines=2514 undecided=0 sat=0 
 [    6401s] pi14 prog 340/16384 nodes=8893 z3=10755 unsat=3562 comb=3412 leaves_closed=2586 refines=2544 undecided=0 sat=0 
 [    6483s] pi14 prog 340/16384 nodes=9129 z3=10928 unsat=3597 comb=3512 leaves_closed=2604 refines=2562 undecided=0 sat=0 
+[    6572s] pi14 prog 340/16384 nodes=9132 z3=11005 unsat=3635 comb=3512 leaves_closed=2640 refines=2598 undecided=0 sat=0 
+[    6662s] pi14 prog 340/16384 nodes=9136 z3=11083 unsat=3673 comb=3512 leaves_closed=2676 refines=2634 undecided=0 sat=0 
+[    6756s] pi14 prog 340/16384 nodes=9165 z3=11174 unsat=3711 comb=3524 leaves_closed=2712 refines=2670 undecided=0 sat=0 
+[    6849s] pi14 prog 340/16384 nodes=9168 z3=11255 unsat=3751 comb=3524 leaves_closed=2750 refines=2708 undecided=0 sat=0 
+[    6939s] pi14 prog 340/16384 nodes=9172 z3=11333 unsat=3789 comb=3524 leaves_closed=2786 refines=2744 undecided=0 sat=0 
+[    6999s] pi14 prog 340/16384 nodes=9273 z3=11425 unsat=3812 comb=3570 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7059s] pi14 prog 340/16384 nodes=9664 z3=11646 unsat=3838 comb=3740 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7121s] pi14 prog 340/16384 nodes=10059 z3=11873 unsat=3866 comb=3908 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7181s] pi14 prog 340/16384 nodes=10450 z3=12095 unsat=3893 comb=4077 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7241s] pi14 prog 340/16384 nodes=10840 z3=12317 unsat=3920 comb=4245 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7302s] pi14 prog 340/16384 nodes=11235 z3=12542 unsat=3948 comb=4415 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7362s] pi14 prog 340/16384 nodes=11624 z3=12763 unsat=3974 comb=4583 leaves_closed=2804 refines=2762 undecided=0 sat=0 
+[    7429s] pi14 prog 340/16384 nodes=11647 z3=12835 unsat=4004 comb=4592 leaves_closed=2832 refines=2790 undecided=0 sat=0 
+[    7493s] pi14 prog 340/16384 nodes=11650 z3=12896 unsat=4034 comb=4592 leaves_closed=2860 refines=2818 undecided=0 sat=0 

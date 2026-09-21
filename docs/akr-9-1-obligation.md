@@ -658,6 +658,34 @@ have not verified that reasoning against the paper, it is mine and not AKR's,
 and it should not be relied on without checking. **Recorded as my reasoning,
 not as a finding.**
 
+> **Update 2026-09-20 — this is now proved, and the sketch above was right.**
+> See `independent/e9_directions/`. The existential holds, with a sharp
+> criterion: a direction giving at least one proper crossing exists **iff the
+> four edge directions `a₁,a₂,b₁,b₂` at the apex are not all mutually
+> parallel**. The proof is the cone argument sketched above, made precise — for
+> `a_k ∦ b_l` the set `{t·b_l − s·a_k : s,t > 0}` is a nonempty open convex
+> cone, and it is scale-invariant, which is what makes one direction work for
+> *all* small `ε` rather than one `ε` at a time. The direction can additionally
+> be chosen degeneracy-free, because each local degeneracy cuts out only
+> finitely many lines through the origin in `E`-space and an open 2-D cone is
+> not covered by finitely many lines.
+>
+> The failure case cannot arise: if all four were parallel, both V's would lie
+> on one line and overlap in a segment, so `∂P ∩ ∂Q` would be infinite,
+> contradicting **AKR's own standing finiteness assumption** (§1.1 above).
+>
+> Verified in exact rational arithmetic on 19,765 random configurations (zero
+> failures, zero disagreements with the cone argument), on 8,628 configurations
+> including degenerate ones against the sharp iff (zero mismatches, 66 genuine
+> "no direction" cases so the criterion is not vacuous), and on 3,980
+> configurations demanding a crossing *and* no local degeneracy (zero
+> failures). The controls reproduce the K-10 failure exactly: on nested cones
+> the superseded fixed rule gives 0 crossings while a direction does exist.
+>
+> **This does not close §9.** The "One final point" ε-estimate below is
+> untouched, and remains the blocker: this lemma is local and assumes, as AKR's
+> own sentence does, that all other points stay fixed.
+
 ### 5.3 A much softer target, which is what the project actually consumes
 
 The part the project's Lean theorem actually needs on top of §9's output —

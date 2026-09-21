@@ -1,0 +1,38 @@
+=== run 2026-09-21 01:43:37 UTC ===
+
+$ python3 sweep.py 1 20000
+configurations tested                     : 19765
+  NO direction found (would break AKR)    : 0
+  sweep disagrees with the cone argument  : 0
+
+$ python3 criterion.py
+configurations tested (degenerates included) : 8628
+  mismatches against the sharp criterion     : 0
+  of which all-four-parallel (the NO cases)  : 66   <- non-vacuous
+
+$ python3 controls.py
+=== CONTROL 1: the checker must be able to say NO ===
+  all four directions collinear -> no direction   (want: no direction)   PASS
+  P straight-through, Q generic -> found (Fraction(-12, 1), Fraction(1, 1))   (a real V for Q, so a crossing should exist)
+
+=== CONTROL 2: positive control, an obvious crossing exists ===
+  opposed V's -> found (Fraction(1, 1), Fraction(0, 1))   PASS
+
+=== CONTROL 3: the K-10 killer -- nested cones Cone_P subset Cone_Q ===
+  nested? P-wedge inside Q-wedge by construction
+  some direction works -> YES (Fraction(-12, 1), Fraction(-11, 1))
+    it yields 2 proper crossing(s)
+    naive fixed direction (Fraction(1, 1), Fraction(0, 1)): 0 crossings   <- this is the K-10 failure
+    naive fixed direction (Fraction(-1, 1), Fraction(0, 1)): 2 crossings
+
+=== CONTROL 4: does the count SURVIVE as eps shrinks? ===
+    eps=1e-3: 2 crossings
+    eps=1e-5: 2 crossings
+    eps=1e-7: 2 crossings
+    eps=1e-9: 2 crossings
+    eps=1e-12: 2 crossings
+    eps=1e-20: 2 crossings
+
+$ python3 nondegenerate.py
+configurations tested                                  : 3980
+  no crossing-AND-nondegenerate direction found        : 0

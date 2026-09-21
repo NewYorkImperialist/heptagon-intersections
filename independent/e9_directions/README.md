@@ -1,0 +1,128 @@
+# `e9_directions` — discharging the one existential AKR assert without proof
+
+## What this is about
+
+`f(7,7) = 38` rests on exactly one unproved input: §9 of
+Ackerman–Keszegh–Rote (2022). Inside §9.1, at the point where vertex–vertex
+coincidences are perturbed apart, the paper says (journal p. 1072):
+
+> "We choose each direction `E_i` **independently so that the two polygons have
+> at least one nondegenerate intersection in the neighborhood** of the original
+> configuration, assuming that all other points stay where they are."
+
+No argument is given that such a direction exists. `../../docs/akr-9-1-obligation.md`
+§5.2 rates this *"hard, and unproved in the paper"*, sketches a
+Minkowski-difference argument for it, and marks that sketch **"my reasoning, not
+a finding"** — explicitly unchecked.
+
+**This directory checks it, and proves it.** The existential is true, with a
+sharp criterion, and the failure case is excluded by AKR's own standing
+assumption.
+
+**It does not close §9.** See "What this does not do" at the bottom.
+
+## The local picture
+
+At a coincidence `P_i = Q_j`, put the apex at the origin. Each boundary is
+locally a "V": `P`'s two edges run to `a₁, a₂` and `Q`'s to `b₁, b₂`. `Q` stays
+put and `P`'s V is translated by `εE`.
+
+## The lemma
+
+> **Lemma.** Let `a₁, a₂, b₁, b₂ ∈ ℝ² ∖ {0}`. The following are equivalent:
+>
+> 1. there is a direction `E` and an `ε₀ > 0` such that for every `0 < ε < ε₀`,
+>    the translate of `P`'s V by `εE` has **at least one proper crossing** with
+>    `Q`'s V;
+> 2. `a₁, a₂, b₁, b₂` are **not all mutually parallel**.
+>
+> Moreover, when these hold, `E` can additionally be chosen so that the
+> translated configuration has **no local degeneracy** — no vertex of either V
+> on the other's boundary.
+
+### Proof
+
+**(2) ⟹ (1).** Parallelism is an equivalence relation on `ℝ² ∖ {0}`, so if the
+four are not all mutually parallel there are `k, l` with `a_k ∦ b_l`. Then
+`{b_l, −a_k}` is a basis, and
+
+    C := { t·b_l − s·a_k : s, t > 0 }
+
+is the image of the open positive quadrant under an invertible linear map: a
+nonempty **open** convex cone. Pick `E = t₀·b_l − s₀·a_k ∈ C`.
+
+The ray from `εE` in direction `a_k` meets the ray from `O` in direction `b_l`
+exactly when `εE + s·a_k = t·b_l` for some `s, t > 0`. Taking `s = ε·s₀` and
+`t = ε·t₀` solves it **for every `ε > 0`** — the cone is scale-invariant, which
+is why one direction works for all small `ε` rather than one `ε` at a time.
+
+Take `ε₀` small enough that `ε·s₀` and `ε·t₀` stay below the two edge lengths;
+then the meeting point is interior to both *segments*. Since `a_k ∦ b_l` the
+lines are transversal, so each segment has its endpoints strictly on opposite
+sides of the other's line — which is exactly `ProperCross`. ∎
+
+**(1) ⟹ (2).** If all four are parallel, both V's lie in lines parallel to a
+common direction, and so does every translate. Segments on parallel lines never
+properly cross: the straddle test fails when the lines are distinct, and
+`orient` vanishes identically when they coincide. ∎
+
+**Nondegeneracy.** Each local degeneracy is an incidence "a vertex lies on a
+segment", i.e. an equation `orient(·,·,·) = 0` in which `E` occurs linearly and
+homogeneously. Its solution set is a finite union of **lines through the origin**
+in `E`-space. An open 2-dimensional cone is not covered by finitely many lines,
+so a degeneracy-free `E` exists inside `C`. ∎
+
+### Corollary — the failure case cannot arise
+
+> Under AKR's **own standing assumption** that the two polygons meet in finitely
+> many points, condition (2) always holds, so the direction `E_i` they assert
+> always exists.
+
+If all four directions were parallel, both V's would lie on one line `L` through
+the apex, each covering an interval of `L` of positive length containing the
+apex. Two such intervals overlap in a positive-length segment, so `∂P ∩ ∂Q`
+would be infinite — contradicting the finiteness assumption stated in AKR §1.
+
+## What was run
+
+| script | what it does | result |
+|---|---|---|
+| `sweep.py` | 19,765 random four-ray configurations; brute-force sweep over 545 integer directions, exact rational arithmetic | **0** with no working direction; **0** disagreements with the cone argument |
+| `criterion.py` | 8,628 configurations **including degenerate ones**, testing the sharp iff | **0** mismatches; 66 genuine "no direction" cases present |
+| `controls.py` | non-vacuity and adversarial controls | all pass — see below |
+| `nondegenerate.py` | 3,980 configurations, demanding a direction that crosses **and** leaves no local degeneracy | **0** failures |
+
+`orient` and `ProperCross` are transcribed from `lean/GeometryDefs.lean` lines
+59 and 73. All arithmetic is exact `Fraction`; nothing is floating point.
+
+### The controls matter
+
+A checker that always answers "found" would prove nothing, so:
+
+* **It can say no.** On four collinear directions it correctly reports that no
+  direction works. 66 such cases appear in `criterion.py` — the criterion is not
+  vacuously true.
+* **It reproduces the project's own recorded failure (K-14/K-10).** On nested
+  cones `Cone_P ⊂ Cone_Q`, the superseded fixed rule "push into `Cone_Q(w)`"
+  gives **0** crossings — exactly the bug that sank the earlier attempt — while
+  a direction nonetheless **exists** and yields 2. This is the distinction that
+  matters: AKR quantify *existentially* and are right to; the earlier attempt
+  fixed the direction and was wrong to.
+* **The count is stable as `ε → 0`** — checked down to `ε = 10⁻²⁰`, consistent
+  with the cone being scale-invariant.
+
+## What this does not do
+
+It does **not** close §9, and `f(7,7) = 38` remains a candidate.
+
+* The real blocker is untouched: the **"One final point"** ε-estimate, which
+  needs a single uniform `ε₀` valid at *every* degeneracy of a 14-vertex
+  configuration simultaneously, while the other endpoints are themselves moving
+  on linear trajectories. This lemma is purely local and assumes, as AKR's
+  sentence does, that all other points stay fixed.
+* §9.2 (vertex–side degeneracies) and the §9.3 counting model are untouched.
+* Nothing here is formalized in Lean.
+
+What it does do is convert one of the two steps `akr-9-1-obligation.md` names as
+hard from "asserted by the authors, unproved" into "proved here, with the sharp
+criterion and the failure case excluded by their own hypothesis."
