@@ -323,5 +323,77 @@ theorem averaging_fails_without_smallness :
 #print axioms averaging_identity
 #print axioms averaging_fails_without_smallness
 
+/-! ### From offsets to actual points
+
+`averaging_identity` counts, but it counts a hypothesis: the offsets `y`, `z`
+are bare reals.  This section supplies the geometry underneath them — the signed
+normal offset of a point from a side line, and the fact that a straddling edge
+really does contain a point of the shifted line. -/
+
+/-- Signed normal offset of `X` from the line through `A` with direction `a`. -/
+def off (a A X : ℝ × ℝ) : ℝ := (-a.2) * (X.1 - A.1) + a.1 * (X.2 - A.2)
+
+/-- The convex combination `t • X + (1-t) • Y`, written componentwise. -/
+def cmb (t : ℝ) (X Y : ℝ × ℝ) : ℝ × ℝ := (t * X.1 + (1 - t) * Y.1, t * X.2 + (1 - t) * Y.2)
+
+theorem off_cmb (a A X Y : ℝ × ℝ) (t : ℝ) :
+    off a A (cmb t X Y) = t * off a A X + (1 - t) * off a A Y := by
+  unfold off cmb; ring
+
+theorem cmb_mem_openSegment {t : ℝ} (ht0 : 0 < t) (ht1 : t < 1) (X Y : ℝ × ℝ) :
+    cmb t X Y ∈ openSegment ℝ X Y :=
+  ⟨t, 1 - t, ht0, by linarith, by ring,
+    by simp [cmb, Prod.ext_iff, Prod.smul_fst, Prod.smul_snd]⟩
+
+/-- Scalar intermediate-value, but linear and explicit: no continuity, no
+compactness, just the ratio that solves the equation. -/
+theorem exists_between {p q c : ℝ} (h : (p - c) * (q - c) < 0) :
+    ∃ t : ℝ, 0 < t ∧ t < 1 ∧ t * p + (1 - t) * q = c := by
+  have hpq : p - q ≠ 0 := by
+    intro hz
+    have : p = q := by linarith [sub_eq_zero.mp hz]
+    rw [this] at h; nlinarith
+  have h1 : 0 < (c - q) / (p - q) := by
+    rcases lt_or_gt_of_ne hpq with hlt | hgt
+    · exact div_pos_of_neg_of_neg (by nlinarith) hlt
+    · exact div_pos (by nlinarith) hgt
+  have h2 : 0 < (p - c) / (p - q) := by
+    rcases lt_or_gt_of_ne hpq with hlt | hgt
+    · exact div_pos_of_neg_of_neg (by nlinarith) hlt
+    · exact div_pos (by nlinarith) hgt
+  have hsum : (c - q) / (p - q) + (p - c) / (p - q) = 1 := by
+    field_simp
+    ring
+  refine ⟨(c - q) / (p - q), h1, by linarith, ?_⟩
+  field_simp
+  ring
+
+/-- **A straddling edge really contains an intersection point.**  If the two
+endpoints of the `Q`-edge `[X, Y]` have normal offsets on opposite sides of the
+value `c`, then some point strictly inside that edge has offset exactly `c` —
+that is, lies on the line at offset `c`.
+
+Taking `c = δ * N` with `N` the normal displacement of the shift, this is the
+point the averaging identity was counting all along. -/
+theorem exists_mem_openSegment_off_eq {a A X Y : ℝ × ℝ} {c : ℝ}
+    (h : (off a A X - c) * (off a A Y - c) < 0) :
+    ∃ Z ∈ openSegment ℝ X Y, off a A Z = c := by
+  obtain ⟨t, ht0, ht1, ht⟩ := exists_between h
+  exact ⟨cmb t X Y, cmb_mem_openSegment ht0 ht1 X Y, by rw [off_cmb]; exact ht⟩
+
+/-- The link back to `Straddle`: when `X` lies *on* the unshifted line
+(`off a A X = 0`, which is the §9.2 hypothesis — a `Q`-vertex on the `P`-side's
+line), the straddle condition for the edge to `Y` is exactly `Straddle`. -/
+theorem straddle_iff_off {a A X Y : ℝ × ℝ} {δ N y : ℝ}
+    (hX : off a A X = 0) (hY : off a A Y = y) :
+    Straddle δ N y ↔ (off a A X - δ * N) * (off a A Y - δ * N) < 0 := by
+  simp only [Straddle, hX, hY, zero_sub]
+
+#print axioms off_cmb
+#print axioms cmb_mem_openSegment
+#print axioms exists_between
+#print axioms exists_mem_openSegment_off_eq
+#print axioms straddle_iff_off
+
 end TiltedShift
 end Heptagon
