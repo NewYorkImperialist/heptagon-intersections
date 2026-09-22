@@ -179,27 +179,34 @@ This is the part that matters, and it is not small.
    all. `akr9_simpleClosed_iff` is the bridge; `shiftPoly_eq_add_smul` then
    shows the shift *is* a linear perturbation, so
    `heptagon_simplicity_stable_linear` applies unchanged.
-2. **The count inequality is not assembled**, and the remaining step is
-   *not* merely definitional. The three `δ₀`s **are** now reconciled
-   (`exists_full_shift_both_signs`: one `δ` for which both `±δ` give a `Pair9`,
-   clear the side, and preserve every proper crossing), and proper crossings
-   **are** shown to survive (`exists_delta0_order_type`). What is missing is the
-   link from the averaging identity's `crossCount` to `points9`, and that is a
-   real obstacle, not bookkeeping:
+2. **The count inequality is not assembled.** The remaining work is now one
+   named obligation, not a vague gap. `Pair9Shift` §9 isolates the counting
+   from the geometry as `card_add_le_of_disjoint_new`, whose four hypotheses
+   are exactly what the geometry must supply:
 
-   * a degenerate `Q`-vertex on a `P`-side is **one point** but lies on **two**
-     `Q`-edges, so point-counting and pair-counting differ exactly at the
-     degeneracies — which is the same entanglement that makes Theorem CI's
-     `ncard` inequality false without **(Fin-out)**, and the same reason the
-     honest bound is `38 + d` rather than `38`;
-   * stating "this degenerate vertex contributes `crossCount` points after the
-     shift" needs to know the shifted side meets `∂Q` *near* that vertex only on
-     its two incident edges — a locality claim resting on the `(Loc)`
-     primitive, which is item 6 and **is now proved**. So this half is
-     unblocked; the point-versus-pair half above is what remains.
+   | hypothesis | meaning | status |
+   |---|---|---|
+   | `hmono` | old crossings survive | **proved** (`crossPairsOf_mono_shift`) |
+   | `hdisjA` | a newly crossing pair was not crossing before | **proved** (`degenerate_not_mem_crossPairs`) |
+   | `hdisj` | distinct degeneracies give disjoint pair sets | **geometric content proved** (`no_consecutive_degeneracy`); `Finset` packaging left |
+   | `hcard` | each degeneracy yields ≥ 1 new crossing | **open** — this is the averaging identity |
 
-   A commit message on 2026-09-22 called this "a definitional bridge, not a new
-   idea". That was wrong and is retracted here.
+   `hcard` is the real one. The averaging identity is stated about
+   `crossCount`; the skeleton wants `crossPairsOf`. Bridging them is where
+   Fact (E) gets used, and it also has to respect that a degenerate `Q`-vertex
+   is **one point** lying on **two** `Q`-edges — the same point-versus-pair
+   entanglement that makes Theorem CI's `ncard` inequality false without
+   **(Fin-out)** and the honest bound `38 + d` rather than `38`.
+
+   Two findings from building the skeleton are worth keeping. `hdisj` is *not*
+   automatic — consecutive degenerate vertices would share a pair — and holds
+   only because of **(Fin)**; and `hdisjA` is the precise statement of why
+   `crossPairsOf` undercounts `points9`: a degenerate point contributes to
+   **no** pair at all.
+
+   A commit message on 2026-09-22 called this step "a definitional bridge, not
+   a new idea". That was wrong and is retracted.
+
 3. **The `δ₀`s are not reconciled.** Three independent sources, three different
    shapes; the uniform bound over a whole configuration *along a motion* —
    the `UniformEps.eps0` shape — is untouched.
