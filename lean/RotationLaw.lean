@@ -1,5 +1,6 @@
 import R3Construct
 import RealUpperBound
+import TiltedShift
 
 /-!
 # The exact rotation law
@@ -25,7 +26,7 @@ Nothing here is an axiom and nothing here proves `f(7,7) = 38`.
 namespace Heptagon
 namespace RotationLaw
 
-open Heptagon.RealConfig Heptagon.RealUpperBound
+open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.TiltedShift
 
 open Heptagon.R3Construct
 
@@ -281,6 +282,79 @@ theorem properCrossR_persists_rotating {F A C D : ℝ × ℝ} (w : ℝ × ℝ)
 #print axioms orientR_mov_last
 #print axioms prod_neg_of_signs
 #print axioms properCrossR_persists_rotating
+
+/-! ### The fixed pivot, and why the repair needs *two* tilt directions
+
+`properCrossR_persists_rotating` handles crossings whose determinants are
+nonzero at `δ = 0`.  The remaining case is the pivot itself: a `Q`-vertex `V`
+lying *on* the rotating side, so the determinant starts at zero.  Rotating is
+supposed to remove that degeneracy — but it does not always.
+
+The condition "`V` is on the rotating side" is `orientR F (mov A w δ) V = 0`,
+which is affine in `δ`.  An affine function either has one root, or is
+identically zero.  Identically zero is the bad case: the rotation never moves
+the degeneracy at all, and it happens exactly when `V − F` is parallel to the
+tilt direction `w`.
+
+That is what the second tilt direction is for.  `nrm u` and `nrm u + u` are
+linearly independent, so a nonzero `V − F` can be parallel to at most one of
+them — one of the two choices always moves the pivot degeneracy. -/
+
+/-- The two tilt directions are linearly independent, for every nonzero side. -/
+theorem tilt_independent {u : ℝ × ℝ} (hu : u ≠ 0) : cross (nrm u) (nrm u + u) ≠ 0 := by
+  have h : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  have key : cross (nrm u) (nrm u + u) = -(u.1 * u.1 + u.2 * u.2) := by
+    simp only [cross, nrm, Prod.fst_add, Prod.snd_add]; ring
+  rw [key]
+  have hpos : 0 < u.1 * u.1 + u.2 * u.2 := by
+    rcases h with h1 | h2
+    · nlinarith [mul_self_pos.mpr h1, mul_self_nonneg u.2]
+    · nlinarith [mul_self_pos.mpr h2, mul_self_nonneg u.1]
+  exact ne_of_lt (by linarith)
+
+/-- In the plane, a vector parallel to two independent directions is zero. -/
+theorem eq_zero_of_cross_both {a b x : ℝ × ℝ} (hab : cross a b ≠ 0)
+    (ha : cross a x = 0) (hb : cross b x = 0) : x = 0 := by
+  simp only [cross] at hab ha hb
+  have h1 : x.1 * (a.1 * b.2 - a.2 * b.1) = 0 := by linear_combination b.1 * ha - a.1 * hb
+  have h2 : x.2 * (a.1 * b.2 - a.2 * b.1) = 0 := by linear_combination b.2 * ha - a.2 * hb
+  exact Prod.ext ((mul_eq_zero.mp h1).resolve_right hab)
+    ((mul_eq_zero.mp h2).resolve_right hab)
+
+/-- **At least one tilt direction moves the pivot degeneracy.**  This is why the
+repair carries two candidate directions rather than one: for a `Q`-vertex at
+`V` and a pivot at `F`, the rotation fails to move the degeneracy only when
+`V − F` is parallel to the tilt, and that can happen for at most one of the
+two. -/
+theorem pivot_tilt_dichotomy {u x : ℝ × ℝ} (hu : u ≠ 0) (hx : x ≠ 0) :
+    cross (nrm u) x ≠ 0 ∨ cross (nrm u + u) x ≠ 0 := by
+  by_contra hc
+  push_neg at hc
+  exact hx (eq_zero_of_cross_both (tilt_independent hu) hc.1 hc.2)
+
+theorem slope_eq_cross (F V w : ℝ × ℝ) :
+    w.1 * (V.2 - F.2) - w.2 * (V.1 - F.1) = cross w (V - F) := by
+  simp only [cross, Prod.fst_sub, Prod.snd_sub]
+
+/-- **With a tilt that does move it, the pivot degeneracy survives at exactly
+one `δ`.**  So all but one shift removes it — a far stronger statement than
+"some shift removes it", and the one a termination argument can use. -/
+theorem pivot_degeneracy_isolated {F A V w : ℝ × ℝ} (hm : cross w (V - F) ≠ 0) {δ : ℝ}
+    (hδ : δ ≠ -orientR F A V / cross w (V - F)) :
+    orientR F (mov A w δ) V ≠ 0 := by
+  rw [orientR_mov_mid, slope_eq_cross]
+  intro h
+  apply hδ
+  field_simp
+  linarith [h]
+
+#print axioms tilt_independent
+#print axioms eq_zero_of_cross_both
+#print axioms pivot_tilt_dichotomy
+#print axioms pivot_degeneracy_isolated
 
 end RotationLaw
 end Heptagon

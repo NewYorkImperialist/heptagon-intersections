@@ -1,0 +1,11 @@
+=== CERTIFICATE: the bad case is real ===
+pivot F = (Fraction(0, 1), Fraction(0, 1))  moving endpoint A = (Fraction(0, 1), Fraction(3, 1))  shifted side dir u = (Fraction(1, 1), Fraction(0, 1))
+Q-vertex V = (Fraction(0, 1), Fraction(1, 1))  lies on rotating side [F,A]: True
+  tilt nrm u      w=(Fraction(0, 1), Fraction(1, 1)) cross(w,V-F)=   0  degeneracy survives EVERY delta: True
+  tilt nrm u + u  w=(Fraction(1, 1), Fraction(1, 1)) cross(w,V-F)=   1  degeneracy survives EVERY delta: False
+
+=== the dichotomy, exhaustively over small integer data ===
+(u, V-F) pairs tested : 28224
+  nrm u fails alone   : 976
+  nrm u + u fails alone: 864
+  BOTH fail           : 0   <- must be 0 (the dichotomy)
