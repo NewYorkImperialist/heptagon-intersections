@@ -419,5 +419,78 @@ is the unfinished half. -/
 #print axioms crossPairsOf_mono_shift
 #print axioms crossPairsOf_card_mono_shift
 
+/-! ## 9. The counting skeleton for "the count does not drop"
+
+The remaining half of §9.2 is a counting argument with four geometric inputs.
+Isolating the counting from the geometry makes it clear exactly what must be
+supplied, and lets the arithmetic be checked now.
+
+The picture: `A` is the set of side pairs crossing **before** the shift, `A'`
+those crossing **after**, `D` indexes the degenerate points, and `newOf d` is
+the set of pairs that degeneracy `d` turns into. -/
+
+/-- **The counting skeleton.**  If the old crossings survive, each degeneracy
+produces at least one new crossing, and the new crossings are disjoint from the
+old ones and from each other, then the count grows by at least the number of
+degeneracies.
+
+The four hypotheses are exactly the geometric obligations:
+
+* `hmono` — the old crossings survive. **Proved**:
+  `crossPairsOf_mono_shift`.
+* `hcard` — each degeneracy yields at least one new crossing. This is the
+  averaging identity: `TiltedShift.exists_sign_not_decreasing` gives it for
+  one of the two signs, and `exists_full_shift_both_signs` makes both signs
+  available at a single `δ`. **Not yet connected**, because the identity is
+  stated about `crossCount` rather than about `crossPairsOf`.
+* `hdisjA` — a pair newly crossing was not crossing before. This is *almost*
+  definitional: a degenerate `Q`-vertex on a `P`-side is a touching, not a
+  proper crossing, so the pair was not in `A`. **Not yet written.**
+* `hdisj` — distinct degeneracies produce disjoint pair sets. Distinct
+  degenerate `Q`-vertices have distinct indices `j`, and the pairs they produce
+  carry that index. **Not yet written.**
+
+`hnew` is bookkeeping. With all four, `A.card + D.card ≤ A'.card` — and since
+`|regPts| ≤ |A|` and `|points9| = |regPts| + |degPts|`, that is the count not
+dropping. -/
+theorem card_add_le_of_disjoint_new {P ι : Type*} [DecidableEq P] [DecidableEq ι]
+    (A A' : Finset P) (D : Finset ι) (newOf : ι → Finset P)
+    (hmono : A ⊆ A')
+    (hnew : ∀ d ∈ D, newOf d ⊆ A')
+    (hdisjA : ∀ d ∈ D, Disjoint (newOf d) A)
+    (hdisj : ∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newOf d) (newOf d'))
+    (hcard : ∀ d ∈ D, 1 ≤ (newOf d).card) :
+    A.card + D.card ≤ A'.card := by
+  classical
+  have hUcard : D.card ≤ (D.biUnion newOf).card := by
+    rw [Finset.card_biUnion hdisj]
+    calc D.card = ∑ _d ∈ D, 1 := by simp
+      _ ≤ ∑ d ∈ D, (newOf d).card := Finset.sum_le_sum hcard
+  have hdisjAU : Disjoint A (D.biUnion newOf) := by
+    rw [Finset.disjoint_biUnion_right]
+    exact fun d hd => (hdisjA d hd).symm
+  have hsub : A ∪ D.biUnion newOf ⊆ A' := by
+    intro x hx
+    rcases Finset.mem_union.mp hx with h | h
+    · exact hmono h
+    · obtain ⟨d, hd, hxd⟩ := Finset.mem_biUnion.mp h
+      exact hnew d hd hxd
+  calc A.card + D.card ≤ A.card + (D.biUnion newOf).card := by omega
+    _ = (A ∪ D.biUnion newOf).card := (Finset.card_union_of_disjoint hdisjAU).symm
+    _ ≤ A'.card := Finset.card_le_card hsub
+
+/-- **The skeleton is not vacuous**, and the bound it gives is attained: all
+five hypotheses hold simultaneously, with `A.card + D.card = A'.card`.  One old
+crossing, one degeneracy, one new pair. -/
+theorem card_add_le_of_disjoint_new_nonvacuous :
+    ∃ (A A' D : Finset ℕ) (newOf : ℕ → Finset ℕ),
+      A ⊆ A' ∧ (∀ d ∈ D, newOf d ⊆ A') ∧ (∀ d ∈ D, Disjoint (newOf d) A) ∧
+      (∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newOf d) (newOf d')) ∧
+      (∀ d ∈ D, 1 ≤ (newOf d).card) ∧ A.card + D.card = A'.card := by
+  refine ⟨{0}, {0, 1}, {5}, fun _ => {1}, by decide, by decide, by decide,
+    by decide, by decide, by decide⟩
+
+#print axioms card_add_le_of_disjoint_new
+
 end Pair9Shift
 end Heptagon
