@@ -5447,3 +5447,6 @@ name = "FactE"
 
 [[lean_lib]]
 name = "E9Directions"
+
+[[lean_lib]]
+name = "SwapPQ"
