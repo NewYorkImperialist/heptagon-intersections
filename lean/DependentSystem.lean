@@ -262,6 +262,67 @@ theorem exists_solves (hR : S.Reaches) (a : ι → ℝ) : ∃ v, S.Solves v a :=
     simp only [hi, if_false] at hc
     exact hc
 
+/-! ## 3b. `Reaches` is not an extra assumption: AKR's Observation 15 and Lemma 18
+
+Every result above takes `Reaches` as a hypothesis. AKR do not assume it — they
+*prove* it, as Lemma 18, from Observation 15. Both are done here, so the
+hypothesis is discharged rather than imported. -/
+
+open scoped Classical in
+/-- **Lemma 18, in the form it is actually used.** If from every dependent
+point some arc strictly increases a potential, then a free point is reachable
+from every dependent point.
+
+The proof is finite, not inductive on the graph: among the points reachable
+from `i`, take one maximising the potential; it cannot be dependent, because a
+dependent point has a strictly larger neighbour, which is also reachable. -/
+theorem reaches_of_strict_potential (p : ι → ℝ)
+    (h : ∀ i ∈ S.dep, ∃ j, S.Arc i j ∧ p i < p j) : S.Reaches := by
+  intro i _
+  obtain ⟨j, hjmem, hjmax⟩ :=
+    Finset.exists_max_image
+      (Finset.univ.filter fun x => Relation.ReflTransGen S.Arc i x) p
+      ⟨i, by simp [Relation.ReflTransGen.refl]⟩
+  have hjr : Relation.ReflTransGen S.Arc i j := by
+    simpa using (Finset.mem_filter.mp hjmem).2
+  by_cases hjd : j ∈ S.dep
+  · obtain ⟨k, hk, hlt⟩ := h j hjd
+    have hkr : Relation.ReflTransGen S.Arc i k := hjr.tail hk
+    have : p k ≤ p j := hjmax k (by simpa using hkr)
+    linarith
+  · exact ⟨j, hjd, hjr⟩
+
+/-- **Observation 15**, one coordinate at a time — which is how AKR's proof of
+Theorem 17 uses it, since their system "splits into an `x`-system and a
+`y`-system".
+
+A convex combination equals its own value only if every point carrying positive
+weight is *already* at that value; otherwise some such point is strictly
+larger. -/
+theorem observation15 {A : ι → ℝ} {i : ι} (hi : i ∈ S.dep)
+    (hrep : A i = ∑ j, S.lam i j * A j) :
+    (∀ j, 0 < S.lam i j → A j = A i) ∨ (∃ j, 0 < S.lam i j ∧ A i < A j) := by
+  by_cases hall : ∀ j, 0 < S.lam i j → A j ≤ A i
+  · left
+    intro j hj
+    by_contra hne
+    have hlt : A j < A i := lt_of_le_of_ne (hall j hj) hne
+    have hle : ∀ k ∈ Finset.univ, S.lam i k * A k ≤ S.lam i k * A i := by
+      intro k _
+      rcases lt_or_eq_of_le (S.lam_nonneg i k) with hk | hk
+      · exact mul_le_mul_of_nonneg_left (hall k hk) (le_of_lt hk)
+      · simp [← hk]
+    have hstrict : S.lam i j * A j < S.lam i j * A i :=
+      mul_lt_mul_of_pos_left hlt hj
+    have : ∑ k, S.lam i k * A k < ∑ k, S.lam i k * A i :=
+      Finset.sum_lt_sum hle ⟨j, Finset.mem_univ j, hstrict⟩
+    rw [← Finset.sum_mul, S.lam_sum i hi, one_mul] at this
+    exact absurd hrep (by linarith)
+  · right
+    push_neg at hall
+    obtain ⟨j, hj, hlt⟩ := hall
+    exact ⟨j, hj, hlt⟩
+
 /-! ## 4. Linearity in the parameter -/
 
 omit [DecidableEq ι] in
@@ -349,6 +410,8 @@ theorem move_of_theorem17 (S : DepSystem (Fin 14)) (hR : S.Reaches)
 #print axioms Heptagon.DependentSystem.DepSystem.op_surjective
 #print axioms Heptagon.DependentSystem.DepSystem.exists_solves
 #print axioms Heptagon.DependentSystem.DepSystem.solves_affine
+#print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_potential
+#print axioms Heptagon.DependentSystem.DepSystem.observation15
 #print axioms Heptagon.DependentSystem.DepSystem.theorem17
 #print axioms Heptagon.DependentSystem.move_of_theorem17
 
