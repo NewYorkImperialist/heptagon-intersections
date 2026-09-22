@@ -101,6 +101,34 @@ theorem tilted_shift_defined {u : ℝ × ℝ} (hu : u ≠ 0) :
   ⟨⟨admissible_nrm hu, nrm_not_parallel hu⟩,
    ⟨admissible_tilt hu, tilt_not_parallel hu⟩⟩
 
+/-! ## The contrast: AKR's own rule fails exactly at a straight vertex
+
+AKR slide the endpoint `A` along the previous side, i.e. in direction `A − C`.
+That is admissible iff `⟪A−C, n⟫ ≠ 0`, and since `n = u^⊥` this says exactly
+that `A − C` is **not parallel to `u`** — that is, `C, A, B` are not collinear.
+So the operator's domain is precisely the non-straight vertices, which is the
+refutation's mechanism, now machine-checked rather than argued. -/
+
+/-- `⟪w, u^⊥⟫` vanishes exactly when `w ∥ u`. -/
+theorem ip_nrm_eq_zero_iff (w u : ℝ × ℝ) : ip w (nrm u) = 0 ↔ cross w u = 0 := by
+  simp only [ip, nrm, cross]
+  constructor <;> intro h <;> linarith
+
+/-- **AKR's rule is admissible iff the vertex is not straight.**  `w = A − C`
+is the direction of the previous side; `cross w u ≠ 0` says `C, A, B` are not
+collinear. -/
+theorem akr_admissible_iff (w u : ℝ × ℝ) : ip w (nrm u) ≠ 0 ↔ cross w u ≠ 0 :=
+  not_congr (ip_nrm_eq_zero_iff w u)
+
+/-- And at a straight vertex it is **not** admissible — the exact failure the
+certificate in `akr-9-assembly.md` §2.5a exploits, where every useful side has
+such an endpoint and no shift can ever break the collinearity. -/
+theorem akr_fails_at_straight {w u : ℝ × ℝ} (h : cross w u = 0) :
+    ip w (nrm u) = 0 := (ip_nrm_eq_zero_iff w u).mpr h
+
+#print axioms akr_admissible_iff
+#print axioms akr_fails_at_straight
+
 #print axioms tilted_shift_defined
 #print axioms ip_tilt_nrm
 
