@@ -628,5 +628,63 @@ theorem straddle_iff_first_conjunct (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t �
 #print axioms orientR_shifted_side
 #print axioms straddle_iff_first_conjunct
 
+/-! ## 13. The other conjunct, and the bridge
+
+The second conjunct of `ProperCrossR` — that the `Q`-edge's line separates the
+`P`-side's endpoints — is, at `δ = 0`, a **strict** inequality, hence an *open*
+condition. So it needs no new machinery: the order-type preservation of §5
+already keeps it.
+
+That it is strict at `δ = 0` is itself geometry worth naming. The degenerate
+`Q`-vertex lies in the **relative interior** of the `P`-side — that is `(VV)`,
+§9.1's output — so the `P`-side genuinely crosses the `Q`-edge's line there,
+unless the two are collinear, which `(Fin)` excludes. It is supplied as a
+hypothesis here rather than re-derived. -/
+
+theorem second_conjunct_persists (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) < 0 →
+      orientR (shiftV V i t δ (pQ j)) (shiftV V i t δ (pQ (j + 1)))
+            (shiftV V i t δ (pP i)) *
+          orientR (shiftV V i t δ (pQ j)) (shiftV V i t δ (pQ (j + 1)))
+            (shiftV V i t δ (pP (i + 1))) < 0 := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_delta0_order_type V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ j h0 => ?_⟩
+  have n1 : orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h0; exact lt_irrefl 0 h0
+  have n2 : orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h0; exact lt_irrefl 0 h0
+  exact prod_neg_of_signs (h δ hδ _ _ _ n1) (h δ hδ _ _ _ n2) h0
+
+/-- **The bridge.**  For a degenerate `Q`-vertex `j` on `P`-side `i`, the pair
+`(i, j)` crosses after the shift exactly when `Straddle` holds — the very
+predicate `TiltedShift.averaging_local` counts.
+
+The two conjuncts of `ProperCrossR` are discharged by two different things:
+the first is `Straddle` verbatim (§12), the second persists from `δ = 0` by
+order-type preservation (above). The hypothesis `hsep` is that second conjunct
+at `δ = 0`, which `(VV)` and `(Fin)` supply. -/
+theorem mem_crossPairs_of_straddle (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) < 0 →
+      Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2)
+        (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j + 1)))) →
+      (i, j) ∈ crossPairsOf (shiftV V i t δ) := by
+  obtain ⟨δ₀, hδ₀, hsec⟩ := second_conjunct_persists V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ j hdeg hsep hstr => ?_⟩
+  simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  unfold ProperCrossR
+  constructor
+  · rw [shiftV_Q, shiftV_Q]
+    exact (straddle_iff_first_conjunct V i t δ _ _ _ hdeg rfl).mpr hstr
+  · exact hsec δ hδ j hsep
+
+#print axioms second_conjunct_persists
+#print axioms mem_crossPairs_of_straddle
+
 end Pair9Shift
 end Heptagon
