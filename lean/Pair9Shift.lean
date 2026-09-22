@@ -1174,5 +1174,65 @@ theorem degSet_card_lt (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
 #print axioms exists_good_delta_affine'
 #print axioms degSet_card_lt
 
+/-! ## 22. Iterating to a degeneracy-free pair
+
+On a `Pair9` the sides are nondegenerate for free (`simpleP`), and simplicity
+survives each shift, so the iteration stays inside `Pair9` and terminates. -/
+
+/-- The iteration step, on a `Pair9`. -/
+theorem pair9_degSet_card_lt (R : Pair9) (i : Fin 7) (t : ℝ) (j₀ : Fin 7)
+    (hj₀ : (i, j₀) ∈ degSetOf R.V) :
+    ∃ (δ : ℝ) (R' : Pair9), R'.V = shiftV R.V i t δ ∧
+      (degSetOf R'.V).card < (degSetOf R.V).card := by
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨δ₁, h₁, hsimp⟩ :=
+    exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ, hδne, hδlt, hcard⟩ := degSet_card_lt R.V i t hu j₀ hj₀ h₁
+  have hP : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pP k)) := by
+    simpa only [shiftV_pP] using hsimp δ (le_of_lt hδlt)
+  have hQ : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) := by
+    have hEq : (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact shiftV_Q R.V i t δ k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, rfl, hcard⟩
+
+/-- `R'` is reachable from `R` by a finite sequence of tilted shifts. -/
+inductive Reach : Pair9 → Pair9 → Prop
+  | refl (R : Pair9) : Reach R R
+  | head {R R' R'' : Pair9} :
+      (∃ (i : Fin 7) (t δ : ℝ), R'.V = shiftV R.V i t δ) → Reach R' R'' → Reach R R''
+
+/-- **§9.2's procedure terminates in a degeneracy-free pair.**
+
+From any `Pair9`, finitely many tilted shifts reach a `Pair9` on which **no**
+`Q`-vertex lies on any `P`-side *line*. Each shift is well-defined with no
+collinearity hypothesis, keeps both heptagons simple, and strictly decreases
+the total degeneracy count — so the process cannot stall or cycle, which is
+the argument §9.2 asserts and does not give.
+
+Half of `(A9)`: it says nothing about `P`-vertices on `Q`-sides. -/
+theorem exists_reach_degSet_empty (t : ℝ) :
+    ∀ (n : ℕ) (R : Pair9), (degSetOf R.V).card = n →
+      ∃ R' : Pair9, Reach R R' ∧ degSetOf R'.V = ∅ := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro R hn
+    by_cases h : degSetOf R.V = ∅
+    · exact ⟨R, Reach.refl R, h⟩
+    · obtain ⟨p, hp⟩ := Finset.nonempty_iff_ne_empty.mpr h
+      obtain ⟨δ, R', hRV, hlt⟩ := pair9_degSet_card_lt R p.1 t p.2 hp
+      obtain ⟨R'', hreach, hclear⟩ := ih (degSetOf R'.V).card (hn ▸ hlt) R' rfl
+      exact ⟨R'', Reach.head ⟨p.1, t, δ, hRV⟩ hreach, hclear⟩
+
+theorem exists_degeneracy_free (R : Pair9) (t : ℝ) :
+    ∃ R' : Pair9, Reach R R' ∧ degSetOf R'.V = ∅ :=
+  exists_reach_degSet_empty t _ R rfl
+
+#print axioms pair9_degSet_card_lt
+#print axioms exists_reach_degSet_empty
+#print axioms exists_degeneracy_free
+
 end Pair9Shift
 end Heptagon
