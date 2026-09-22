@@ -1,0 +1,10 @@
+=== Lemma CL, main sample (finite intersection; hypothesis HOLDS) ===
+random pairs            : pairs audited=400  (infinite, excluded=9)  classes a=1684 b=83 c=52  pairs with a Lemma-CL violation = 0
+pairs forced degenerate : pairs audited=400  (infinite, excluded=96)  classes a=1335 b=463 c=306  pairs with a Lemma-CL violation = 0
+
+=== CONTROL: finiteness DROPPED (a Q-side laid on a P-side) ===
+    Lemma CL must FAIL here, or the audit above has no power.
+overlapping-side pairs  : pairs audited=400  (infinite, excluded=400)  classes a=2447 b=856 c=32  pairs with a Lemma-CL violation = 400
+    examples: [('a: NOT a proper crossing', (Fraction(-7, 1), Fraction(-19, 20)), 6, 5), ('a: NOT a proper crossing', (Fraction(38, 15), Fraction(8, 3)), 5, 2), ('a: NOT a proper crossing', (Fraction(-59, 10), Fraction(33, 5)), 5, 5)]
+
+SUMMARY: violations with the hypothesis = 0;  without it = 400

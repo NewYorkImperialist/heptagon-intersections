@@ -1,0 +1,16 @@
+P0 simple: True  Q0 simple: True
+alpha=0:  |X| = 4  infinite: False  pts: [(Fraction(0, 1), Fraction(0, 1)), (Fraction(122, 53), Fraction(240, 53)), (Fraction(249, 37), Fraction(-142, 37)), (Fraction(9, 1), Fraction(-1, 1))]
+vertex-vertex coincidences: [(0, 0)]
+vertex-side degeneracies: [('P', 3, 2)]
+check P3 on segment Q2Q3: True
+alpha=1/50:  simpleP=True  infinite=True  overlapping side pairs=[(6, 6)]  finite pts=6
+alpha=1/100:  simpleP=True  infinite=True  overlapping side pairs=[(6, 6)]  finite pts=6
+alpha=1/1048576:  simpleP=True  infinite=True  overlapping side pairs=[(6, 6)]  finite pts=6
+alpha=1/1152921504606846976:  simpleP=True  infinite=True  overlapping side pairs=[(6, 6)]  finite pts=6
+  (R2) straddle pattern holds for incident pair (P-side 0, Q-side 0) leads=[(1, -1), (0, 1), (1, 1), (0, -1)]
+(R2) satisfied at apex P0=Q0 : True
+
+source classes: [('c', (0, 0)), ('a', (4, 5)), ('a', (2, 1)), ('b', ('P', 3, 2))]
+alpha=1/50: Phi total=True (None) injective=True lands=True lands_exact=True |X0|=4  ncard(target)=0 (infinite)
+alpha=1/100: Phi total=True (None) injective=True lands=True lands_exact=True |X0|=4  ncard(target)=0 (infinite)
+alpha=1/1048576: Phi total=True (None) injective=True lands=True lands_exact=True |X0|=4  ncard(target)=0 (infinite)

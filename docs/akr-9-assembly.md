@@ -207,8 +207,13 @@ interior cases is simplicity: if `x` is interior to `P`-side `i` and lies on
 `disj`), or adjacent, in which case their intersection is the shared vertex,
 which is not interior to side `i`. For (a), the two sides are not collinear —
 two collinear segments sharing an interior point overlap in a segment, making
-`X` infinite — so they meet only at `x` and each has its endpoints strictly off
-the other's line: that is `ProperCrossR`. For (c), `x = P_i = Q_j`; `x` cannot
+`X` infinite — so they meet only at `x`. *(Corrected 2026-09-21: the original
+text went on "and each has its endpoints strictly off the other's line", as if
+that followed from non-collinearity. It does not, and a formalisation copying
+the sentence gets stuck. It follows instead from `x` being in the **relative
+interior of both** sides: if exactly one endpoint lay on the other's line, that
+endpoint would have to be the unique common point `x`, contradicting
+interiority.)* That gives `ProperCrossR`. For (c), `x = P_i = Q_j`; `x` cannot
 lie on a third `P`-side by the same simplicity argument. ∎
 
 Note what Lemma CL needs and what it does not: **simplicity and finiteness
@@ -282,6 +287,46 @@ upper bound on `f(7,7)` with **no external input whatsoever**.
 > `|∂P(α) ∩ ∂Q(α)| ≥ |X|`,
 >
 > and the witnessing injection `Φ_α : X → ∂P(α) ∩ ∂Q(α)` is explicit:
+
+> ### ⚠ Corrected 2026-09-21 — the statement above is **false as written**, in two ways
+>
+> **(i) The inequality needs (Fin-out), and the injection does not.** With
+> `|·| = Set.ncard` — which is what the Lean consumer reads, and `ncard` of an
+> *infinite* set is `0` — the displayed inequality fails under the hypotheses
+> listed. Certificate: `independent/eps_uniform/R3.md` Finding R3-1, which this
+> document cites nowhere. There `P⁰,Q⁰` are simple, `|X| = 4` is finite, there
+> is one apex, **(R2) is satisfied** at it, the motion is affine, every relation
+> (1) is maintained and `P(α)` stays simple — and `∂P(α) ∩ ∂Q(α)` is **infinite
+> for every `α ∈ (0,ε₀)`**, so `ncard = 0 < 4`. Re-verified from scratch.
+>
+> The separation is the useful part: **the injection survives, the inequality
+> does not.** On that very certificate `Φ_α` is total, injective and lands in
+> the target. So the theorem should be stated in two pieces — "there exists an
+> injection `X ↪ ∂P(α) ∩ ∂Q(α)`", which needs no (Fin-out), and the `ncard`
+> form as a corollary taking (Fin-out) explicitly.
+>
+> Consequence for §3: **rows 8 and 13 of A9-RED are not independent.** Row 8
+> already presupposes row 13. `injection.py` cannot detect any of this — it does
+> `if infe: return dict(skip='infinite at eps')`, skipping exactly the failure.
+>
+> **(ii) (R2) is unsatisfiable at an apex the motion does not separate.** If
+> `P_i(α) ≡ Q_j(α)`, every incident side pair has two of its four `D`'s equal to
+> `orient(A,x,x) ≡ 0`, so "all four `D`'s `≢ 0`" cannot hold. §9.1 processes
+> coincidences one at a time, so **any input with ≥2 coincidences produces
+> exactly this.** The theorem is still true, via a fourth rule:
+>
+> > **(c0)** if the apex is *maintained*, `Φ_α(x) := P_i(α) = Q_j(α)`.
+>
+> This needs no hypothesis at all, and the separated/maintained dichotomy is
+> decided on all of `(0,ε₀)` by Theorem U on the `X/Y` witnesses. So (R2) should
+> be restricted to *separated* coincidences. `run_arms.py`'s direction filter
+> already implements the split without saying so.
+>
+> **Also missing from the assume-list:** **(G4)**, simplicity of the perturbed
+> pair, which the injectivity proof uses. Not a gap — it is A9-RED hypotheses
+> 9+10, both kernel-checked — but the row should carry it.
+>
+> See `independent/akr_9_assembly/CI_HARDENED.md`.
 >
 > | class of `x` | `Φ_α(x)` | why it exists |
 > |---|---|---|
@@ -556,7 +601,7 @@ non-negative integer. ∎
 | **5′** | **(Fin-pres)** the direction `E_i` can be chosen so that finiteness is *preserved*: no P-side and Q-side acquire a positive-length overlap | **PROVED ON PAPER**, with a sharp criterion — the bad directions are exactly the positive multiples of a `b_l` parallel to some `a_k`, finitely many open rays, so a safe direction survives inside the cone | `independent/e9_directions/antiparallel.py`, `global_finiteness.py`; `verification-status.md` row 62 |
 | **6** | **(U)** Theorem U: the sign vector of the witness family is constant on `(0, ε₀)` with `ε₀` explicit; and the bootstrapping principle | **IN LEAN.** `lemmaU_sign`, `theoremU_sameSign`, `bootstrap`, `properCrossR_move_iff`, `rho_orient_ge`. I read the statements; no `sorry` in the file; I did not build it | `lean/UniformEps.lean`; `eps_uniform` Finding 3 |
 | **7** | **(R2)** at every apex, some incident side pair has all four `D`'s `≢ 0` with the straddle leading-sign pattern | **PROVED ON PAPER** (per-apex, and the per-apex choices provably do not interfere) | `eps_uniform` Finding 1 + Finding 4; `e9_directions` |
-| **8** | **(CI)** the count inequality for the §9.1 motion | **PROVED ON PAPER — §2 of this document.** 285/285 with two firing controls | §2.3, §2.4; `independent/akr_9_assembly/` |
+| **8** | **(CI)** the count inequality for the §9.1 motion | **PARTLY CORRECTED 2026-09-21.** The *injection* `X ↪ ∂P(α) ∩ ∂Q(α)` is proved and survives hard testing — 1668/1668 total, injective and landing, across 10 families with four firing controls including two that specifically exercise injectivity and the class-(b) rule. The **`ncard` inequality is false without (Fin-out)**, so **this row presupposes row 13 and is not independent of it**. The row also silently needs (G4), and (R2) must be restricted to *separated* coincidences with a fourth rule (c0) for maintained ones. | §2.3 (with its correction box), `independent/akr_9_assembly/CI_HARDENED.md` |
 | **9** | **(Simp-stable)** small perturbations preserve `SimpleClosed`, including along a linear motion | **VERIFIED IN LEAN**, kernel-checked | `lean/SimplicityStable.lean`, `heptagon_simplicity_stable_linear` |
 | **10** | **(Sign-exp)** `SimpleClosed` is a Boolean function of the sign vector of the witness family `W` | **VERIFIED IN LEAN, 2026-09-21**, kernel-checked, zero `sorryAx`. `simpleClosed_iff_sign` in `lean/SignExp.lean`, via `cornerVec_ne_zero_iff_sign` (the corner half) and `disjoint_iff_sign` (the disjointness half, resting on `mem_segment_iff_sign`: a point lies on a closed segment iff a determinant vanishes **and** an inner product is non-positive — which is why the witness family needs dot products, not just determinants) | `eps_uniform` Finding 4's table asserts it; `SimplicityStable.meet_eq_singleton_of_cornerVec_ne_zero` supplies the corner half |
 | **11** | **(Avg)** §9.2's averaging identity, plus clauses 1–4 (simplicity, no new degeneracy, termination monovariant) | **PROVED ON PAPER**; 47 346 exact tests, 0 violations | `docs/akr-9-2-obligation.md` §4, §5 |

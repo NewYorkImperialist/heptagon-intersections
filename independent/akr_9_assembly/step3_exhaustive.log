@@ -1,0 +1,22 @@
+=== STEP 3, exhaustive over Fin 7 ^ 4 ===
+index tuples (i,j,k,l) with i!=k and j!=l            : 1764
+  ... admitting a SHARED candidate side pair          : 196
+  ... of those, shared pair whose two sides do NOT
+      coincide as segments (would BREAK step 3)       : 0
+tuples adjacent along BOTH boundaries                 : 196
+  ... of those with NO shared pair                    : 0
+
+READ: 'shared pair' and 'adjacent along both boundaries' are the SAME
+set of index tuples, and on every one of them the shared pair's P-side
+and Q-side have identical endpoint sets, hence coincide as segments,
+hence dP cap dQ contains a segment and is infinite.
+
+=== CONTROL: same checker, wrong incidence rule {i,i+1} x {j,j+1} ===
+shared pairs found: 196   of which sides do NOT coincide: 196
+The control fires (bad2 > 0), so the checker above CAN report a failure;
+its 0 on the correct rule is a fact about the rule, not about the code.
+
+=== FACT 2, exhaustive: every class-(c) candidate pair's two sides
+    share an endpoint (so a second, interior, common point would force
+    collinearity and an infinite intersection) ===
+apex/candidate-pair combinations: 196   sharing an endpoint: 196

@@ -1,0 +1,240 @@
+==============================================================================
+A. MAIN ARM (arm B: AKR's criterion (R2) enforced at every SEPARATED apex)
+==============================================================================
+--- family none
+    built=60 tested=180 simple=180 inf@0=0 nodir=0
+    (G3) carried by motion: 180/180   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 180/180   [a/c rules alone: 180/180]
+    Phi inj (ANY choice) : 180/180
+    Phi lands in target  : 180/180
+    pairsets disjoint @0 : 60/60   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/0   among the FINITE ones: 0
+    OUTPUT finite        : 180/180   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 180/180
+    source pts  a=663 b=222 c=6   | rule c0 (maintained apex) used 6x, c1 with >1 admissible pair 0x
+
+--- family one
+    built=60 tested=168 simple=168 inf@0=4 nodir=0
+    (G3) carried by motion: 168/168   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 168/168   [a/c rules alone: 168/168]
+    Phi inj (ANY choice) : 168/168
+    Phi lands in target  : 168/168
+    pairsets disjoint @0 : 56/56   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 2/4   among the FINITE ones: 0
+    OUTPUT finite        : 168/168   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 168/168
+    source pts  a=510 b=141 c=177   | rule c0 (maintained apex) used 9x, c1 with >1 admissible pair 99x
+
+--- family fig27c
+    built=60 tested=168 simple=168 inf@0=4 nodir=0
+    (G3) carried by motion: 168/168   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 168/168   [a/c rules alone: 168/168]
+    Phi inj (ANY choice) : 168/168
+    Phi lands in target  : 168/168
+    pairsets disjoint @0 : 56/56   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/4   among the FINITE ones: 0
+    OUTPUT finite        : 168/168   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 168/168
+    source pts  a=489 b=126 c=336   | rule c0 (maintained apex) used 0x, c1 with >1 admissible pair 216x
+
+--- family adjP
+    built=60 tested=168 simple=168 inf@0=4 nodir=0
+    (G3) carried by motion: 168/168   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 168/168   [a/c rules alone: 168/168]
+    Phi inj (ANY choice) : 168/168
+    Phi lands in target  : 168/168
+    pairsets disjoint @0 : 56/56   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/4   among the FINITE ones: 0
+    OUTPUT finite        : 168/168   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 168/168
+    source pts  a=501 b=102 c=348   | rule c0 (maintained apex) used 12x, c1 with >1 admissible pair 237x
+
+--- family adjQ
+    built=60 tested=171 simple=171 inf@0=3 nodir=0
+    (G3) carried by motion: 171/171   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 171/171   [a/c rules alone: 171/171]
+    Phi inj (ANY choice) : 171/171
+    Phi lands in target  : 171/171
+    pairsets disjoint @0 : 57/57   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 1/3   among the FINITE ones: 0
+    OUTPUT finite        : 171/171   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 171/171
+    source pts  a=435 b=99 c=348   | rule c0 (maintained apex) used 6x, c1 with >1 admissible pair 222x
+
+--- family three
+    built=60 tested=162 simple=162 inf@0=6 nodir=0
+    (G3) carried by motion: 162/162   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 162/162   [a/c rules alone: 162/162]
+    Phi inj (ANY choice) : 162/162
+    Phi lands in target  : 162/162
+    pairsets disjoint @0 : 54/54   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/6   among the FINITE ones: 0
+    OUTPUT finite        : 162/162   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 162/162
+    source pts  a=351 b=93 c=486   | rule c0 (maintained apex) used 0x, c1 with >1 admissible pair 291x
+
+--- family threeadjP
+    built=60 tested=159 simple=159 inf@0=7 nodir=0
+    (G3) carried by motion: 159/159   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 159/159   [a/c rules alone: 159/159]
+    Phi inj (ANY choice) : 159/159
+    Phi lands in target  : 159/159
+    pairsets disjoint @0 : 53/53   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 1/7   among the FINITE ones: 0
+    OUTPUT finite        : 159/159   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 159/159
+    source pts  a=303 b=6 c=477   | rule c0 (maintained apex) used 0x, c1 with >1 admissible pair 306x
+
+--- family vsboth
+    built=60 tested=159 simple=159 inf@0=7 nodir=0
+    (G3) carried by motion: 159/159   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 159/159   [a/c rules alone: 159/159]
+    Phi inj (ANY choice) : 159/159
+    Phi lands in target  : 159/159
+    pairsets disjoint @0 : 53/53   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/7   among the FINITE ones: 0
+    OUTPUT finite        : 159/159   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 159/159
+    source pts  a=534 b=297 c=165   | rule c0 (maintained apex) used 6x, c1 with >1 admissible pair 69x
+
+--- family unsep
+    built=60 tested=165 simple=165 inf@0=5 nodir=0
+    (G3) carried by motion: 165/165   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 165/165   [a/c rules alone: 165/165]
+    Phi inj (ANY choice) : 165/165
+    Phi lands in target  : 165/165
+    pairsets disjoint @0 : 55/55   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/5   among the FINITE ones: 0
+    OUTPUT finite        : 165/165   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 165/165
+    source pts  a=501 b=141 c=336   | rule c0 (maintained apex) used 171x, c1 with >1 admissible pair 105x
+
+--- family anti
+    built=60 tested=168 simple=168 inf@0=4 nodir=0
+    (G3) carried by motion: 168/168   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 168/168   [a/c rules alone: 168/168]
+    Phi inj (ANY choice) : 168/168
+    Phi lands in target  : 168/168
+    pairsets disjoint @0 : 56/56   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/4   among the FINITE ones: 0
+    OUTPUT finite        : 168/168   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 168/168
+    source pts  a=492 b=99 c=180   | rule c0 (maintained apex) used 12x, c1 with >1 admissible pair 78x
+
+### TOTAL, arm B, all families
+--- ARM B TOTAL
+    built=600 tested=1668 simple=1668 inf@0=44 nodir=0
+    (G3) carried by motion: 1668/1668   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 1668/1668   [a/c rules alone: 1668/1668]
+    Phi inj (ANY choice) : 1668/1668
+    Phi lands in target  : 1668/1668
+    pairsets disjoint @0 : 556/556   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 4/44   among the FINITE ones: 0
+    OUTPUT finite        : 1668/1668   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 1668/1668
+    source pts  a=4779 b=1326 c=2859   | rule c0 (maintained apex) used 222x, c1 with >1 admissible pair 1623x
+
+==============================================================================
+B. CONTROLS
+==============================================================================
+--- CONTROL 1 -- arm A (bare directions: coincidences break, (R2) NOT required)
+    built=600 tested=1644 simple=1644 inf@0=52 nodir=0
+    (G3) carried by motion: 1644/1644   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 978/1644   [a/c rules alone: 978/1644]
+    Phi inj (ANY choice) : 978/978
+    Phi lands in target  : 978/978
+    pairsets disjoint @0 : 548/548   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 9/52   among the FINITE ones: 0
+    OUTPUT finite        : 1644/1644   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 978/1644
+    source pts  a=4848 b=1293 c=2838   | rule c0 (maintained apex) used 171x, c1 with >1 admissible pair 528x
+
+--- CONTROL 2 -- E parallel to an incident P-edge at the apex
+    built=600 tested=1674 simple=1674 inf@0=42 nodir=0
+    (G3) carried by motion: 1671/1674   (violations: 3 -- builder artefact, see notes)
+    Phi total            : 936/1674   [a/c rules alone: 936/1671]
+    Phi inj (ANY choice) : 936/936
+    Phi lands in target  : 936/936
+    pairsets disjoint @0 : 558/558   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 5/42   among the FINITE ones: 0
+    OUTPUT finite        : 1674/1674   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 936/1674
+    source pts  a=4830 b=1239 c=2853   | rule c0 (maintained apex) used 129x, c1 with >1 admissible pair 390x
+
+--- CONTROL 3 -- MUTATED Phi: class (a) sent to the crossing of its P-side with the LOWEST-indexed Q-side it crosses (an injectivity-only mutation)
+    built=600 tested=1668 simple=1668 inf@0=44 nodir=0
+    (G3) carried by motion: 1668/1668   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 1668/1668   [a/c rules alone: 1668/1668]
+    Phi inj (ANY choice) : 702/1668
+    Phi lands in target  : 1668/1668
+    pairsets disjoint @0 : 556/556   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 4/44   among the FINITE ones: 0
+    OUTPUT finite        : 1668/1668   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 1668/1668
+    source pts  a=4779 b=1326 c=2859   | rule c0 (maintained apex) used 222x, c1 with >1 admissible pair 1623x
+
+--- CONTROL 4 -- (G3) DROPPED: the motion does not carry the relations (1) it breaks (tests the class-(b) rule in isolation)
+    built=600 tested=1668 simple=1668 inf@0=44 nodir=0
+    (G3) carried by motion: 1656/1668   (violations: 12 -- builder artefact, see notes)
+    Phi total            : 1656/1668   [a/c rules alone: 1656/1656]
+    Phi inj (ANY choice) : 1656/1656
+    Phi lands in target  : 1656/1656
+    pairsets disjoint @0 : 556/556   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 4/44   among the FINITE ones: 0
+    OUTPUT finite        : 1668/1668   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 1656/1668
+    source pts  a=4779 b=1326 c=2859   | rule c0 (maintained apex) used 222x, c1 with >1 admissible pair 1614x
+
+==============================================================================
+C. THE DOUBLE-COUNTING HAZARD, built on purpose
+==============================================================================
+--- two coincidences ADJACENT ALONG BOTH BOUNDARIES
+    built=360 tested=0 simple=0 inf@0=360 nodir=0
+    (G3) carried by motion: 0/0   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 0/0   [a/c rules alone: 0/0]
+    Phi inj (ANY choice) : 0/0
+    Phi lands in target  : 0/0
+    pairsets disjoint @0 : 0/0   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 360/360   among the FINITE ones: 0
+    OUTPUT finite        : 0/0   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 0/0
+    source pts  a=0 b=0 c=0   | rule c0 (maintained apex) used 0x, c1 with >1 admissible pair 0x
+
+  built 360, of which infinite at alpha=0: 360
+  of those, the step-3 hazard precondition (two apexes sharing a
+  candidate side pair) was PRESENT in 360
+  configurations with the hazard precondition AND finite intersection: 0
+==============================================================================
+D. (Fin-out): the output's finiteness, attacked directly
+==============================================================================
+--- anti family, E forced parallel to b1, (R2) still enforced
+    built=120 tested=312 simple=312 inf@0=16 nodir=0
+    (G3) carried by motion: 312/312   (violations: 0 -- builder artefact, see notes)
+    Phi total            : 312/312   [a/c rules alone: 312/312]
+    Phi inj (ANY choice) : 312/312
+    Phi lands in target  : 312/312
+    pairsets disjoint @0 : 104/104   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 0/16   among the FINITE ones: 0
+    OUTPUT finite        : 0/312   (INFINITE: 312  -> ncard form FALSE there)
+    count did not drop   : 0/0
+    source pts  a=984 b=297 c=318   | rule c0 (maintained apex) used 6x, c1 with >1 admissible pair 0x
+
+  ncard form |dP(a) n dQ(a)| >= |X| FALSE (output infinite, Set.ncard = 0): 312
+  ... while Phi was total/injective/landed in: 312/312/312

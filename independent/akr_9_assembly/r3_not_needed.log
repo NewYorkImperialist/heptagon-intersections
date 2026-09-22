@@ -1,0 +1,18 @@
+=== Does Theorem CI ever consult an identically-zero witness? ===
+  instances                              216
+  instances_with_a_zero_witness          216
+  zero_witnesses                         4828
+  consulted_keys                         4661
+  CONSULTS_A_ZERO_WITNESS                0
+  consulted_identically_zero             0
+  consulted_c0_nonzero                   3565
+  consulted_c0_zero_but_nonzero_poly     1096
+
+READ: `instances_with_a_zero_witness` > 0 is the non-vacuity control --
+identically-zero witnesses DO occur in this sample, so (R3) is not
+trivially satisfied here.  `CONSULTS_A_ZERO_WITNESS` = 0 says Theorem
+CI's proof never reads one of them, i.e. (R3) is not among its
+hypotheses.  The split of the consulted keys shows why: those with
+c_0 != 0 need only that the quantity is nonzero at alpha = 0; the
+rest are exactly (R2)'s four D's per apex, which (R2) itself asserts
+are not identically zero.

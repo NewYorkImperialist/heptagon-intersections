@@ -1,0 +1,13 @@
+--- CONTROL 4b -- (G3) DROPPED ENTIRELY: no relation (1) is carried by the motion
+    built=600 tested=1668 simple=1668 inf@0=44 nodir=0
+    (G3) carried by motion: 699/1668   (violations: 969 -- builder artefact, see notes)
+    Phi total            : 699/1668   [a/c rules alone: 699/699]
+    Phi inj (ANY choice) : 699/699
+    Phi lands in target  : 699/699
+    pairsets disjoint @0 : 556/556   (collisions: 0)
+    STEP-3 hazard precondition (two apexes sharing a candidate
+      side pair) among the inf@0 rejects: 4/44   among the FINITE ones: 0
+    OUTPUT finite        : 1668/1668   (INFINITE: 0  -> ncard form FALSE there)
+    count did not drop   : 699/1668
+    source pts  a=4779 b=1326 c=2859   | rule c0 (maintained apex) used 75x, c1 with >1 admissible pair 831x
+

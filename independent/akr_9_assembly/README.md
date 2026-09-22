@@ -38,3 +38,14 @@ cannot certify the argument.
 is not refuted by any of this; what `nc_stuck.py` and `certificate.py` refute is
 §9's *printed procedure*, on an explicit input. Repairs are discussed in
 `docs/akr-9-assembly.md` §2.5 and are not proved.
+
+## `CI_HARDENED.md` — hardening pass on Theorem CI, 2026-09-21
+
+Independent re-derivation of Lemma CL and Theorem CI, an exhaustive decision of
+the double-counting hazard, and a hypothesis audit. Headline: the **injection**
+survives (1 668/1 668, choice-free, with four firing controls), but the
+**`ncard` inequality** `|∂P(α) ∩ ∂Q(α)| ≥ |X|` is **false under the hypotheses
+§2.3 lists** — it silently needs **(Fin-out)**, A9-RED hypothesis 13.
+Certificate: `ci_finout_cert.py`. Also: (R2) as stated is unsatisfiable at a
+coincidence the motion does not separate, and a fourth rule is needed.
+See `CI_HARDENED.md` §0 for the verdict table and §7 for the file list.
