@@ -5438,3 +5438,6 @@ name = "CIInstance"
 
 [[lean_lib]]
 name = "RotationLaw"
+
+[[lean_lib]]
+name = "Pair9Shift"
