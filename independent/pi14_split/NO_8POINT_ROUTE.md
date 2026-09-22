@@ -40,6 +40,37 @@ is comfortably realizable on eight points.
 > `c`. The induced set is contained in `Π₁₄ ∖ {c}`, which has a realization on
 > eleven points; restrict that realization to the eight chosen vertices. ∎
 
+## It is not just 8 — it is every proper subset
+
+*Added later the same day.* The argument above never used `k = 8`. It only used
+"omits at least one **confirmed** droppable condition", so it generalises:
+
+> **Theorem.** No proper vertex subset of Π₁₄ induces an unrealizable set of
+> conditions. All eleven vertices are needed.
+>
+> *Proof.* The three conditions whose one-condition relaxation the sweep did
+> **not** realize are `h0_3` (`P₀⊁P₃`), `h7_10` (`Q₀⊁Q₃`) and `h8_10`
+> (`Q₁⊁Q₃`) — `drop1`, `drop18`, `drop19`, all at count 0. For a proper subset
+> to escape the argument, *every* condition it omits would have to be one of
+> those three, so it would have to induce at least `21 − 3 = 18` conditions.
+> The richest proper subset induces **17** (drop `V₁₂`, which kills only 4).
+> So every proper subset omits a confirmed-droppable condition `c`; the induced
+> set lies inside `Π₁₄ ∖ {c}`, which has an eleven-point realization; restrict
+> it. ∎
+
+Checked exhaustively over all **1,980** proper vertex subsets of size ≥ 3:
+**zero** have all their omitted conditions among the three unconfirmed ones.
+
+| subset size | richest induced | minimum omitted |
+|---|---|---|
+| 10 | 17 | 4 |
+| 9 | 14 | 7 |
+| 8 | 10 | 11 |
+
+This is the sharp form. Π₁₄ is **irreducibly eleven-point**: there is no
+smaller vertex certificate to find, at any size, and the residual inequality
+inherits that.
+
 So the order-type route is closed for Π₁₄ in a stronger sense than the usual
 one. The usual statement is that eleven points is out of reach — 2,334,512,907
 order types, and no database. This is sharper: **even a complete 11-point
