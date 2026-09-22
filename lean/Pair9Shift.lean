@@ -269,5 +269,53 @@ theorem exists_delta0_properCrossR (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : 
 #print axioms exists_delta0_order_type
 #print axioms exists_delta0_properCrossR
 
+/-! ## 6. The §9.2 step, assembled
+
+Three bounds have been produced independently — one for simplicity, one for
+clearing the side, one for the order type.  Reconciling them is a minimum. -/
+
+/-- **§9.2's step.**  For every `Pair9`, every non-degenerate `P`-side and
+every tilt, there is a single nonzero shift `δ` such that the result
+
+1. is a genuine `Pair9` — both heptagons still simple;
+2. has **no** `Q`-vertex on that side's line — every degeneracy there is gone;
+3. loses **no** proper crossing — the entire order type is unchanged.
+
+Clause 2 with `degeneracy_monovariant` gives the strict drop in the degeneracy
+count. Clause 3 gives survival of the *transversal* intersections.
+
+**These do not yet add up to "the intersection count does not drop."** Clause 3
+is about `ProperCrossR`, and the intersection points that clause 2 destroys are
+precisely the ones that are *not* proper crossings — a `Q`-vertex sitting on a
+`P`-side is one intersection point, and after the shift it may contribute none.
+That is exactly the case `TiltedShift.averaging_identity` handles, and exactly
+the reason it is needed: over the two signs `±δ` the degenerate contributions
+sum to twice the original, so one sign does not lose. Joining that to this
+theorem — which fixes a single `δ` and says nothing about `-δ` — is not done. -/
+theorem exists_full_shift (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hside : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) :
+    ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (∀ j : Fin 7,
+        off (R'.V (pP (i + 1)) - R'.V (pP i)) (R'.V (pP i)) (R'.V (pQ j)) ≠ 0) ∧
+      (∀ a b c d : Fin 14, ProperCrossR (R.V a) (R.V b) (R.V c) (R.V d) →
+        ProperCrossR (R'.V a) (R'.V b) (R'.V c) (R'.V d)) := by
+  obtain ⟨δ₁, hδ₁, hsimp⟩ :=
+    exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ₂, hδ₂, hord⟩ := exists_delta0_properCrossR R.V i t
+  obtain ⟨δ, hδ0, hδlt, hclear⟩ :=
+    shift_clears_side R.V i t hside (lt_min hδ₁ hδ₂)
+  have h1 : |δ| ≤ δ₁ := le_of_lt (lt_of_lt_of_le hδlt (min_le_left _ _))
+  have h2 : |δ| < δ₂ := lt_of_lt_of_le hδlt (min_le_right _ _)
+  have hP : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pP k)) := by
+    simpa only [shiftV_pP] using hsimp δ h1
+  have hQ : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) := by
+    have hEq : (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact shiftV_Q R.V i t δ k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, hδ0, rfl, hclear,
+    fun a b c d hpc => hord δ h2 a b c d hpc⟩
+
+#print axioms exists_full_shift
+
 end Pair9Shift
 end Heptagon
