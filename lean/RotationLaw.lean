@@ -466,5 +466,85 @@ theorem ip_nrm_tilt (u : ℝ × ℝ) (t : ℝ) : ip (nrm u) (tilt u t) = ip (nrm
 #print axioms bad_tilt_unique
 #print axioms exists_good_tilt
 
+/-! ### The shift operator itself
+
+Step **S7** of the dependency graph is labelled "the interface gap": §9.2's
+shift operator `P(δ)` is never *defined* in AKR — Figure 28 shows it and the
+text does not say what it is.  With the tilt family in hand it can simply be
+written down, for every side of every simple heptagon, with no collinearity
+hypothesis anywhere.
+
+`shiftPoly W i t δ` moves both endpoints of side `i` by `δ · tilt u t`, where
+`u` is that side's direction, and leaves the other five vertices alone. -/
+
+/-- **§9.2's shift operator, defined.**  Side `i` of `W` is displaced by
+`δ · tilt u t`; every other vertex is fixed. -/
+def shiftPoly (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) : Fin 7 → ℝ × ℝ :=
+  fun j => if j = i ∨ j = i + 1 then mov (W j) (tilt (W (i + 1) - W i) t) δ else W j
+
+theorem shiftPoly_at (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftPoly W i t δ i = mov (W i) (tilt (W (i + 1) - W i) t) δ := by
+  simp [shiftPoly]
+
+theorem shiftPoly_at_succ (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftPoly W i t δ (i + 1) = mov (W (i + 1)) (tilt (W (i + 1) - W i) t) δ := by
+  simp [shiftPoly]
+
+/-- Vertices off the shifted side do not move. -/
+theorem shiftPoly_other (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) {j : Fin 7}
+    (h1 : j ≠ i) (h2 : j ≠ i + 1) : shiftPoly W i t δ j = W j := by
+  simp [shiftPoly, h1, h2]
+
+/-- At `δ = 0` the operator is the identity. -/
+theorem shiftPoly_zero (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    shiftPoly W i t 0 = W := by
+  funext j
+  simp only [shiftPoly, mov]
+  split_ifs with h
+  · simp
+  · rfl
+
+/-- **The shifted side is a translate: its direction is unchanged.**  Both
+endpoints move by the same vector, so the side stays parallel to itself — which
+is what makes it *a shift* rather than an arbitrary perturbation. -/
+theorem shiftPoly_dir (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftPoly W i t δ (i + 1) - shiftPoly W i t δ i = W (i + 1) - W i := by
+  rw [shiftPoly_at, shiftPoly_at_succ]
+  simp only [mov, Prod.ext_iff, Prod.fst_sub, Prod.snd_sub]
+  constructor <;> ring
+
+/-- Both endpoints land at normal offset `δ · ‖u‖²` from the original side
+line — the same value for **every** `t`, so the whole tilt family moves the side
+onto the same parallel line.  This is `shift_parallel` and `ip_nrm_tilt` in the
+form the operator needs. -/
+theorem off_mov_tilt (u A X : ℝ × ℝ) (t δ : ℝ) :
+    off u X (mov A (tilt u t) δ) = off u X A + δ * (u.1 * u.1 + u.2 * u.2) := by
+  simp only [off, mov, tilt]; ring
+
+theorem shiftPoly_offset_fst (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    off (W (i + 1) - W i) (W i) (shiftPoly W i t δ i)
+      = δ * ((W (i + 1) - W i).1 * (W (i + 1) - W i).1
+           + (W (i + 1) - W i).2 * (W (i + 1) - W i).2) := by
+  rw [shiftPoly_at, off_mov_tilt]
+  simp only [off]
+  ring
+
+theorem shiftPoly_offset_snd (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    off (W (i + 1) - W i) (W i) (shiftPoly W i t δ (i + 1))
+      = δ * ((W (i + 1) - W i).1 * (W (i + 1) - W i).1
+           + (W (i + 1) - W i).2 * (W (i + 1) - W i).2) := by
+  rw [shiftPoly_at_succ, off_mov_tilt]
+  simp only [off, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+#print axioms shiftPoly_at
+#print axioms shiftPoly_at_succ
+#print axioms shiftPoly_other
+#print axioms shiftPoly_zero
+#print axioms shiftPoly_dir
+#print axioms off_mov_tilt
+#print axioms shiftPoly_offset_fst
+#print axioms shiftPoly_offset_snd
+
 end RotationLaw
 end Heptagon
