@@ -1029,5 +1029,66 @@ theorem count_grows_by_degeneracies (R : Pair9) (hfin : (points9 R).Finite)
 
 #print axioms count_grows_by_degeneracies
 
+/-! ## 20. Towards `points9`
+
+`count_grows_by_degeneracies` is about `crossPairsOf`. Two `DegBound` facts
+convert between that and `points9`; the first is the intermediate step of
+`regPts_ncard_le_38`, which was only ever used inside a `calc`. -/
+
+/-- **A regular point determines a crossing pair, injectively.** -/
+theorem regPts_ncard_le_crossPairs (R : Pair9) (hno : NoOverlap R) :
+    (regPts R).ncard ≤ (crossPairsOf R.V).card := by
+  have hmaps : ∀ x ∈ regPts R,
+      (pIdx R x, qIdx R x) ∈ (crossPairsOf R.V : Set (Fin 7 × Fin 7)) := fun x hx =>
+    mem_crossPairs_of_reg R hno hx _ _ (mem_sideP_pIdx R hx.1) (mem_sideQ_qIdx R hx.1)
+  have hinj : Set.InjOn (fun x => (pIdx R x, qIdx R x)) (regPts R) := by
+    intro x hx y hy h
+    have h1 : pIdx R x = pIdx R y := congrArg Prod.fst h
+    have h2 : qIdx R x = qIdx R y := congrArg Prod.snd h
+    exact hno (pIdx R x) (qIdx R x) x y
+      (mem_sideP_pIdx R hx.1) (mem_sideQ_qIdx R hx.1)
+      (h1 ▸ mem_sideP_pIdx R hy.1) (h2 ▸ mem_sideQ_qIdx R hy.1)
+  calc (regPts R).ncard
+      ≤ ((crossPairsOf R.V : Finset (Fin 7 × Fin 7)) : Set (Fin 7 × Fin 7)).ncard :=
+        Set.ncard_le_ncard_of_injOn _ hmaps hinj (crossPairsOf R.V).finite_toSet
+    _ = (crossPairsOf R.V).card := by
+        simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
+
+/-- **The intersection points split into regular and degenerate.**  This is the
+decomposition the count argument runs on, and the reason a bound on
+`crossPairsOf` alone cannot bound `points9`. -/
+theorem points9_ncard_eq (R : Pair9) (hfin : (points9 R).Finite) :
+    (points9 R).ncard = (regPts R).ncard + (degPts R).ncard := by
+  have hsplit : points9 R = regPts R ∪ degPts R := by
+    ext x
+    simp only [regPts, degPts, Set.mem_union, Set.mem_diff, Set.mem_inter_iff]
+    constructor
+    · intro hx
+      by_cases hv : x ∈ verts R
+      · exact Or.inr ⟨hx, hv⟩
+      · exact Or.inl ⟨hx, hv⟩
+    · rintro (⟨hx, -⟩ | ⟨hx, -⟩) <;> exact hx
+  have hdisj : Disjoint (regPts R) (degPts R) := by
+    rw [Set.disjoint_left]
+    rintro x ⟨-, hnv⟩ ⟨-, hv⟩
+    exact hnv hv
+  rw [hsplit, Set.ncard_union_eq hdisj (hfin.subset Set.diff_subset)
+    (hfin.subset Set.inter_subset_left)]
+
+/-- **The bound `points9` needs, in terms of pairs.**  Combining the two:
+`|points9| ≤ |crossPairsOf| + |degPts|`.
+
+Set beside `count_grows_by_degeneracies`, this is the shape of §9.2's argument:
+the shift converts degenerate points into crossing pairs one for one, and the
+regular points were already pairs. -/
+theorem points9_ncard_le_crossPairs_add_deg (R : Pair9) (hfin : (points9 R).Finite) :
+    (points9 R).ncard ≤ (crossPairsOf R.V).card + (degPts R).ncard := by
+  rw [points9_ncard_eq R hfin]
+  exact Nat.add_le_add_right (regPts_ncard_le_crossPairs R (noOverlap_of_finite R hfin)) _
+
+#print axioms regPts_ncard_le_crossPairs
+#print axioms points9_ncard_eq
+#print axioms points9_ncard_le_crossPairs_add_deg
+
 end Pair9Shift
 end Heptagon
