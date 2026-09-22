@@ -528,6 +528,22 @@ theorem reaches : (D.toDepSystem).Reaches := by
 
 end VSDeg
 
+/-! ## 5c. Extracting the barycentric ratio from the geometry
+
+`VSDeg` takes the ratio `t` as data.  In the real setting one is *given* a
+vertex-side degeneracy — a vertex lying in the **relative interior** of a side
+— and must produce the ratio.  That is exactly `openSegment` membership
+unpacked, and it lands in the open interval `(0,1)` that `VSDeg` requires. -/
+
+theorem exists_ratio_of_mem_openSegment {a b x : ℝ × ℝ}
+    (h : x ∈ openSegment ℝ a b) :
+    ∃ t : ℝ, 0 < t ∧ t < 1 ∧ x = t • a + (1 - t) • b := by
+  obtain ⟨u, v, hu, hv, huv, hx⟩ := h
+  refine ⟨u, hu, by linarith, ?_⟩
+  rw [← hx, show (1 : ℝ) - u = v by linarith]
+
+#print axioms exists_ratio_of_mem_openSegment
+
 /-! ## 6. Axiom check -/
 
 #print axioms Heptagon.DependentSystem.DepSystem.eq_zero_of_homogeneous
