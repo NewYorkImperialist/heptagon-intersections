@@ -1,0 +1,4 @@
+non-parallel (ak,bl) pairs : 3000  x 6 epsilons
+  FAILURES to cross properly : 0
+parallel pairs (control)    : 3000  x 4 epsilons
+  spurious proper crossings  : 0   <- must be 0

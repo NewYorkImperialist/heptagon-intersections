@@ -5444,3 +5444,6 @@ name = "Pair9Shift"
 
 [[lean_lib]]
 name = "FactE"
+
+[[lean_lib]]
+name = "E9Directions"
