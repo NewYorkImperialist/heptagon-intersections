@@ -682,5 +682,52 @@ theorem exists_good_tilt_and_delta {ι : Type*} [DecidableEq ι] (S : Finset ι)
 #print axioms exists_good_delta_affine
 #print axioms exists_good_tilt_and_delta
 
+/-! ### The monovariant, and termination
+
+Step **S10** of the dependency graph reads: "termination of *one by one* — the
+project's monovariant; **no termination argument in AKR**".  §9.2 removes
+degeneracies one at a time and simply asserts the process finishes.
+
+With `shift_removes_degeneracy` and `shift_creates_no_degeneracy` in hand the
+monovariant is immediate, and termination follows from it by strong induction.
+Both are stated abstractly, over an arbitrary index type for the degeneracies,
+so they do not depend on how a degeneracy is encoded. -/
+
+/-- **The monovariant.**  If the step creates no degeneracy (`D' ⊆ D`) and
+removes at least one (`k ∈ D`, `k ∉ D'`), the count strictly drops. -/
+theorem degeneracy_monovariant {ι : Type*} [DecidableEq ι] {D D' : Finset ι} {k : ι}
+    (hsub : D' ⊆ D) (hk : k ∈ D) (hk' : k ∉ D') : D'.card < D.card :=
+  Finset.card_lt_card ((Finset.ssubset_iff_of_subset hsub).mpr ⟨k, hk, hk'⟩)
+
+/-- **Termination.**  A step that strictly decreases a `ℕ`-valued measure
+whenever the measure is nonzero reaches zero, in at most `meas a` steps.
+
+This is the argument AKR do not give.  It is not deep — but "one by one" is not
+a proof that the process halts, and with the measure named it is three lines. -/
+theorem exists_iterate_meas_zero {α : Type*} (step : α → α) (meas : α → ℕ)
+    (hdec : ∀ a, meas a ≠ 0 → meas (step a) < meas a) :
+    ∀ (n : ℕ) (a : α), meas a = n → ∃ k : ℕ, k ≤ n ∧ meas (step^[k] a) = 0 := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro a ha
+    by_cases h : meas a = 0
+    · exact ⟨0, Nat.zero_le _, by simpa using h⟩
+    · have hlt : meas (step a) < n := ha ▸ hdec a h
+      obtain ⟨k, hk, hk0⟩ := ih (meas (step a)) hlt (step a) rfl
+      refine ⟨k + 1, by omega, ?_⟩
+      rw [Function.iterate_succ_apply]
+      exact hk0
+
+/-- The form `§9.2` uses: the process reaches a degeneracy-free configuration. -/
+theorem terminates {α : Type*} (step : α → α) (meas : α → ℕ)
+    (hdec : ∀ a, meas a ≠ 0 → meas (step a) < meas a) (a : α) :
+    ∃ k : ℕ, k ≤ meas a ∧ meas (step^[k] a) = 0 :=
+  exists_iterate_meas_zero step meas hdec (meas a) a rfl
+
+#print axioms degeneracy_monovariant
+#print axioms exists_iterate_meas_zero
+#print axioms terminates
+
 end RotationLaw
 end Heptagon
