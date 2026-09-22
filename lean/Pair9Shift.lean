@@ -1,4 +1,5 @@
 import AKR9
+import DegBound
 import RotationLaw
 
 /-!
@@ -32,6 +33,7 @@ namespace Pair9Shift
 
 open Heptagon.AKR9 Heptagon.RotationLaw Heptagon.TiltedShift Heptagon.ResidualSym
 open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.RealPerturb
+open Heptagon.DegBound
 
 /-! ## 1. The two notions of simplicity agree -/
 
@@ -443,9 +445,10 @@ The four hypotheses are exactly the geometric obligations:
   one of the two signs, and `exists_full_shift_both_signs` makes both signs
   available at a single `δ`. **Not yet connected**, because the identity is
   stated about `crossCount` rather than about `crossPairsOf`.
-* `hdisjA` — a pair newly crossing was not crossing before. This is *almost*
-  definitional: a degenerate `Q`-vertex on a `P`-side is a touching, not a
-  proper crossing, so the pair was not in `A`. **Not yet written.**
+* `hdisjA` — a pair newly crossing was not crossing before. **Proved**:
+  `degenerate_not_mem_crossPairs` in §10 below. A degenerate touching makes an
+  orientation determinant vanish, and `ProperCrossR` needs a strictly negative
+  *product*, so a vanishing determinant rules it out.
 * `hdisj` — distinct degeneracies produce disjoint pair sets. **This one is
   not automatic, and an earlier draft of this note claimed it was.** Vertex `j`
   produces the pairs `(i, j−1)` and `(i, j)`; vertex `j+1` produces `(i, j)` and
@@ -454,7 +457,9 @@ The four hypotheses are exactly the geometric obligations:
   happens precisely when the whole `Q`-side `j` lies inside `P`-side `i`, an
   **overlap**, which `(Fin)` excludes because it makes `∂P ∩ ∂Q` infinite.
   So `hdisj` holds, but it depends on the finiteness hypothesis, and not on
-  anything about the shift. **Not yet written.**
+  anything about the shift. **Geometric content proved**:
+  `no_consecutive_degeneracy` in §11 below; only the packaging into `Finset`
+  disjointness is left.
 
 `hnew` is bookkeeping. With all four, `A.card + D.card ≤ A'.card` — and since
 `|regPts| ≤ |A|` and `|points9| = |regPts| + |degPts|`, that is the count not
@@ -544,6 +549,39 @@ theorem degenerate_not_mem_crossPairs (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
 
 #print axioms off_eq_orientR
 #print axioms degenerate_not_mem_crossPairs
+
+/-! ## 11. `hdisj`: no two consecutive `Q`-vertices are degenerate on one side
+
+The fourth obligation, and the one whose dependency was not obvious. It holds,
+but it is a consequence of **finiteness**, not of anything about the shift. -/
+
+/-- **Two consecutive degenerate `Q`-vertices force an overlap.**  If both
+endpoints of `Q`-side `j` lie on `P`-side `i`, then by convexity the *whole*
+`Q`-side does — and a nondegenerate segment is infinite, so `∂P ∩ ∂Q` is
+infinite, contradicting `(Fin)`.
+
+This is what makes `hdisj` true. Vertex `j` contributes the pairs `(i, j−1)`
+and `(i, j)`, and vertex `j+1` contributes `(i, j)` and `(i, j+1)`; they share
+`(i, j)`, so the pair sets are disjoint only because the two vertices cannot
+both be degenerate on the same side. -/
+theorem no_consecutive_degeneracy (R : Pair9) (hfin : (points9 R).Finite) (i j : Fin 7)
+    (h1 : R.V (pQ j) ∈ sideP9 R i) (h2 : R.V (pQ (j + 1)) ∈ sideP9 R i) : False := by
+  have hsub : sideQ9 R j ⊆ sideP9 R i :=
+    (convex_segment (R.V (pP i)) (R.V (pP (i + 1)))).segment_subset h1 h2
+  have hne : R.V (pQ j) ≠ R.V (pQ (j + 1)) := R.simpleQ.1 j
+  have hinf : (sideQ9 R j).Infinite := segment_infinite hne
+  have hsub2 : sideQ9 R j ⊆ points9 R := fun x hx =>
+    ⟨Set.mem_iUnion.mpr ⟨i, hsub hx⟩, Set.mem_iUnion.mpr ⟨j, hx⟩⟩
+  exact hinf (hfin.subset hsub2)
+
+/-- The contrapositive, in the form the counting uses: on a fixed `P`-side, the
+degenerate `Q`-vertices are **non-adjacent**. -/
+theorem degenerate_not_adjacent (R : Pair9) (hfin : (points9 R).Finite) (i j : Fin 7)
+    (h1 : R.V (pQ j) ∈ sideP9 R i) : R.V (pQ (j + 1)) ∉ sideP9 R i :=
+  fun h2 => no_consecutive_degeneracy R hfin i j h1 h2
+
+#print axioms no_consecutive_degeneracy
+#print axioms degenerate_not_adjacent
 
 end Pair9Shift
 end Heptagon
