@@ -5435,3 +5435,6 @@ name = "CrossTransport"
 
 [[lean_lib]]
 name = "CIInstance"
+
+[[lean_lib]]
+name = "RotationLaw"
