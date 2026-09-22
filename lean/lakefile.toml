@@ -5423,3 +5423,6 @@ name = "DegBound"
 
 [[lean_lib]]
 name = "SignExp"
+
+[[lean_lib]]
+name = "R3Construct"
