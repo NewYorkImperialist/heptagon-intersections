@@ -197,5 +197,70 @@ theorem not_properCrossR_of_cross_eq {ak bl : ℝ × ℝ} (h : cross ak bl = 0) 
 #print axioms not_properCrossR_of_parallel
 #print axioms not_properCrossR_of_cross_eq
 
+/-! ## 5. The four-ray statement
+
+At an apex `P` has two rays `a₁, a₂` and `Q` has two, `b₁, b₂`. The lemma's
+hypothesis is that the four are **not all mutually parallel** — six cross
+products, not four. Reducing that to "some `a_k ∦ b_l`" is the combinatorial
+step, and it needs that parallelism is transitive through a nonzero vector. -/
+
+/-- **Parallelism is transitive through a nonzero vector.**  Both `b` and `c`
+parallel to `a ≠ 0` makes them parallel to each other. -/
+theorem parallel_trans {a b c : ℝ × ℝ} (ha : a ≠ 0)
+    (h1 : cross a b = 0) (h2 : cross a c = 0) : cross b c = 0 := by
+  have hcase : a.1 ≠ 0 ∨ a.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact ha (Prod.ext hc.1 hc.2)
+  simp only [cross] at h1 h2 ⊢
+  rcases hcase with h | h
+  · have : a.1 * (b.1 * c.2 - b.2 * c.1) = 0 := by linear_combination b.1 * h2 - c.1 * h1
+    exact (mul_eq_zero.mp this).resolve_left h
+  · have : a.2 * (b.1 * c.2 - b.2 * c.1) = 0 := by linear_combination b.2 * h2 - c.2 * h1
+    exact (mul_eq_zero.mp this).resolve_left h
+
+/-- **The four-ray reduction.**  If the four rays are not all mutually
+parallel, then some `P`-ray is non-parallel to some `Q`-ray — which is what the
+construction of §3 consumes.
+
+Note the hypothesis really is about all six pairs: `a₁ ∦ a₂` alone (two
+`P`-rays) does not directly give a usable pair, and the proof routes through
+`parallel_trans` to get one. -/
+theorem exists_nonparallel_ray {a₁ a₂ b₁ b₂ : ℝ × ℝ} (ha₁ : a₁ ≠ 0) (hb₁ : b₁ ≠ 0)
+    (h : ¬(cross a₁ a₂ = 0 ∧ cross a₁ b₁ = 0 ∧ cross a₁ b₂ = 0 ∧
+           cross a₂ b₁ = 0 ∧ cross a₂ b₂ = 0 ∧ cross b₁ b₂ = 0)) :
+    cross a₁ b₁ ≠ 0 ∨ cross a₁ b₂ ≠ 0 ∨ cross a₂ b₁ ≠ 0 ∨ cross a₂ b₂ ≠ 0 := by
+  by_contra hcon
+  push_neg at hcon
+  obtain ⟨e11, e12, e21, e22⟩ := hcon
+  refine h ⟨?_, e11, e12, e21, e22, ?_⟩
+  · -- `a₁` and `a₂` are both parallel to `b₁`
+    have s1 : cross b₁ a₁ = 0 := by
+      simp only [cross] at e11 ⊢; linarith
+    have s2 : cross b₁ a₂ = 0 := by
+      simp only [cross] at e21 ⊢; linarith
+    exact parallel_trans hb₁ s1 s2
+  · -- `b₁` and `b₂` are both parallel to `a₁`
+    exact parallel_trans ha₁ e11 e12
+
+/-- **(E-exists) at an apex.**  Four rays, not all mutually parallel: a
+direction exists, and it is one of four explicit candidates. -/
+theorem exists_direction_four_ray {a₁ a₂ b₁ b₂ : ℝ × ℝ} (ha₁ : a₁ ≠ 0) (hb₁ : b₁ ≠ 0)
+    (h : ¬(cross a₁ a₂ = 0 ∧ cross a₁ b₁ = 0 ∧ cross a₁ b₂ = 0 ∧
+           cross a₂ b₁ = 0 ∧ cross a₂ b₂ = 0 ∧ cross b₁ b₂ = 0)) :
+    ∃ ak bl : ℝ × ℝ,
+      (ak = a₁ ∨ ak = a₂) ∧ (bl = b₁ ∨ bl = b₂) ∧
+      ∀ e : ℝ, 0 < e → e < 1 →
+        ProperCrossR (pStart ak bl e) (pEnd ak bl e) 0 bl := by
+  rcases exists_nonparallel_ray ha₁ hb₁ h with h' | h' | h' | h'
+  · exact ⟨a₁, b₁, Or.inl rfl, Or.inl rfl, fun e h0 h1 => properCrossR_of_cross_ne h' h0 h1⟩
+  · exact ⟨a₁, b₂, Or.inl rfl, Or.inr rfl, fun e h0 h1 => properCrossR_of_cross_ne h' h0 h1⟩
+  · exact ⟨a₂, b₁, Or.inr rfl, Or.inl rfl, fun e h0 h1 => properCrossR_of_cross_ne h' h0 h1⟩
+  · exact ⟨a₂, b₂, Or.inr rfl, Or.inr rfl, fun e h0 h1 => properCrossR_of_cross_ne h' h0 h1⟩
+
+#print axioms parallel_trans
+#print axioms exists_nonparallel_ray
+#print axioms exists_direction_four_ray
+
 end E9Directions
 end Heptagon
