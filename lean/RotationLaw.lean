@@ -75,6 +75,50 @@ theorem rot_displacement_zero_of_parallel {w ea v : ℝ × ℝ} (h : cross ea w 
   obtain ⟨h1, h2⟩ := rot_displacement w ea v δ
   exact ⟨by rw [h1, h]; ring, by rw [h2, h]; ring⟩
 
+/-! ## Lemma T: why the `K_rot` error is harmless
+
+`K_CONSTANTS.md` saves `δ₀` with **Lemma T**: `τ₁ · K_rot ≥ |w|`, which caps
+the error at a constant and leaves the rational bound `1/(61440·M⁷)` standing.
+
+Its whole content collapses to one classical fact.  Writing
+`τ₁^t = |⟨v,w⟩| / |⟨v,e_a⟩|` and `K_rot^t = |e_a||w||v| / |⟨w,v⟩|`, the two
+cross-product factors **cancel**, leaving
+
+    τ₁^t · K_rot^t  =  |e_a|·|w|·|v| / |⟨v,e_a⟩|  ≥  |w|
+
+precisely when `|⟨v,e_a⟩| ≤ |v|·|e_a|` — Cauchy–Schwarz for the scalar cross
+product, which in the plane is Lagrange's identity. -/
+
+/-- Squared norm. -/
+def n2 (u : ℝ × ℝ) : ℝ := u.1 * u.1 + u.2 * u.2
+
+/-- Inner product. -/
+def dot (u v : ℝ × ℝ) : ℝ := u.1 * v.1 + u.2 * v.2
+
+/-- **Lagrange's identity** in the plane: the squared cross and squared dot
+products sum to the product of the squared norms. -/
+theorem lagrange (u v : ℝ × ℝ) : cross u v ^ 2 + dot u v ^ 2 = n2 u * n2 v := by
+  simp only [cross, dot, n2]; ring
+
+/-- **Cauchy–Schwarz for the cross product**, which is Lemma T's entire
+content once the `⟨w,v⟩` factors cancel. -/
+theorem cross_sq_le (u v : ℝ × ℝ) : cross u v ^ 2 ≤ n2 u * n2 v := by
+  have h := lagrange u v
+  nlinarith [sq_nonneg (dot u v)]
+
+/-- **Lemma T, squared form.**  `(τ₁ · K_rot)² ≥ |w|²`, with the product
+written out: the `⟨w,v⟩` factors have already cancelled, so what remains is
+exactly the Cauchy–Schwarz step. -/
+theorem lemmaT_sq {v ea w : ℝ × ℝ} (hv : cross v ea ≠ 0) :
+    n2 w * cross v ea ^ 2 ≤ n2 ea * n2 w * n2 v := by
+  have h := cross_sq_le v ea
+  have hw : 0 ≤ n2 w := by simp only [n2]; nlinarith [mul_self_nonneg w.1, mul_self_nonneg w.2]
+  nlinarith [h, hw]
+
+#print axioms lagrange
+#print axioms cross_sq_le
+#print axioms lemmaT_sq
+
 #print axioms plucker
 #print axioms rot_displacement
 #print axioms rot_displacement_zero_of_parallel
