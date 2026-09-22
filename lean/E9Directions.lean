@@ -276,5 +276,79 @@ theorem coincidence_direction (R : Pair9) (i j : Fin 7)
 #print axioms properCrossR_translate
 #print axioms coincidence_direction
 
+/-! ## 8. The move on a whole configuration
+
+§9.1's move displaces **one** vertex. That makes it a linear perturbation, so
+the same route as §9.2's shift applies: simplicity survives, `Q` is untouched,
+and the result is a `Pair9`. -/
+
+/-- The displacement field of §9.1's move: `E` at the apex, zero elsewhere. -/
+def moveField (i : Fin 7) (E : ℝ × ℝ) : Fin 7 → ℝ × ℝ :=
+  fun k => if k = i then E else 0
+
+/-- §9.1's move on a fourteen-vertex configuration: only `P_i` moves. -/
+def moveV (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ) : Fin 14 → ℝ × ℝ :=
+  fun k => if k = pP i then V k + e • E else V k
+
+theorem moveV_Q (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ) (j : Fin 7) :
+    moveV V i E e (pQ j) = V (pQ j) := by
+  simp only [moveV]
+  rw [if_neg (pP_ne_pQ i j).symm]
+
+theorem moveV_apex (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ) :
+    moveV V i E e (pP i) = V (pP i) + e • E := by
+  simp [moveV]
+
+theorem moveV_pP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ) (k : Fin 7) :
+    moveV V i E e (pP k) = (fun m => V (pP m) + e • moveField i E m) k := by
+  simp only [moveV, moveField]
+  by_cases h : k = i
+  · subst h; simp
+  · rw [if_neg (fun hc => h (Pair9Shift.pP_inj hc)), if_neg h]
+    simp
+
+/-- **The coincidence is removed.**  Trivial, but it is the point of the move. -/
+theorem moveV_ne_of_coincidence {V : Fin 14 → ℝ × ℝ} {i j : Fin 7} {E : ℝ × ℝ} {e : ℝ}
+    (hco : V (pP i) = V (pQ j)) (hE : E ≠ 0) (he : e ≠ 0) :
+    moveV V i E e (pP i) ≠ moveV V i E e (pQ j) := by
+  rw [moveV_apex, moveV_Q, ← hco]
+  intro h
+  have : e • E = 0 := by
+    have := congrArg (fun x : ℝ × ℝ => x - V (pP i)) h
+    simpa using this
+  rcases smul_eq_zero.mp this with h' | h'
+  · exact he h'
+  · exact hE h'
+
+/-- **The move preserves simplicity for all small `ε`.** -/
+theorem exists_eps0_simpleClosed_move (W : Fin 7 → ℝ × ℝ) (hW : AKR9.SimpleClosed W)
+    (i : Fin 7) (E : ℝ × ℝ) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| ≤ e₀ →
+      AKR9.SimpleClosed (fun k => W k + e • moveField i E k) := by
+  rw [Pair9Shift.akr9_simpleClosed_iff] at hW
+  obtain ⟨e₀, he₀, h⟩ :=
+    SimplicityStable.heptagon_simplicity_stable_linear
+      (EP := moveField i E) (EQ := moveField i E) hW hW
+  refine ⟨e₀, he₀, fun e he => ?_⟩
+  rw [Pair9Shift.akr9_simpleClosed_iff]
+  exact (h e he).1
+
+/-- **The move carries a `Pair9` to a `Pair9`.** -/
+theorem exists_moved_pair9 (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| ≤ e₀ →
+      ∃ R' : Pair9, R'.V = moveV R.V i E e := by
+  obtain ⟨e₀, he₀, hsimp⟩ :=
+    exists_eps0_simpleClosed_move (fun m => R.V (pP m)) R.simpleP i E
+  refine ⟨e₀, he₀, fun e he => ⟨⟨moveV R.V i E e, ?_, ?_⟩, rfl⟩⟩
+  · have := hsimp e he
+    simpa only [← moveV_pP] using this
+  · have hEq : (fun k : Fin 7 => moveV R.V i E e (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact moveV_Q R.V i E e k
+    rw [hEq]; exact R.simpleQ
+
+#print axioms moveV_Q
+#print axioms moveV_ne_of_coincidence
+#print axioms exists_moved_pair9
+
 end E9Directions
 end Heptagon
