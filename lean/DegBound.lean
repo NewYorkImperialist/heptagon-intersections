@@ -20,12 +20,11 @@ distinct common points of two closed segments force them to be collinear and to
 overlap in a positive-length subsegment.  It is stated directly rather than
 derived so that this file imports nothing beyond `AKR9`'s definitions.
 
-**`NoOverlap` is not discharged here**, and that is the honest limit of this
-file. It is a hypothesis, never an `axiom`, exactly as `NoVertexOnOther` is in
-`AKR9.lean`. Deriving it from `(points9 R).Finite` needs "the segment between
-two distinct points is infinite", which this Mathlib does not have ready-made;
-deriving it from general position needs "two segments meeting twice are
-collinear". Either is a small self-contained job and neither is done.
+**`NoOverlap` is now discharged** (2026-09-21): `noOverlap_of_finite` derives it
+from `(points9 R).Finite`, so `points9_ncard_le_38_add_deg'` has **finiteness as
+its only hypothesis**. The missing ingredient was "the segment between two
+distinct points is infinite", which this Mathlib does not have ready-made;
+`segment_infinite` supplies it from injectivity of the parametrisation.
 
 Nothing here is an axiom and nothing here proves `f(7,7) = 38`. The bound is
 strictly weaker than `AKR9.points_le_38_of_no_vertex_on_boundary` whenever that
@@ -158,6 +157,37 @@ theorem regPts_ncard_le_38 (hno : NoOverlap R) : (regPts R).ncard ≤ 38 := by
         simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
     _ ≤ 38 := raw_crossPairs_card_le_38 (toRawPair R)
 
+/-! ## Discharging `NoOverlap` from finiteness
+
+This is the Lean content of hypothesis **13 (Fin-out)** of
+`docs/akr-9-assembly.md` §3: finiteness of the boundary intersection is what
+stops two sides sharing more than one point. It also removes the one open
+hypothesis this file was originally stated with. -/
+
+/-- A segment between two distinct points is infinite. Mathlib does not have
+this ready-made; it follows from injectivity of the parametrisation. -/
+theorem segment_infinite {x y : ℝ × ℝ} (hxy : x ≠ y) :
+    (segment ℝ x y).Infinite := by
+  rw [segment_eq_image']
+  refine Set.Infinite.image ?_ (Set.Icc_infinite (by norm_num : (0:ℝ) < 1))
+  intro s _ t _ hst
+  have hd : y - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hxy)
+  have : (s - t) • (y - x) = 0 := by
+    rw [sub_smul]; rw [add_right_inj] at hst; rw [hst]; ring
+  rcases smul_eq_zero.mp this with h | h
+  · linarith [sub_eq_zero.mp h]
+  · exact absurd h hd
+
+/-- **Finiteness gives `NoOverlap`.** Two distinct common points of a `P`-side
+and a `Q`-side force the whole segment between them into `∂P ∩ ∂Q`. -/
+theorem noOverlap_of_finite (hfin : (points9 R).Finite) : NoOverlap R := by
+  intro i j x y hxP hxQ hyP hyQ
+  by_contra hne
+  refine (segment_infinite hne) (hfin.subset ?_)
+  intro z hz
+  exact ⟨Set.mem_iUnion.mpr ⟨i, (convex_segment _ _).segment_subset hxP hyP hz⟩,
+         Set.mem_iUnion.mpr ⟨j, (convex_segment _ _).segment_subset hxQ hyQ hz⟩⟩
+
 /-! ## The bound -/
 
 /-- **`|∂P ∩ ∂Q| ≤ 38 + d`**, importing nothing from AKR §9. -/
@@ -173,9 +203,16 @@ theorem points9_ncard_le_38_add_deg (hno : NoOverlap R) (hfin : (points9 R).Fini
   rw [this]
   exact Nat.add_le_add_right (regPts_ncard_le_38 R hno) _
 
+/-- The bound, with **finiteness as the only hypothesis**. -/
+theorem points9_ncard_le_38_add_deg' (hfin : (points9 R).Finite) :
+    (points9 R).ncard ≤ 38 + (degPts R).ncard :=
+  points9_ncard_le_38_add_deg R (noOverlap_of_finite R hfin) hfin
+
 #print axioms points9_ncard_le_38_add_deg
 #print axioms regPts_ncard_le_38
 #print axioms mem_crossPairs_of_reg
+#print axioms noOverlap_of_finite
+#print axioms points9_ncard_le_38_add_deg'
 
 end DegBound
 end Heptagon
