@@ -14,7 +14,7 @@ and the last section says precisely why.
 Everything below is `sorry`-free, `native_decide`-free, and depends on no
 axioms beyond `propext`, `Classical.choice`, `Quot.sound` — most results on a
 strict subset of those. Sweep of the eleven §9 modules: exit 0, **239**
-`#print axioms` lines, **0** `sorryAx`; plus the leaf module `Pair9Shift`.
+`#print axioms` lines, **0** `sorryAx`; plus the leaf modules `Pair9Shift` and `FactE`.
 
 ---
 
@@ -194,8 +194,9 @@ This is the part that matters, and it is not small.
      honest bound is `38 + d` rather than `38`;
    * stating "this degenerate vertex contributes `crossCount` points after the
      shift" needs to know the shifted side meets `∂Q` *near* that vertex only on
-     its two incident edges — a locality claim, which is the `(Loc)` primitive /
-     Fact (E), and is item 6 below.
+     its two incident edges — a locality claim resting on the `(Loc)`
+     primitive, which is item 6 and **is now proved**. So this half is
+     unblocked; the point-versus-pair half above is what remains.
 
    A commit message on 2026-09-22 called this "a definitional bridge, not a new
    idea". That was wrong and is retracted here.
@@ -205,8 +206,17 @@ This is the part that matters, and it is not small.
 4. **§9.1 is a separate matter.** Hypotheses 3, 4, 5′, 7, 13, 14 of A9-RED are
    about §9.1 and are unaffected by any of this. Hypothesis 14 **(R3)** was
    closed on paper only.
-6. **Fact (E) / the `(Loc)` primitive is not in Lean.** It needs a
-   compactness or minimiser argument, and item 2 depends on it.
+6. ~~**Fact (E) / the `(Loc)` primitive is not in Lean.**~~ **Closed
+   2026-09-22**, `lean/FactE.lean`. `factE_unconditional`. The proof in
+   `LOC_AND_DELTA0.md` §1.2 is written with gradients and a Hessian; none of
+   that is needed. The first-order conditions come from exhibiting **one
+   explicit competitor** rather than taking a limit
+   (`ip_eq_zero_of_min_gen`), so the only analytic ingredient left is the
+   existence of the minimiser (`exists_min_params`, three lines of Mathlib).
+   `cross_eq_zero_of_both_orth` is the single place planarity is used — and the
+   single reason Fact (E) is false in `ℝ³`. Already checked computationally
+   before this: 2,990 disjoint planar pairs, 0 violations, with controls firing
+   686/776 on crossing pairs and 572/1500 in `ℝ³`.
 5. **The audit's own honest gap** remains: the `δ₀` derivation's proved cap is
    `30/29` against an observed worst case of `60/59` — a factor of two in the
    proof, not in the data.
