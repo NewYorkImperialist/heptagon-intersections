@@ -631,5 +631,82 @@ theorem exists_coincidence_free (R : Pair9) :
 #print axioms pair9_coincSet_card_lt
 #print axioms exists_coincidence_free
 
+/-! ## 13. The interleaving: §9.2's shift does not undo §9.1
+
+The obvious worry about running the two sections in sequence is that §9.2's
+shift moves `P`-vertices, so it could **recreate** a vertex–vertex coincidence
+that §9.1 removed. AKR run the two in sequence without remarking on it.
+
+It is a finite avoidance, like everything else here. For a fixed `Q_m` the
+condition `P_k + δ·w = Q_m` is affine in `δ` with slope `w = tilt u t ≠ 0`, so
+it has at most one root; the vertices §9.2 does *not* move are already clear by
+hypothesis. -/
+
+theorem tilt_ne_zero {u : ℝ × ℝ} (hu : u ≠ 0) (t : ℝ) :
+    RotationLaw.tilt u t ≠ 0 := by
+  intro h
+  refine RotationLaw.cross_tilt_self hu t ?_
+  rw [h]
+  simp [cross]
+
+/-- **A shift that keeps the configuration coincidence-free.** -/
+theorem exists_delta_preserving_coincFree (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (hfree : coincSet V = ∅)
+    {δ₁ : ℝ} (hδ₁ : 0 < δ₁) :
+    ∃ δ : ℝ, 0 < δ ∧ δ < δ₁ ∧ coincSet (RotationLaw.shiftV V i t δ) = ∅ := by
+  classical
+  set w := RotationLaw.tilt (V (pP (i + 1)) - V (pP i)) t with hw
+  have hwne : w ≠ 0 := tilt_ne_zero hu t
+  have hcase : w.1 ≠ 0 ∨ w.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hwne (Prod.ext hc.1 hc.2)
+  -- the bad shifts, one per (moved vertex, Q-vertex) pair
+  have key : ∀ (bad : Finset ℝ),
+      (∀ δ : ℝ, δ ∉ bad → ∀ k m : Fin 7,
+        RotationLaw.shiftV V i t δ (pP k) ≠ V (pQ m)) →
+      ∃ δ : ℝ, 0 < δ ∧ δ < δ₁ ∧ coincSet (RotationLaw.shiftV V i t δ) = ∅ := by
+    intro bad hbad
+    obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ :=
+      ((Set.Ioo_infinite hδ₁).diff bad.finite_toSet).nonempty
+    refine ⟨δ, hpos, hlt, ?_⟩
+    rw [Finset.eq_empty_iff_forall_notMem]
+    intro p hp
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+    rw [RotationLaw.shiftV_Q] at hp
+    exact hbad δ (fun hc => hnot (Finset.mem_coe.mpr hc)) p.1 p.2 hp
+  rcases hcase with hw1 | hw2
+  · refine key (Finset.univ.image
+      (fun q : Fin 7 × Fin 7 => ((V (pQ q.2)).1 - (V (pP q.1)).1) / w.1)) ?_
+    intro δ hδ k m hc
+    by_cases hmv : pP k = pP i ∨ pP k = pP (i + 1)
+    · rw [RotationLaw.shiftV, if_pos hmv] at hc
+      have h1 : (V (pP k)).1 + δ * w.1 = (V (pQ m)).1 := by
+        have := congrArg Prod.fst hc
+        simpa [RotationLaw.mov, hw] using this
+      exact hδ (Finset.mem_image.mpr ⟨(k, m), Finset.mem_univ _, by
+        field_simp; linarith⟩)
+    · rw [RotationLaw.shiftV, if_neg hmv] at hc
+      rw [Finset.eq_empty_iff_forall_notMem] at hfree
+      exact hfree (k, m) (by
+        simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
+  · refine key (Finset.univ.image
+      (fun q : Fin 7 × Fin 7 => ((V (pQ q.2)).2 - (V (pP q.1)).2) / w.2)) ?_
+    intro δ hδ k m hc
+    by_cases hmv : pP k = pP i ∨ pP k = pP (i + 1)
+    · rw [RotationLaw.shiftV, if_pos hmv] at hc
+      have h2 : (V (pP k)).2 + δ * w.2 = (V (pQ m)).2 := by
+        have := congrArg Prod.snd hc
+        simpa [RotationLaw.mov, hw] using this
+      exact hδ (Finset.mem_image.mpr ⟨(k, m), Finset.mem_univ _, by
+        field_simp; linarith⟩)
+    · rw [RotationLaw.shiftV, if_neg hmv] at hc
+      rw [Finset.eq_empty_iff_forall_notMem] at hfree
+      exact hfree (k, m) (by
+        simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
+
+#print axioms tilt_ne_zero
+#print axioms exists_delta_preserving_coincFree
+
 end E9Directions
 end Heptagon
