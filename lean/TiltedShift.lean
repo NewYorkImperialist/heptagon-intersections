@@ -164,6 +164,58 @@ theorem side_perp (A B : ℝ × ℝ) : ip B (nrm (B - A)) = ip A (nrm (B - A)) :
   simp only [ip, nrm, Prod.fst_sub, Prod.snd_sub] at h ⊢
   linarith
 
+/-! ## The averaging identity, local core
+
+AKR's §9.2 rests on one sentence: *"an intersection point may disappear or
+multiply into two intersection points, depending on the direction of the shift.
+However, the average number of intersections over the two possible directions
+is always the same as before."*  They give no argument.
+
+Here is the case that sentence describes, and it is an arithmetic identity.
+A `Q`-vertex `X` lies **on** the shifted side's line at `δ = 0`, contributing
+one intersection.  Its two incident `Q`-edges run to `Y` and `Z`; write
+`y = ⟪Y−A, n⟫` and `z = ⟪Z−A, n⟫` for their normal offsets, both nonzero
+because `X` is not a `P`-vertex (that is (VV), §9.1's output).
+
+After a shift by `δ`, the line sits at normal offset `δN`, so `X` is at offset
+`−δN` from it and the edge to `Y` crosses exactly when `−δN` and `y − δN` have
+opposite signs — for small `δ`, exactly when `δ` and `y` agree in sign.
+
+The identity then holds for **both** corner shapes at once, which is what makes
+it work: if `y` and `z` agree in sign the count goes `2` then `0`; if they
+disagree it goes `1` then `1`.  Either way the two directions sum to `2`. -/
+
+/-- The local crossing count after a shift of signed size `δ`. -/
+noncomputable def localCount (δ y z : ℝ) : ℕ :=
+  (if 0 < δ * y then 1 else 0) + (if 0 < δ * z then 1 else 0)
+
+/-- One edge is crossed by exactly one of the two shift directions. -/
+theorem one_of_two_signs {δ y : ℝ} (h : δ * y ≠ 0) :
+    (if 0 < δ * y then 1 else 0) + (if 0 < -δ * y then 1 else 0) = 1 := by
+  rcases lt_trichotomy (δ * y) 0 with hlt | heq | hgt
+  · rw [if_neg (by linarith), if_pos (by nlinarith)]
+  · exact absurd heq h
+  · rw [if_pos hgt, if_neg (by nlinarith)]
+
+/-- **The averaging identity, local core.**  The two shift directions together
+cross each incident edge exactly once, so the local counts sum to `2` — which
+is twice the single intersection present before the shift.
+
+No hypothesis on the corner's shape is needed: the identity holds whether the
+vertex is a local extremum of the normal offset (count `2` then `0`) or not
+(count `1` then `1`). -/
+theorem averaging_local {δ y z : ℝ} (hδ : δ ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) :
+    localCount δ y z + localCount (-δ) y z = 2 := by
+  simp only [localCount]
+  have h1 : δ * y ≠ 0 := mul_ne_zero hδ hy
+  have h2 : δ * z ≠ 0 := mul_ne_zero hδ hz
+  have e1 := one_of_two_signs h1
+  have e2 := one_of_two_signs h2
+  omega
+
+#print axioms one_of_two_signs
+#print axioms averaging_local
+
 #print axioms shift_parallel
 #print axioms side_perp
 
