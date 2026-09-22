@@ -555,5 +555,81 @@ theorem coincSet_card_lt (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
 #print axioms exists_eps_clearing_apex
 #print axioms coincSet_card_lt
 
+/-! ## 12. §9.1's procedure: iterating to a coincidence-free pair
+
+Exactly the shape of §9.2's, and for the same reasons: each move keeps the
+configuration a `Pair9`, strictly decreases the monovariant, and preserves the
+crossing pairs. -/
+
+theorem e_ne_zero : ((1 : ℝ), (0 : ℝ)) ≠ 0 := by
+  simp [Prod.ext_iff]
+
+/-- One §9.1 move, on a `Pair9`, with the crossings carried. -/
+theorem pair9_coincSet_card_lt (R : Pair9) (i j : Fin 7)
+    (hij : (i, j) ∈ coincSet R.V) :
+    ∃ (e : ℝ) (R' : Pair9), R'.V = moveV R.V i (1, 0) e ∧
+      (coincSet R'.V).card < (coincSet R.V).card ∧
+      RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V := by
+  obtain ⟨e₁, h₁, hsimp⟩ :=
+    exists_eps0_simpleClosed_move (fun m => R.V (pP m)) R.simpleP i (1, 0)
+  obtain ⟨e₂, h₂, hmono⟩ := crossPairsOf_mono_move R.V i (1, 0)
+  obtain ⟨e, hepos, helt, hcard⟩ :=
+    coincSet_card_lt R.V i j hij e_ne_zero (lt_min h₁ h₂)
+  have hd1 : |e| ≤ e₁ := by
+    rw [abs_of_pos hepos]
+    exact le_of_lt (lt_of_lt_of_le helt (min_le_left _ _))
+  have hd2 : |e| < e₂ := by
+    rw [abs_of_pos hepos]; exact lt_of_lt_of_le helt (min_le_right _ _)
+  have hP : AKR9.SimpleClosed (fun k : Fin 7 => moveV R.V i (1, 0) e (pP k)) := by
+    simpa only [← moveV_pP] using hsimp e hd1
+  have hQ : AKR9.SimpleClosed (fun k : Fin 7 => moveV R.V i (1, 0) e (pQ k)) := by
+    have hEq : (fun k : Fin 7 => moveV R.V i (1, 0) e (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact moveV_Q R.V i (1, 0) e k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨e, ⟨moveV R.V i (1, 0) e, hP, hQ⟩, rfl, hcard, hmono e hd2⟩
+
+/-- Reachability by §9.1 moves, carrying preservation of the crossing pairs. -/
+inductive ReachMove : Pair9 → Pair9 → Prop
+  | refl (R : Pair9) : ReachMove R R
+  | head {R R' R'' : Pair9} :
+      (∃ (i : Fin 7) (E : ℝ × ℝ) (e : ℝ), R'.V = moveV R.V i E e) →
+        RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V →
+        ReachMove R' R'' → ReachMove R R''
+
+theorem reachMove_crossPairs_mono {R R' : Pair9} (h : ReachMove R R') :
+    RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V := by
+  induction h with
+  | refl _ => exact Finset.Subset.refl _
+  | head _ hmono _ ih => exact hmono.trans ih
+
+theorem exists_reachMove_coincSet_empty :
+    ∀ (n : ℕ) (R : Pair9), (coincSet R.V).card = n →
+      ∃ R' : Pair9, ReachMove R R' ∧ coincSet R'.V = ∅ := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro R hn
+    by_cases h : coincSet R.V = ∅
+    · exact ⟨R, ReachMove.refl R, h⟩
+    · obtain ⟨p, hp⟩ := Finset.nonempty_iff_ne_empty.mpr h
+      obtain ⟨e, R', hRV, hlt, hmono⟩ := pair9_coincSet_card_lt R p.1 p.2 hp
+      obtain ⟨R'', hreach, hclear⟩ := ih (coincSet R'.V).card (hn ▸ hlt) R' rfl
+      exact ⟨R'', ReachMove.head ⟨p.1, (1, 0), e, hRV⟩ hmono hreach, hclear⟩
+
+/-- **§9.1's output.**  From any `Pair9`, finitely many single-vertex moves
+reach a `Pair9` with **no vertex–vertex coincidence** and at least as many
+crossing pairs.
+
+This is `(G1)` together with the half of `(G2)` that says the count does not
+drop — for the pair count. No `(Fin)`, no general position, only simplicity. -/
+theorem exists_coincidence_free (R : Pair9) :
+    ∃ R' : Pair9, coincSet R'.V = ∅ ∧
+      (RealPerturb.crossPairsOf R.V).card ≤ (RealPerturb.crossPairsOf R'.V).card := by
+  obtain ⟨R', hreach, hclear⟩ := exists_reachMove_coincSet_empty _ R rfl
+  exact ⟨R', hclear, Finset.card_le_card (reachMove_crossPairs_mono hreach)⟩
+
+#print axioms pair9_coincSet_card_lt
+#print axioms exists_coincidence_free
+
 end E9Directions
 end Heptagon
