@@ -162,6 +162,27 @@ Step **S10** reads *"no termination argument in AKR"*. `degeneracy_monovariant`
 and `terminates` supply one. It is three lines once the measure is named; that
 it was never written is the point.
 
+### 3.6 The procedure, end to end (`Pair9Shift`)
+
+The pieces above compose into the §9.2 procedure itself, on the project's own
+`Pair9`.
+
+| | |
+|---|---|
+| `pair9_degSet_card_lt` | one shift strictly decreases the **total** degeneracy count — over all seven sides, not just the shifted one. Sides `i±1` rotate and could acquire degeneracies; every such condition is affine in `δ`, so the bad shifts are finite and avoided |
+| `exists_degeneracy_free_mono` | from **any** `Pair9`, finitely many shifts reach a degeneracy-free `Pair9` **with at least as many crossing pairs** |
+| `degQ_empty_of_degSet_empty`, `points9_le_38_add_degP` | the output satisfies `|points9| ≤ 38 + |degP|` |
+
+No `(Fin)`, no general position, no non-collinearity: only that the two
+heptagons are simple. Simulated end to end in exact arithmetic on 600
+configurations — 0 steps failed to shrink the degeneracy set, and the four runs
+that did not clear all had a *degenerate `P`-side*, which `simpleP` forbids, so
+they were never valid inputs.
+
+The accounting is worth stating exactly. The `38` is **free** —
+`crossPairs_card_le_38_of_simple` bounds the pair count of any simple pair.
+What the procedure buys is not the `38`; it is that `degQ` leaves the sum.
+
 ---
 
 ## 4. What is **not** proved
@@ -179,39 +200,26 @@ This is the part that matters, and it is not small.
    all. `akr9_simpleClosed_iff` is the bridge; `shiftPoly_eq_add_smul` then
    shows the shift *is* a linear perturbation, so
    `heptagon_simplicity_stable_linear` applies unchanged.
-2. **The count inequality — assembled at the pair level, 2026-09-22.**
-   `count_grows_by_degeneracies`: for a non-degenerate `P`-side carrying the
-   degenerate `Q`-vertices `D`, some arbitrarily small nonzero shift gives
+2. **The count does not yet reach `38`.** `count_grows_by_degeneracies` gives
+   `|crossPairsOf| + |D| ≤ |crossPairsOf'|` for one `P`-side, with all four
+   counting-skeleton obligations discharged and the bound checked
+   independently (1,500 configurations, 0 violations, bound **attained** in
+   407, so `|D|` is tight). But the chain that actually composes is
 
-   >  `|crossPairsOf| + |D| ≤ |crossPairsOf of the shifted pair|`.
+   >  `|points9 R| ≤ |crossPairs R| + |degPts R| ≤ |crossPairs R'| + |degPts R| ≤ 38 + |degPts R|`
 
-   The pair count grows by at least the number of degeneracies removed — which
-   is the point, since each degenerate point was an intersection contributing
-   to **no** pair at all. All four obligations of the counting skeleton are
-   discharged:
+   which is **exactly `DegBound`'s existing bound** and no improvement on it.
+   Reaching `38` needs the count to *grow* by the degeneracies removed, not
+   merely not to shrink — and `count_grows_by_degeneracies` is per-side and
+   carries hypotheses (neighbour offsets nonzero; the `Q`-edges crossing the
+   side's line) that come from **(VV)** and **(Fin)**, neither of which a bare
+   `Pair9` carries. Threading those along a `Reach` chain is the work.
 
-   | hypothesis | status |
-   |---|---|
-   | `hmono` | `crossPairsOf_mono_shift` |
-   | `hdisjA` | `degenerate_not_mem_crossPairs` — a vanishing determinant rules out a *proper* crossing |
-   | `hdisj` | `no_consecutive_degeneracy` + `incident_disjoint` |
-   | `hsum` | `hsum_for_side` — the averaging identity, finally doing the work it was proved for |
-
-   Checked independently: 1,500 configurations with a `Q`-vertex forced onto a
-   `P`-side and the hypotheses *verified* rather than assumed — 0 violations,
-   and the bound **attained** in 407 of them, so `|D|` is the right quantity
-   and not a conservative stand-in.
-
-   **What is still missing**, and it is not small: this is about
-   `crossPairsOf`, not `points9`. Converting it needs `DegBound`'s
-   `|points9| = |regPts| + |degPts|` together with `|regPts| ≤ |crossPairsOf|`.
-   It also treats **one** `P`-side's degeneracies — iterating over all seven,
-   and over `P`-vertices lying on `Q`-sides, is not done.
-
-   `(Fin)` enters twice and in different roles: through `hfin`, to stop two
-   *adjacent* degenerate vertices sharing an incident pair; and through the
-   neighbour-offset hypotheses, to make the averaging identity's smallness
-   condition satisfiable at all.
+3'. **`degP` is untouched.** The procedure shifts `P`-sides and so removes
+   `degQ`; the `P`-vertices lying on `Q`-sides need the mirror-image argument.
+   The real difficulty is the interleaving — shifting a `Q`-side moves
+   `Q`-vertices, which can put one back onto a `P`-side. AKR's §9.2 runs both
+   in one pass; nothing here addresses that.
 
 3. **The `δ₀`s are not reconciled.** Three independent sources, three different
    shapes; the uniform bound over a whole configuration *along a motion* —
