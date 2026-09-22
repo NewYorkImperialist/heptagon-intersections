@@ -26,7 +26,7 @@ Nothing here is an axiom and nothing here proves `f(7,7) = 38`.
 namespace Heptagon
 namespace RotationLaw
 
-open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.TiltedShift
+open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.TiltedShift Heptagon.ResidualSym
 
 open Heptagon.R3Construct
 
@@ -728,6 +728,88 @@ theorem terminates {α : Type*} (step : α → α) (meas : α → ℕ)
 #print axioms degeneracy_monovariant
 #print axioms exists_iterate_meas_zero
 #print axioms terminates
+
+/-! ### Connecting to the project's own configurations
+
+Everything above is stated about bare points.  This section applies it to the
+representation the rest of the development uses: `V : Fin 14 → ℝ × ℝ`, with
+`P` at `pP 0 … pP 6` and `Q` at `pQ 0 … pQ 6`.
+
+Note what is *not* here: no `Pair9`.  Building one requires re-establishing
+`SimpleClosed` for the shifted polygon, which is hypothesis 9's obligation and
+belongs to `SimplicityStable.lean`. -/
+
+/-- A nonzero plane vector has nonzero squared norm. -/
+theorem n2_ne_zero_of_ne {u : ℝ × ℝ} (hu : u ≠ 0) : u.1 * u.1 + u.2 * u.2 ≠ 0 := by
+  have h : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  have hpos : 0 < u.1 * u.1 + u.2 * u.2 := by
+    rcases h with h1 | h2
+    · nlinarith [mul_self_pos.mpr h1, mul_self_nonneg u.2]
+    · nlinarith [mul_self_pos.mpr h2, mul_self_nonneg u.1]
+  exact ne_of_gt hpos
+
+/-- The shift operator on a fourteen-vertex configuration: it displaces the two
+endpoints of `P`-side `i` and touches nothing else. -/
+def shiftV (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) : Fin 14 → ℝ × ℝ :=
+  fun k => if k = pP i ∨ k = pP (i + 1) then
+    mov (V k) (tilt (V (pP (i + 1)) - V (pP i)) t) δ else V k
+
+theorem shiftV_P (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftV V i t δ (pP i) = mov (V (pP i)) (tilt (V (pP (i + 1)) - V (pP i)) t) δ := by
+  simp [shiftV]
+
+theorem shiftV_P_succ (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftV V i t δ (pP (i + 1))
+      = mov (V (pP (i + 1))) (tilt (V (pP (i + 1)) - V (pP i)) t) δ := by
+  simp [shiftV]
+
+/-- **`Q` does not move.**  This is why the `Q`-vertices form a *fixed* finite
+family for the `δ`-choice. -/
+theorem shiftV_Q (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (j : Fin 7) :
+    shiftV V i t δ (pQ j) = V (pQ j) := by
+  simp only [shiftV]
+  rw [if_neg (not_or.mpr ⟨(pP_ne_pQ i j).symm, (pP_ne_pQ (i + 1) j).symm⟩)]
+
+/-- The shifted side has the same direction, so `off` may keep using it. -/
+theorem shiftV_dir (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) :
+    shiftV V i t δ (pP (i + 1)) - shiftV V i t δ (pP i)
+      = V (pP (i + 1)) - V (pP i) := by
+  rw [shiftV_P, shiftV_P_succ]
+  simp only [mov, Prod.ext_iff, Prod.fst_sub, Prod.snd_sub]
+  constructor <;> ring
+
+/-- **The shift clears every `Q`-vertex degeneracy on side `i` at once.**
+
+Given any non-degenerate `P`-side and any prescribed `δ₀`, there is a nonzero
+shift smaller than `δ₀` after which **no** `Q`-vertex lies on that side's line.
+So the side's degeneracy count drops to zero in a single step, whatever it was
+— which with `degeneracy_monovariant` is a strict decrease whenever the side
+had a degeneracy to begin with.
+
+The tilt parameter `t` is free here: by `ip_nrm_tilt` every member of the
+family reaches the same offset, so this holds for whichever `t` was chosen to
+dodge the pivots. -/
+theorem shift_clears_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hside : V (pP (i + 1)) - V (pP i) ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ j : Fin 7,
+      off (shiftV V i t δ (pP (i + 1)) - shiftV V i t δ (pP i))
+        (shiftV V i t δ (pP i)) (shiftV V i t δ (pQ j)) ≠ 0 := by
+  classical
+  obtain ⟨δ, hδ0, hδlt, hall⟩ :=
+    exists_good_delta (Finset.univ : Finset (Fin 7)) (fun j => V (pQ j))
+      (u := V (pP (i + 1)) - V (pP i)) (V (pP i)) t (n2_ne_zero_of_ne hside) hδ₀
+  refine ⟨δ, hδ0, hδlt, fun j => ?_⟩
+  rw [shiftV_dir, shiftV_P, shiftV_Q]
+  exact hall j (Finset.mem_univ j)
+
+#print axioms n2_ne_zero_of_ne
+#print axioms shiftV_P
+#print axioms shiftV_Q
+#print axioms shiftV_dir
+#print axioms shift_clears_side
 
 end RotationLaw
 end Heptagon
