@@ -317,5 +317,59 @@ theorem exists_full_shift (R : Pair9) (i : Fin 7) (t : ℝ)
 
 #print axioms exists_full_shift
 
+/-! ## 7. Both signs at once
+
+`exists_full_shift` fixes one `δ`, which is why it cannot feed the averaging
+identity — that identity is a statement about `δ` *and* `−δ`.  Since the bad
+set merely doubles when both signs must be avoided, and stays finite, the same
+shift can be required to work in both directions. -/
+
+/-- **Both shift directions, simultaneously.**  A single `δ` for which *both*
+`+δ` and `−δ` yield a genuine `Pair9`, clear every `Q`-vertex off the side's
+line, and preserve every proper crossing.
+
+This is the shape the averaging identity consumes: it compares the two
+directions, so both must be available at the same `δ`. With
+`TiltedShift.exists_sign_not_increasing`, one of the two does not lose count —
+though joining these two results formally still requires expressing the
+degenerate contributions of a `Pair9` as the `crossCount` the identity is
+stated about, which is not done. -/
+theorem exists_full_shift_both_signs (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hside : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) :
+    ∃ (δ : ℝ) (Rp Rm : Pair9), δ ≠ 0 ∧
+      Rp.V = shiftV R.V i t δ ∧ Rm.V = shiftV R.V i t (-δ) ∧
+      (∀ j : Fin 7,
+        off (Rp.V (pP (i + 1)) - Rp.V (pP i)) (Rp.V (pP i)) (Rp.V (pQ j)) ≠ 0) ∧
+      (∀ j : Fin 7,
+        off (Rm.V (pP (i + 1)) - Rm.V (pP i)) (Rm.V (pP i)) (Rm.V (pQ j)) ≠ 0) ∧
+      (∀ a b c d : Fin 14, ProperCrossR (R.V a) (R.V b) (R.V c) (R.V d) →
+        ProperCrossR (Rp.V a) (Rp.V b) (Rp.V c) (Rp.V d)) ∧
+      (∀ a b c d : Fin 14, ProperCrossR (R.V a) (R.V b) (R.V c) (R.V d) →
+        ProperCrossR (Rm.V a) (Rm.V b) (Rm.V c) (Rm.V d)) := by
+  obtain ⟨δ₁, hδ₁, hsimp⟩ :=
+    exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ₂, hδ₂, hord⟩ := exists_delta0_properCrossR R.V i t
+  obtain ⟨δ, hδ0, hδlt, hclear⟩ :=
+    shift_clears_side_symm R.V i t hside (lt_min hδ₁ hδ₂)
+  have h1 : |δ| ≤ δ₁ := le_of_lt (lt_of_lt_of_le hδlt (min_le_left _ _))
+  have h2 : |δ| < δ₂ := lt_of_lt_of_le hδlt (min_le_right _ _)
+  have hn1 : |(-δ)| ≤ δ₁ := by rw [abs_neg]; exact h1
+  have hn2 : |(-δ)| < δ₂ := by rw [abs_neg]; exact h2
+  have mkP : ∀ e : ℝ, |e| ≤ δ₁ →
+      AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t e (pP k)) := by
+    intro e he; simpa only [shiftV_pP] using hsimp e he
+  have mkQ : ∀ e : ℝ, AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t e (pQ k)) := by
+    intro e
+    have hEq : (fun k : Fin 7 => shiftV R.V i t e (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact shiftV_Q R.V i t e k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨δ, ⟨shiftV R.V i t δ, mkP δ h1, mkQ δ⟩,
+    ⟨shiftV R.V i t (-δ), mkP (-δ) hn1, mkQ (-δ)⟩, hδ0, rfl, rfl,
+    fun j => (hclear j).1, fun j => (hclear j).2,
+    fun a b c d hpc => hord δ h2 a b c d hpc,
+    fun a b c d hpc => hord (-δ) hn2 a b c d hpc⟩
+
+#print axioms exists_full_shift_both_signs
+
 end Pair9Shift
 end Heptagon

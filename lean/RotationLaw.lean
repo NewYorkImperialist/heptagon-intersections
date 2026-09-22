@@ -890,5 +890,78 @@ theorem shift_avoids_Q_sides (V : Fin 14 → ℝ × ℝ) (i : Fin 7)
 
 #print axioms shift_avoids_Q_sides
 
+/-! ### Choosing `δ` good for *both* signs
+
+The averaging identity is a statement about `δ` **and** `−δ`.  A `δ`-choice that
+only controls one sign cannot feed it.  Since each condition excludes one value
+for `+δ` and one for `−δ`, the bad set merely doubles — still finite. -/
+
+/-- **The symmetric `δ`-choice.**  A single arbitrarily small nonzero `δ` such
+that *both* `+δ` and `−δ` avoid every condition in the family. -/
+theorem exists_good_delta_affine_symm {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    (c m : ι → ℝ) (hm : ∀ i ∈ S, m i ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧
+      (∀ i ∈ S, c i + δ * m i ≠ 0) ∧ (∀ i ∈ S, c i + (-δ) * m i ≠ 0) := by
+  classical
+  set B : Finset ℝ :=
+    S.image (fun i => -c i / m i) ∪ S.image (fun i => c i / m i) with hB
+  have hinf : (Set.Ioo (0:ℝ) δ₀ \ (B : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite hδ₀).diff B.finite_toSet
+  obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ := hinf.nonempty
+  refine ⟨δ, ne_of_gt hpos, by rw [abs_of_pos hpos]; exact hlt,
+    fun i hi hz => hnot ?_, fun i hi hz => hnot ?_⟩
+  · rw [Finset.mem_coe, hB, Finset.mem_union]
+    refine Or.inl (Finset.mem_image.mpr ⟨i, hi, ?_⟩)
+    have hmi := hm i hi
+    field_simp
+    linarith
+  · rw [Finset.mem_coe, hB, Finset.mem_union]
+    refine Or.inr (Finset.mem_image.mpr ⟨i, hi, ?_⟩)
+    have hmi := hm i hi
+    field_simp
+    linarith
+
+/-- The symmetric form of `exists_good_delta`: both shift directions clear
+every `Q`-vertex off the side's line. -/
+theorem exists_good_delta_symm {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    (V : ι → ℝ × ℝ) {u : ℝ × ℝ} (A : ℝ × ℝ) (t : ℝ)
+    (hu2 : u.1 * u.1 + u.2 * u.2 ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧
+      (∀ i ∈ S, off u (mov A (tilt u t) δ) (V i) ≠ 0) ∧
+      (∀ i ∈ S, off u (mov A (tilt u t) (-δ)) (V i) ≠ 0) := by
+  obtain ⟨δ, h0, hlt, hp, hn⟩ :=
+    exists_good_delta_affine_symm S (fun i => off u A (V i))
+      (fun _ => -(u.1 * u.1 + u.2 * u.2)) (fun _ _ => neg_ne_zero.mpr hu2) hδ₀
+  refine ⟨δ, h0, hlt, fun i hi => ?_, fun i hi => ?_⟩
+  · rw [off_base_mov]
+    have := hp i hi
+    intro hz; exact this (by linarith)
+  · rw [off_base_mov]
+    have := hn i hi
+    intro hz; exact this (by linarith)
+
+/-- The configuration-level symmetric clearing: both `±δ` leave no `Q`-vertex
+on `P`-side `i`'s line. -/
+theorem shift_clears_side_symm (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hside : V (pP (i + 1)) - V (pP i) ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ j : Fin 7,
+      off (shiftV V i t δ (pP (i + 1)) - shiftV V i t δ (pP i))
+        (shiftV V i t δ (pP i)) (shiftV V i t δ (pQ j)) ≠ 0 ∧
+      off (shiftV V i t (-δ) (pP (i + 1)) - shiftV V i t (-δ) (pP i))
+        (shiftV V i t (-δ) (pP i)) (shiftV V i t (-δ) (pQ j)) ≠ 0 := by
+  classical
+  obtain ⟨δ, h0, hlt, hp, hn⟩ :=
+    exists_good_delta_symm (Finset.univ : Finset (Fin 7)) (fun j => V (pQ j))
+      (u := V (pP (i + 1)) - V (pP i)) (V (pP i)) t (n2_ne_zero_of_ne hside) hδ₀
+  refine ⟨δ, h0, hlt, fun j => ⟨?_, ?_⟩⟩
+  · rw [shiftV_dir, shiftV_P, shiftV_Q]
+    exact hp j (Finset.mem_univ j)
+  · rw [shiftV_dir, shiftV_P, shiftV_Q]
+    exact hn j (Finset.mem_univ j)
+
+#print axioms exists_good_delta_affine_symm
+#print axioms exists_good_delta_symm
+#print axioms shift_clears_side_symm
+
 end RotationLaw
 end Heptagon
