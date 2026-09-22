@@ -1,0 +1,4 @@
+configurations        : 120
+affine identity fails : 0  (quadratic term must vanish)
+sign flips inside d0  : 0
+order type changed beyond d0: 340 / 360
