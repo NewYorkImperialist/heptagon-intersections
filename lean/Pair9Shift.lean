@@ -31,7 +31,7 @@ namespace Heptagon
 namespace Pair9Shift
 
 open Heptagon.AKR9 Heptagon.RotationLaw Heptagon.TiltedShift Heptagon.ResidualSym
-open Heptagon.RealConfig Heptagon.RealUpperBound
+open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.RealPerturb
 
 /-! ## 1. The two notions of simplicity agree -/
 
@@ -370,6 +370,54 @@ theorem exists_full_shift_both_signs (R : Pair9) (i : Fin 7) (t : ℝ)
     fun a b c d hpc => hord (-δ) hn2 a b c d hpc⟩
 
 #print axioms exists_full_shift_both_signs
+
+/-! ## 8. The pair count is monotone — and why that is not enough
+
+`crossPairsOf` is the object the project's upper bound is actually about, and
+`SimplicityBridge.crossPairs_card_le_38_of_simple` bounds it by `38` for *any*
+two simple heptagons, with no general position. Every proper crossing survives
+the shift, so the pair count is monotone too. -/
+
+theorem crossPairsOf_mono_shift (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      crossPairsOf V ⊆ crossPairsOf (shiftV V i t δ) := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_delta0_properCrossR V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ p hp => ?_⟩
+  simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hp ⊢
+  exact h δ hδ _ _ _ _ hp
+
+theorem crossPairsOf_card_mono_shift (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      (crossPairsOf V).card ≤ (crossPairsOf (shiftV V i t δ)).card := by
+  obtain ⟨δ₀, hδ₀, h⟩ := crossPairsOf_mono_shift V i t
+  exact ⟨δ₀, hδ₀, fun δ hδ => Finset.card_le_card (h δ hδ)⟩
+
+/-! **Why this does not finish §9.**
+
+It is tempting to read the two facts together — the pair count is `≤ 38` for
+any simple pair, and the shift does not decrease it — as a bound on a
+degenerate configuration's intersections. It is not one, and the gap is exactly
+what §9 exists to close.
+
+`crossPairsOf` counts side pairs that cross **properly**. A `Q`-vertex lying on
+a `P`-side is a genuine point of `∂P ∩ ∂Q`, but it is *not* a proper crossing of
+any pair, so it contributes **nothing** to `crossPairsOf`. Hence for a
+degenerate configuration
+
+>  `|points9| = |crossPairsOf| + (degenerate points)`,
+
+and the `38` bound on the first summand says nothing about the total. That is
+why `DegBound`'s honest statement is `|points9| ≤ 38 + d`, and why the
+corollary `≤ 52` is *weaker* than the trivial `49`.
+
+What closes it is the averaging identity: for the *degenerate* points,
+`TiltedShift.exists_sign_not_decreasing` gives a sign along which their
+contribution does not drop either. Joining that to the monotonicity above needs
+`DegBound`'s classification to say that the two summands stay separate — which
+is the unfinished half. -/
+
+#print axioms crossPairsOf_mono_shift
+#print axioms crossPairsOf_card_mono_shift
 
 end Pair9Shift
 end Heptagon
