@@ -5426,3 +5426,6 @@ name = "SignExp"
 
 [[lean_lib]]
 name = "R3Construct"
+
+[[lean_lib]]
+name = "TiltedShift"
