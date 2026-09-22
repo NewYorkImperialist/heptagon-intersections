@@ -625,5 +625,62 @@ theorem exists_good_delta {ι : Type*} [DecidableEq ι] (S : Finset ι) (V : ι 
 #print axioms shift_creates_no_degeneracy
 #print axioms exists_good_delta
 
+/-! ### The general form, and the two-stage choice
+
+`exists_good_delta` was stated for `Q`-vertices on one side's line.  Every other
+family §9.2 has to dodge — `P`-vertices on `Q`-sides, degeneracies on the
+rotating neighbours, the other sides of `P` — has the same shape, because *all*
+of these conditions are affine in `δ`.  That is the single structural fact this
+whole development rests on, so it is worth stating once in general.
+
+Stated that way, §9.2's step is a **two-stage choice**:
+
+1. choose the tilt parameter `t` so that every condition's slope is nonzero
+   (`exists_good_tilt` — each degeneracy rules out at most one `t`);
+2. choose the shift `δ` avoiding the finitely many roots that remain
+   (`exists_good_delta_affine` — each condition now rules out at most one `δ`).
+
+Neither stage can be skipped: without stage 1 a condition can be identically
+zero in `δ`, and then no shift removes it — which is exactly the pivot
+certificate. -/
+
+/-- **The general form.**  Finitely many conditions, each affine in `δ` with
+nonzero slope, are all avoided by some arbitrarily small nonzero shift. -/
+theorem exists_good_delta_affine {ι : Type*} [DecidableEq ι] (S : Finset ι) (c m : ι → ℝ)
+    (hm : ∀ i ∈ S, m i ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ i ∈ S, c i + δ * m i ≠ 0 := by
+  classical
+  set B : Finset ℝ := S.image (fun i => -c i / m i) with hB
+  have hinf : (Set.Ioo (0:ℝ) δ₀ \ (B : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite hδ₀).diff B.finite_toSet
+  obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ := hinf.nonempty
+  refine ⟨δ, ne_of_gt hpos, by rw [abs_of_pos hpos]; exact hlt, fun i hi hz => hnot ?_⟩
+  rw [Finset.mem_coe, hB]
+  refine Finset.mem_image.mpr ⟨i, hi, ?_⟩
+  have hmi := hm i hi
+  field_simp
+  linarith
+
+/-- **The two-stage choice, which is the shape of §9.2's step.**  A tilt `t`
+from any candidate set bigger than the number of degeneracies, and then a
+shift `δ` as small as required — together avoiding every degeneracy at once.
+
+The slopes are `cross (tilt u t) (x i)`, so stage 1 is precisely what makes
+stage 2 applicable. -/
+theorem exists_good_tilt_and_delta {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    {u : ℝ × ℝ} (hu : u ≠ 0) (x : ι → ℝ × ℝ) (hx : ∀ i ∈ S, x i ≠ 0)
+    (T : Finset ℝ) (hT : S.card < T.card) (c : ℝ → ι → ℝ)
+    {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ t ∈ T, ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧
+      ∀ i ∈ S, c t i + δ * cross (tilt u t) (x i) ≠ 0 := by
+  obtain ⟨t, htT, ht⟩ := exists_good_tilt S hu x hx T hT
+  obtain ⟨δ, hδ0, hδlt, hδall⟩ :=
+    exists_good_delta_affine S (c t) (fun i => cross (tilt u t) (x i))
+      (fun i hi => ht i hi) hδ₀
+  exact ⟨t, htT, δ, hδ0, hδlt, hδall⟩
+
+#print axioms exists_good_delta_affine
+#print axioms exists_good_tilt_and_delta
+
 end RotationLaw
 end Heptagon
