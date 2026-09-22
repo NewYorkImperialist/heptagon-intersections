@@ -811,5 +811,84 @@ theorem shift_clears_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
 #print axioms shiftV_dir
 #print axioms shift_clears_side
 
+/-! ### The other direction: moving `P`-vertices against fixed `Q`-lines
+
+`shift_clears_side` handles fixed `Q`-vertices against the moving `P`-side.
+The shift also moves two `P`-vertices, and *they* can land on a `Q`-side — the
+symmetric-looking case that is not actually symmetric, because `Q` is fixed
+and `P` moves.
+
+It has the same two-stage shape, but now stage 1 is doing real work: the slope
+is `a × tilt u t` for the `Q`-side direction `a`, which vanishes when the tilt
+happens to be parallel to that `Q`-side.  No choice of `δ` helps then; the tilt
+must be chosen first. -/
+
+theorem cross_swap (a b : ℝ × ℝ) : cross a b = -cross b a := by
+  simp only [cross]; ring
+
+/-- Moving the *evaluated* point (rather than the base point) also shifts the
+offset affinely — with slope `a × w` instead of `‖u‖²`. -/
+theorem off_mov_general (a A X w : ℝ × ℝ) (δ : ℝ) :
+    off a A (mov X w δ) = off a A X + δ * (a.1 * w.2 - a.2 * w.1) := by
+  simp only [off, mov]; ring
+
+/-- **The general `§9.2` avoidance theorem.**  A finite family of conditions
+"this moving point must not land on that fixed line", all avoided at once by a
+single tilt and a single arbitrarily small shift.
+
+Instantiating `a`, `A` at the seven `Q`-sides and `X` at the two moving
+`P`-vertices covers the `P`-vertex-on-`Q`-side case; instantiating at the
+rotating neighbours covers the pivots.  The only hypothesis on the family is
+that each fixed line is non-degenerate. -/
+theorem exists_good_tilt_and_delta_lines {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    {u : ℝ × ℝ} (hu : u ≠ 0) (a A X : ι → ℝ × ℝ) (ha : ∀ i ∈ S, a i ≠ 0)
+    (T : Finset ℝ) (hT : S.card < T.card) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ t ∈ T, ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧
+      ∀ i ∈ S, off (a i) (A i) (mov (X i) (tilt u t) δ) ≠ 0 := by
+  classical
+  obtain ⟨t, htT, ht⟩ := exists_good_tilt S hu a ha T hT
+  have hm : ∀ i ∈ S, ((a i).1 * (tilt u t).2 - (a i).2 * (tilt u t).1) ≠ 0 := by
+    intro i hi
+    have h := ht i hi
+    rw [cross_swap] at h
+    simpa only [cross, neg_ne_zero] using h
+  obtain ⟨δ, hδ0, hδlt, hall⟩ :=
+    exists_good_delta_affine S (fun i => off (a i) (A i) (X i))
+      (fun i => (a i).1 * (tilt u t).2 - (a i).2 * (tilt u t).1) hm hδ₀
+  refine ⟨t, htT, δ, hδ0, hδlt, fun i hi => ?_⟩
+  rw [off_mov_general]
+  exact hall i hi
+
+#print axioms cross_swap
+#print axioms off_mov_general
+#print axioms exists_good_tilt_and_delta_lines
+
+/-- **Instantiated at the configuration.**  Both moving `P`-vertices avoid all
+seven `Q`-side lines, for a single tilt and a single arbitrarily small shift.
+
+Fourteen conditions, so fifteen tilt candidates suffice — the hypothesis
+`14 < T.card`. -/
+theorem shift_avoids_Q_sides (V : Fin 14 → ℝ × ℝ) (i : Fin 7)
+    (hside : V (pP (i + 1)) - V (pP i) ≠ 0)
+    (hQ : ∀ j : Fin 7, V (pQ (j + 1)) - V (pQ j) ≠ 0)
+    (T : Finset ℝ) (hT : 14 < T.card) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ t ∈ T, ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ j : Fin 7,
+      off (V (pQ (j + 1)) - V (pQ j)) (V (pQ j)) (shiftV V i t δ (pP i)) ≠ 0 ∧
+      off (V (pQ (j + 1)) - V (pQ j)) (V (pQ j)) (shiftV V i t δ (pP (i + 1))) ≠ 0 := by
+  classical
+  obtain ⟨t, htT, δ, h0, hlt, hall⟩ :=
+    exists_good_tilt_and_delta_lines (Finset.univ : Finset (Fin 7 × Bool)) hside
+      (fun p => V (pQ (p.1 + 1)) - V (pQ p.1))
+      (fun p => V (pQ p.1))
+      (fun p => if p.2 then V (pP (i + 1)) else V (pP i))
+      (fun p _ => hQ p.1) T (by simpa using hT) hδ₀
+  refine ⟨t, htT, δ, h0, hlt, fun j => ⟨?_, ?_⟩⟩
+  · rw [shiftV_P]
+    simpa using hall (j, false) (Finset.mem_univ _)
+  · rw [shiftV_P_succ]
+    simpa using hall (j, true) (Finset.mem_univ _)
+
+#print axioms shift_avoids_Q_sides
+
 end RotationLaw
 end Heptagon
