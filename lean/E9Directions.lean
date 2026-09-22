@@ -486,5 +486,74 @@ theorem crossPairs_card_lt_move (R : Pair9) (i j : Fin 7)
 #print axioms coincidence_not_mem_crossPairs
 #print axioms crossPairs_card_lt_move
 
+/-! ## 11. Iterating: every coincidence at `P_i` goes at once
+
+The coincidences are `(P`-index, `Q`-index`)` pairs. Moving `P_i` cannot touch
+a coincidence at another `P`-vertex, and it clears **every** coincidence at
+`P_i` simultaneously — because for a fixed `Q_m`, the equation
+`P_i + εE = Q_m` is affine in `ε` with slope `E ≠ 0`, so it has at most one
+root. Finitely many roots, all avoidable. -/
+
+noncomputable def coincSet (V : Fin 14 → ℝ × ℝ) : Finset (Fin 7 × Fin 7) :=
+  Finset.univ.filter (fun p => V (pP p.1) = V (pQ p.2))
+
+/-- **A move that clears every coincidence at `P_i`.** -/
+theorem exists_eps_clearing_apex (V : Fin 14 → ℝ × ℝ) (i : Fin 7) {E : ℝ × ℝ}
+    (hE : E ≠ 0) {e₁ : ℝ} (he₁ : 0 < e₁) :
+    ∃ e : ℝ, 0 < e ∧ e < e₁ ∧ ∀ m : Fin 7, moveV V i E e (pP i) ≠ V (pQ m) := by
+  classical
+  have hcase : E.1 ≠ 0 ∨ E.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hE (Prod.ext hc.1 hc.2)
+  rcases hcase with hE1 | hE2
+  · obtain ⟨e, ⟨hpos, hlt⟩, hnot⟩ :=
+      ((Set.Ioo_infinite he₁).diff
+        (Finset.univ.image
+          (fun m : Fin 7 => ((V (pQ m)).1 - (V (pP i)).1) / E.1)).finite_toSet).nonempty
+    refine ⟨e, hpos, hlt, fun m hc => hnot ?_⟩
+    rw [show moveV V i E e (pP i) = V (pP i) + e • E from moveV_apex V i E e] at hc
+    have h1 : (V (pP i)).1 + e * E.1 = (V (pQ m)).1 := congrArg Prod.fst hc
+    exact Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨m, Finset.mem_univ _, by
+      field_simp; linarith⟩)
+  · obtain ⟨e, ⟨hpos, hlt⟩, hnot⟩ :=
+      ((Set.Ioo_infinite he₁).diff
+        (Finset.univ.image
+          (fun m : Fin 7 => ((V (pQ m)).2 - (V (pP i)).2) / E.2)).finite_toSet).nonempty
+    refine ⟨e, hpos, hlt, fun m hc => hnot ?_⟩
+    rw [show moveV V i E e (pP i) = V (pP i) + e • E from moveV_apex V i E e] at hc
+    have h2 : (V (pP i)).2 + e * E.2 = (V (pQ m)).2 := congrArg Prod.snd hc
+    exact Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨m, Finset.mem_univ _, by
+      field_simp; linarith⟩)
+
+/-- **The coincidence count strictly decreases.**  The move clears every
+coincidence at `P_i` and creates none anywhere, so the total drops. -/
+theorem coincSet_card_lt (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
+    (hij : (i, j) ∈ coincSet V) {E : ℝ × ℝ} (hE : E ≠ 0) {e₁ : ℝ} (he₁ : 0 < e₁) :
+    ∃ e : ℝ, 0 < e ∧ e < e₁ ∧
+      (coincSet (moveV V i E e)).card < (coincSet V).card := by
+  classical
+  obtain ⟨e, hpos, hlt, hclear⟩ := exists_eps_clearing_apex V i hE he₁
+  refine ⟨e, hpos, hlt, ?_⟩
+  have hsub : coincSet (moveV V i E e) ⊆ coincSet V := by
+    intro p hp
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and] at hp ⊢
+    by_cases h : p.1 = i
+    · subst h
+      exact absurd (by rw [moveV_Q] at hp; exact hp) (hclear p.2)
+    · rw [moveV_Q] at hp
+      have : moveV V i E e (pP p.1) = V (pP p.1) := by
+        simp only [moveV]
+        rw [if_neg (fun hc => h (Pair9Shift.pP_inj hc))]
+      rwa [this] at hp
+  have hgone : (i, j) ∉ coincSet (moveV V i E e) := by
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [moveV_Q]
+    exact hclear j
+  exact RotationLaw.degeneracy_monovariant hsub hij hgone
+
+#print axioms exists_eps_clearing_apex
+#print axioms coincSet_card_lt
+
 end E9Directions
 end Heptagon
