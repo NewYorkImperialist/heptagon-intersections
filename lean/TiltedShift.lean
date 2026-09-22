@@ -431,5 +431,44 @@ theorem exists_sign_not_increasing {ι : Type*} (S : Finset ι) (N δ : ℝ) (y 
 #print axioms averaging_sum
 #print axioms exists_sign_not_increasing
 
+/-! ### Capstone: the tilted shift always admits the averaging step
+
+The two halves of this file meet here.  `tilted_shift_defined` says the tilted
+direction exists for *every* nonzero side direction, including at a straight
+vertex where AKR's own shift along an adjacent side line is undefined.  The
+averaging machinery says a shift with nonzero normal displacement always admits
+a non-increasing choice of sign.  Composing them: the repair is available
+everywhere the original argument needed it, and at the vertices where the
+original argument breaks down. -/
+
+/-- The tilted direction's normal displacement is strictly positive — never the
+degenerate `N = 0` that the averaging step has to exclude. -/
+theorem ip_nrm_self_pos {u : ℝ × ℝ} (hu : u ≠ 0) : 0 < ip (nrm u) (nrm u) := by
+  have h : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  unfold ip nrm
+  rcases h with h1 | h2
+  · nlinarith [mul_self_pos.mpr h1, mul_self_nonneg u.2]
+  · nlinarith [mul_self_pos.mpr h2, mul_self_nonneg u.1]
+
+/-- **The §9.2 repair, assembled.**  For any nonzero side direction `u`, shifting
+along the tilted direction `nrm u` gives a well-defined, strictly positive normal
+displacement, and hence a choice of sign that does not increase the intersection
+count — at every vertex, straight or not.
+
+The hypotheses `hy`, `hz` are the `δ₀` bound and nothing else. -/
+theorem tilted_shift_admits_averaging {u : ℝ × ℝ} (hu : u ≠ 0) {ι : Type*}
+    (S : Finset ι) (y z : ι → ℝ) {δ : ℝ} (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * ip (nrm u) (nrm u) < |y i|)
+    (hz : ∀ i ∈ S, |δ| * ip (nrm u) (nrm u) < |z i|) :
+    (∑ i ∈ S, crossCount δ (ip (nrm u) (nrm u)) (y i) (z i)) ≤ S.card ∨
+      (∑ i ∈ S, crossCount (-δ) (ip (nrm u) (nrm u)) (y i) (z i)) ≤ S.card :=
+  exists_sign_not_increasing S _ δ y z (ip_nrm_self_pos hu) hδ hy hz
+
+#print axioms ip_nrm_self_pos
+#print axioms tilted_shift_admits_averaging
+
 end TiltedShift
 end Heptagon
