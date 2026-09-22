@@ -446,9 +446,15 @@ The four hypotheses are exactly the geometric obligations:
 * `hdisjA` — a pair newly crossing was not crossing before. This is *almost*
   definitional: a degenerate `Q`-vertex on a `P`-side is a touching, not a
   proper crossing, so the pair was not in `A`. **Not yet written.**
-* `hdisj` — distinct degeneracies produce disjoint pair sets. Distinct
-  degenerate `Q`-vertices have distinct indices `j`, and the pairs they produce
-  carry that index. **Not yet written.**
+* `hdisj` — distinct degeneracies produce disjoint pair sets. **This one is
+  not automatic, and an earlier draft of this note claimed it was.** Vertex `j`
+  produces the pairs `(i, j−1)` and `(i, j)`; vertex `j+1` produces `(i, j)` and
+  `(i, j+1)`. They **share `(i, j)`**. So `hdisj` fails exactly when two
+  *consecutive* `Q`-vertices are degenerate on the same `P`-side — and that
+  happens precisely when the whole `Q`-side `j` lies inside `P`-side `i`, an
+  **overlap**, which `(Fin)` excludes because it makes `∂P ∩ ∂Q` infinite.
+  So `hdisj` holds, but it depends on the finiteness hypothesis, and not on
+  anything about the shift. **Not yet written.**
 
 `hnew` is bookkeeping. With all four, `A.card + D.card ≤ A'.card` — and since
 `|regPts| ≤ |A|` and `|points9| = |regPts| + |degPts|`, that is the count not
@@ -491,6 +497,53 @@ theorem card_add_le_of_disjoint_new_nonvacuous :
     by decide, by decide, by decide⟩
 
 #print axioms card_add_le_of_disjoint_new
+
+/-! ## 10. `hdisjA`: a degenerate pair is not a crossing pair
+
+The third obligation of the skeleton. It is short, and the reason is the one
+that makes the whole `points9` / `crossPairsOf` discrepancy exist: a degenerate
+touching makes an orientation determinant **vanish**, and `ProperCrossR`
+demands a strictly negative *product* of determinants, so a vanishing one rules
+it out. -/
+
+/-- `off` against a side's own direction **is** that side's orientation
+determinant. -/
+theorem off_eq_orientR (A B X : ℝ × ℝ) : off (B - A) A X = orientR A B X := by
+  simp only [off, orientR, Prod.fst_sub, Prod.snd_sub]; ring
+
+theorem not_properCrossR_of_left_zero {a b c d : ℝ × ℝ} (h : orientR a b c = 0) :
+    ¬ ProperCrossR a b c d := by
+  rintro ⟨h1, -⟩
+  rw [h, zero_mul] at h1
+  exact lt_irrefl 0 h1
+
+theorem not_properCrossR_of_right_zero {a b c d : ℝ × ℝ} (h : orientR a b d = 0) :
+    ¬ ProperCrossR a b c d := by
+  rintro ⟨h1, -⟩
+  rw [h, mul_zero] at h1
+  exact lt_irrefl 0 h1
+
+/-- **A `Q`-vertex on a `P`-side's line kills both incident pairs.**  The vertex
+`V (pQ j)` is an endpoint of `Q`-sides `j − 1` and `j`, so neither pair
+`(i, j−1)` nor `(i, j)` is a proper crossing.
+
+This is `hdisjA` of the skeleton, and it is also the precise reason
+`crossPairsOf` undercounts `points9` at a degeneracy: the point is there, and
+it contributes to **no** pair. -/
+theorem degenerate_not_mem_crossPairs (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
+    (hdeg : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0) :
+    (i, j) ∉ crossPairsOf V ∧ (i, j - 1) ∉ crossPairsOf V := by
+  rw [off_eq_orientR] at hdeg
+  constructor
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact not_properCrossR_of_left_zero hdeg
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    have hj : j - 1 + 1 = j := by simp
+    rw [hj]
+    exact not_properCrossR_of_right_zero hdeg
+
+#print axioms off_eq_orientR
+#print axioms degenerate_not_mem_crossPairs
 
 end Pair9Shift
 end Heptagon
