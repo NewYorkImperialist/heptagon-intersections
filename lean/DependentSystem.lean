@@ -276,7 +276,7 @@ from every dependent point.
 The proof is finite, not inductive on the graph: among the points reachable
 from `i`, take one maximising the potential; it cannot be dependent, because a
 dependent point has a strictly larger neighbour, which is also reachable. -/
-theorem reaches_of_strict_potential (p : ι → ℝ)
+theorem reaches_of_strict_potential {α : Type*} [LinearOrder α] (p : ι → α)
     (h : ∀ i ∈ S.dep, ∃ j, S.Arc i j ∧ p i < p j) : S.Reaches := by
   intro i _
   obtain ⟨j, hjmem, hjmax⟩ :=
@@ -288,8 +288,8 @@ theorem reaches_of_strict_potential (p : ι → ℝ)
   by_cases hjd : j ∈ S.dep
   · obtain ⟨k, hk, hlt⟩ := h j hjd
     have hkr : Relation.ReflTransGen S.Arc i k := hjr.tail hk
-    have : p k ≤ p j := hjmax k (by simpa using hkr)
-    linarith
+    have hle : p k ≤ p j := hjmax k (by simpa using hkr)
+    exact absurd hle (not_le.mpr hlt)
   · exact ⟨j, hjd, hjr⟩
 
 /-- **Observation 15**, one coordinate at a time — which is how AKR's proof of
@@ -322,6 +322,43 @@ theorem observation15 {A : ι → ℝ} {i : ι} (hi : i ∈ S.dep)
     push_neg at hall
     obtain ⟨j, hj, hlt⟩ := hall
     exact ⟨j, hj, hlt⟩
+
+/-- A strict convex combination of two **distinct** points lies strictly below
+the lexicographically larger of them. This is what rules out the first
+disjunct of `observation15` for the real dependence graph: a dependent vertex
+lies strictly between the two it depends on, so it cannot coincide with both. -/
+theorem lex_lt_of_strict_between {u v w : ℝ × ℝ} (huv : u ≠ v) {t : ℝ}
+    (ht0 : 0 < t) (ht1 : t < 1) (hw : w = t • u + (1 - t) • v) :
+    toLex w < toLex u ∨ toLex w < toLex v := by
+  have h1 : w.1 = t * u.1 + (1 - t) * v.1 := by rw [hw]; simp
+  have h2 : w.2 = t * u.2 + (1 - t) * v.2 := by rw [hw]; simp
+  have hne : toLex u ≠ toLex v := fun h => huv (by simpa using h)
+  rcases lt_or_gt_of_ne hne with hlt | hlt
+  · right
+    rw [Prod.Lex.toLex_lt_toLex] at hlt ⊢
+    rcases hlt with hx | ⟨hx, hy⟩
+    · exact Or.inl (by rw [h1]; nlinarith)
+    · exact Or.inr ⟨by rw [h1, hx]; ring, by rw [h2]; nlinarith⟩
+  · left
+    rw [Prod.Lex.toLex_lt_toLex] at hlt ⊢
+    rcases hlt with hx | ⟨hx, hy⟩
+    · exact Or.inl (by rw [h1]; nlinarith)
+    · exact Or.inr ⟨by rw [h1, hx]; ring, by rw [h2]; nlinarith⟩
+
+/-- **AKR's Lemma 18 for the actual dependence graph.**  If every dependent
+vertex lies strictly between two vertices it depends on, then `Reaches` holds —
+so `theorem17`'s hypothesis is supplied by the geometry of the vertex-side
+degeneracies, not assumed. -/
+theorem reaches_of_strict_between (V : ι → ℝ × ℝ)
+    (h : ∀ i ∈ S.dep, ∃ b c : ι, S.Arc i b ∧ S.Arc i c ∧ V b ≠ V c ∧
+          ∃ t : ℝ, 0 < t ∧ t < 1 ∧ V i = t • V b + (1 - t) • V c) :
+    S.Reaches := by
+  refine S.reaches_of_strict_potential (fun i => toLex (V i)) ?_
+  intro i hi
+  obtain ⟨b, c, hab, hac, hbc, t, ht0, ht1, hrep⟩ := h i hi
+  rcases lex_lt_of_strict_between hbc ht0 ht1 hrep with hlt | hlt
+  · exact ⟨b, hab, hlt⟩
+  · exact ⟨c, hac, hlt⟩
 
 /-! ## 4. Linearity in the parameter -/
 
@@ -412,6 +449,10 @@ theorem move_of_theorem17 (S : DepSystem (Fin 14)) (hR : S.Reaches)
 #print axioms Heptagon.DependentSystem.DepSystem.solves_affine
 #print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_potential
 #print axioms Heptagon.DependentSystem.DepSystem.observation15
+#print axioms Heptagon.DependentSystem.DepSystem.lex_lt_of_strict_between
+#print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_between
+#print axioms Heptagon.DependentSystem.DepSystem.lex_lt_of_strict_between
+#print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_between
 #print axioms Heptagon.DependentSystem.DepSystem.theorem17
 #print axioms Heptagon.DependentSystem.move_of_theorem17
 
