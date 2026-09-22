@@ -932,5 +932,102 @@ theorem hsum_for_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
 
 #print axioms hsum_for_side
 
+/-! ## 18. Packaging `hdisj`
+
+Two ingredients: a point on a side has zero offset from it (so a degeneracy
+indexed by *segment* membership is one indexed by *line* membership), and the
+incident pair sets of two non-adjacent vertices are disjoint. -/
+
+/-- A point of a segment has zero offset from that segment's own line. -/
+theorem off_eq_zero_of_mem_segment {A B x : ℝ × ℝ} (hx : x ∈ segment ℝ A B) :
+    off (B - A) A x = 0 := by
+  obtain ⟨a, b, -, -, hab, rfl⟩ := hx
+  have ha : a = 1 - b := by linarith
+  subst ha
+  simp only [off, Prod.fst_sub, Prod.snd_sub, Prod.fst_add, Prod.snd_add,
+    Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+  ring
+
+/-- The incident pair sets of two `Q`-vertices that are neither equal nor
+adjacent are disjoint.  Adjacency is exactly the excluded case: vertices `j`
+and `j+1` would share the pair `(i, j)`. -/
+theorem incident_disjoint {i j j' : Fin 7} (hne : j ≠ j')
+    (h1 : j' ≠ j + 1) (h2 : j ≠ j' + 1) (S : Finset (Fin 7 × Fin 7)) :
+    Disjoint (({(i, j - 1), (i, j)} : Finset (Fin 7 × Fin 7)).filter (fun q => q ∈ S))
+      (({(i, j' - 1), (i, j')} : Finset (Fin 7 × Fin 7)).filter (fun q => q ∈ S)) := by
+  classical
+  have hA : j - 1 ≠ j' - 1 := fun h => hne (sub_left_inj.mp h)
+  have hB : j - 1 ≠ j' := fun h => h2 (sub_eq_iff_eq_add.mp h)
+  have hC : j ≠ j' - 1 := fun h => h1 (eq_sub_iff_add_eq.mp h).symm
+  refine Finset.disjoint_filter_filter ?_
+  simp only [Finset.disjoint_left, Finset.mem_insert, Finset.mem_singleton]
+  rintro a (rfl | rfl) <;> simp [Prod.ext_iff, hA, hB, hC, hne]
+
+#print axioms off_eq_zero_of_mem_segment
+#print axioms incident_disjoint
+
+/-! ## 19. The count grows by the number of degeneracies
+
+All four obligations of `card_add_le_of_disjoint_new` are now available, so
+they can be discharged together. -/
+
+/-- **§9.2's count step.**  For a non-degenerate `P`-side carrying the
+degenerate `Q`-vertices `D`, there is an arbitrarily small nonzero shift after
+which
+
+>  `|crossPairsOf| + |D| ≤ |crossPairsOf of the shifted configuration|`.
+
+The pair count grows by **at least the number of degeneracies removed** — which
+is what makes the exchange worth doing, since each degenerate point was an
+intersection contributing to no pair at all.
+
+`(Fin)` enters twice and in different roles: through `hfin`, to rule out two
+*adjacent* degenerate vertices sharing an incident pair, and through `hyne`,
+`hzne` to keep the neighbour offsets nonzero. -/
+theorem count_grows_by_degeneracies (R : Pair9) (hfin : (points9 R).Finite)
+    (i : Fin 7) (t : ℝ) (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) (D : Finset (Fin 7))
+    (hD : ∀ j ∈ D, R.V (pQ j) ∈ sideP9 R i)
+    (hyne : ∀ j ∈ D,
+      off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ (j - 1))) ≠ 0)
+    (hzne : ∀ j ∈ D,
+      off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ (j + 1))) ≠ 0)
+    (hsepPrev : ∀ j ∈ D, orientR (R.V (pQ (j - 1))) (R.V (pQ j)) (R.V (pP i)) *
+        orientR (R.V (pQ (j - 1))) (R.V (pQ j)) (R.V (pP (i + 1))) < 0)
+    (hsepNext : ∀ j ∈ D, orientR (R.V (pQ j)) (R.V (pQ (j + 1))) (R.V (pP i)) *
+        orientR (R.V (pQ j)) (R.V (pQ (j + 1))) (R.V (pP (i + 1))) < 0) :
+    ∃ δ : ℝ, δ ≠ 0 ∧
+      (crossPairsOf R.V).card + D.card
+        ≤ (crossPairsOf (shiftV R.V i t δ)).card := by
+  classical
+  -- segment membership gives line membership
+  have hD' : ∀ j ∈ D,
+      off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ j)) = 0 :=
+    fun j hj => off_eq_zero_of_mem_segment (hD j hj)
+  obtain ⟨δ₀, hδ₀, hmono⟩ := crossPairsOf_mono_shift R.V i t
+  obtain ⟨δ, hδne, hδlt, hsum⟩ :=
+    hsum_for_side R.V i t hu D hD' hyne hzne hsepPrev hsepNext hδ₀
+  refine ⟨δ, hδne, ?_⟩
+  refine card_add_le_of_disjoint_new _ _ D
+    (fun j => ({(i, j - 1), (i, j)} : Finset (Fin 7 × Fin 7)).filter
+      (fun q => q ∈ crossPairsOf (shiftV R.V i t δ)))
+    (hmono δ hδlt) (fun j _ q hq => (Finset.mem_filter.mp hq).2) ?_ ?_ hsum
+  · -- a newly crossing pair was not crossing before
+    intro j hj
+    obtain ⟨hnotj, hnotjm⟩ := degenerate_not_mem_crossPairs R.V i j (hD' j hj)
+    simp only [Finset.disjoint_left, Finset.mem_filter, Finset.mem_insert,
+      Finset.mem_singleton]
+    rintro q ⟨rfl | rfl, -⟩
+    · exact hnotjm
+    · exact hnotj
+  · -- distinct degeneracies give disjoint pair sets
+    intro j hj j' hj' hne
+    refine incident_disjoint hne ?_ ?_ _
+    · intro h
+      exact no_consecutive_degeneracy R hfin i j (hD j hj) (h ▸ hD j' hj')
+    · intro h
+      exact no_consecutive_degeneracy R hfin i j' (hD j' hj') (h ▸ hD j hj)
+
+#print axioms count_grows_by_degeneracies
+
 end Pair9Shift
 end Heptagon
