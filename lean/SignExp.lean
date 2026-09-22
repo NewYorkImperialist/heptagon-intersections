@@ -307,6 +307,137 @@ theorem simpleClosed_iff_sign (W : Fin 7 → ℝ × ℝ) :
       exact (cornerVec_ne_zero_iff_sign _ _ _).mpr ⟨h1, h2, h3⟩
     · exact (disjoint_iff_sign _ _ _ _).mpr (hd i j hij)
 
+/-! ## Transporting `SimpleClosed` along a sign agreement
+
+`RealConfig.SameSignR x y` means both are strictly positive or both strictly
+negative — it **excludes zero**. That is the right notion for a witness that is
+not identically zero, which is what `UniformEps.theoremU_sameSign` delivers.
+But §9 must also tolerate witnesses that vanish identically: those are the
+degenerate features §9.2 removes later, and naming them is exactly what (R3)
+does. So the notion that transports `SimpleClosed` is `SameSignR` **or both
+zero**, spelled out here to avoid depending on that namespace. -/
+
+/-- Same strict sign, or both zero. The first two disjuncts are
+`RealConfig.SameSignR`. -/
+def SignAgree (x y : ℝ) : Prop :=
+  (0 < x ∧ 0 < y) ∨ (x < 0 ∧ y < 0) ∨ (x = 0 ∧ y = 0)
+
+theorem SignAgree.eq_zero_iff {x y : ℝ} (h : SignAgree x y) : x = 0 ↔ y = 0 := by
+  rcases h with ⟨hx, hy⟩ | ⟨hx, hy⟩ | ⟨hx, hy⟩
+  · constructor <;> intro hz <;> linarith
+  · constructor <;> intro hz <;> linarith
+  · simp [hx, hy]
+
+theorem SignAgree.pos_iff {x y : ℝ} (h : SignAgree x y) : 0 < x ↔ 0 < y := by
+  rcases h with ⟨hx, hy⟩ | ⟨hx, hy⟩ | ⟨hx, hy⟩
+  · exact ⟨fun _ => hy, fun _ => hx⟩
+  · constructor <;> intro hz <;> linarith
+  · simp [hx, hy]
+
+theorem SignAgree.nonpos_iff {x y : ℝ} (h : SignAgree x y) : x ≤ 0 ↔ y ≤ 0 := by
+  rcases h with ⟨hx, hy⟩ | ⟨hx, hy⟩ | ⟨hx, hy⟩
+  · constructor <;> intro hz <;> linarith
+  · exact ⟨fun _ => le_of_lt hy, fun _ => le_of_lt hx⟩
+  · simp [hx, hy]
+
+theorem SignAgree.mul_neg_iff {x y x' y' : ℝ}
+    (hx : SignAgree x x') (hy : SignAgree y y') : x * y < 0 ↔ x' * y' < 0 := by
+  rcases hy with ⟨h3, h4⟩ | ⟨h3, h4⟩ | ⟨h3, h4⟩
+  · rcases hx with ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩
+    · constructor <;> intro <;> nlinarith
+    · constructor <;> intro <;> nlinarith
+    · simp [h1, h2]
+  · rcases hx with ⟨h1, h2⟩ | ⟨h1, h2⟩ | ⟨h1, h2⟩
+    · constructor <;> intro <;> nlinarith
+    · constructor <;> intro <;> nlinarith
+    · simp [h1, h2]
+  · simp [h3, h4]
+
+/-- Points coincide in one configuration exactly when they do in the other. -/
+theorem eq_iff_of_signAgree {u v u' v' : ℝ × ℝ}
+    (h1 : SignAgree (u.1 - v.1) (u'.1 - v'.1))
+    (h2 : SignAgree (u.2 - v.2) (u'.2 - v'.2)) : u = v ↔ u' = v' := by
+  constructor
+  · intro h
+    exact Prod.ext
+      (sub_eq_zero.mp (h1.eq_zero_iff.mp (sub_eq_zero.mpr (congrArg Prod.fst h))))
+      (sub_eq_zero.mp (h2.eq_zero_iff.mp (sub_eq_zero.mpr (congrArg Prod.snd h))))
+  · intro h
+    exact Prod.ext
+      (sub_eq_zero.mp (h1.eq_zero_iff.mpr (sub_eq_zero.mpr (congrArg Prod.fst h))))
+      (sub_eq_zero.mp (h2.eq_zero_iff.mpr (sub_eq_zero.mpr (congrArg Prod.snd h))))
+
+theorem ne_iff_of_signAgree {u v u' v' : ℝ × ℝ}
+    (h1 : SignAgree (u.1 - v.1) (u'.1 - v'.1))
+    (h2 : SignAgree (u.2 - v.2) (u'.2 - v'.2)) : u ≠ v ↔ u' ≠ v' :=
+  not_congr (eq_iff_of_signAgree h1 h2)
+
+#print axioms SignAgree.mul_neg_iff
+#print axioms ne_iff_of_signAgree
+
+/-! ## The transport theorem
+
+`SimpleClosed` depends on the configuration only through the signs of the
+witness values — so two configurations whose witnesses agree in sign are either
+both simple or both not.  This is the form `UniformEps.bootstrap` consumes. -/
+
+/-- The four coordinate differences at the corner `i`, agreeing in sign. -/
+def CornerAgree (W W' : Fin 7 → ℝ × ℝ) (i : Fin 7) : Prop :=
+  SignAgree ((W i).1 - (W (i+1)).1) ((W' i).1 - (W' (i+1)).1) ∧
+  SignAgree ((W i).2 - (W (i+1)).2) ((W' i).2 - (W' (i+1)).2) ∧
+  SignAgree ((W (i+1+1)).1 - (W (i+1)).1) ((W' (i+1+1)).1 - (W' (i+1)).1) ∧
+  SignAgree ((W (i+1+1)).2 - (W (i+1)).2) ((W' (i+1+1)).2 - (W' (i+1)).2) ∧
+  SignAgree (cdet (W i) (W (i+1)) (W (i+1+1))) (cdet (W' i) (W' (i+1)) (W' (i+1+1))) ∧
+  SignAgree (cdot (W i) (W (i+1)) (W (i+1+1))) (cdot (W' i) (W' (i+1)) (W' (i+1+1)))
+
+theorem cornerSign_congr {W W' : Fin 7 → ℝ × ℝ} {i : Fin 7}
+    (h : CornerAgree W W' i) : CornerSign W i ↔ CornerSign W' i := by
+  obtain ⟨h1, h2, h3, h4, hdet, hdot⟩ := h
+  unfold CornerSign
+  rw [ne_iff_of_signAgree h1 h2, ne_iff_of_signAgree h3 h4,
+    hdet.eq_zero_iff, hdot.pos_iff]
+
+/-- The eight values governing whether sides `i` and `j` are disjoint. -/
+def SideAgree (W W' : Fin 7 → ℝ × ℝ) (i j : Fin 7) : Prop :=
+  SignAgree (det (W i) (W (i+1)) (W j)) (det (W' i) (W' (i+1)) (W' j)) ∧
+  SignAgree (det (W i) (W (i+1)) (W (j+1))) (det (W' i) (W' (i+1)) (W' (j+1))) ∧
+  SignAgree (det (W j) (W (j+1)) (W i)) (det (W' j) (W' (j+1)) (W' i)) ∧
+  SignAgree (det (W j) (W (j+1)) (W (i+1))) (det (W' j) (W' (j+1)) (W' (i+1))) ∧
+  SignAgree (sdot (W j) (W (j+1)) (W i)) (sdot (W' j) (W' (j+1)) (W' i)) ∧
+  SignAgree (sdot (W j) (W (j+1)) (W (i+1))) (sdot (W' j) (W' (j+1)) (W' (i+1))) ∧
+  SignAgree (sdot (W i) (W (i+1)) (W j)) (sdot (W' i) (W' (i+1)) (W' j)) ∧
+  SignAgree (sdot (W i) (W (i+1)) (W (j+1))) (sdot (W' i) (W' (i+1)) (W' (j+1)))
+
+theorem sideDisjSign_congr {W W' : Fin 7 → ℝ × ℝ} {i j : Fin 7}
+    (h : SideAgree W W' i j) : SideDisjSign W i j ↔ SideDisjSign W' i j := by
+  obtain ⟨d1, d2, d3, d4, t1, t2, t3, t4⟩ := h
+  unfold SideDisjSign
+  rw [sdet_eq_det, sdet_eq_det, sdet_eq_det, sdet_eq_det,
+    sdet_eq_det, sdet_eq_det, sdet_eq_det, sdet_eq_det,
+    d1.mul_neg_iff d2, d3.mul_neg_iff d4,
+    d3.eq_zero_iff, t1.nonpos_iff, d4.eq_zero_iff, t2.nonpos_iff,
+    d1.eq_zero_iff, t3.nonpos_iff, d2.eq_zero_iff, t4.nonpos_iff]
+
+/-- **The transport theorem.**  If every witness agrees in sign, `SimpleClosed`
+transfers.  This is what lets `UniformEps.bootstrap` carry simplicity across the
+whole interval `(0, ε₀)` rather than only "for small enough" it. -/
+theorem simpleClosed_congr {W W' : Fin 7 → ℝ × ℝ}
+    (hc : ∀ i : Fin 7, CornerAgree W W' i)
+    (hs : ∀ i j : Fin 7, SideAgree W W' i j) :
+    SimpleClosed W ↔ SimpleClosed W' := by
+  rw [simpleClosed_iff_sign, simpleClosed_iff_sign]
+  constructor
+  · rintro ⟨h1, h2⟩
+    exact ⟨fun i => (cornerSign_congr (hc i)).mp (h1 i),
+      fun i j hij => (sideDisjSign_congr (hs i j)).mp (h2 i j hij)⟩
+  · rintro ⟨h1, h2⟩
+    exact ⟨fun i => (cornerSign_congr (hc i)).mpr (h1 i),
+      fun i j hij => (sideDisjSign_congr (hs i j)).mpr (h2 i j hij)⟩
+
+#print axioms cornerSign_congr
+#print axioms sideDisjSign_congr
+#print axioms simpleClosed_congr
+
 #print axioms simpleClosed_iff_sign
 
 #print axioms inter_nonempty_iff
