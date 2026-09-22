@@ -729,5 +729,102 @@ theorem mem_crossPairs_of_straddle_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) 
 #print axioms straddle_iff_first_conjunct'
 #print axioms mem_crossPairs_of_straddle_prev
 
+/-! ## 15. The bridge as an equivalence
+
+`straddle_iff_first_conjunct` is an *iff*, so the converse direction is already
+available: given that the second conjunct survives, membership in
+`crossPairsOf` after the shift is **equivalent** to `Straddle`, not merely
+implied by it.
+
+That is what the counting needs — `|newOf j| = crossCount`, an equality — and
+it completes the mathematical content of `hsum`. -/
+
+theorem mem_crossPairs_iff_straddle (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) < 0 →
+      ((i, j) ∈ crossPairsOf (shiftV V i t δ)
+        ↔ Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2)
+          (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j + 1))))) := by
+  obtain ⟨δ₀, hδ₀, hmem⟩ := mem_crossPairs_of_straddle V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ j hdeg hsep => ⟨fun hin => ?_, hmem δ hδ j hdeg hsep⟩⟩
+  simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+  obtain ⟨h1, -⟩ := hin
+  rw [shiftV_Q, shiftV_Q] at h1
+  exact (straddle_iff_first_conjunct V i t δ _ _ _ hdeg rfl).mp h1
+
+theorem mem_crossPairs_iff_straddle_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP i)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (i + 1))) < 0 →
+      ((i, j - 1) ∈ crossPairsOf (shiftV V i t δ)
+        ↔ Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2)
+          (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j - 1))))) := by
+  obtain ⟨δ₀, hδ₀, hmem⟩ := mem_crossPairs_of_straddle_prev V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ j hdeg hsep => ⟨fun hin => ?_, hmem δ hδ j hdeg hsep⟩⟩
+  have hj : j - 1 + 1 = j := by simp
+  simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+  rw [hj] at hin
+  obtain ⟨h1, -⟩ := hin
+  rw [shiftV_Q, shiftV_Q] at h1
+  exact (straddle_iff_first_conjunct' V i t δ _ _ _ rfl hdeg).mp h1
+
+#print axioms mem_crossPairs_iff_straddle
+#print axioms mem_crossPairs_iff_straddle_prev
+
+/-! ## 16. `|newOf j| = crossCount` — the last step of `hsum`
+
+Pure `Finset` arithmetic on top of the two equivalences. -/
+
+theorem card_filter_pair {X : Type*} [DecidableEq X] (a b : X) (hab : a ≠ b)
+    (p : X → Prop) [DecidablePred p] :
+    (({a, b} : Finset X).filter p).card
+      = (if p a then 1 else 0) + (if p b then 1 else 0) := by
+  rw [Finset.filter_insert, Finset.filter_singleton]
+  by_cases hpa : p a <;> by_cases hpb : p b <;> simp [hpa, hpb, hab]
+
+theorem pred_ne_self (i j : Fin 7) : (i, j - 1) ≠ ((i, j) : Fin 7 × Fin 7) := by
+  intro h
+  have hj : j - 1 = j := congrArg Prod.snd h
+  exact absurd (sub_eq_self.mp hj) (by decide)
+
+/-- **The degenerate vertex's incident pairs, counted.**  The two `Q`-edges at
+a degenerate vertex contribute to `crossPairsOf` after the shift in exactly the
+number `TiltedShift.crossCount` predicts.
+
+This is `hsum`'s content: summing this over the degenerate vertices, and
+applying `TiltedShift.exists_sign_not_decreasing` to pick the sign, discharges
+the last hypothesis of the counting skeleton. -/
+theorem card_incident_eq_crossCount (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP i)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (i + 1))) < 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) < 0 →
+      ((({(i, j - 1), (i, j)} : Finset (Fin 7 × Fin 7)).filter
+          (fun q => q ∈ crossPairsOf (shiftV V i t δ))).card
+        = crossCount δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2)
+            (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j - 1))))
+            (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j + 1))))) := by
+  classical
+  obtain ⟨δ₁, h₁, hprev⟩ := mem_crossPairs_iff_straddle_prev V i t
+  obtain ⟨δ₂, h₂, hnext⟩ := mem_crossPairs_iff_straddle V i t
+  refine ⟨min δ₁ δ₂, lt_min h₁ h₂, fun δ hδ j hdeg hsepPrev hsepNext => ?_⟩
+  have hd1 : |δ| < δ₁ := lt_of_lt_of_le hδ (min_le_left _ _)
+  have hd2 : |δ| < δ₂ := lt_of_lt_of_le hδ (min_le_right _ _)
+  rw [card_filter_pair _ _ (pred_ne_self i j), crossCount]
+  exact congrArg₂ (· + ·)
+    (if_congr (hprev δ hd1 j hdeg hsepPrev) rfl rfl)
+    (if_congr (hnext δ hd2 j hdeg hsepNext) rfl rfl)
+
+#print axioms card_filter_pair
+#print axioms card_incident_eq_crossCount
+
 end Pair9Shift
 end Heptagon
