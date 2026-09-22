@@ -160,6 +160,34 @@ theorem exists_good_direction {a₁ a₂ b₁ b₂ : ℝ × ℝ}
   · obtain ⟨t, _, h1, h2, h3, h4⟩ := exists_good_t hk ha₂ hb₂
     exact ⟨Edir a₁ b₁ t, h1, h3, h2, h4⟩
 
+/-! ## Why the four-ray clause is the right one
+
+Certificate K7 moves the apex along a direction **parallel to a `Q`-ray**, and
+the apex then slides along that very side — a vertex-side degeneracy created
+out of nothing, while every other requirement is met and the configuration
+stays finite.  The lemma below is the exact reason, and its contrapositive is
+what `exists_good_direction` buys: a direction non-parallel to a ray can never
+put the moved apex onto that ray's side. -/
+
+/-- If `E` is not parallel to `b`, the moved apex never lands on the segment
+from the origin to `b`, for any nonzero displacement. -/
+theorem apex_not_mem_segment {E b : ℝ × ℝ} (h : cross E b ≠ 0) {ε : ℝ} (hε : ε ≠ 0) :
+    (ε * E.1, ε * E.2) ∉ segment ℝ (0 : ℝ × ℝ) b := by
+  intro hmem
+  rw [segment_eq_image'] at hmem
+  obtain ⟨s, _, hs⟩ := hmem
+  apply h
+  have h1 : ε * E.1 = s * b.1 := by
+    have := congrArg Prod.fst hs; simpa using this.symm
+  have h2 : ε * E.2 = s * b.2 := by
+    have := congrArg Prod.snd hs; simpa using this.symm
+  have : ε * cross E b = 0 := by
+    simp only [cross]
+    linear_combination b.2 * h1 - b.1 * h2
+  exact (mul_eq_zero.mp this).resolve_left hε
+
+#print axioms apex_not_mem_segment
+
 #print axioms exists_good_direction
 
 end R3Construct
