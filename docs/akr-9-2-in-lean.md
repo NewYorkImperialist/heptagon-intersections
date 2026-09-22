@@ -210,10 +210,20 @@ This is the part that matters, and it is not small.
 
    which is **exactly `DegBound`'s existing bound** and no improvement on it.
    Reaching `38` needs the count to *grow* by the degeneracies removed, not
-   merely not to shrink — and `count_grows_by_degeneracies` is per-side and
-   carries hypotheses (neighbour offsets nonzero; the `Q`-edges crossing the
-   side's line) that come from **(VV)** and **(Fin)**, neither of which a bare
-   `Pair9` carries. Threading those along a `Reach` chain is the work.
+   merely not to shrink.
+
+   The count step's own hypotheses are no longer the obstacle:
+   `count_grows_from_interior` derives all four from **(Fin)** plus the
+   degenerate vertex being *strictly inside* the `P`-side, which is **(VV)**.
+   The two families turn out to be one condition reached from opposite sides —
+   `hyne`/`hzne` say the neighbouring `Q`-vertices are off the side's line,
+   which given the degenerate vertex is *on* it is non-collinearity of the
+   `Q`-edge with the `P`-side, and that is exactly what `hsepPrev`/`hsepNext`
+   need to rule out the degenerate case of `straddle_of_interior`.
+
+   What remains is that the step is **per-side and per-configuration**:
+   interiority of the degenerate vertices is not tracked along a `Reach`
+   chain, so the growth cannot yet be accumulated over the whole procedure.
 
 3'. **`degP` is untouched.** The procedure shifts `P`-sides and so removes
    `degQ`; the `P`-vertices lying on `Q`-sides need the mirror-image argument.
