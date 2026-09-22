@@ -262,5 +262,115 @@ theorem exists_direction_four_ray {a₁ a₂ b₁ b₂ : ℝ × ℝ} (ha₁ : a�
 #print axioms exists_nonparallel_ray
 #print axioms exists_direction_four_ray
 
+/-! ## 6. Preserving finiteness — the whole cone, not one point
+
+`R3.md` Finding R3-1 showed a direction can satisfy AKR's stated criterion and
+still make `∂P(ε) ∩ ∂Q(ε)` **infinite**, destroying the standing finiteness
+assumption every later step inherits. `e9_directions/README.md` characterises
+the bad directions: `E` is bad iff it is a **positive multiple of some `b_m`
+with `a_k ∥ b_m`**. So the bad set is a finite union of **rays**, and an open
+two-dimensional cone minus finitely many rays is still nonempty.
+
+Rather than reason about cones, it is enough to move along the cone's own
+one-parameter family `E(t) = t·b_l − a_k`. Those directions are pairwise
+non-proportional, and being parallel to a *fixed* `b_m` is **affine in `t`**,
+so each `b_m` excludes at most one `t`. This is the same finite-avoidance
+argument that runs throughout §9.2. -/
+
+/-- The moved apex for the general cone point `E(t) = t·b_l − a_k`. -/
+def qStart (ak bl : ℝ × ℝ) (t e : ℝ) : ℝ × ℝ :=
+  (e * (t * bl.1 - ak.1), e * (t * bl.2 - ak.2))
+
+def qEnd (ak bl : ℝ × ℝ) (t e : ℝ) : ℝ × ℝ :=
+  (e * (t * bl.1 - ak.1) + ak.1, e * (t * bl.2 - ak.2) + ak.2)
+
+theorem orientR_Q_start (ak bl : ℝ × ℝ) (t e : ℝ) :
+    orientR (qStart ak bl t e) (qEnd ak bl t e) 0 = -(e * t * cross ak bl) := by
+  simp only [orientR, qStart, qEnd, cross, Prod.fst_zero, Prod.snd_zero]; ring
+
+theorem orientR_Q_bl' (ak bl : ℝ × ℝ) (t e : ℝ) :
+    orientR (qStart ak bl t e) (qEnd ak bl t e) bl = (1 - e * t) * cross ak bl := by
+  simp only [orientR, qStart, qEnd, cross]; ring
+
+theorem orientR_O_qStart (ak bl : ℝ × ℝ) (t e : ℝ) :
+    orientR 0 bl (qStart ak bl t e) = e * cross ak bl := by
+  simp only [orientR, qStart, cross, Prod.fst_zero, Prod.snd_zero]; ring
+
+theorem orientR_O_qEnd (ak bl : ℝ × ℝ) (t e : ℝ) :
+    orientR 0 bl (qEnd ak bl t e) = (e - 1) * cross ak bl := by
+  simp only [orientR, qEnd, cross, Prod.fst_zero, Prod.snd_zero]; ring
+
+/-- **The construction for the whole one-parameter family.**  Every cone point
+`E(t) = t·b_l − a_k` with `t ∈ (0,1)` gives a proper crossing for every
+`ε ∈ (0,1)`. -/
+theorem properCrossR_cone {ak bl : ℝ × ℝ} (h : cross ak bl ≠ 0) {t e : ℝ}
+    (ht0 : 0 < t) (ht1 : t < 1) (he0 : 0 < e) (he1 : e < 1) :
+    ProperCrossR (qStart ak bl t e) (qEnd ak bl t e) 0 bl := by
+  have hc : 0 < cross ak bl * cross ak bl := mul_self_pos.mpr h
+  have het : 0 < e * t := mul_pos he0 ht0
+  have het1 : e * t < 1 := by nlinarith
+  constructor
+  · rw [orientR_Q_start, orientR_Q_bl']
+    nlinarith [mul_pos (mul_pos het (by linarith : (0:ℝ) < 1 - e * t)) hc]
+  · rw [orientR_O_qStart, orientR_O_qEnd]
+    nlinarith [mul_pos (mul_pos he0 (by linarith : (0:ℝ) < 1 - e)) hc]
+
+/-- **A cone point avoiding every bad ray.**  For any finite family `B` of
+nonzero vectors — in the application, the `Q`-rays whose lines could absorb the
+moved apex — some `t ∈ (0,1)` makes `E(t)` parallel to **none** of them.
+
+The key step is that a `b ∈ B` can only exclude a `t` at all if
+`cross b_l b ≠ 0`; when `cross b_l b = 0`, `parallel_trans` forces
+`cross a_k b ≠ 0`, and then `cross (E t) b = −cross a_k b` is nonzero for
+*every* `t`. -/
+theorem exists_cone_t_avoiding {ak bl : ℝ × ℝ} (h : cross ak bl ≠ 0)
+    (B : Finset (ℝ × ℝ)) (hB : ∀ b ∈ B, b ≠ 0) :
+    ∃ t : ℝ, 0 < t ∧ t < 1 ∧ ∀ b ∈ B, cross (Edir ak bl t) b ≠ 0 := by
+  classical
+  set bad : Finset ℝ :=
+    B.image (fun b => if cross bl b = 0 then 0 else cross ak b / cross bl b) with hbad
+  have hinf : (Set.Ioo (0:ℝ) 1 \ (bad : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite (by norm_num)).diff bad.finite_toSet
+  obtain ⟨t, ⟨ht0, ht1⟩, hnot⟩ := hinf.nonempty
+  refine ⟨t, ht0, ht1, fun b hb hz => ?_⟩
+  rw [cross_Edir] at hz
+  by_cases hbl : cross bl b = 0
+  · -- `b` is parallel to `b_l`, hence not to `a_k`
+    rw [hbl, mul_zero, zero_sub, neg_eq_zero] at hz
+    exact h (parallel_trans (hB b hb)
+      (show cross b ak = 0 by simp only [cross] at hz ⊢; linarith)
+      (show cross b bl = 0 by simp only [cross] at hbl ⊢; linarith))
+  · refine hnot ?_
+    rw [Finset.mem_coe, hbad]
+    refine Finset.mem_image.mpr ⟨b, hb, ?_⟩
+    rw [if_neg hbl, eq_comm, eq_div_iff hbl]
+    linarith
+
+#print axioms properCrossR_cone
+#print axioms exists_cone_t_avoiding
+
+/-- **§9.1's direction, with both requirements at once.**  A single cone point
+`E(t)` that
+
+* creates a **proper crossing** at the apex for every `ε ∈ (0,1)`, and
+* is parallel to **none** of a prescribed finite family of nonzero vectors —
+  in the application, the `Q`-rays whose lines would absorb the moved apex and
+  destroy finiteness.
+
+This is hypothesis **(E-exists)** and hypothesis **(Fin-pres)** together, which
+is how §9.1 needs them: a direction satisfying one but not the other is
+useless, and `R3.md`'s Finding R3-1 is exactly a direction that satisfies the
+first and fails the second. -/
+theorem exists_good_cone_direction {ak bl : ℝ × ℝ} (h : cross ak bl ≠ 0)
+    (B : Finset (ℝ × ℝ)) (hB : ∀ b ∈ B, b ≠ 0) :
+    ∃ t : ℝ, 0 < t ∧ t < 1 ∧
+      (∀ b ∈ B, cross (Edir ak bl t) b ≠ 0) ∧
+      ∀ e : ℝ, 0 < e → e < 1 →
+        ProperCrossR (qStart ak bl t e) (qEnd ak bl t e) 0 bl := by
+  obtain ⟨t, ht0, ht1, hav⟩ := exists_cone_t_avoiding h B hB
+  exact ⟨t, ht0, ht1, hav, fun e he0 he1 => properCrossR_cone h ht0 ht1 he0 he1⟩
+
+#print axioms exists_good_cone_direction
+
 end E9Directions
 end Heptagon
