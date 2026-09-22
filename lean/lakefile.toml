@@ -5420,3 +5420,6 @@ name = "DependentSystem"
 
 [[lean_lib]]
 name = "DegBound"
+
+[[lean_lib]]
+name = "SignExp"

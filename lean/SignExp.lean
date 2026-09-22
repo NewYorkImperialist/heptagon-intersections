@@ -1,0 +1,124 @@
+import SimplicityStable
+
+/-!
+# (Sign-exp): the corner condition is a sign condition
+
+`docs/akr-9-assembly.md` §3 lists **hypothesis 10 (Sign-exp)** as the small
+residue of the §9 reduction: `SimpleClosed` must be a Boolean function of the
+*sign vector* of the witness family, so that `UniformEps.bootstrap` can lift
+simplicity from "for all sufficiently small `α`" to "on all of `(0, ε₀)`".
+
+`SimplicityStable.simpleClosed_iff` splits `SimpleClosed` into two halves:
+
+* every corner has `cornerVec ≠ 0`;
+* non-adjacent sides are disjoint.
+
+This file discharges the **first** half. `cornerVec` is built from norms, so it
+is not itself polynomial; the content here is that its vanishing is equivalent
+to a condition on the signs of a determinant and a dot product, both of which
+*are* polynomial in the coordinates and therefore degree-`≤ 2` in the motion
+parameter.
+
+The second half (disjointness of non-adjacent sides) is **not** done here.
+
+Nothing here is an axiom and nothing here proves `f(7,7) = 38`.
+-/
+
+namespace Heptagon
+namespace SignExp
+
+open Heptagon.SimplicityStable
+
+variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+
+/-- `cornerVec` vanishes exactly at a degenerate edge or a *spur*: the two edge
+vectors being positive multiples of one another. Norm-free on the right. -/
+theorem cornerVec_eq_zero_iff {a b c : E} :
+    cornerVec a b c = 0 ↔
+      a = b ∨ c = b ∨ ∃ t : ℝ, 0 < t ∧ a - b = t • (c - b) := by
+  constructor
+  · intro h
+    by_cases hu : a - b = 0
+    · exact Or.inl (sub_eq_zero.mp hu)
+    by_cases hv : c - b = 0
+    · exact Or.inr (Or.inl (sub_eq_zero.mp hv))
+    refine Or.inr (Or.inr ⟨‖a - b‖ / ‖c - b‖,
+      div_pos (norm_pos_iff.mpr hu) (norm_pos_iff.mpr hv), ?_⟩)
+    have hvn : ‖c - b‖ ≠ 0 := norm_ne_zero_iff.mpr hv
+    rw [cornerVec, sub_eq_zero] at h
+    have := congrArg (fun x => (‖c - b‖)⁻¹ • x) h
+    simpa [smul_smul, inv_mul_cancel₀ hvn, div_eq_inv_mul, mul_comm] using this
+  · rintro (h | h | ⟨t, ht, h⟩)
+    · subst h; simp [cornerVec]
+    · subst h; simp [cornerVec]
+    · rw [cornerVec, h, norm_smul, Real.norm_eq_abs, abs_of_pos ht, smul_smul,
+        mul_comm]
+      simp
+
+/-! ## The ℝ² specialisation: a determinant and a dot product -/
+
+/-- The determinant of the two edge vectors at the corner `a — b — c`. -/
+def cdet (a b c : ℝ × ℝ) : ℝ := (a.1 - b.1) * (c.2 - b.2) - (a.2 - b.2) * (c.1 - b.1)
+
+/-- Their dot product. -/
+def cdot (a b c : ℝ × ℝ) : ℝ := (a.1 - b.1) * (c.1 - b.1) + (a.2 - b.2) * (c.2 - b.2)
+
+theorem normsq_pos {v : ℝ × ℝ} (hv : v ≠ 0) : 0 < v.1 * v.1 + v.2 * v.2 := by
+  rcases eq_or_ne v.1 0 with h1 | h1
+  · have h2 : v.2 ≠ 0 := fun h2 => hv (Prod.ext h1 h2)
+    have := mul_self_pos.mpr h2
+    nlinarith [mul_self_nonneg v.1]
+  · have := mul_self_pos.mpr h1
+    nlinarith [mul_self_nonneg v.2]
+
+theorem exists_pos_smul_iff {u v : ℝ × ℝ} (hv : v ≠ 0) :
+    (∃ t : ℝ, 0 < t ∧ u = t • v) ↔
+      (u.1 * v.2 - u.2 * v.1 = 0 ∧ 0 < u.1 * v.1 + u.2 * v.2) := by
+  have hD : 0 < v.1 * v.1 + v.2 * v.2 := normsq_pos hv
+  constructor
+  · rintro ⟨t, ht, rfl⟩
+    simp only [Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+    constructor
+    · ring
+    · have : t * v.1 * v.1 + t * v.2 * v.2 = t * (v.1 * v.1 + v.2 * v.2) := by ring
+      rw [this]; positivity
+  · rintro ⟨hcross, hdot⟩
+    have hD' : v.1 * v.1 + v.2 * v.2 ≠ 0 := ne_of_gt hD
+    refine ⟨(u.1 * v.1 + u.2 * v.2) / (v.1 * v.1 + v.2 * v.2), div_pos hdot hD, ?_⟩
+    apply Prod.ext
+    · simp only [Prod.smul_fst, smul_eq_mul, div_mul_eq_mul_div, eq_div_iff hD']
+      linear_combination v.2 * hcross
+    · simp only [Prod.smul_snd, smul_eq_mul, div_mul_eq_mul_div, eq_div_iff hD']
+      linear_combination (-v.1) * hcross
+
+/-- **(Sign-exp), corner half.** The corner condition is a Boolean function of
+the signs of two polynomials. -/
+theorem cornerVec_ne_zero_iff_sign (a b c : ℝ × ℝ) :
+    cornerVec a b c ≠ 0 ↔ a ≠ b ∧ c ≠ b ∧ ¬(cdet a b c = 0 ∧ 0 < cdot a b c) := by
+  rw [Ne, cornerVec_eq_zero_iff]
+  constructor
+  · intro h
+    refine ⟨fun hab => h (Or.inl hab), fun hcb => h (Or.inr (Or.inl hcb)), ?_⟩
+    rintro ⟨hd, hp⟩
+    have hv : c - b ≠ 0 := fun hv => h (Or.inr (Or.inl (sub_eq_zero.mp hv)))
+    refine h (Or.inr (Or.inr ((exists_pos_smul_iff hv).mpr ⟨?_, ?_⟩)))
+    · simp only [Prod.fst_sub, Prod.snd_sub]
+      simp only [cdet] at hd; linarith
+    · simp only [Prod.fst_sub, Prod.snd_sub]
+      simp only [cdot] at hp; linarith
+  · rintro ⟨hab, hcb, hspur⟩ (h | h | h)
+    · exact hab h
+    · exact hcb h
+    · have hv : c - b ≠ 0 := sub_ne_zero.mpr hcb
+      obtain ⟨hd, hp⟩ := (exists_pos_smul_iff hv).mp h
+      refine hspur ⟨?_, ?_⟩
+      · simp only [Prod.fst_sub, Prod.snd_sub] at hd
+        simp only [cdet]; linarith
+      · simp only [Prod.fst_sub, Prod.snd_sub] at hp
+        simp only [cdot]; linarith
+
+#print axioms cornerVec_eq_zero_iff
+#print axioms cornerVec_ne_zero_iff_sign
+
+end SignExp
+end Heptagon
