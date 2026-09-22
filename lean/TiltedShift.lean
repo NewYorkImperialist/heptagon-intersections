@@ -613,5 +613,48 @@ theorem nu_abs_le {a A Y : ℝ × ℝ} {s δ : ℝ} (hs0 : 0 ≤ s) (hs1 : s ≤
 #print axioms crossing_param_tilted
 #print axioms nu_abs_le
 
+/-! ### Uniformity over a configuration
+
+`crossing_mem_side` bounds one degeneracy.  A configuration has finitely many,
+each with its own interior position `s i` and its own Lipschitz constant `C i`
+from `nu_abs_le`.  A single `δ` serving all of them at once is then a finite
+minimum — and a finite minimum of positive reals is positive.
+
+This is *not* the uniform-`ε₀` step that blocks §9 as a whole.  That one also
+has to hold along a motion, so the constraints are quantified over an interval
+of the parameter as well as over the degeneracies; `UniformEps.eps0` is the
+machinery for that shape.  What is proved here is the finite-family half, for
+the static constraints the tilted shift generates. -/
+
+/-- **A single shift small enough for every degeneracy at once.** -/
+theorem exists_uniform_shift {ι : Type*} (S : Finset ι) (s C : ι → ℝ)
+    (hs0 : ∀ i ∈ S, 0 < s i) (hs1 : ∀ i ∈ S, s i < 1) (hC : ∀ i ∈ S, 0 < C i) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ i ∈ S, |δ| * C i < min (s i) (1 - s i) := by
+  rcases S.eq_empty_or_nonempty with hE | hS
+  · exact ⟨1, one_pos, by simp [hE]⟩
+  · refine ⟨S.inf' hS (fun i => min (s i) (1 - s i) / C i), ?_, ?_⟩
+    · rw [Finset.lt_inf'_iff]
+      intro i hi
+      exact div_pos (lt_min (hs0 i hi) (by linarith [hs1 i hi])) (hC i hi)
+    · intro δ hδ i hi
+      have hle : S.inf' hS (fun i => min (s i) (1 - s i) / C i)
+          ≤ min (s i) (1 - s i) / C i := Finset.inf'_le _ hi
+      have hlt : |δ| < min (s i) (1 - s i) / C i := lt_of_lt_of_le hδ hle
+      have hmul := mul_lt_mul_of_pos_right hlt (hC i hi)
+      rwa [div_mul_cancel₀ _ (ne_of_gt (hC i hi))] at hmul
+
+/-- The same, phrased directly in the displacements: if every degeneracy's
+displacement is Lipschitz in the shift with constant `C i` — which `nu_abs_le`
+supplies — then one `δ₀` puts *every* crossing strictly inside its own side. -/
+theorem exists_uniform_delta0 {ι : Type*} (S : Finset ι) (s C : ι → ℝ) (ν : ℝ → ι → ℝ)
+    (hs0 : ∀ i ∈ S, 0 < s i) (hs1 : ∀ i ∈ S, s i < 1) (hC : ∀ i ∈ S, 0 < C i)
+    (hlip : ∀ δ : ℝ, ∀ i ∈ S, |ν δ i| ≤ |δ| * C i) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ i ∈ S, |ν δ i| < min (s i) (1 - s i) := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_uniform_shift S s C hs0 hs1 hC
+  exact ⟨δ₀, hδ₀, fun δ hδ i hi => lt_of_le_of_lt (hlip δ i hi) (h δ hδ i hi)⟩
+
+#print axioms exists_uniform_shift
+#print axioms exists_uniform_delta0
+
 end TiltedShift
 end Heptagon
