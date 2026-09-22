@@ -26,7 +26,7 @@ namespace Heptagon
 namespace CrossTransport
 
 open Heptagon.UniformEps Heptagon.RealPerturb Heptagon.RealUpperBound
-open Heptagon.ResidualSym
+open Heptagon.ResidualSym Heptagon.RealConfig
 
 /-- If every side pair has the same crossing status at two parameters, the
 crossing-pair sets coincide. -/
@@ -58,6 +58,36 @@ theorem crossPairsOf_move_eq (V0 E : Fin 14 → ℝ × ℝ) {e₁ e₂ : ℝ}
         (move V0 E e₂ (pQ j)) (move V0 E e₂ (pQ (j + 1)))) :
     crossPairsOf (move V0 E e₁) = crossPairsOf (move V0 E e₂) :=
   crossPairsOf_eq_of_pairwise h
+
+/-! ## Comparing to the *unperturbed* configuration
+
+The restriction above — both parameters positive — is exactly what the `c₀ ≠ 0`
+clause of Theorem CI's class-(a) row removes.  A witness whose **constant term**
+is nonzero has `ord = 0`, and then its sign on `(0, ρ)` is the sign of that
+constant term, which is its value at `0`.  So the comparison reaches the
+unperturbed configuration after all. -/
+
+theorem eval_zero (w : Wit) : w.eval 0 = w.coeff 0 := by
+  simp only [Wit.eval]
+  rw [Finset.sum_eq_single 0]
+  · simp
+  · intro b _ hb; simp [zero_pow hb]
+  · intro h; exact absurd (Finset.mem_range.mpr (Nat.succ_pos _)) h
+
+/-- **Class (a)'s `c₀ ≠ 0` clause.**  If the witness has nonzero constant term,
+its sign at every parameter in `(0, ρ)` agrees with its sign at `0`. -/
+theorem sameSign_eval_zero (w : Wit) (h0 : w.ord = 0) {e : ℝ}
+    (he0 : 0 < e) (he : e < w.rho) : SameSignR (w.eval 0) (w.eval e) := by
+  have hpos : 0 < w.coeff w.ord * w.eval e := w.lemmaU_sign he0 he
+  rw [h0] at hpos
+  rw [eval_zero]
+  rcases lt_trichotomy (w.coeff 0) 0 with h | h | h
+  · exact Or.inr ⟨h, by nlinarith⟩
+  · exact absurd hpos (by rw [h]; simp)
+  · exact Or.inl ⟨h, by nlinarith⟩
+
+#print axioms eval_zero
+#print axioms sameSign_eval_zero
 
 #print axioms crossPairsOf_eq_of_pairwise
 #print axioms crossPairsOf_move_eq
