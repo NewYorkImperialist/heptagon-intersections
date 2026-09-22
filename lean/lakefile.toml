@@ -5441,3 +5441,6 @@ name = "RotationLaw"
 
 [[lean_lib]]
 name = "Pair9Shift"
+
+[[lean_lib]]
+name = "FactE"
