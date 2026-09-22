@@ -1,0 +1,5 @@
+runs with at least one degeneracy : 600
+steps that failed to strictly shrink degSet : 0
+runs that never cleared (<=60 steps) : 4
+total steps: 902  max steps in a run: 3
+early-stop reasons: {'degenerate side': 4}
