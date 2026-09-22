@@ -126,6 +126,39 @@ theorem crossPairs_card_mono {V0 E : Fin 14 → ℝ × ℝ} {e : ℝ}
   obtain ⟨i, j⟩ := p
   exact mem_crossPairsOf.mpr (h i j (mem_crossPairsOf.mp hp))
 
+/-! ## Classes (b) and (c) of the transport
+
+Class (a) was the hard one — it needed Theorem U.  The other two are cheap, and
+that is the point: `Φ_α` on them is *given* by what the motion maintains.
+
+* **(b)** a vertex of one polygon lying on a side of the other.  AKR's
+  relation (1) is one of the equations Theorem 17 solves, so the ratio is
+  maintained and the point stays on the (moving) side.
+* **(c)** a coincidence.  If the motion *separates* it, `Φ_α` is the (R2)
+  crossing; if it *maintains* it, `Φ_α` is the apex itself, which needs no
+  hypothesis at all.  That fourth rule is the one `CI_HARDENED.md` found
+  missing — (R2) is unsatisfiable at an unseparated apex, and §9.1 processes
+  coincidences one at a time, so any input with two or more produces exactly
+  that case. -/
+
+/-- A maintained convex combination stays in the moving segment.  This is
+class (b): relation (1) with its original `λ`. -/
+theorem classB_survives {Vb Vc Vi : ℝ → ℝ × ℝ} {t : ℝ}
+    (ht0 : 0 ≤ t) (ht1 : t ≤ 1)
+    (hrel : ∀ e : ℝ, Vi e = t • Vb e + (1 - t) • Vc e) (e : ℝ) :
+    Vi e ∈ segment ℝ (Vb e) (Vc e) :=
+  ⟨t, 1 - t, ht0, by linarith, by ring, (hrel e).symm⟩
+
+/-- Rule **(c0)**: a maintained apex is still a common point.  No hypothesis
+beyond the coincidence persisting. -/
+theorem classC0_survives {Vp Vq : ℝ → ℝ × ℝ} {e : ℝ} (h : Vp e = Vq e)
+    (Vp' Vq' : ℝ × ℝ) :
+    Vp e ∈ segment ℝ (Vp e) Vp' ∧ Vp e ∈ segment ℝ (Vq e) Vq' :=
+  ⟨left_mem_segment ℝ _ _, by rw [h]; exact left_mem_segment ℝ _ _⟩
+
+#print axioms classB_survives
+#print axioms classC0_survives
+
 #print axioms crossPairs_card_mono
 
 #print axioms properCrossR_survives
