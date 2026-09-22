@@ -110,6 +110,24 @@ theorem properCrossR_survives (V0 E : Fin 14 → ℝ × ℝ) (a b c d : Fin 14)
   rw [move_zero] at s₁ s₂ s₃ s₄
   exact (properCrossR_congr s₁ s₂ s₃ s₄).mp hcross
 
+/-- **The class-(a) count cannot drop.**  If every pair crossing at the start
+still crosses at parameter `e`, the crossing-pair set only grows, so its
+cardinality only grows.  With `DegBound.lemmaCL_regular` — regular points are
+in bijection with crossing pairs — this is the class-(a) half of the count
+inequality. -/
+theorem crossPairs_card_mono {V0 E : Fin 14 → ℝ × ℝ} {e : ℝ}
+    (h : ∀ i j : Fin 7,
+      ProperCrossR (V0 (pP i)) (V0 (pP (i + 1))) (V0 (pQ j)) (V0 (pQ (j + 1))) →
+      ProperCrossR (move V0 E e (pP i)) (move V0 E e (pP (i + 1)))
+        (move V0 E e (pQ j)) (move V0 E e (pQ (j + 1)))) :
+    (crossPairsOf V0).card ≤ (crossPairsOf (move V0 E e)).card := by
+  apply Finset.card_le_card
+  intro p hp
+  obtain ⟨i, j⟩ := p
+  exact mem_crossPairsOf.mpr (h i j (mem_crossPairsOf.mp hp))
+
+#print axioms crossPairs_card_mono
+
 #print axioms properCrossR_survives
 
 #print axioms eval_zero
