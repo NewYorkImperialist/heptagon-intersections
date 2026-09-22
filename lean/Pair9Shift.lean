@@ -31,6 +31,7 @@ namespace Heptagon
 namespace Pair9Shift
 
 open Heptagon.AKR9 Heptagon.RotationLaw Heptagon.TiltedShift Heptagon.ResidualSym
+open Heptagon.RealConfig Heptagon.RealUpperBound
 
 /-! ## 1. The two notions of simplicity agree -/
 
@@ -157,6 +158,116 @@ theorem exists_good_shifted_pair9 (R : Pair9) (i : Fin 7) (t : ℝ)
   exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, hδ0, rfl, hclear⟩
 
 #print axioms exists_good_shifted_pair9
+
+/-! ## 5. Every determinant is affine in the shift
+
+A determinant of three points each moving affinely is in general **quadratic**
+in the parameter.  Here it is not, and the reason is specific to a shift: the
+two vertices that move, move by the *same* vector.  The `δ²` coefficient is
+`(c_b − c_a)(c_c − c_a)·(w × w)`, and `w × w = 0`.
+
+So the whole configuration's order type varies affinely, and the open-condition
+argument of `RotationLaw` applies to *every* determinant at once — not only the
+ones on the rotating neighbours. -/
+
+/-- The `δ`-coefficient of a determinant whose three points are displaced by
+`δ·c_a·w`, `δ·c_b·w`, `δ·c_c·w`. -/
+def dcoef (A B C w : ℝ × ℝ) (ca cb cc : ℝ) : ℝ :=
+  (cb - ca) * w.1 * (C.2 - A.2) + (B.1 - A.1) * ((cc - ca) * w.2)
+    - (cb - ca) * w.2 * (C.1 - A.1) - (B.2 - A.2) * ((cc - ca) * w.1)
+
+/-- **Displacements along a common direction make every determinant affine.**
+No hypothesis is needed: the quadratic term carries the factor `w × w`. -/
+theorem orientR_shift_affine (A B C w : ℝ × ℝ) (ca cb cc δ : ℝ) :
+    orientR (A + (δ * ca) • w) (B + (δ * cb) • w) (C + (δ * cc) • w)
+      = orientR A B C + δ * dcoef A B C w ca cb cc := by
+  simp only [orientR, dcoef, Prod.fst_add, Prod.snd_add, Prod.smul_fst, Prod.smul_snd,
+    smul_eq_mul]
+  ring
+
+/-- The shift written as a common-direction displacement, with coefficient `1`
+at the two moving vertices and `0` elsewhere. -/
+theorem shiftV_eq_add_smul (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (k : Fin 14) :
+    shiftV V i t δ k
+      = V k + (δ * (if k = pP i ∨ k = pP (i + 1) then 1 else 0))
+          • tilt (V (pP (i + 1)) - V (pP i)) t := by
+  simp only [shiftV]
+  split_ifs with h
+  · simp [mov, Prod.ext_iff, Prod.smul_fst, Prod.smul_snd]
+  · simp
+
+/-- **Every determinant of the shifted configuration is affine in `δ`.** -/
+theorem orientR_shiftV_affine (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    (a b c : Fin 14) :
+    orientR (shiftV V i t δ a) (shiftV V i t δ b) (shiftV V i t δ c)
+      = orientR (V a) (V b) (V c)
+        + δ * dcoef (V a) (V b) (V c) (tilt (V (pP (i + 1)) - V (pP i)) t)
+            (if a = pP i ∨ a = pP (i + 1) then 1 else 0)
+            (if b = pP i ∨ b = pP (i + 1) then 1 else 0)
+            (if c = pP i ∨ c = pP (i + 1) then 1 else 0) := by
+  rw [shiftV_eq_add_smul, shiftV_eq_add_smul, shiftV_eq_add_smul, orientR_shift_affine]
+
+#print axioms orientR_shift_affine
+#print axioms shiftV_eq_add_smul
+#print axioms orientR_shiftV_affine
+
+/-- **The order type is preserved.**  There is a `δ₀ > 0` such that every shift
+smaller than it leaves *every* nonzero orientation determinant of the
+configuration nonzero and of unchanged sign.
+
+This is the count argument's missing half.  A proper crossing is a conjunction
+of strict sign conditions on these determinants, so no crossing is lost; and
+since the whole chirotope is unchanged, nothing else about the configuration's
+combinatorics moves either.
+
+Proved by applying `exists_uniform_rotation` to the finite family of *all*
+triples whose determinant is nonzero — which is legitimate precisely because
+`orientR_shiftV_affine` says each one is affine, with no quadratic term. -/
+theorem exists_delta0_order_type (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ a b c : Fin 14,
+      orientR (V a) (V b) (V c) ≠ 0 →
+        0 < orientR (V a) (V b) (V c) *
+            orientR (shiftV V i t δ a) (shiftV V i t δ b) (shiftV V i t δ c) := by
+  classical
+  obtain ⟨δ₀, hδ₀, h⟩ :=
+    exists_uniform_rotation
+      (Finset.univ.filter
+        (fun p : Fin 14 × Fin 14 × Fin 14 => orientR (V p.1) (V p.2.1) (V p.2.2) ≠ 0))
+      (fun p => orientR (V p.1) (V p.2.1) (V p.2.2))
+      (fun p => dcoef (V p.1) (V p.2.1) (V p.2.2)
+        (tilt (V (pP (i + 1)) - V (pP i)) t)
+        (if p.1 = pP i ∨ p.1 = pP (i + 1) then 1 else 0)
+        (if p.2.1 = pP i ∨ p.2.1 = pP (i + 1) then 1 else 0)
+        (if p.2.2 = pP i ∨ p.2.2 = pP (i + 1) then 1 else 0))
+      (fun p hp => (Finset.mem_filter.mp hp).2)
+  refine ⟨δ₀, hδ₀, fun δ hδ a b c habc => ?_⟩
+  rw [orientR_shiftV_affine]
+  exact h δ hδ (a, b, c) (Finset.mem_filter.mpr ⟨Finset.mem_univ _, habc⟩)
+
+/-- **No proper crossing is lost.**  Immediate from the previous theorem, since
+`ProperCrossR` is a conjunction of strict sign conditions on four determinants
+and each keeps its sign. -/
+theorem exists_delta0_properCrossR (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ a b c d : Fin 14,
+      ProperCrossR (V a) (V b) (V c) (V d) →
+        ProperCrossR (shiftV V i t δ a) (shiftV V i t δ b)
+          (shiftV V i t δ c) (shiftV V i t δ d) := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_delta0_order_type V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ a b c d hpc => ?_⟩
+  obtain ⟨h1, h2⟩ := hpc
+  have n1 : orientR (V a) (V b) (V c) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h1; exact lt_irrefl 0 h1
+  have n2 : orientR (V a) (V b) (V d) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h1; exact lt_irrefl 0 h1
+  have n3 : orientR (V c) (V d) (V a) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h2; exact lt_irrefl 0 h2
+  have n4 : orientR (V c) (V d) (V b) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h2; exact lt_irrefl 0 h2
+  exact ⟨prod_neg_of_signs (h δ hδ a b c n1) (h δ hδ a b d n2) h1,
+         prod_neg_of_signs (h δ hδ c d a n3) (h δ hδ c d b n4) h2⟩
+
+#print axioms exists_delta0_order_type
+#print axioms exists_delta0_properCrossR
 
 end Pair9Shift
 end Heptagon
