@@ -179,16 +179,34 @@ This is the part that matters, and it is not small.
    all. `akr9_simpleClosed_iff` is the bridge; `shiftPoly_eq_add_smul` then
    shows the shift *is* a linear perturbation, so
    `heptagon_simplicity_stable_linear` applies unchanged.
-2. **The count inequality is not assembled.** The averaging identity, the
-   line-versus-side bound, and the rotation bound each produce a `δ₀`. Nothing
-   yet takes their minimum and concludes that the intersection count does not
-   drop.
+2. **The count inequality is not assembled**, and the remaining step is
+   *not* merely definitional. The three `δ₀`s **are** now reconciled
+   (`exists_full_shift_both_signs`: one `δ` for which both `±δ` give a `Pair9`,
+   clear the side, and preserve every proper crossing), and proper crossings
+   **are** shown to survive (`exists_delta0_order_type`). What is missing is the
+   link from the averaging identity's `crossCount` to `points9`, and that is a
+   real obstacle, not bookkeeping:
+
+   * a degenerate `Q`-vertex on a `P`-side is **one point** but lies on **two**
+     `Q`-edges, so point-counting and pair-counting differ exactly at the
+     degeneracies — which is the same entanglement that makes Theorem CI's
+     `ncard` inequality false without **(Fin-out)**, and the same reason the
+     honest bound is `38 + d` rather than `38`;
+   * stating "this degenerate vertex contributes `crossCount` points after the
+     shift" needs to know the shifted side meets `∂Q` *near* that vertex only on
+     its two incident edges — a locality claim, which is the `(Loc)` primitive /
+     Fact (E), and is item 6 below.
+
+   A commit message on 2026-09-22 called this "a definitional bridge, not a new
+   idea". That was wrong and is retracted here.
 3. **The `δ₀`s are not reconciled.** Three independent sources, three different
    shapes; the uniform bound over a whole configuration *along a motion* —
    the `UniformEps.eps0` shape — is untouched.
 4. **§9.1 is a separate matter.** Hypotheses 3, 4, 5′, 7, 13, 14 of A9-RED are
    about §9.1 and are unaffected by any of this. Hypothesis 14 **(R3)** was
    closed on paper only.
+6. **Fact (E) / the `(Loc)` primitive is not in Lean.** It needs a
+   compactness or minimiser argument, and item 2 depends on it.
 5. **The audit's own honest gap** remains: the `δ₀` derivation's proved cap is
    `30/29` against an observed worst case of `60/59` — a factor of two in the
    proof, not in the data.
