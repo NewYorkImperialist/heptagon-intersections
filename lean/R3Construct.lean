@@ -134,5 +134,33 @@ theorem exists_good_t {ak bl r s : ℝ × ℝ}
 #print axioms eq_of_cross_Edir_eq_zero
 #print axioms not_both_parallel
 
+/-! ## The four-ray statement
+
+At a real coincidence the rays are the edge directions `a₁, a₂` of `P` and
+`b₁, b₂` of `Q`.  The geometric input is that the apex is a genuine vertex of
+one polygon — `cross a₁ a₂ ≠ 0` — and then a usable pair exists for free:
+`not_both_parallel` with the roles swapped already says so. -/
+
+/-- Some `a_k` is non-parallel to `b₁`, as soon as `P`'s corner is genuine. -/
+theorem exists_pair {a₁ a₂ b₁ : ℝ × ℝ} (ha : cross a₁ a₂ ≠ 0) (hb : b₁ ≠ 0) :
+    cross a₂ b₁ ≠ 0 ∨ cross a₁ b₁ ≠ 0 :=
+  not_both_parallel ha hb
+
+/-- **Theorem C⁺, four-ray form.**  If the apex is a genuine vertex of `P` and
+`Q`'s two rays are nonzero, there is a direction parallel to **none** of the
+four — the clause certificate K7 showed is needed, and the one
+`independent/e9_directions` had been asserting without proof. -/
+theorem exists_good_direction {a₁ a₂ b₁ b₂ : ℝ × ℝ}
+    (ha : cross a₁ a₂ ≠ 0) (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) :
+    ∃ E : ℝ × ℝ, cross E a₁ ≠ 0 ∧ cross E a₂ ≠ 0 ∧
+      cross E b₁ ≠ 0 ∧ cross E b₂ ≠ 0 := by
+  rcases exists_pair ha hb₁ with hk | hk
+  · obtain ⟨t, _, h1, h2, h3, h4⟩ := exists_good_t hk ha₁ hb₂
+    exact ⟨Edir a₂ b₁ t, h3, h1, h2, h4⟩
+  · obtain ⟨t, _, h1, h2, h3, h4⟩ := exists_good_t hk ha₂ hb₂
+    exact ⟨Edir a₁ b₁ t, h1, h3, h2, h4⟩
+
+#print axioms exists_good_direction
+
 end R3Construct
 end Heptagon
