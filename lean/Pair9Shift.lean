@@ -1309,5 +1309,192 @@ theorem points9_le_38_add_degP (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms degQ_empty_of_degSet_empty
 #print axioms points9_le_38_add_degP
 
+/-! ## 24. Deriving the separation hypotheses
+
+`count_grows_by_degeneracies` carries `hsepPrev` and `hsepNext` — that each
+`Q`-edge's line separates the `P`-side's endpoints — as hypotheses. They are
+not extra assumptions: they follow from the degenerate vertex being *interior*
+to the `P`-side, which is `(VV)`, together with non-collinearity, which
+`(Fin)` supplies.
+
+The mechanism is that `orientR C D ·` is an **affine** function of its last
+argument, so along a segment it is the corresponding convex combination. -/
+
+theorem orientR_affine_comb (C D A B : ℝ × ℝ) (s : ℝ) :
+    orientR C D (lin A (B - A) s)
+      = (1 - s) * orientR C D A + s * orientR C D B := by
+  simp only [orientR, lin, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+/-- **A point strictly inside a segment, lying on another line, forces the
+segment's endpoints to opposite sides of that line** — unless both endpoints
+are on it, i.e. the two are collinear.
+
+This is `hsepPrev` / `hsepNext`, derived rather than assumed. -/
+theorem straddle_of_interior {C D A B : ℝ × ℝ} {s : ℝ} (hs0 : 0 < s) (hs1 : s < 1)
+    (hzero : orientR C D (lin A (B - A) s) = 0)
+    (hnc : ¬(orientR C D A = 0 ∧ orientR C D B = 0)) :
+    orientR C D A * orientR C D B < 0 := by
+  rw [orientR_affine_comb] at hzero
+  by_cases hA : orientR C D A = 0
+  · exfalso
+    rw [hA, mul_zero, zero_add] at hzero
+    exact hnc ⟨hA, by
+      rcases mul_eq_zero.mp hzero with h | h
+      · exact absurd h (ne_of_gt hs0)
+      · exact h⟩
+  · have hB : orientR C D B ≠ 0 := by
+      intro hB0
+      rw [hB0, mul_zero, add_zero] at hzero
+      rcases mul_eq_zero.mp hzero with h | h
+      · linarith [sub_eq_zero.mp h]
+      · exact hA h
+    -- `(1-s)·oA = -s·oB` with both coefficients positive forces opposite signs
+    rcases lt_or_gt_of_ne hA with hAneg | hApos
+    · have : 0 < orientR C D B := by nlinarith
+      nlinarith
+    · have : orientR C D B < 0 := by nlinarith
+      nlinarith
+
+#print axioms orientR_affine_comb
+#print axioms straddle_of_interior
+
+/-! ## 25. Deriving the neighbour-offset hypotheses
+
+`hyne`/`hzne` say the neighbouring `Q`-vertices are off the `P`-side's line.
+Given that the degenerate vertex is *on* it, that is exactly non-collinearity
+of the `Q`-edge with the `P`-side — and `(Fin)` forces it, because two
+collinear segments meeting at an interior point of one of them overlap. -/
+
+/-- A point with zero offset from a line is a point *of* that line, with an
+explicit parameter. -/
+theorem exists_param_of_off_zero {A u X : ℝ × ℝ} (hu : u ≠ 0) (h : off u A X = 0) :
+    ∃ r : ℝ, X = lin A u r := by
+  have hn : u.1 * u.1 + u.2 * u.2 ≠ 0 := ne_of_gt (n2_pos_of_ne hu)
+  simp only [off] at h
+  have key1 : (X.1 - A.1) * (u.1 * u.1 + u.2 * u.2)
+      = (u.1 * (X.1 - A.1) + u.2 * (X.2 - A.2)) * u.1 := by
+    linear_combination (-u.2) * h
+  have key2 : (X.2 - A.2) * (u.1 * u.1 + u.2 * u.2)
+      = (u.1 * (X.1 - A.1) + u.2 * (X.2 - A.2)) * u.2 := by
+    linear_combination u.1 * h
+  refine ⟨(u.1 * (X.1 - A.1) + u.2 * (X.2 - A.2)) / (u.1 * u.1 + u.2 * u.2),
+    Prod.ext ?_ ?_⟩ <;> simp only [lin]
+  · have e : (u.1 * (X.1 - A.1) + u.2 * (X.2 - A.2)) / (u.1 * u.1 + u.2 * u.2) * u.1
+        = X.1 - A.1 := by
+      rw [div_mul_eq_mul_div, div_eq_iff hn]; linarith [key1]
+    linarith [e]
+  · have e : (u.1 * (X.1 - A.1) + u.2 * (X.2 - A.2)) / (u.1 * u.1 + u.2 * u.2) * u.2
+        = X.2 - A.2 := by
+      rw [div_mul_eq_mul_div, div_eq_iff hn]; linarith [key2]
+    linarith [e]
+
+/-- A parameter between two others gives a point of the segment between the
+corresponding points. -/
+theorem lin_mem_segment {A u : ℝ × ℝ} {a b τ : ℝ} (h1 : a ≤ τ) (h2 : τ ≤ b) :
+    lin A u τ ∈ segment ℝ (lin A u a) (lin A u b) := by
+  rcases eq_or_lt_of_le (h1.trans h2) with hab | hab
+  · have hτa : τ = a := le_antisymm (hab ▸ h2) h1
+    subst hτa
+    rw [hab]
+    exact left_mem_segment ℝ _ _
+  · have hba : (0:ℝ) < b - a := by linarith
+    refine ⟨(b - τ) / (b - a), (τ - a) / (b - a),
+      div_nonneg (by linarith) (le_of_lt hba),
+      div_nonneg (by linarith) (le_of_lt hba), ?_, ?_⟩
+    · field_simp
+      ring
+    · simp only [lin, Prod.ext_iff, Prod.fst_add, Prod.snd_add, Prod.smul_fst,
+        Prod.smul_snd, smul_eq_mul]
+      constructor <;> · field_simp; ring
+
+#print axioms exists_param_of_off_zero
+#print axioms lin_mem_segment
+
+theorem lin_zero (A u : ℝ × ℝ) : lin A u 0 = A := by
+  simp [lin]
+
+theorem lin_one_sub (A B : ℝ × ℝ) : lin A (B - A) 1 = B := by
+  simp only [lin, Prod.fst_sub, Prod.snd_sub, one_mul, Prod.ext_iff]
+  constructor <;> ring
+
+theorem lin_inj {A u : ℝ × ℝ} (hu : u ≠ 0) {a b : ℝ} (h : lin A u a = lin A u b) : a = b := by
+  have h1 : A.1 + a * u.1 = A.1 + b * u.1 := congrArg Prod.fst h
+  have h2 : A.2 + a * u.2 = A.2 + b * u.2 := congrArg Prod.snd h
+  have hcase : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  rcases hcase with h' | h'
+  · have : (a - b) * u.1 = 0 := by linarith
+    rcases mul_eq_zero.mp this with hz | hz
+    · linarith [sub_eq_zero.mp hz]
+    · exact absurd hz h'
+  · have : (a - b) * u.2 = 0 := by linarith
+    rcases mul_eq_zero.mp this with hz | hz
+    · linarith [sub_eq_zero.mp hz]
+    · exact absurd hz h'
+
+/-- **The neighbour offsets are nonzero — from `(Fin)`.**  If the degenerate
+`Q`-vertex sits strictly inside the `P`-side and a neighbour also lies on that
+side's *line*, then a whole sub-segment of the `Q`-edge lies inside the
+`P`-side, so `∂P ∩ ∂Q` is infinite.
+
+This is `hyne` / `hzne` of `count_grows_by_degeneracies`, derived rather than
+assumed. The parameter `k` is `j−1` or `j+1`. -/
+theorem neighbour_off_ne_zero (R : Pair9) (hfin : (points9 R).Finite) (i j k : Fin 7)
+    (hk : R.V (pQ k) ∈ sideQ9 R j) (hjk : R.V (pQ j) ≠ R.V (pQ k))
+    (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) {s : ℝ} (hs0 : 0 < s) (hs1 : s < 1)
+    (hsj : R.V (pQ j) = lin (R.V (pP i)) (R.V (pP (i + 1)) - R.V (pP i)) s) :
+    off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ k)) ≠ 0 := by
+  intro hzero
+  obtain ⟨r, hr⟩ := exists_param_of_off_zero hu hzero
+  have hrs : r ≠ s := fun h => hjk (by rw [hsj, hr, h])
+  -- a parameter strictly between `s` and `r`, still inside `(0,1)`
+  obtain ⟨τ, hτ1, hτ2, hτ3, hτ4⟩ :
+      ∃ τ : ℝ, τ ≠ s ∧ 0 ≤ τ ∧ τ ≤ 1 ∧
+        (min s r ≤ τ ∧ τ ≤ max s r) := by
+    rcases lt_or_gt_of_ne hrs with hlt | hgt
+    · refine ⟨max r (s / 2), ?_, by positivity,
+        max_le (by linarith) (by linarith), ?_, ?_⟩
+      · rcases max_cases r (s / 2) with ⟨he, -⟩ | ⟨he, -⟩ <;> rw [he] <;> linarith
+      · rw [min_eq_right (le_of_lt hlt)]; exact le_max_left _ _
+      · rw [max_eq_left (le_of_lt hlt)]
+        exact max_le (le_of_lt hlt) (by linarith)
+    · refine ⟨min r ((s + 1) / 2), ?_, ?_, ?_, ?_, ?_⟩
+      · rcases min_cases r ((s + 1) / 2) with ⟨he, -⟩ | ⟨he, -⟩ <;> rw [he] <;> linarith
+      · exact le_trans (by linarith) (le_min (le_of_lt hgt) (by linarith))
+      · exact le_trans (min_le_right _ _) (by linarith)
+      · rw [min_eq_left (le_of_lt hgt)]
+        exact le_min (le_of_lt hgt) (by linarith)
+      · rw [max_eq_right (le_of_lt hgt)]; exact min_le_left _ _
+  set A := R.V (pP i)
+  set u := R.V (pP (i + 1)) - R.V (pP i)
+  -- the sub-segment lies in both boundaries
+  have hPs : lin A u s ∈ sideP9 R i := by
+    have := lin_mem_segment (A := A) (u := u) (le_of_lt hs0) (le_of_lt hs1)
+    rwa [lin_zero, lin_one_sub] at this
+  have hPτ : lin A u τ ∈ sideP9 R i := by
+    have := lin_mem_segment (A := A) (u := u) hτ2 hτ3
+    rwa [lin_zero, lin_one_sub] at this
+  have hQs : lin A u s ∈ sideQ9 R j := by rw [← hsj]; exact left_mem_segment ℝ _ _
+  have hQτ : lin A u τ ∈ sideQ9 R j := by
+    have hmem : lin A u τ ∈ segment ℝ (R.V (pQ j)) (R.V (pQ k)) := by
+      rw [hsj, hr]
+      rcases le_total s r with hle | hle
+      · exact lin_mem_segment (min_eq_left hle ▸ hτ4.1) (max_eq_right hle ▸ hτ4.2)
+      · rw [segment_symm]
+        exact lin_mem_segment (min_eq_right hle ▸ hτ4.1) (max_eq_left hle ▸ hτ4.2)
+    exact (convex_segment _ _).segment_subset (left_mem_segment ℝ _ _) hk hmem
+  have hne : lin A u s ≠ lin A u τ := fun h => hτ1 (lin_inj hu h).symm
+  have hinf : (segment ℝ (lin A u s) (lin A u τ)).Infinite := segment_infinite hne
+  refine hinf (hfin.subset ?_)
+  intro x hx
+  exact ⟨Set.mem_iUnion.mpr ⟨i, (convex_segment _ _).segment_subset hPs hPτ hx⟩,
+    Set.mem_iUnion.mpr ⟨j, (convex_segment _ _).segment_subset hQs hQτ hx⟩⟩
+
+#print axioms lin_inj
+#print axioms neighbour_off_ne_zero
+
 end Pair9Shift
 end Heptagon
