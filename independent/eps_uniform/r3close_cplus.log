@@ -1,0 +1,56 @@
+--- base  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {2: 2, 1: 79},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 80/160
+--- deep  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 78, 2: 2},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 86/160
+--- anti  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 41, 2: 1},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 80/160
+--- antidep  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 80, 2: 1},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 82/160
+--- depapex  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 41, 2: 1},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 80/160
+--- doubleanti  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 46},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 80/160
+--- multianti  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 80},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 80/160
+--- hard  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 78, 2: 2},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 82/160
+--- multi3  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 1/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 120, 2: 1},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 86/160
+--- multi4  cfgs=40 ---
+  C  (forbid a1,a2;   t in 1..2): created a degeneracy in 2/40,  lost 0,  end-to-end ok 40
+  C+ (forbid all 4;   t in 1..3): created a degeneracy in 0/40,  lost 0,  end-to-end ok 40,  t-histogram {1: 153, 2: 8},  no-t failures 0,  req violations 0,  R2 failures 0
+  Kronecker (R3-strong)         : created a degeneracy in 0/40,  lost 0,  end-to-end ok 40
+  CONTROL E || a ray            : created a degeneracy in 88/160
+=== GRAND TOTAL ===
+  cfgs 400
+  C  created 3  lost 0  e2e ok 400
+  C+ created 0  lost 0  e2e ok 400  t-hist {2: 18, 1: 796}  no-t 0  req-bad 0  R2-bad 0
+  Kron created 0  lost 0  e2e ok 400
+  CONTROL E||ray created 824/1600

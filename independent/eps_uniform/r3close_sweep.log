@@ -1,0 +1,373 @@
+--- base  n=150 gridT=3  (63.5s) ---
+apex_nbr_dep     6
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        84
+con_dirty        66
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           294
+con_t2           8
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         458
+kron_found       150
+kron_none        0
+kron_tau         {2: 142, 3: 7, 4: 1}
+min_gridT        {2: 71, 1: 78, 3: 1}
+nZf              1647
+ncoinc           302
+ndep             308
+other_forced     {}
+req_fires        {'R1': 302, 'Fdis': 2, 'Fsh': 7}
+singular         0
+tries            1193
+
+--- deep  n=150 gridT=3  (99.3s) ---
+apex_nbr_dep     150
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        93
+con_dirty        57
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           294
+con_t2           6
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         363
+kron_found       150
+kron_none        0
+kron_tau         {2: 139, 3: 11}
+min_gridT        {1: 88, 2: 61, 3: 1}
+nZf              1463
+ncoinc           300
+ndep             453
+other_forced     {}
+req_fires        {'R1': 300, 'Fsh': 4}
+singular         0
+tries            11209
+
+--- anti  n=150 gridT=3  (29.0s) ---
+apex_nbr_dep     0
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        136
+con_dirty        14
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           150
+con_t2           0
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         164
+kron_found       150
+kron_none        0
+kron_tau         {2: 150}
+min_gridT        {1: 136, 2: 14}
+nZf              4696
+ncoinc           150
+ndep             17
+other_forced     {}
+req_fires        {'R1': 150, 'Fsh': 150}
+singular         0
+tries            150
+
+--- antidep  n=150 gridT=3  (68.0s) ---
+apex_nbr_dep     2
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        103
+con_dirty        47
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           295
+con_t2           5
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         275
+kron_found       150
+kron_none        0
+kron_tau         {3: 6, 2: 144}
+min_gridT        {1: 99, 2: 51}
+nZf              1648
+ncoinc           300
+ndep             305
+other_forced     {}
+req_fires        {'R1': 300, 'Fsh': 154}
+singular         0
+tries            153
+
+--- depapex  n=150 gridT=3  (34.5s) ---
+apex_nbr_dep     151
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        108
+con_dirty        42
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           159
+con_t2           0
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         210
+kron_found       150
+kron_none        0
+kron_tau         {2: 136, 3: 14}
+min_gridT        {1: 108, 2: 42}
+nZf              2677
+ncoinc           159
+ndep             196
+other_forced     {}
+req_fires        {'R1': 159, 'Fsh': 2}
+singular         0
+tries            150
+
+--- doubleanti  n=150 gridT=3  (39.9s) ---
+apex_nbr_dep     15
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        96
+con_dirty        54
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           158
+con_t2           1
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         253
+kron_found       150
+kron_none        0
+kron_tau         {2: 133, 3: 17}
+min_gridT        {1: 95, 2: 48, 3: 7}
+nZf              3852
+ncoinc           159
+ndep             42
+other_forced     {}
+req_fires        {'R1': 159, 'Fsh': 300, 'Fdis': 9}
+singular         0
+tries            167
+
+--- multianti  n=150 gridT=3  (55.6s) ---
+apex_nbr_dep     7
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        105
+con_dirty        45
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           298
+con_t2           3
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         287
+kron_found       150
+kron_none        0
+kron_tau         {2: 144, 3: 6}
+min_gridT        {1: 103, 2: 44, 3: 3}
+nZf              1834
+ncoinc           301
+ndep             159
+other_forced     {}
+req_fires        {'R1': 301, 'Fsh': 303}
+singular         0
+tries            150
+
+--- hard  n=150 gridT=3  (49.6s) ---
+apex_nbr_dep     156
+breaks           {}
+cfgs             150
+con_R2_bad       0
+con_R2_ok        150
+con_clean        120
+con_dirty        30
+con_empty        0
+con_not          0
+con_ok           150
+con_req_bad      0
+con_req_ok       150
+con_t1           302
+con_t2           1
+e2e_ok           150
+e2e_tot          150
+e2e_why          {}
+forced_break     0
+grid_found       150
+grid_none        0
+grid_pts         199
+kron_found       150
+kron_none        0
+kron_tau         {2: 148, 3: 2}
+min_gridT        {1: 119, 2: 31}
+nZf              1767
+ncoinc           303
+ndep             305
+other_forced     {}
+req_fires        {'R1': 303, 'Fsh': 155, 'Fdis': 3}
+singular         0
+tries            150
+
+--- multi3  n=120 gridT=2  (48.8s) ---
+apex_nbr_dep     145
+breaks           {}
+cfgs             120
+con_R2_bad       0
+con_R2_ok        120
+con_clean        68
+con_dirty        52
+con_empty        0
+con_not          0
+con_ok           120
+con_req_bad      0
+con_req_ok       120
+con_t1           353
+con_t2           8
+e2e_ok           120
+e2e_tot          120
+e2e_why          {}
+forced_break     0
+grid_found       120
+grid_none        0
+grid_pts         664
+kron_found       120
+kron_none        0
+kron_tau         {2: 115, 3: 5}
+min_gridT        {1: 62, 2: 58}
+nZf              1397
+ncoinc           361
+ndep             123
+other_forced     {}
+req_fires        {'R1': 361, 'Fsh': 7, 'Fdis': 1}
+singular         0
+tries            154
+
+--- multi4  n=80 gridT=2  (62.4s) ---
+apex_nbr_dep     57
+breaks           {}
+cfgs             80
+con_R2_bad       0
+con_R2_ok        80
+con_clean        38
+con_dirty        42
+con_empty        0
+con_not          0
+con_ok           80
+con_req_bad      0
+con_req_ok       80
+con_t1           312
+con_t2           8
+e2e_ok           80
+e2e_tot          80
+e2e_why          {}
+forced_break     0
+grid_found       80
+grid_none        0
+grid_pts         1290
+kron_found       80
+kron_none        0
+kron_tau         {2: 76, 3: 4}
+min_gridT        {2: 45, 1: 35}
+nZf              744
+ncoinc           320
+ndep             36
+other_forced     {}
+req_fires        {'R1': 320, 'Fsh': 6, 'Fdis': 1}
+singular         0
+tries            178
+
+=== GRAND TOTAL ===
+apex_nbr_dep     689
+breaks           {}
+cfgs             1400
+con_R2_bad       0
+con_R2_ok        1400
+con_clean        951
+con_dirty        449
+con_empty        0
+con_not          0
+con_ok           1400
+con_req_bad      0
+con_req_ok       1400
+con_t1           2615
+con_t2           40
+e2e_ok           1400
+e2e_tot          1400
+e2e_why          {}
+forced_break     0
+grid_found       1400
+grid_none        0
+grid_pts         4163
+kron_found       1400
+kron_none        0
+kron_tau         {2: 1327, 3: 72, 4: 1}
+min_gridT        {2: 465, 1: 923, 3: 12}
+nZf              21725
+ncoinc           2655
+ndep             1944
+other_forced     {}
+req_fires        {'R1': 2655, 'Fdis': 16, 'Fsh': 1088}
+singular         0
+tries            13654

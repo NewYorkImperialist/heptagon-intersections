@@ -1,0 +1,9 @@
+P = [('0', '0'), ('4', '-4'), ('13', '-15'), ('9', '-4'), ('17', '-8'), ('20', '-6'), ('4', '0')]
+Q = [('0', '0'), ('4', '-8'), ('1', '-11'), ('-7', '-16'), ('-7', '5'), ('-2', '2'), ('0', '4')]
+|dP0 n dQ0| = 1 (finite);  coincidence [(0, 7)];  deps {}
+a1=(Fraction(4, 1), Fraction(0, 1)) a2=(Fraction(4, 1), Fraction(-4, 1)) b1=(Fraction(0, 1), Fraction(4, 1)) b2=(Fraction(4, 1), Fraction(-8, 1));  cross(a1,b1)=16
+  t=1: E=(Fraction(-4, 1), Fraction(4, 1))  parallel to ['a2'];  req violations [];  removable zeros 4;  new degeneracies [('Q', 0, 'Pside', 0)];  end-to-end ok=True []
+  t=2: E=(Fraction(-4, 1), Fraction(8, 1))  parallel to ['b2'];  req violations [];  removable zeros 1;  new degeneracies [];  end-to-end ok=True []
+  t=3: E=(Fraction(-4, 1), Fraction(12, 1))  parallel to none;  req violations [];  removable zeros 0;  new degeneracies [];  end-to-end ok=True []
+  construct_Eplus_at picks E=(Fraction(-4, 1), Fraction(12, 1)) with (k,l,t)=(0, 0, 3)  <- t=3 branch FIRES
+  Theorem C (forbid a1,a2 only) would pick E=(Fraction(-4, 1), Fraction(8, 1)) with (k,l,t)=(0, 0, 2)

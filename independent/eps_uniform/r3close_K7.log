@@ -1,0 +1,18 @@
+P = [('0', '0'), ('-4', '-1'), ('-6', '-4'), ('-8', '-16'), ('-5', '-11'), ('-6', '-15'), ('4', '0')]
+Q = [('0', '0'), ('0', '6'), ('14', '18'), ('16', '11'), ('14', '10'), ('11', '8'), ('4', '4')]
+|dP0 n dQ0| = 1 (finite);  coincidence [(0, 7)];  dependencies {}
+a1=(Fraction(4, 1), Fraction(0, 1)) a2=(Fraction(-4, 1), Fraction(-1, 1)) b1=(Fraction(4, 1), Fraction(4, 1)) b2=(Fraction(0, 1), Fraction(6, 1))   cross(a1,b1)=16
+vertex-side degeneracies at eps=0 : []
+C  (forbid a1,a2):  E = (Fraction(0, 1), Fraction(4, 1))
+    parallel to  a1?False  a2?False  b1?False  b2?True
+    requirement violations (R1/Fsh): []
+    (R2) holds: True
+    NEW vertex-side degeneracies at eps0/2, /4, /8, /1024: [[('P', 0, 'Qside', 0)], [('P', 0, 'Qside', 0)], [('P', 0, 'Qside', 0)], [('P', 0, 'Qside', 0)]]
+    removable zeros left: 4;   end-to-end ok=True []
+C+ (forbid all four rays):  E = (Fraction(4, 1), Fraction(8, 1))
+    parallel to  a1?False  a2?False  b1?False  b2?False
+    requirement violations (R1/Fsh): []
+    (R2) holds: True
+    NEW vertex-side degeneracies at eps0/2, /4, /8, /1024: [[], [], [], []]
+    removable zeros left: 1;   end-to-end ok=True []
+Kronecker (R3-strong), tau=2:  E = (Fraction(24, 1), Fraction(32, 1)), new degeneracies []

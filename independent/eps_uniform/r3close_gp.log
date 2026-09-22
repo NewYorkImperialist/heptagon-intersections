@@ -1,0 +1,123 @@
+--- base  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 32.33
+  |Z_forced| (mean)                              : 11.63
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 41
+    ... forced D of a relation-(1) triple        : 63
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 63
+    class 'three stationary vertices, collinear at eps=0': 41
+    class 'three stationary vertices, orthogonal at eps=0': 123
+    class 'two stationary vertices sharing a coordinate': 122
+--- deep  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 31.97
+  |Z_forced| (mean)                              : 10.70
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 30
+    ... forced D of a relation-(1) triple        : 92
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 92
+    class 'three stationary vertices, collinear at eps=0': 30
+    class 'three stationary vertices, orthogonal at eps=0': 89
+    class 'two stationary vertices sharing a coordinate': 110
+--- anti  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 20.33
+  |Z_forced| (mean)                              : 32.50
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 161
+    ... forced D of a relation-(1) triple        : 5
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 5
+    class 'three stationary vertices, collinear at eps=0': 161
+    class 'three stationary vertices, orthogonal at eps=0': 505
+    class 'two stationary vertices sharing a coordinate': 304
+--- antidep  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 34.47
+  |Z_forced| (mean)                              : 12.77
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 66
+    ... forced D of a relation-(1) triple        : 62
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 62
+    class 'three stationary vertices, collinear at eps=0': 66
+    class 'three stationary vertices, orthogonal at eps=0': 119
+    class 'two stationary vertices sharing a coordinate': 136
+--- depapex  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 17.00
+  |Z_forced| (mean)                              : 17.93
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 72
+    ... forced D of a relation-(1) triple        : 37
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 37
+    class 'three stationary vertices, collinear at eps=0': 72
+    class 'three stationary vertices, orthogonal at eps=0': 231
+    class 'two stationary vertices sharing a coordinate': 198
+--- doubleanti  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 21.13
+  |Z_forced| (mean)                              : 21.63
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 148
+    ... forced D of a relation-(1) triple        : 6
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 6
+    class 'three stationary vertices, collinear at eps=0': 148
+    class 'three stationary vertices, orthogonal at eps=0': 278
+    class 'two stationary vertices sharing a coordinate': 217
+--- multianti  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 33.63
+  |Z_forced| (mean)                              : 11.10
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 92
+    ... forced D of a relation-(1) triple        : 31
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 31
+    class 'three stationary vertices, collinear at eps=0': 92
+    class 'three stationary vertices, orthogonal at eps=0': 105
+    class 'two stationary vertices sharing a coordinate': 105
+--- hard  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 33.77
+  |Z_forced| (mean)                              : 11.13
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 69
+    ... forced D of a relation-(1) triple        : 61
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 61
+    class 'three stationary vertices, collinear at eps=0': 69
+    class 'three stationary vertices, orthogonal at eps=0': 91
+    class 'two stationary vertices sharing a coordinate': 113
+--- multi3  cfgs=30 ---
+  collinear triples already at eps=0 (mean)      : 39.73
+  |Z_forced| (mean)                              : 11.77
+  configs with Z_forced nonempty                 : 30/30
+  configs where Z_forced contains an orient D    : 30/30
+    ... forced D of three STATIONARY vertices    : 39
+    ... forced D of a relation-(1) triple        : 32
+  configs where FullGP is REACHABLE by any E in L: 0/30
+  ... and achieved by the construction           : 0/30
+    class 'relation-(1) maintained (sec 9.2 obligation)': 32
+    class 'three stationary vertices, collinear at eps=0': 39
+    class 'three stationary vertices, orthogonal at eps=0': 130
+    class 'two stationary vertices sharing a coordinate': 152
+=== GRAND TOTAL ===
+  cfgs 270, Z_forced nonempty 270, Z_forced contains an orient D 270, FullGP reachable 0, achieved 0
+  class 'relation-(1) maintained (sec 9.2 obligation)': 389
+  class 'three stationary vertices, collinear at eps=0': 718
+  class 'three stationary vertices, orthogonal at eps=0': 1671
+  class 'two stationary vertices sharing a coordinate': 1457

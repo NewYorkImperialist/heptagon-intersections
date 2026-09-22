@@ -1,0 +1,77 @@
+=== A: wide coordinates, one coincidence, no dependency (FullGP should be REACHABLE and ACHIEVED) ===
+  A1:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A2:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A3:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A4:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A5:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A6:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A7:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A8:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A9:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A10:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A11:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  A12:  collinear triples at eps=0 = 12,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 0   -> FullGP REACHABLE
+      orient-D left by construction: 0   -> FullGP ACHIEVED   (end-to-end ok=True)
+  --> REACHABLE 12/12   ACHIEVED 12/12   (the checker CAN say yes: yes)
+
+=== B: same, then ONE collinear triple planted among frozen vertices (FullGP must flip to IMPOSSIBLE) ===
+  B1:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B2:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B3:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B4:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B5:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B6:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B7:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B8:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B9:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B10:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B11:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  B12:  collinear triples at eps=0 = 13,  |C|=1, |deps|=0
+      forced orient-D in Z_forced : 1   -> FullGP IMPOSSIBLE
+      orient-D left by construction: 1   -> FullGP not achieved   (end-to-end ok=True)
+  --> flipped to IMPOSSIBLE 12/12   <- must be 12

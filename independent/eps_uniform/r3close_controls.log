@@ -1,0 +1,51 @@
+
+==========================================================================
+K1  all four rays at the apex mutually parallel: construct_E_at must report EMPTY-CONE, not invent a direction
+==========================================================================
+rays a1,a2,b1,b2 = (Fraction(-3, 1), Fraction(0, 1)) (Fraction(3, 1), Fraction(0, 1)) (Fraction(-6, 1), Fraction(0, 1)) (Fraction(5, 1), Fraction(0, 1))
+all mutually parallel: True
+construct_E_at -> 'EMPTY-CONE'   FIRES
+
+==========================================================================
+K2  Finding R3-1's certificate: the requirement checker must FLAG E=(2,0) and the end-to-end checker must report infinite-intersection.  And the construction must pick something else.
+==========================================================================
+coincidences [(0, 7)]  dependencies {3: (9, 10, Fraction(1, 2))}
+Fsh requirements present: ['collinear P-side 6 / Q-side 6 sharing an endpoint']
+  E=(Fraction(2, 1), Fraction(0, 1))  Fsh-violated=['Fsh']  R2_all=True  end-to-end ok=False  why=['infinite-intersection']
+  E=(Fraction(1, 1), Fraction(0, 1))  Fsh-violated=['Fsh']  R2_all=True  end-to-end ok=False  why=['infinite-intersection']
+  E=(Fraction(5, 1), Fraction(0, 1))  Fsh-violated=['Fsh']  R2_all=True  end-to-end ok=False  why=['infinite-intersection']
+  construction picks E = {'E0': (Fraction(5, 1), Fraction(-1, 1))}  detail(k,l,t) = {'E0': (0, 1, 1)}
+  -> violations []   R2_all=True   end-to-end ok=True why=[]
+
+==========================================================================
+K3  power of the Fsh check: a DELIBERATELY BAD rule (E := the Q-ray b_l itself, i.e. AKR-admissible-looking but parallel to an incident edge) must break the requirement at a measurable rate on the Fsh families, while the real construction breaks it 0 times on the same configurations.
+==========================================================================
+  anti        cfgs= 15  Fsh-requirements= 15  | BAD rule: req-violations= 15 infinite= 15  | construction: req-violations=  0 infinite=  0
+  antidep     cfgs= 15  Fsh-requirements= 16  | BAD rule: req-violations= 15 infinite= 15  | construction: req-violations=  0 infinite=  0
+  doubleanti  cfgs= 15  Fsh-requirements= 30  | BAD rule: req-violations= 15 infinite= 15  | construction: req-violations=  0 infinite=  0
+  multianti   cfgs= 15  Fsh-requirements= 30  | BAD rule: req-violations= 15 infinite= 15  | construction: req-violations=  0 infinite=  0
+  hard        cfgs= 15  Fsh-requirements= 15  | BAD rule: req-violations= 15 infinite= 15  | construction: req-violations=  0 infinite=  0
+
+==========================================================================
+K4  the strong-form grid search must be able to return NOTHING: ask for Z(E) = {} (AKR's literal sentence "there will be no degenerate situations") on configurations that carry a forced zero.
+==========================================================================
+  configurations 20, of which carrying a forced zero 20
+  grid reaching Z(E) = Z_forced : 20   <- the target, >0
+  grid reaching Z(E) = {}       : 0   <- must be 0
+
+==========================================================================
+K5  apply AKR's E=0 rule to the coincident vertex itself (the one place AKR do NOT apply it).  Z_forced must then break (R1) every time.
+==========================================================================
+  configurations 20, reporting (R1) forced-broken 20  <- must be 20
+
+==========================================================================
+K6  THE BRANCH THAT NEVER FIRED.  The construction takes the first t in {1,2}; every sweep so far chose t=1, so the t=2 branch is untested and the claim "t in {1,2} always suffices" is, so far, vacuous in half its content.  Build a configuration where t=1 is CATASTROPHIC.
+==========================================================================
+  P = [('0', '0'), ('0', '4'), ('-14', '4'), ('-9', '13'), ('-5', '14'), ('-1', '7'), ('3', '0')]
+  Q = [('0', '0'), ('0', '-5'), ('1', '-8'), ('13', '-13'), ('8', '-1'), ('3', '-6'), ('3', '-3')]
+  |dP n dQ| = 1  coincidences [(0, 7)]  dependencies {}
+  a1,a2 = ((Fraction(3, 1), Fraction(0, 1)), (Fraction(0, 1), Fraction(4, 1)))   b1,b2 = ((Fraction(3, 1), Fraction(-3, 1)), (Fraction(0, 1), Fraction(-5, 1)))   cross(a2,b2) = 0
+  Fsh requirements: ['collinear P-side 0 / Q-side 0 sharing an endpoint']
+  t=1: E=(Fraction(0, 1), Fraction(-3, 1))  cross(E,a1)=9 cross(E,a2)=0  violations=[('Fsh', 'collinear P-side 0 / Q-side 0 sharing an endpoint')]  R2=True  end-to-end ok=False why=['infinite-intersection']
+  t=2: E=(Fraction(3, 1), Fraction(-6, 1))  cross(E,a1)=18 cross(E,a2)=12  violations=[]  R2=True  end-to-end ok=True why=[]
+  construct_E_at picks E=(Fraction(3, 1), Fraction(-6, 1)) with (k,l,t)=(0, 0, 2)   <- t=2 branch FIRES

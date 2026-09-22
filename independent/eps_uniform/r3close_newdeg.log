@@ -1,0 +1,20 @@
+=== new vertex-side degeneracies created by the motion ===
+  added            34
+  added_clean      0
+  added_dirty      34
+  added_reqbad     0
+  cfg_withline     60
+  cfgs             60
+  dirs             3000
+  explained        34
+  onlineoutside    246
+  unexplained      0
+  structural precondition present in 60 configs, 246 vertex/side pairs total
+  examples:
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+    ('base', 'b', ('Q', 0, 'Pside', 6), 'EXPLAINED: removable D left zero', True, False)
+

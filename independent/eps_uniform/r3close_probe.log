@@ -1,0 +1,40 @@
+--- base seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   236  battery failures=    21  {'degeneracy-added': 21}
+  CLEAN              n=   844  battery failures=     0  {}
+--- deep seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   150  battery failures=     8  {'degeneracy-added': 8}
+  CLEAN              n=   930  battery failures=     0  {}
+--- anti seed=777001 cfgs=18 ---
+  violates Req       n=    18  battery failures=    18  {'infinite-intersection': 18, 'degeneracy-added': 18}
+  Req ok but DIRTY   n=   114  battery failures=     0  {}
+  CLEAN              n=   732  battery failures=     0  {}
+--- antidep seed=777001 cfgs=18 ---
+  violates Req       n=     2  battery failures=     0  {}
+  Req ok but DIRTY   n=   201  battery failures=     0  {}
+  CLEAN              n=   877  battery failures=     0  {}
+--- depapex seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   142  battery failures=     6  {'degeneracy-added': 6}
+  CLEAN              n=   938  battery failures=     0  {}
+--- doubleanti seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   131  battery failures=     0  {}
+  CLEAN              n=   473  battery failures=     0  {}
+--- multianti seed=777001 cfgs=18 ---
+  violates Req       n=     4  battery failures=     0  {}
+  Req ok but DIRTY   n=   206  battery failures=     4  {'degeneracy-added': 4}
+  CLEAN              n=   870  battery failures=     0  {}
+--- hard seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   188  battery failures=     3  {'degeneracy-added': 3}
+  CLEAN              n=   892  battery failures=     0  {}
+--- multi3 seed=777001 cfgs=18 ---
+  violates Req       n=     0  battery failures=     0  {}
+  Req ok but DIRTY   n=   335  battery failures=    25  {'degeneracy-added': 25}
+  CLEAN              n=   745  battery failures=     0  {}
+=== GRAND TOTAL ===
+  violates Req       n=    24  battery failures=    18  {'infinite-intersection': 18, 'degeneracy-added': 18}
+  Req ok but DIRTY   n=  1703  battery failures=    67  {'degeneracy-added': 67}
+  CLEAN              n=  7301  battery failures=     0  {}
