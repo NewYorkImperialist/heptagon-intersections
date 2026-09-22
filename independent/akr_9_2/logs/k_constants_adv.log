@@ -1,0 +1,13 @@
+seed 11 usable 3087 max E3 ratio = 1.0156211257128689
+   P= ((-1, 0), (0, 0), (5, 0), (4, 3), (-3, 0))
+   Q= ((-3, 2), (3, -2), (-1, 6), (-6, -1))
+   i= 1 mode= translate binding= K lam0= 1 t= ((Fraction(-3, 1), Fraction(2, 1)), (Fraction(3, 1), Fraction(-2, 1)))
+seed 12 usable 3250 max E3 ratio = 1.0166096534256044
+   P= ((-1, 0), (0, 0), (6, 0), (2, -1), (2, -7))
+   Q= ((-2, 2), (6, -6), (4, -3), (2, 4), (-3, 4))
+   i= 1 mode= translate binding= K lam0= 1 t= ((Fraction(-2, 1), Fraction(2, 1)), (Fraction(6, 1), Fraction(-6, 1)))
+seed 13 usable 3118 max E3 ratio = 1.0156211257128689
+   P= ((-1, 0), (0, 0), (7, 0), (3, -6), (-5, -3))
+   Q= ((-9, 6), (9, -6), (3, 3), (1, 6))
+   i= 1 mode= translate binding= K lam0= 1 t= ((Fraction(-9, 1), Fraction(6, 1)), (Fraction(9, 1), Fraction(-6, 1)))
+cap 30/29 = 1.0344827586206897

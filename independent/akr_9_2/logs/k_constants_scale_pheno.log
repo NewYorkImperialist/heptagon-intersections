@@ -1,0 +1,29 @@
+=== (d) scale invariance, EXACT (no bracketing needed: delta_0^2 is rational)
+   {'compared': 1260, 'AS PRINTED (with guard): NOT invariant, lam=1/4': 34, 'AS PRINTED (with guard): NOT invariant, lam=1/13': 152}
+
+=== (e) does the adversarial phenomenon actually occur in the sample?
+   over 364 (config,side) frames:
+       ... with lam0 = 1 exactly (t through A)               34
+       ... with lam0 > 0.9                                   38
+     Q-side PERP to s meeting s (1.3 defect)                 38
+     Q-side meets s^- (K_rot nonvacuous)                     396
+     Q-side within 6deg of parallel to s (K_slide blowup)    252
+     TILT ACTIVE at A                                        4
+     TILT ACTIVE at B                                        6
+     corner at A within 18deg of straight                    50
+     corner at A within 6deg of right angle                  37
+     reflex/obtuse-ish corner at A (<u,w> > 0)               138
+     straight vertex at A (AKR undefined)                    16
+     straight vertex at B                                    16
+
+=== (f) control for 2.4 (K_end >= |u|): claim K_end >= 1.01|u| instead
+   K_end >= 1.01|u| fails in 586 / 863  -- the inequality of 2.4 is ATTAINED
+=== (g') control, corrected: baseline = delta_0^2 with the guard DELETED
+    (that baseline was exactly invariant, 1260/1260 in (d)).
+   {'compared': 1260, 'guard binds on exactly one side, lam=1/4': 34, 'guard binds on exactly one side, lam=1/13': 152}
+=== (g'') control, second attempt: drop the dimension-carrying maxK^2
+    from the K-branch.  rho^2/100 scales like lam^2, so the result must
+    FAIL to be scale-invariant.  (The first control I tried, capping
+    delta_0^2 at 1/100, did NOT fire -- delta_0^2 is always far below
+    1/100 -- and is reported here as not firing.)
+   {'compared': 1260, 'CONTROL (maxK dropped) NOT invariant': 1260}

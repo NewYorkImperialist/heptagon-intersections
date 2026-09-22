@@ -1,0 +1,23 @@
+=== (g) control for (d): a deliberately dimensionally-WRONG variant must
+        report non-invariance.  Replace max(K,1) by max(K,1) but also
+        add the non-invariant term  min(..., 1/10)  to delta_0.
+   {'dimensionally OK variant compared': 140, 'dimensionally WRONG variant compared': 140, 'dimensionally OK variant NOT invariant': 8, 'dimensionally WRONG variant NOT invariant': 8}
+
+=== (h) control for Lemma R: drop the lam0 factor -> must MISMATCH
+   Lemma R as stated : ok=3212 MISMATCH=0
+   Lemma R w/o lam0  : ok=1340 MISMATCH=1872  <- control fires
+
+=== (i) observed tightness: TRUE displacement / claimed constant
+   ('akr', 'E1')      n= 165  min=5.87e-02  median=1.0000  max=1.0000000000
+   ('akr', 'E2')      n= 102  min=5.55e-02  median=0.4472  max=1.0000000000
+   ('tilt', 'E1')     n= 189  min=7.07e-01  median=1.0000  max=1.0000000000
+   ('tilt', 'E2')     n= 112  min=5.55e-02  median=0.4472  max=1.0000000000
+   ('tilt', 'E3')     n= 140  min=1.03e-02  median=0.3286  max=1.0101010101
+   ('translate', 'E1') n= 189  min=1.00e+00  median=1.0000  max=1.0000000000
+   ('translate', 'E2') n= 112  min=5.55e-02  median=0.4472  max=1.0000000000
+   ('translate', 'E3') n= 140  min=1.03e-02  median=0.3340  max=1.0101010101
+
+=== (j) how loose are the A-PRIORI bounds 4M / 23M^3 / 32M^3 ?
+   K_end / 4M         n= 518  median=0.12500  MAX=0.29463
+   K_rot / 32M^3      n= 518  median=0.00053  MAX=0.00443
+   K_slide / 23M^3    n= 518  median=0.00201  MAX=0.01846

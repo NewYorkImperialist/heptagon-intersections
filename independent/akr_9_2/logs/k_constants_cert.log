@@ -1,0 +1,18 @@
+--- tilt max E3 ratio^2 = 1.0341513442200372 ratio = 1.0169323203734049
+P = ((Fraction(2, 1), Fraction(1, 1)), (Fraction(2, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(1, 1)), (Fraction(0, 1), Fraction(0, 1)), (Fraction(2, 1), Fraction(0, 1)))
+Q = ((Fraction(3, 1), Fraction(0, 1)), (Fraction(1, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(3, 1)), (Fraction(2, 1), Fraction(3, 1)), (Fraction(3, 1), Fraction(3, 1)))
+i = 0 mode= tilt delta= 78629246614186963695/4722366482869645213696
+worst t = ((Fraction(3, 1), Fraction(0, 1)), (Fraction(1, 1), Fraction(2, 1))) pivot= (Fraction(2, 1), Fraction(0, 1)) lam0= 1
+binding= K delta0 = 0.016666666666666666
+Kend= 1.0 Kslide= 1.4142135623730951 Krot= 1.4142135623730951
+tau1= 1.0 tau2= 1.0
+r = 0.23570226039551584  rho4 = 1.0
+--- translate max E3 ratio^2 = 1.0341513442200372 ratio = 1.0169323203734049
+P = ((Fraction(2, 1), Fraction(1, 1)), (Fraction(2, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(1, 1)), (Fraction(0, 1), Fraction(0, 1)), (Fraction(2, 1), Fraction(0, 1)))
+Q = ((Fraction(3, 1), Fraction(0, 1)), (Fraction(1, 1), Fraction(2, 1)), (Fraction(1, 1), Fraction(3, 1)), (Fraction(2, 1), Fraction(3, 1)), (Fraction(3, 1), Fraction(3, 1)))
+i = 0 mode= translate delta= 78629246614186963695/4722366482869645213696
+worst t = ((Fraction(3, 1), Fraction(0, 1)), (Fraction(1, 1), Fraction(2, 1))) pivot= (Fraction(2, 1), Fraction(0, 1)) lam0= 1
+binding= K delta0 = 0.016666666666666666
+Kend= 1.0 Kslide= 1.4142135623730951 Krot= 1.4142135623730951
+tau1= 1.0 tau2= 1.0
+r = 0.23570226039551584  rho4 = 1.0

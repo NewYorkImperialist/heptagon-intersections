@@ -952,3 +952,44 @@ not firing**. The *sharp* constructive bound δ₀^ℚ (square roots replaced by
 rational bounds at precision *S*) is by contrast exact to a relative 2⁻⁴⁰:
 rigorous two-sided brackets give max δ₀^UB/δ₀^ℚ = 1 at *S* = 2⁴⁰ over 1 176
 instances.
+
+---
+
+# Appendix of 2026-09-22, by a fourth agent: §2.3's three *K* constants audited
+
+Full derivations, certificates, counts and controls:
+[`K_CONSTANTS.md`](K_CONSTANTS.md); code `k_constants.py`; logs
+`logs/k_constants_*.log`. Exact rationals throughout. Nothing is in Lean, no
+Lean build was run, no git command was run, and *f*(7,7) = 38 is not proved by
+any of it.
+
+This closes the hole R5 names ("does not re-derive or re-audit *K*_end,
+*K*_slide, *K*_rot"). **§2.3 is left unchanged above; read it with this.**
+
+* ***K*_end is correct and sharp.** \|*A*_δ−*A*\| = \|δ\|\|*c*_a**a**\| is an
+  identity; extending it to the whole of each moving side needs one convexity
+  step (a convex combination of two displacements has norm ≤ the larger).
+  New consequence, used twice below: **K_end ≥ \|**u**\|** for *every*
+  admissible (**a**,**b**), by Cauchy–Schwarz on \|⟨**a**,**n**⟩\| ≤ \|**a**\|\|**n**\|.
+* ***K*_slide is correct and is an exact identity, not an inequality.** Since
+  both endpoints lie on ℓ_δ, line([*A*_δ,*B*_δ]) = ℓ_δ has direction **u**
+  independent of δ, and the crossing point with *t* slides by exactly
+  \|δ\|*N*\|**v**_t\|/\|⟨**v**_t,**n**⟩\|. It does not depend on the rule.
+* ***K*_rot as defined is WRONG* — it is the δ→0 limit.** The exact law is
+  > \|*x*−*X*₀\| = \|δ\|·λ₀·\|cross(*c*_a**a**,**w**)\|·\|**v**\| /
+  > \|cross(**v**, **w**+δ*c*_a**a**)\|,
+  >
+  whose denominator is δ-dependent and shrinks exactly as δ approaches τ₁.
+  Exact certificate (pentagons, integer coordinates ≤ 3, (F), (VV), **AKR's
+  rule undefined**, δ₀ = 1/60): the true displacement is 1/(1−δ) times the
+  claimed \|δ\|*K*_rot for **every** δ ∈ (0,δ₀), one sign only; sup = 60/59.
+  A heptagon-pair certificate at *M* = 6 gives 100/99. 31 violations in 15 636
+  exact random instances; **0** for AKR's rule, where *s*⁻ does not rotate and
+  the displacement is identically 0.
+* **δ₀ does not change.** τ₁^t·*K*_rot ≥ \|**w**\| ≥ ρ₄ ≥ 3*r* forces
+  \|δ\| < δ₀ ≤ τ₁^t/30, so the error factor is < 30/29. §R3 step 3's
+  "\|*x*−*X*₀\| < *r*/10" becomes "< *r*/9.67"; step 4 only ever needs "< *r*".
+  **The single edit required is to that one sentence of §R3.**
+* **§2.3's `max(…,1)` guard can be deleted**, since *K*_end ≥ \|**u**\| ≥ 1 for
+  integer data; deleting it makes δ₀ exactly scale-invariant (0/1 260
+  failures, against 186/1 260 with the guard, all at λ < 1).

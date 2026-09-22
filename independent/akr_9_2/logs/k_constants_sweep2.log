@@ -1,0 +1,14 @@
+TOTALS: {('tilt', 'tested'): 5349, ('tilt', 'E1 nonzero'): 5349, ('tilt', 'E2 nonzero'): 3057, ('tilt', 'E3 nonzero'): 4080, ('tilt', 'E3 VIOLATION'): 18, ('translate', 'tested'): 5349, ('translate', 'E1 nonzero'): 5349, ('translate', 'E2 nonzero'): 3057, ('translate', 'E3 nonzero'): 4080, ('translate', 'E3 VIOLATION'): 13, ('akr', 'tested'): 4938, ('akr', 'E1 nonzero'): 4938, ('akr', 'E2 nonzero'): 2859}
+
+  max ratio ('akr', 'E1')          = 1.0000000000
+  max ratio ('akr', 'E2')          = 1.0000000000
+  max ratio ('akr', 'E3')          = 0.0000000000
+  max ratio ('tilt', 'E1')         = 1.0000000000
+  max ratio ('tilt', 'E2')         = 1.0000000000
+  max ratio ('tilt', 'E3')         = 1.0169491525
+  max ratio ('translate', 'E1')    = 1.0000000000
+  max ratio ('translate', 'E2')    = 1.0000000000
+  max ratio ('translate', 'E3')    = 1.0169491525
+
+  exceedances of the proved caps: NONE
+  30/29 = 1.0344827586206897   60/59 = 1.0169491525423728

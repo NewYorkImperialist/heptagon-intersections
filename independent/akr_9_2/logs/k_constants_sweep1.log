@@ -1,0 +1,60 @@
+========================================================================
+m=7 grid 7 seed 2026  usable pairs: 27
+ [tilt] {'tested': 567, 'E1 nonzero': 567, 'E2 nonzero': 336, 'E3 nonzero': 420, 'E3 VIOLATION': 4}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 22300745198530623141535718272648361505980416/21857391577021990747878541126403596672759441  (1.010091)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [translate] {'tested': 567, 'E1 nonzero': 567, 'E2 nonzero': 336, 'E3 nonzero': 420, 'E3 VIOLATION': 3}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 22300745198530623141535718272648361505980416/21857391577021990747878541126403596672759441  (1.010091)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [akr] {'tested': 495, 'E1 nonzero': 495, 'E2 nonzero': 306, 'skip:undefined (G fails)': 24}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 0  (0.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ binding term of delta_0: {('tilt', 'K'): 189, ('translate', 'K'): 189, ('akr', 'K'): 165}
+========================================================================
+m=7 grid 9 seed 4242  usable pairs: 36
+ [tilt] {'tested': 756, 'E1 nonzero': 756, 'E3 nonzero': 561, 'E2 nonzero': 399}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 356811923176489970264571492362373784095686656/378862989206633367130567477686273468775535825  (0.970462)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [translate] {'tested': 756, 'E1 nonzero': 756, 'E3 nonzero': 561, 'E2 nonzero': 399}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [akr] {'tested': 711, 'E1 nonzero': 711, 'E2 nonzero': 384, 'skip:undefined (G fails)': 15}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 0  (0.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ binding term of delta_0: {('tilt', 'K'): 252, ('translate', 'K'): 252, ('akr', 'K'): 237}
+========================================================================
+m=6 grid 5 seed 77  usable pairs: 10
+ [tilt] {'tested': 180, 'E1 nonzero': 180, 'E3 nonzero': 129, 'E2 nonzero': 81, 'E3 VIOLATION': 1}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 22300745198530623141535718272648361505980416/22152466053353896506415809084621742568395849  (1.003341)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [translate] {'tested': 180, 'E1 nonzero': 180, 'E3 nonzero': 129, 'E2 nonzero': 81}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 401413413573551216547642928907670507107647488/444119121433216295166586622675407838522376605  (0.950706)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [akr] {'tested': 150, 'E1 nonzero': 150, 'E2 nonzero': 60, 'skip:undefined (G fails)': 10}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 0  (0.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ binding term of delta_0: {('tilt', 'K'): 60, ('translate', 'K'): 60, ('akr', 'K'): 50}
+========================================================================
+m=5 grid 4 seed 31  usable pairs: 3
+ [tilt] {'tested': 45, 'E1 nonzero': 45, 'E2 nonzero': 30, 'E3 nonzero': 36, 'E3 VIOLATION': 3}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 22300745198530623141535718272648361505980416/21564295519385481671611340391965573416500001  (1.016932)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [translate] {'tested': 45, 'E1 nonzero': 45, 'E2 nonzero': 30, 'E3 nonzero': 36, 'E3 VIOLATION': 3}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 22300745198530623141535718272648361505980416/21564295519385481671611340391965573416500001  (1.016932)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ [akr] {'tested': 24, 'E1 nonzero': 24, 'E2 nonzero': 15, 'skip:undefined (G fails)': 7}
+    max ratio E1 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E2 = 1  (1.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+    max ratio E3 = 0  (0.000000)   [ratio of TRUE displacement to the bound, as a ratio of SQUARES above; sqrt shown]
+ binding term of delta_0: {('tilt', 'K'): 15, ('translate', 'K'): 15, ('akr', 'K'): 8}

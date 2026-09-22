@@ -787,3 +787,50 @@ Two controls are reported as **not** firing, per the standard ATTACK.md set:
 **f(7,7) = 38 is not proved by anything in this document.** It remains a
 candidate resting on §9 of Ackerman–Keszegh–Rote, of which the vertex-side half
 is being replaced rather than imported, on paper, unreviewed, and not in Lean.
+
+---
+
+## Addendum of 2026-09-22, by a fourth agent: §R5's hole closed
+
+§R5 / §5 record as the largest remaining hole that *K*_end, *K*_slide, *K*_rot
+were used as §2.3 defines them, on ≈ 44 000 instances of evidence and no proof.
+They are now derived: [`K_CONSTANTS.md`](K_CONSTANTS.md), code
+`k_constants.py`, logs `logs/k_constants_*.log`. Exact rationals; nothing in
+Lean; no Lean build and no git command was run; *f*(7,7) = 38 is not proved.
+
+**Result.** *K*_end and *K*_slide are correct, and both are *attained* (max
+observed ratio exactly 1.000000000). ***K*_rot is wrong as printed** — it is
+the δ→0 limit of the true rotation law, and the true displacement exceeds
+\|δ\|*K*_rot for every positive δ below δ₀ on an exact pentagon certificate
+(*M* = 3, (F), (VV), AKR's rule undefined there, δ₀ = 1/60, ratio 1/(1−δ),
+sup 60/59); a heptagon-pair certificate at *M* = 6 gives 100/99. **The effect
+on δ₀ is nil**: τ₁^t·*K*_rot ≥ \|**w**\| ≥ ρ₄ ≥ 3*r* caps the error at 30/29,
+and §2.2 step 3 only needs \|*x*−*X*₀\| < *r*, not < *r*/10. So
+**δ₀ ≥ 1/(61440 *M*⁷) stands**; the belt-and-braces variant (2*K*_rot inside
+δ₀) gives 1/(122880 *M*⁷), under which §3.5's δ := 2⁻¹⁷*M*⁻⁷ is still valid.
+
+**On the two claims §3.6 flags:**
+
+* ***K*_end ≤ 4*M* for AKR's rule (234 failures).* The scope restriction is
+  right and the bound is genuinely false there, by Θ(*M*²)**: an exact
+  certificate at *M* = 6 has *K*_end = 130 against 4*M* = 24, ratio 5.42; over
+  506 independently drawn AKR instances it fails 30 times (5.9 %). §3.4's
+  replacement *K*_end ≤ 23*M*³ for AKR is correct and I re-derived it.
+* ***The `max(…,1)` guard.* §3.6(D) is right, and can be sharpened two ways.**
+  (a) It is decidable **exactly**, with no bracketing: every term of δ₀ is
+  √(rational), so δ₀² ∈ ℚ. Over 1 260 rescalings the printed δ₀ is not
+  invariant **186** times, all at λ < 1, never at λ ≥ 1; with the guard deleted,
+  **0/1 260**. (Control: dropping the dimension-carrying max*K*² from the
+  K-branch fails 1 260/1 260. A first control — capping δ₀² at 1/100 — did not
+  fire and is reported as not firing.)
+  (b) **The guard is inert**: *K*_end ≥ \|**u**\| for every admissible
+  (**a**,**b**) by Cauchy–Schwarz, hence ≥ 1 for integer data
+  (0/863 instances where max(*K*_end,*K*_slide,*K*_rot) < 1). So it can simply
+  be deleted and δ₀ becomes exactly scale-invariant, which is what §3.4's
+  "Corollary (rational data)" wanted.
+
+**Independent cross-check of this file's own machinery.** My exact δ₀² was
+compared with `attack3.delta0` on 543 (configuration, side, rule) instances:
+`attack3.delta0` never exceeded the true value and matched it to
+max (mine/attack3)² = 1.000000000 — §3.6(C)'s 2⁻⁴⁰ claim, confirmed by a
+different method.

@@ -1,0 +1,8 @@
+NON-VACUITY: deliberately weaken each K by a factor and re-run the SAME
+checker.  A checker that cannot report failure is worthless.
+
+  K multiplied by 1        -> {'tested': 2475, 'E3 VIOLATION': 13}
+  K multiplied by 99/100   -> {'tested': 2475, 'E1 VIOLATION': 2310, 'E2 VIOLATION': 240, 'E3 VIOLATION': 26}
+  K multiplied by 9/10     -> {'tested': 2475, 'E1 VIOLATION': 2328, 'E2 VIOLATION': 267, 'E3 VIOLATION': 63}
+  K multiplied by 1/2      -> {'tested': 2475, 'E1 VIOLATION': 2426, 'E2 VIOLATION': 525, 'E3 VIOLATION': 423}
+  K multiplied by 1/10     -> {'tested': 2475, 'E1 VIOLATION': 2474, 'E2 VIOLATION': 1245, 'E3 VIOLATION': 1158}

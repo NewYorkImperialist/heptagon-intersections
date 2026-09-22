@@ -1,0 +1,11 @@
+HEPTAGON certificate, max E3 ratio = 1.010101010092
+ P = ((2, 5), (0, 1), (3, 1), (4, 1), (5, 2), (1, 2), (4, 3))
+ Q = ((6, 0), (0, 2), (2, 6), (3, 6), (2, 4), (5, 3), (6, 1))
+ i = 1  mode = tilt  delta0 = 0.0011111111111111111  binding = K
+ worst t = ((6, 0), (0, 2))  lam0 = 1
+ |dP n dQ| = 4  degeneracies = {('Pv_on_Qs', 2, 0)}
+ K_end^2=9 K_slide^2=90 K_rot^2=90 tau1^2=1/81 tau2^2=1/9 r^2=1/90
+   delta=0.0005555556  ratio=1.005025125628 VIOLATION
+   delta=0.0010000000  ratio=1.009081735621 VIOLATION
+   delta=0.0011000000  ratio=1.009998990001 VIOLATION
+   delta=0.0011110000  ratio=1.010099989798 VIOLATION

@@ -1,0 +1,11 @@
+Lemma T:  tau_1^t * K_rot >= |w|   (resp |z|),  and  tau_1^t >= 30*delta_0.
+All comparisons on SQUARES, exact rationals.
+
+  {'t-instances': 1558, 'CONTROL 1.01|w| fails': 39}
+  min (tau1^t^2 K_rot^2 / |w|^2) = 1.000000   (Lemma T is TIGHT iff 1)
+  min (tau1^t / delta0)          = 100.0000   (the corollary claims >= 30)
+
+Control ladder for the corollary tau_1^t >= 30*delta_0: strengthen 30 to c
+and find where it starts to fail.  Samples: m=7 grid 7/9, m=6 grid 5, m=5 grid 4.
+  2868 t-instances;  min tau_1^t/delta_0 = 60.000000
+  {'c=200 fails': 30, 'c=120 fails': 11, 'c=100 fails': 9, 'c=61 fails': 7, 'c=80 fails': 7}
