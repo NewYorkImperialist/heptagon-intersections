@@ -1,4 +1,6 @@
-non-parallel (ak,bl) pairs : 3000  x 6 epsilons
-  FAILURES to cross properly : 0
-parallel pairs (control)    : 3000  x 4 epsilons
-  spurious proper crossings  : 0   <- must be 0
+A. non-parallel pairs: 1200 x 4 t-values x 8 epsilons
+   FAILURES: 0
+B. parallel pairs (control): 1200
+   spurious crossings: 0   <- must be 0
+C. general cone point s0=1,t0=6 at eps in {1/4,1/2,1}:
+   crossings LOST: 3000 / 3000   <- must be > 0; this is why t<=1 is in the theorem
