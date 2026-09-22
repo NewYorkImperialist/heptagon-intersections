@@ -708,5 +708,152 @@ theorem exists_delta_preserving_coincFree (V : Fin 14 → ℝ × ℝ) (i : Fin 7
 #print axioms tilt_ne_zero
 #print axioms exists_delta_preserving_coincFree
 
+/-! ## 14. Composing: one shift that clears a degeneracy **and** keeps the
+coincidences away
+
+`exists_delta_preserving_coincFree` chooses its own `δ`; to compose it with
+§9.2's degeneracy step the two must agree. So the coincidence obligation is
+re-stated as the **bad set** it really is, and handed to
+`Pair9Shift.degSet_card_lt_avoiding`. -/
+
+/-- The coincidence obligation as a finite set of forbidden shifts. -/
+theorem exists_coinc_bad_set (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (hfree : coincSet V = ∅) :
+    ∃ bad : Finset ℝ, ∀ δ : ℝ, δ ∉ bad →
+      coincSet (RotationLaw.shiftV V i t δ) = ∅ := by
+  classical
+  set w := RotationLaw.tilt (V (pP (i + 1)) - V (pP i)) t with hw
+  have hwne : w ≠ 0 := tilt_ne_zero hu t
+  have hcase : w.1 ≠ 0 ∨ w.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hwne (Prod.ext hc.1 hc.2)
+  have main : ∀ (bad : Finset ℝ),
+      (∀ δ : ℝ, δ ∉ bad → ∀ k m : Fin 7,
+        RotationLaw.shiftV V i t δ (pP k) ≠ V (pQ m)) →
+      ∀ δ : ℝ, δ ∉ bad → coincSet (RotationLaw.shiftV V i t δ) = ∅ := by
+    intro bad hbad δ hδ
+    rw [Finset.eq_empty_iff_forall_notMem]
+    intro p hp
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+    rw [RotationLaw.shiftV_Q] at hp
+    exact hbad δ hδ p.1 p.2 hp
+  rcases hcase with hw1 | hw2
+  · refine ⟨Finset.univ.image
+      (fun q : Fin 7 × Fin 7 => ((V (pQ q.2)).1 - (V (pP q.1)).1) / w.1),
+      main _ ?_⟩
+    intro δ hδ k m hc
+    by_cases hmv : pP k = pP i ∨ pP k = pP (i + 1)
+    · rw [RotationLaw.shiftV, if_pos hmv] at hc
+      have h1 : (V (pP k)).1 + δ * w.1 = (V (pQ m)).1 := by
+        have := congrArg Prod.fst hc
+        simpa [RotationLaw.mov, hw] using this
+      exact hδ (Finset.mem_image.mpr ⟨(k, m), Finset.mem_univ _, by
+        field_simp; linarith⟩)
+    · rw [RotationLaw.shiftV, if_neg hmv] at hc
+      rw [Finset.eq_empty_iff_forall_notMem] at hfree
+      exact hfree (k, m) (by
+        simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
+  · refine ⟨Finset.univ.image
+      (fun q : Fin 7 × Fin 7 => ((V (pQ q.2)).2 - (V (pP q.1)).2) / w.2),
+      main _ ?_⟩
+    intro δ hδ k m hc
+    by_cases hmv : pP k = pP i ∨ pP k = pP (i + 1)
+    · rw [RotationLaw.shiftV, if_pos hmv] at hc
+      have h2 : (V (pP k)).2 + δ * w.2 = (V (pQ m)).2 := by
+        have := congrArg Prod.snd hc
+        simpa [RotationLaw.mov, hw] using this
+      exact hδ (Finset.mem_image.mpr ⟨(k, m), Finset.mem_univ _, by
+        field_simp; linarith⟩)
+    · rw [RotationLaw.shiftV, if_neg hmv] at hc
+      rw [Finset.eq_empty_iff_forall_notMem] at hfree
+      exact hfree (k, m) (by
+        simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
+
+/-- **§9.2's step, run inside §9.1's output.**  One shift that strictly
+decreases the degeneracy count **and** leaves the configuration
+coincidence-free. This is the two-phase composition, at the level of a single
+step. -/
+theorem degSet_step_preserving_coinc (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (j₀ : Fin 7)
+    (hj₀ : (i, j₀) ∈ Pair9Shift.degSetOf V) (hfree : coincSet V = ∅)
+    {δtop : ℝ} (hδtop : 0 < δtop) :
+    ∃ δ : ℝ, 0 < δ ∧ δ < δtop ∧
+      (Pair9Shift.degSetOf (RotationLaw.shiftV V i t δ)).card
+        < (Pair9Shift.degSetOf V).card ∧
+      coincSet (RotationLaw.shiftV V i t δ) = ∅ := by
+  obtain ⟨bad, hbad⟩ := exists_coinc_bad_set V i t hu hfree
+  obtain ⟨δ, hpos, hlt, hav, hcard⟩ :=
+    Pair9Shift.degSet_card_lt_avoiding V i t hu j₀ hj₀ bad hδtop
+  exact ⟨δ, hpos, hlt, hcard, hbad δ hav⟩
+
+#print axioms exists_coinc_bad_set
+#print axioms degSet_step_preserving_coinc
+
+/-! ## 15. The two phases, composed -/
+
+/-- One §9.2 step on a coincidence-free `Pair9`, keeping it coincidence-free
+and carrying the crossings. -/
+theorem pair9_degStep_preserving_coinc (R : Pair9) (t : ℝ) (i j₀ : Fin 7)
+    (hj₀ : (i, j₀) ∈ Pair9Shift.degSetOf R.V) (hfree : coincSet R.V = ∅) :
+    ∃ (δ : ℝ) (R' : Pair9), R'.V = RotationLaw.shiftV R.V i t δ ∧
+      (Pair9Shift.degSetOf R'.V).card < (Pair9Shift.degSetOf R.V).card ∧
+      coincSet R'.V = ∅ ∧
+      RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V := by
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨δ₁, h₁, hsimp⟩ :=
+    Pair9Shift.exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ₂, h₂, hmono⟩ := Pair9Shift.crossPairsOf_mono_shift R.V i t
+  obtain ⟨δ, hpos, hlt, hcard, hcoinc⟩ :=
+    degSet_step_preserving_coinc R.V i t hu j₀ hj₀ hfree (lt_min h₁ h₂)
+  have hd1 : |δ| ≤ δ₁ := by
+    rw [abs_of_pos hpos]; exact le_of_lt (lt_of_lt_of_le hlt (min_le_left _ _))
+  have hd2 : |δ| < δ₂ := by
+    rw [abs_of_pos hpos]; exact lt_of_lt_of_le hlt (min_le_right _ _)
+  have hP : AKR9.SimpleClosed
+      (fun k : Fin 7 => RotationLaw.shiftV R.V i t δ (pP k)) := by
+    simpa only [Pair9Shift.shiftV_pP] using hsimp δ hd1
+  have hQ : AKR9.SimpleClosed
+      (fun k : Fin 7 => RotationLaw.shiftV R.V i t δ (pQ k)) := by
+    have hEq : (fun k : Fin 7 => RotationLaw.shiftV R.V i t δ (pQ k))
+        = fun k => R.V (pQ k) := by
+      funext k; exact RotationLaw.shiftV_Q R.V i t δ k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨δ, ⟨RotationLaw.shiftV R.V i t δ, hP, hQ⟩, rfl, hcard, hcoinc, hmono δ hd2⟩
+
+/-- **Phases 1 and 2 composed.**  From a coincidence-free `Pair9`, finitely
+many tilted shifts reach one that is **both** coincidence-free and free of
+`Q`-vertices on `P`-side lines, with at least as many crossing pairs. -/
+theorem exists_degFree_of_coincFree (t : ℝ) :
+    ∀ (n : ℕ) (R : Pair9), coincSet R.V = ∅ → (Pair9Shift.degSetOf R.V).card = n →
+      ∃ R' : Pair9, Pair9Shift.degSetOf R'.V = ∅ ∧ coincSet R'.V = ∅ ∧
+        (RealPerturb.crossPairsOf R.V).card ≤ (RealPerturb.crossPairsOf R'.V).card := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro R hfree hn
+    by_cases h : Pair9Shift.degSetOf R.V = ∅
+    · exact ⟨R, h, hfree, le_rfl⟩
+    · obtain ⟨p, hp⟩ := Finset.nonempty_iff_ne_empty.mpr h
+      obtain ⟨δ, R', hRV, hlt, hcoinc, hmono⟩ :=
+        pair9_degStep_preserving_coinc R t p.1 p.2 hp hfree
+      obtain ⟨R'', hclear, hfree'', hcard⟩ :=
+        ih (Pair9Shift.degSetOf R'.V).card (hn ▸ hlt) R' hcoinc rfl
+      exact ⟨R'', hclear, hfree'', le_trans (Finset.card_le_card hmono) hcard⟩
+
+/-- **Both phases, from an arbitrary `Pair9`.**  §9.1 then §9.2, composed: no
+vertex–vertex coincidence, no `Q`-vertex on a `P`-side line, and the crossing
+count never dropped. -/
+theorem exists_coincFree_degFree (R : Pair9) (t : ℝ) :
+    ∃ R' : Pair9, coincSet R'.V = ∅ ∧ Pair9Shift.degSetOf R'.V = ∅ ∧
+      (RealPerturb.crossPairsOf R.V).card ≤ (RealPerturb.crossPairsOf R'.V).card := by
+  obtain ⟨R₁, hc₁, hcard₁⟩ := exists_coincidence_free R
+  obtain ⟨R₂, hd₂, hc₂, hcard₂⟩ := exists_degFree_of_coincFree t _ R₁ hc₁ rfl
+  exact ⟨R₂, hc₂, hd₂, le_trans hcard₁ hcard₂⟩
+
+#print axioms pair9_degStep_preserving_coinc
+#print axioms exists_coincFree_degFree
+
 end E9Directions
 end Heptagon

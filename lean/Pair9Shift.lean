@@ -1578,5 +1578,77 @@ theorem count_grows_from_interior (R : Pair9) (hfin : (points9 R).Finite)
 
 #print axioms count_grows_from_interior
 
+/-! ## 26. Composing δ-choices
+
+Every step of §9.1 and §9.2 chooses `δ` outside a finite bad set. Composing
+the procedures means one `δ` outside **all** of them at once, which is a union
+— so the right primitive takes the other obligations' bad set as a parameter
+rather than each step inventing its own. -/
+
+/-- `exists_good_delta_affine'` with an extra finite set to avoid. -/
+theorem exists_good_delta_affine_avoiding {ι : Type*} [DecidableEq ι] (S : Finset ι)
+    (c m : ι → ℝ) (hc : ∀ p ∈ S, c p ≠ 0) (avoid : Finset ℝ)
+    {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, 0 < δ ∧ δ < δ₀ ∧ δ ∉ avoid ∧ ∀ p ∈ S, c p + δ * m p ≠ 0 := by
+  classical
+  set bad : Finset ℝ :=
+    S.image (fun p => if m p = 0 then 0 else -c p / m p) ∪ avoid with hbad
+  have hinf : (Set.Ioo (0:ℝ) δ₀ \ (bad : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite hδ₀).diff bad.finite_toSet
+  obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ := hinf.nonempty
+  have hnotb : δ ∉ bad := fun hc' => hnot (Finset.mem_coe.mpr hc')
+  refine ⟨δ, hpos, hlt, fun ha => hnotb (by rw [hbad]; exact Finset.mem_union_right _ ha),
+    fun p hp hz => ?_⟩
+  by_cases hm : m p = 0
+  · rw [hm, mul_zero, add_zero] at hz
+    exact hc p hp hz
+  · refine hnotb ?_
+    rw [hbad]
+    refine Finset.mem_union_left _ (Finset.mem_image.mpr ⟨p, hp, ?_⟩)
+    rw [if_neg hm]
+    field_simp
+    linarith
+
+/-- The `δ`-choice of §21 with the other obligations' bad set carried. -/
+theorem degSet_card_lt_avoiding (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (j₀ : Fin 7) (hj₀ : (i, j₀) ∈ degSetOf V)
+    (avoid : Finset ℝ) {δtop : ℝ} (hδtop : 0 < δtop) :
+    ∃ δ : ℝ, 0 < δ ∧ δ < δtop ∧ δ ∉ avoid ∧
+      (degSetOf (shiftV V i t δ)).card < (degSetOf V).card := by
+  classical
+  obtain ⟨δ, hδpos, hδlt, hδav, hkeep⟩ :=
+    exists_good_delta_affine_avoiding (Finset.univ.filter
+        (fun p : Fin 7 × Fin 7 =>
+          orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) ≠ 0))
+      (fun p => orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)))
+      (fun p => dcoef (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2))
+        (tilt (V (pP (i + 1)) - V (pP i)) t)
+        (if pP p.1 = pP i ∨ pP p.1 = pP (i + 1) then 1 else 0)
+        (if pP (p.1 + 1) = pP i ∨ pP (p.1 + 1) = pP (i + 1) then 1 else 0)
+        (if pQ p.2 = pP i ∨ pQ p.2 = pP (i + 1) then 1 else 0))
+      (fun p hp => (Finset.mem_filter.mp hp).2) avoid hδtop
+  refine ⟨δ, hδpos, hδlt, hδav, ?_⟩
+  have hsub : degSetOf (shiftV V i t δ) ⊆ degSetOf V := by
+    intro p hp
+    by_contra hnot
+    have hne : orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) ≠ 0 := by
+      simpa [degSetOf] using hnot
+    have := hkeep p (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hne⟩)
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+    rw [orientR_shiftV_affine] at hp
+    exact this hp
+  have hgone : (i, j₀) ∉ degSetOf (shiftV V i t δ) := by
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [← off_eq_orientR, shiftV_dir, shiftV_P, shiftV_Q, off_base_mov]
+    have h0 : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j₀)) = 0 := by
+      rw [off_eq_orientR]
+      simpa [degSetOf] using hj₀
+    rw [h0, zero_sub, neg_eq_zero]
+    exact mul_ne_zero (ne_of_gt hδpos) (ne_of_gt (n2_pos_of_ne hu))
+  exact degeneracy_monovariant hsub hj₀ hgone
+
+#print axioms exists_good_delta_affine_avoiding
+#print axioms degSet_card_lt_avoiding
+
 end Pair9Shift
 end Heptagon
