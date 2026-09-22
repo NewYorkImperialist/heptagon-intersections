@@ -1183,25 +1183,30 @@ survives each shift, so the iteration stays inside `Pair9` and terminates. -/
 theorem pair9_degSet_card_lt (R : Pair9) (i : Fin 7) (t : ℝ) (j₀ : Fin 7)
     (hj₀ : (i, j₀) ∈ degSetOf R.V) :
     ∃ (δ : ℝ) (R' : Pair9), R'.V = shiftV R.V i t δ ∧
-      (degSetOf R'.V).card < (degSetOf R.V).card := by
+      (degSetOf R'.V).card < (degSetOf R.V).card ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V := by
   have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
     sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
   obtain ⟨δ₁, h₁, hsimp⟩ :=
     exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
-  obtain ⟨δ, hδne, hδlt, hcard⟩ := degSet_card_lt R.V i t hu j₀ hj₀ h₁
+  obtain ⟨δ₂, h₂, hmono⟩ := crossPairsOf_mono_shift R.V i t
+  obtain ⟨δ, hδne, hδlt, hcard⟩ := degSet_card_lt R.V i t hu j₀ hj₀ (lt_min h₁ h₂)
+  have hd1 : |δ| ≤ δ₁ := le_of_lt (lt_of_lt_of_le hδlt (min_le_left _ _))
+  have hd2 : |δ| < δ₂ := lt_of_lt_of_le hδlt (min_le_right _ _)
   have hP : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pP k)) := by
-    simpa only [shiftV_pP] using hsimp δ (le_of_lt hδlt)
+    simpa only [shiftV_pP] using hsimp δ hd1
   have hQ : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) := by
     have hEq : (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) = fun k => R.V (pQ k) := by
       funext k; exact shiftV_Q R.V i t δ k
     rw [hEq]; exact R.simpleQ
-  exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, rfl, hcard⟩
+  exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, rfl, hcard, hmono δ hd2⟩
 
 /-- `R'` is reachable from `R` by a finite sequence of tilted shifts. -/
 inductive Reach : Pair9 → Pair9 → Prop
   | refl (R : Pair9) : Reach R R
   | head {R R' R'' : Pair9} :
-      (∃ (i : Fin 7) (t δ : ℝ), R'.V = shiftV R.V i t δ) → Reach R' R'' → Reach R R''
+      (∃ (i : Fin 7) (t δ : ℝ), R'.V = shiftV R.V i t δ) →
+        crossPairsOf R.V ⊆ crossPairsOf R'.V → Reach R' R'' → Reach R R''
 
 /-- **§9.2's procedure terminates in a degeneracy-free pair.**
 
@@ -1222,9 +1227,9 @@ theorem exists_reach_degSet_empty (t : ℝ) :
     by_cases h : degSetOf R.V = ∅
     · exact ⟨R, Reach.refl R, h⟩
     · obtain ⟨p, hp⟩ := Finset.nonempty_iff_ne_empty.mpr h
-      obtain ⟨δ, R', hRV, hlt⟩ := pair9_degSet_card_lt R p.1 t p.2 hp
+      obtain ⟨δ, R', hRV, hlt, hmono⟩ := pair9_degSet_card_lt R p.1 t p.2 hp
       obtain ⟨R'', hreach, hclear⟩ := ih (degSetOf R'.V).card (hn ▸ hlt) R' rfl
-      exact ⟨R'', Reach.head ⟨p.1, t, δ, hRV⟩ hreach, hclear⟩
+      exact ⟨R'', Reach.head ⟨p.1, t, δ, hRV⟩ hmono hreach, hclear⟩
 
 theorem exists_degeneracy_free (R : Pair9) (t : ℝ) :
     ∃ R' : Pair9, Reach R R' ∧ degSetOf R'.V = ∅ :=
@@ -1233,6 +1238,29 @@ theorem exists_degeneracy_free (R : Pair9) (t : ℝ) :
 #print axioms pair9_degSet_card_lt
 #print axioms exists_reach_degSet_empty
 #print axioms exists_degeneracy_free
+
+/-- **The crossing pairs survive the whole chain.**  Every step preserves them,
+so the endpoint of any `Reach` has at least the crossings of the start. -/
+theorem reach_crossPairs_mono {R R' : Pair9} (h : Reach R R') :
+    crossPairsOf R.V ⊆ crossPairsOf R'.V := by
+  induction h with
+  | refl _ => exact Finset.Subset.refl _
+  | head _ hmono _ ih => exact hmono.trans ih
+
+/-- **§9.2's procedure, with the count carried.**  The degeneracy-free pair it
+reaches has at least as many crossing pairs as the original.
+
+This is the form the section needs and the previous statement lacked: a
+sequence of shifts that cleared every degeneracy while *losing* intersections
+would have satisfied `exists_degeneracy_free` and been worthless. -/
+theorem exists_degeneracy_free_mono (R : Pair9) (t : ℝ) :
+    ∃ R' : Pair9, degSetOf R'.V = ∅ ∧
+      (crossPairsOf R.V).card ≤ (crossPairsOf R'.V).card := by
+  obtain ⟨R', hreach, hclear⟩ := exists_degeneracy_free R t
+  exact ⟨R', hclear, Finset.card_le_card (reach_crossPairs_mono hreach)⟩
+
+#print axioms reach_crossPairs_mono
+#print axioms exists_degeneracy_free_mono
 
 end Pair9Shift
 end Heptagon
