@@ -181,6 +181,62 @@ theorem pair_unique_of_shared {V : Fin 14 → ℝ × ℝ} {i₁ i₂ j₁ j₂ :
 
 #print axioms pair_unique_of_shared
 
+/-! ## Both signs of the parameter
+
+Everything above is one-sided: Theorem U lives on `(0, ρ)`.  §9.2's averaging
+identity needs **both** signs, and AKR's own sentence — "an intersection point
+may disappear or multiply into two, depending on the direction of the shift" —
+is about exactly that comparison.
+
+The negative side is not a new theory.  Moving by `−e` along `E` is moving by
+`+e` along `−E`, so every one-sided result applies verbatim after negating the
+direction. -/
+
+theorem move_neg (V0 E : Fin 14 → ℝ × ℝ) (e : ℝ) :
+    move V0 E (-e) = move V0 (fun i => -(E i)) e := by
+  funext i
+  apply Prod.ext <;> · simp only [move, Prod.fst_neg, Prod.snd_neg]; ring
+
+/-- **A transversal crossing survives both shifts.**  This is case F1 of the
+averaging identity: a pair crossing at `δ = 0` with all four determinants
+nonzero still crosses at `+δ` and at `−δ`, so it contributes `1 + 1 = 2·1` and
+the identity holds on it with nothing to check. -/
+theorem survives_both_signs (V0 E : Fin 14 → ℝ × ℝ) (a b c d : Fin 14)
+    (w₁ w₂ w₃ w₄ n₁ n₂ n₃ n₄ : Wit)
+    (hw₁ : ∀ e : ℝ, w₁.eval e = orientR (move V0 E e a) (move V0 E e b) (move V0 E e c))
+    (hw₂ : ∀ e : ℝ, w₂.eval e = orientR (move V0 E e a) (move V0 E e b) (move V0 E e d))
+    (hw₃ : ∀ e : ℝ, w₃.eval e = orientR (move V0 E e c) (move V0 E e d) (move V0 E e a))
+    (hw₄ : ∀ e : ℝ, w₄.eval e = orientR (move V0 E e c) (move V0 E e d) (move V0 E e b))
+    (hn₁ : ∀ e : ℝ, n₁.eval e =
+      orientR (move V0 (fun i => -(E i)) e a) (move V0 (fun i => -(E i)) e b)
+        (move V0 (fun i => -(E i)) e c))
+    (hn₂ : ∀ e : ℝ, n₂.eval e =
+      orientR (move V0 (fun i => -(E i)) e a) (move V0 (fun i => -(E i)) e b)
+        (move V0 (fun i => -(E i)) e d))
+    (hn₃ : ∀ e : ℝ, n₃.eval e =
+      orientR (move V0 (fun i => -(E i)) e c) (move V0 (fun i => -(E i)) e d)
+        (move V0 (fun i => -(E i)) e a))
+    (hn₄ : ∀ e : ℝ, n₄.eval e =
+      orientR (move V0 (fun i => -(E i)) e c) (move V0 (fun i => -(E i)) e d)
+        (move V0 (fun i => -(E i)) e b))
+    (o₁ : w₁.ord = 0) (o₂ : w₂.ord = 0) (o₃ : w₃.ord = 0) (o₄ : w₄.ord = 0)
+    (p₁ : n₁.ord = 0) (p₂ : n₂.ord = 0) (p₃ : n₃.ord = 0) (p₄ : n₄.ord = 0)
+    {e : ℝ} (he0 : 0 < e)
+    (k₁ : e < w₁.rho) (k₂ : e < w₂.rho) (k₃ : e < w₃.rho) (k₄ : e < w₄.rho)
+    (m₁ : e < n₁.rho) (m₂ : e < n₂.rho) (m₃ : e < n₃.rho) (m₄ : e < n₄.rho)
+    (hcross : ProperCrossR (V0 a) (V0 b) (V0 c) (V0 d)) :
+    ProperCrossR (move V0 E e a) (move V0 E e b) (move V0 E e c) (move V0 E e d) ∧
+    ProperCrossR (move V0 E (-e) a) (move V0 E (-e) b)
+      (move V0 E (-e) c) (move V0 E (-e) d) := by
+  refine ⟨properCrossR_survives V0 E a b c d w₁ w₂ w₃ w₄ hw₁ hw₂ hw₃ hw₄
+      o₁ o₂ o₃ o₄ he0 k₁ k₂ k₃ k₄ hcross, ?_⟩
+  rw [move_neg]
+  exact properCrossR_survives V0 (fun i => -(E i)) a b c d n₁ n₂ n₃ n₄
+    hn₁ hn₂ hn₃ hn₄ p₁ p₂ p₃ p₄ he0 m₁ m₂ m₃ m₄ hcross
+
+#print axioms move_neg
+#print axioms survives_both_signs
+
 #print axioms classB_survives
 #print axioms classC0_survives
 
