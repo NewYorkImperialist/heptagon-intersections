@@ -213,6 +213,45 @@ theorem averaging_local {δ y z : ℝ} (hδ : δ ≠ 0) (hy : y ≠ 0) (hz : z �
   have e2 := one_of_two_signs h2
   omega
 
+/-- **Where `δ₀` enters.**  The sign criterion above is the *small-`δ`* form of
+the actual straddle condition.  They agree exactly when the shift is smaller
+than the offset it has to compare against — which is precisely the kind of
+bound `δ₀` is assembled from.
+
+`straddle` is the honest condition: the segment from `X` (offset `0`) to `Y`
+(offset `y`) meets the shifted line iff the two endpoints' offsets from it have
+opposite signs. -/
+theorem straddle_iff_sign {y δ N : ℝ} (hN : 0 < N) (hsmall : |δ| * N < |y|) :
+    (-(δ * N)) * (y - δ * N) < 0 ↔ 0 < δ * y := by
+  rcases lt_trichotomy δ 0 with hd | hd | hd
+  · have hdn : δ * N < 0 := mul_neg_of_neg_of_pos hd hN
+    rw [abs_of_neg hd] at hsmall
+    constructor
+    · intro h
+      rcases lt_trichotomy y 0 with hy | hy | hy
+      · nlinarith
+      · exfalso; rw [hy] at h; nlinarith
+      · exfalso; rw [abs_of_pos hy] at hsmall; nlinarith
+    · intro h
+      have hy : y < 0 := by nlinarith
+      rw [abs_of_neg hy] at hsmall
+      nlinarith
+  · subst hd; simp
+  · have hdn : 0 < δ * N := mul_pos hd hN
+    rw [abs_of_pos hd] at hsmall
+    constructor
+    · intro h
+      rcases lt_trichotomy y 0 with hy | hy | hy
+      · exfalso; rw [abs_of_neg hy] at hsmall; nlinarith
+      · exfalso; rw [hy] at h; nlinarith
+      · nlinarith
+    · intro h
+      have hy : 0 < y := by nlinarith
+      rw [abs_of_pos hy] at hsmall
+      nlinarith
+
+#print axioms straddle_iff_sign
+
 #print axioms one_of_two_signs
 #print axioms averaging_local
 
@@ -224,6 +263,65 @@ theorem averaging_local {δ y z : ℝ} (hδ : δ ≠ 0) (hy : y ≠ 0) (hz : z �
 
 #print axioms tilted_shift_defined
 #print axioms ip_tilt_nrm
+
+/-! ### The averaging identity, stated geometrically
+
+`averaging_local` is phrased with the sign criterion `0 < δ * y`, which is the
+*small-`δ`* shorthand.  The honest condition is `straddle`: the endpoints of the
+`Q`-edge lie on opposite sides of the shifted line.  Composing the two gives the
+identity in the form §9.2 actually needs. -/
+
+/-- The two endpoints of the edge from `X` (normal offset `0`) to `Y` (normal
+offset `y`) lie strictly on opposite sides of the line shifted by `δ`. -/
+def Straddle (δ N y : ℝ) : Prop := (-(δ * N)) * (y - δ * N) < 0
+
+open Classical in
+/-- How many of `X`'s two incident `Q`-edges the shifted line actually crosses. -/
+noncomputable def crossCount (δ N y z : ℝ) : ℕ :=
+  (if Straddle δ N y then 1 else 0) + (if Straddle δ N z then 1 else 0)
+
+theorem crossCount_eq_localCount {δ N y z : ℝ} (hN : 0 < N)
+    (hy : |δ| * N < |y|) (hz : |δ| * N < |z|) :
+    crossCount δ N y z = localCount δ y z := by
+  unfold crossCount localCount Straddle
+  rw [if_congr (straddle_iff_sign hN hy) rfl rfl,
+      if_congr (straddle_iff_sign hN hz) rfl rfl]
+
+/-- **The averaging identity of §9.2.**  A `Q`-vertex lying on the side line
+being shifted contributes one intersection.  After shifting by `δ` it
+contributes `crossCount δ`, and after shifting by `-δ` it contributes
+`crossCount (-δ)`.  The two sum to `2` — so the *average* over the two
+directions is `1`, unchanged.
+
+The hypotheses are exactly what `δ₀` supplies: the shift's normal displacement
+`|δ| * N` is smaller than every nonzero offset in the picture. -/
+theorem averaging_identity {δ N y z : ℝ} (hN : 0 < N) (hδ : δ ≠ 0)
+    (hy : |δ| * N < |y|) (hz : |δ| * N < |z|) :
+    crossCount δ N y z + crossCount (-δ) N y z = 2 := by
+  have hpos : 0 < |δ| * N := mul_pos (abs_pos.mpr hδ) hN
+  have hy0 : y ≠ 0 := by
+    intro h; rw [h, abs_zero] at hy; linarith
+  have hz0 : z ≠ 0 := by
+    intro h; rw [h, abs_zero] at hz; linarith
+  have habs : |(-δ)| = |δ| := abs_neg δ
+  rw [crossCount_eq_localCount hN hy hz,
+      crossCount_eq_localCount hN (by rw [habs]; exact hy) (by rw [habs]; exact hz)]
+  exact averaging_local hδ hy0 hz0
+
+/-- **The smallness hypothesis is not decorative.**  With `N = 1`, both offsets
+equal to `1`, and `δ = 2`, the shift overshoots the whole corner in either
+direction: neither edge is crossed by either shift, and the two counts sum to
+`0`, not `2`.  So §9.2's averaging step genuinely requires a bound of `δ₀`'s
+kind, and is false without one. -/
+theorem averaging_fails_without_smallness :
+    crossCount 2 1 1 1 + crossCount (-2) 1 1 1 = 0 := by
+  have h1 : ¬ Straddle 2 1 1 := by unfold Straddle; norm_num
+  have h2 : ¬ Straddle (-2) 1 1 := by unfold Straddle; norm_num
+  simp [crossCount, h1, h2]
+
+#print axioms crossCount_eq_localCount
+#print axioms averaging_identity
+#print axioms averaging_fails_without_smallness
 
 end TiltedShift
 end Heptagon
