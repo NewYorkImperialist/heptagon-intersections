@@ -117,6 +117,79 @@ theorem cornerVec_ne_zero_iff_sign (a b c : ℝ × ℝ) :
       · simp only [Prod.fst_sub, Prod.snd_sub] at hp
         simp only [cdot]; linarith
 
+/-! ## Betweenness: membership of a closed segment is a sign condition
+
+This is the primitive the *other* half of (Sign-exp) is built from, and it is
+the reason `eps_uniform`'s witness family carries 1092 dot products alongside
+the 364 determinants: an orientation determinant alone cannot distinguish a
+point *on* a segment from a point on its extension. -/
+
+/-- Orientation of `c` against the directed segment `a → b`. -/
+def sdet (a b c : ℝ × ℝ) : ℝ := (b.1 - a.1) * (c.2 - a.2) - (b.2 - a.2) * (c.1 - a.1)
+
+/-- `⟪c - a, c - b⟫`; non-positive exactly when `c` is between `a` and `b`. -/
+def sdot (a b c : ℝ × ℝ) : ℝ := (c.1 - a.1) * (c.1 - b.1) + (c.2 - a.2) * (c.2 - b.2)
+
+theorem mem_segment_iff_sign (a b c : ℝ × ℝ) :
+    c ∈ segment ℝ a b ↔ sdet a b c = 0 ∧ sdot a b c ≤ 0 := by
+  constructor
+  · intro hc
+    rw [segment_eq_image'] at hc
+    obtain ⟨t, ht, rfl⟩ := hc
+    have h1 : (a + t • (b - a)).1 - a.1 = t * (b.1 - a.1) := by simp
+    have h2 : (a + t • (b - a)).2 - a.2 = t * (b.2 - a.2) := by simp
+    have h3 : (a + t • (b - a)).1 - b.1 = (t - 1) * (b.1 - a.1) := by
+      rw [show (a + t • (b - a)).1 - b.1
+            = ((a + t • (b - a)).1 - a.1) - (b.1 - a.1) by ring, h1]; ring
+    have h4 : (a + t • (b - a)).2 - b.2 = (t - 1) * (b.2 - a.2) := by
+      rw [show (a + t • (b - a)).2 - b.2
+            = ((a + t • (b - a)).2 - a.2) - (b.2 - a.2) by ring, h2]; ring
+    refine ⟨by simp only [sdet, h1, h2]; ring, ?_⟩
+    simp only [sdot, h1, h2, h3, h4]
+    have : t * (b.1 - a.1) * ((t - 1) * (b.1 - a.1))
+         + t * (b.2 - a.2) * ((t - 1) * (b.2 - a.2))
+         = t * (t - 1) * ((b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2)) := by ring
+    rw [this]
+    have hnn : 0 ≤ (b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2) := by
+      nlinarith [mul_self_nonneg (b.1 - a.1), mul_self_nonneg (b.2 - a.2)]
+    have htt : t * (t - 1) ≤ 0 := by nlinarith [ht.1, ht.2]
+    nlinarith [htt, hnn]
+  · rintro ⟨hdet, hdot⟩
+    rcases eq_or_ne b a with rfl | hba
+    · have hc : c = b := by
+        have : (c.1 - b.1) * (c.1 - b.1) + (c.2 - b.2) * (c.2 - b.2) ≤ 0 := by
+          simpa [sdot] using hdot
+        have h1 : c.1 = b.1 := by nlinarith [mul_self_nonneg (c.1 - b.1), mul_self_nonneg (c.2 - b.2)]
+        have h2 : c.2 = b.2 := by nlinarith [mul_self_nonneg (c.1 - b.1), mul_self_nonneg (c.2 - b.2)]
+        exact Prod.ext h1 h2
+      simpa [hc] using left_mem_segment ℝ b b
+    · have hD : 0 < (b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2) :=
+        normsq_pos (sub_ne_zero.mpr hba)
+      have hDne : (b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2) ≠ 0 := ne_of_gt hD
+      set t : ℝ := ((c.1 - a.1) * (b.1 - a.1) + (c.2 - a.2) * (b.2 - a.2))
+                    / ((b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2)) with hts
+      have e1 : c.1 - a.1 = t * (b.1 - a.1) := by
+        rw [hts, div_mul_eq_mul_div, eq_div_iff hDne]
+        simp only [sdet] at hdet; linear_combination (-(b.2 - a.2)) * hdet
+      have e2 : c.2 - a.2 = t * (b.2 - a.2) := by
+        rw [hts, div_mul_eq_mul_div, eq_div_iff hDne]
+        simp only [sdet] at hdet; linear_combination (b.1 - a.1) * hdet
+      have hquad : t * (t - 1) * ((b.1 - a.1) * (b.1 - a.1) + (b.2 - a.2) * (b.2 - a.2)) ≤ 0 := by
+        simp only [sdot] at hdot
+        have g1 : c.1 - b.1 = (t - 1) * (b.1 - a.1) := by linarith [e1]
+        have g2 : c.2 - b.2 = (t - 1) * (b.2 - a.2) := by linarith [e2]
+        rw [e1, e2, g1, g2] at hdot; linarith [hdot, sq_nonneg (b.1 - a.1)]
+      have ht : 0 ≤ t ∧ t ≤ 1 := by
+        have hts0 : t * (t - 1) ≤ 0 := by
+          by_contra hcon
+          push_neg at hcon
+          linarith [hquad, mul_pos hcon hD]
+        constructor <;> nlinarith [hts0]
+      rw [segment_eq_image']
+      exact ⟨t, ⟨ht.1, ht.2⟩, Prod.ext (by simp; linarith [e1]) (by simp; linarith [e2])⟩
+
+#print axioms mem_segment_iff_sign
+
 #print axioms cornerVec_eq_zero_iff
 #print axioms cornerVec_ne_zero_iff_sign
 
