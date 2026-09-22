@@ -186,6 +186,52 @@ theorem apex_not_mem_segment {E b : ℝ × ℝ} (h : cross E b ≠ 0) {ε : ℝ}
     linear_combination b.2 * h1 - b.1 * h2
   exact (mul_eq_zero.mp this).resolve_left hε
 
+/-! ## The cone crossing point
+
+`independent/e9_directions` proves the existence half by exhibiting the
+intersection explicitly: for `E = t₀·b_l − s₀·a_k` with `s₀, t₀ > 0`, the
+segment from the moved apex `εE` to the fixed neighbour `a_k` meets the segment
+from the origin to `b_l`, at parameters
+
+    μ = ε·s₀ / (1 + ε·s₀),        ν = ε·t₀ / (1 + ε·s₀).
+
+That is an algebraic identity, proved here, and the two parameters lie in
+`(0,1)` — `μ` always, `ν` for `ε` small, which is the correction that file
+records. -/
+
+/-- The point at parameter `μ` on `[εE, a_k]` **is** the point at parameter `ν`
+on `[0, b_l]`. -/
+theorem cone_crossing_identity (ak bl : ℝ × ℝ) {s₀ t₀ ε : ℝ}
+    (hs : 0 < s₀) (hε : 0 < ε) :
+    let E : ℝ × ℝ := (t₀ * bl.1 - s₀ * ak.1, t₀ * bl.2 - s₀ * ak.2)
+    let μ : ℝ := ε * s₀ / (1 + ε * s₀)
+    let ν : ℝ := ε * t₀ / (1 + ε * s₀)
+    ((1 - μ) * (ε * E.1) + μ * ak.1, (1 - μ) * (ε * E.2) + μ * ak.2)
+      = (ν * bl.1, ν * bl.2) := by
+  intro E μ ν
+  have hden : 1 + ε * s₀ ≠ 0 := by positivity
+  apply Prod.ext <;> · simp only [E, μ, ν]; field_simp; ring
+
+/-- `μ ∈ (0,1)` for every positive `ε`. -/
+theorem mu_mem (s₀ ε : ℝ) (hs : 0 < s₀) (hε : 0 < ε) :
+    0 < ε * s₀ / (1 + ε * s₀) ∧ ε * s₀ / (1 + ε * s₀) < 1 := by
+  have hden : 0 < 1 + ε * s₀ := by positivity
+  constructor
+  · positivity
+  · rw [div_lt_one hden]; linarith
+
+/-- `ν ∈ (0,1)` once `ε` is small enough — **not** for every `ε`, which is the
+correction `e9_directions` records: with `s₀ = 1, t₀ = 6, ε = 1/4` one gets
+`ν = 6/5` and the crossing is gone. -/
+theorem nu_mem {s₀ t₀ ε : ℝ} (hs : 0 < s₀) (ht : 0 < t₀) (hε : 0 < ε)
+    (hsmall : ε * t₀ < 1 + ε * s₀) :
+    0 < ε * t₀ / (1 + ε * s₀) ∧ ε * t₀ / (1 + ε * s₀) < 1 := by
+  have hden : 0 < 1 + ε * s₀ := by positivity
+  exact ⟨by positivity, by rw [div_lt_one hden]; exact hsmall⟩
+
+#print axioms cone_crossing_identity
+#print axioms nu_mem
+
 #print axioms apex_not_mem_segment
 
 #print axioms exists_good_direction
