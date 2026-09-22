@@ -440,11 +440,15 @@ The four hypotheses are exactly the geometric obligations:
 
 * `hmono` — the old crossings survive. **Proved**:
   `crossPairsOf_mono_shift`.
-* `hcard` — each degeneracy yields at least one new crossing. This is the
-  averaging identity: `TiltedShift.exists_sign_not_decreasing` gives it for
-  one of the two signs, and `exists_full_shift_both_signs` makes both signs
-  available at a single `δ`. **Not yet connected**, because the identity is
-  stated about `crossCount` rather than about `crossPairsOf`.
+* `hsum` — the degeneracies yield at least `D.card` new crossings **in
+  total**. This is the averaging identity, and the hypothesis is deliberately
+  a *sum* rather than a per-degeneracy bound: `exists_sign_not_decreasing`
+  delivers `S.card ≤ ∑ crossCount`, and **not** `1 ≤ crossCount d` for each
+  `d` separately. An earlier version of this skeleton demanded the
+  per-degeneracy form, which the averaging identity cannot supply — a shift
+  may kill one degeneracy's contribution outright while another's doubles.
+  **Not yet connected**, because the identity is stated about `crossCount`
+  rather than about `crossPairsOf`.
 * `hdisjA` — a pair newly crossing was not crossing before. **Proved**:
   `degenerate_not_mem_crossPairs` in §10 below. A degenerate touching makes an
   orientation determinant vanish, and `ProperCrossR` needs a strictly negative
@@ -470,13 +474,12 @@ theorem card_add_le_of_disjoint_new {P ι : Type*} [DecidableEq P] [DecidableEq 
     (hnew : ∀ d ∈ D, newOf d ⊆ A')
     (hdisjA : ∀ d ∈ D, Disjoint (newOf d) A)
     (hdisj : ∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newOf d) (newOf d'))
-    (hcard : ∀ d ∈ D, 1 ≤ (newOf d).card) :
+    (hsum : D.card ≤ ∑ d ∈ D, (newOf d).card) :
     A.card + D.card ≤ A'.card := by
   classical
   have hUcard : D.card ≤ (D.biUnion newOf).card := by
     rw [Finset.card_biUnion hdisj]
-    calc D.card = ∑ _d ∈ D, 1 := by simp
-      _ ≤ ∑ d ∈ D, (newOf d).card := Finset.sum_le_sum hcard
+    exact hsum
   have hdisjAU : Disjoint A (D.biUnion newOf) := by
     rw [Finset.disjoint_biUnion_right]
     exact fun d hd => (hdisjA d hd).symm
@@ -497,7 +500,7 @@ theorem card_add_le_of_disjoint_new_nonvacuous :
     ∃ (A A' D : Finset ℕ) (newOf : ℕ → Finset ℕ),
       A ⊆ A' ∧ (∀ d ∈ D, newOf d ⊆ A') ∧ (∀ d ∈ D, Disjoint (newOf d) A) ∧
       (∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newOf d) (newOf d')) ∧
-      (∀ d ∈ D, 1 ≤ (newOf d).card) ∧ A.card + D.card = A'.card := by
+      D.card ≤ (∑ d ∈ D, (newOf d).card) ∧ A.card + D.card = A'.card := by
   refine ⟨{0}, {0, 1}, {5}, fun _ => {1}, by decide, by decide, by decide,
     by decide, by decide, by decide⟩
 
