@@ -1442,8 +1442,9 @@ side's *line*, then a whole sub-segment of the `Q`-edge lies inside the
 
 This is `hyne` / `hzne` of `count_grows_by_degeneracies`, derived rather than
 assumed. The parameter `k` is `j−1` or `j+1`. -/
-theorem neighbour_off_ne_zero (R : Pair9) (hfin : (points9 R).Finite) (i j k : Fin 7)
-    (hk : R.V (pQ k) ∈ sideQ9 R j) (hjk : R.V (pQ j) ≠ R.V (pQ k))
+theorem neighbour_off_ne_zero (R : Pair9) (hfin : (points9 R).Finite) (i j k m : Fin 7)
+    (hj : R.V (pQ j) ∈ sideQ9 R m) (hk : R.V (pQ k) ∈ sideQ9 R m)
+    (hjk : R.V (pQ j) ≠ R.V (pQ k))
     (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) {s : ℝ} (hs0 : 0 < s) (hs1 : s < 1)
     (hsj : R.V (pQ j) = lin (R.V (pP i)) (R.V (pP (i + 1)) - R.V (pP i)) s) :
     off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ k)) ≠ 0 := by
@@ -1477,24 +1478,105 @@ theorem neighbour_off_ne_zero (R : Pair9) (hfin : (points9 R).Finite) (i j k : F
   have hPτ : lin A u τ ∈ sideP9 R i := by
     have := lin_mem_segment (A := A) (u := u) hτ2 hτ3
     rwa [lin_zero, lin_one_sub] at this
-  have hQs : lin A u s ∈ sideQ9 R j := by rw [← hsj]; exact left_mem_segment ℝ _ _
-  have hQτ : lin A u τ ∈ sideQ9 R j := by
+  have hQs : lin A u s ∈ sideQ9 R m := by rw [← hsj]; exact hj
+  have hQτ : lin A u τ ∈ sideQ9 R m := by
     have hmem : lin A u τ ∈ segment ℝ (R.V (pQ j)) (R.V (pQ k)) := by
       rw [hsj, hr]
       rcases le_total s r with hle | hle
       · exact lin_mem_segment (min_eq_left hle ▸ hτ4.1) (max_eq_right hle ▸ hτ4.2)
       · rw [segment_symm]
         exact lin_mem_segment (min_eq_right hle ▸ hτ4.1) (max_eq_left hle ▸ hτ4.2)
-    exact (convex_segment _ _).segment_subset (left_mem_segment ℝ _ _) hk hmem
+    exact (convex_segment _ _).segment_subset hj hk hmem
   have hne : lin A u s ≠ lin A u τ := fun h => hτ1 (lin_inj hu h).symm
   have hinf : (segment ℝ (lin A u s) (lin A u τ)).Infinite := segment_infinite hne
   refine hinf (hfin.subset ?_)
   intro x hx
   exact ⟨Set.mem_iUnion.mpr ⟨i, (convex_segment _ _).segment_subset hPs hPτ hx⟩,
-    Set.mem_iUnion.mpr ⟨j, (convex_segment _ _).segment_subset hQs hQτ hx⟩⟩
+    Set.mem_iUnion.mpr ⟨m, (convex_segment _ _).segment_subset hQs hQτ hx⟩⟩
 
 #print axioms lin_inj
 #print axioms neighbour_off_ne_zero
+
+/-- Three points of one parametrised line are collinear. -/
+theorem orientR_lin_three (C u : ℝ × ℝ) (a b c : ℝ) :
+    orientR (lin C u a) (lin C u b) (lin C u c) = 0 := by
+  simp only [orientR, lin]; ring
+
+/-- **Collinearity is transitive through a nondegenerate pair.**  If `A`, `B`
+and `X` all lie on the line `CD`, then `X` lies on the line `AB`. -/
+theorem collinear_trans {C D A B X : ℝ × ℝ} (hCD : D - C ≠ 0)
+    (hA : orientR C D A = 0) (hB : orientR C D B = 0) (hX : orientR C D X = 0) :
+    orientR A B X = 0 := by
+  obtain ⟨α, hα⟩ := exists_param_of_off_zero hCD (by rw [off_eq_orientR]; exact hA)
+  obtain ⟨β, hβ⟩ := exists_param_of_off_zero hCD (by rw [off_eq_orientR]; exact hB)
+  obtain ⟨ξ, hξ⟩ := exists_param_of_off_zero hCD (by rw [off_eq_orientR]; exact hX)
+  rw [hα, hβ, hξ]
+  exact orientR_lin_three _ _ _ _ _
+
+/-- **`count_grows_by_degeneracies` with its hypotheses derived.**  The only
+inputs are `(Fin)` and that each degenerate `Q`-vertex sits *strictly inside*
+the `P`-side — which is `(VV)`. Everything else the count step needed is
+produced along the way. -/
+theorem count_grows_from_interior (R : Pair9) (hfin : (points9 R).Finite)
+    (i : Fin 7) (t : ℝ) (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) (D : Finset (Fin 7))
+    (hint : ∀ j ∈ D, ∃ s : ℝ, 0 < s ∧ s < 1 ∧
+      R.V (pQ j) = lin (R.V (pP i)) (R.V (pP (i + 1)) - R.V (pP i)) s) :
+    ∃ δ : ℝ, δ ≠ 0 ∧
+      (crossPairsOf R.V).card + D.card ≤ (crossPairsOf (shiftV R.V i t δ)).card := by
+  have hD : ∀ j ∈ D, R.V (pQ j) ∈ sideP9 R i := by
+    intro j hj
+    obtain ⟨s, hs0, hs1, hsj⟩ := hint j hj
+    rw [hsj]
+    have := lin_mem_segment (A := R.V (pP i)) (u := R.V (pP (i + 1)) - R.V (pP i))
+      (le_of_lt hs0) (le_of_lt hs1)
+    rwa [lin_zero, lin_one_sub] at this
+  have hyne : ∀ j ∈ D,
+      off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ (j - 1))) ≠ 0 := by
+    intro j hj
+    obtain ⟨s, hs0, hs1, hsj⟩ := hint j hj
+    have hj1 : j - 1 + 1 = j := by simp
+    refine neighbour_off_ne_zero R hfin i j (j - 1) (j - 1) ?_ (left_mem_segment ℝ _ _)
+      ?_ hu hs0 hs1 hsj
+    · show R.V (pQ j) ∈ segment ℝ (R.V (pQ (j - 1))) (R.V (pQ (j - 1 + 1)))
+      rw [hj1]; exact right_mem_segment ℝ _ _
+    · have h := R.simpleQ.1 (j - 1)
+      rw [hj1] at h
+      exact fun hc => h hc.symm
+  have hzne : ∀ j ∈ D,
+      off (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pP i)) (R.V (pQ (j + 1))) ≠ 0 := by
+    intro j hj
+    obtain ⟨s, hs0, hs1, hsj⟩ := hint j hj
+    exact neighbour_off_ne_zero R hfin i j (j + 1) j
+      (left_mem_segment ℝ _ _) (right_mem_segment ℝ _ _) (R.simpleQ.1 j) hu hs0 hs1 hsj
+  refine count_grows_by_degeneracies R hfin i t hu D hD hyne hzne ?_ ?_
+  · -- separation for the edge `[Q(j-1), Q j]`
+    intro j hj
+    obtain ⟨s, hs0, hs1, hsj⟩ := hint j hj
+    have hj1 : j - 1 + 1 = j := by simp
+    have hCD : R.V (pQ j) - R.V (pQ (j - 1)) ≠ 0 := by
+      have h := R.simpleQ.1 (j - 1)
+      rw [hj1] at h
+      exact sub_ne_zero.mpr (fun hc => h hc.symm)
+    refine straddle_of_interior hs0 hs1 (by rw [← hsj]; simp only [orientR]; ring) ?_
+    rintro ⟨hA, hB⟩
+    refine hyne j hj ?_
+    rw [off_eq_orientR]
+    exact collinear_trans hCD hA hB (by simp only [orientR]; ring)
+  · -- separation for the edge `[Q j, Q (j+1)]`
+    intro j hj
+    obtain ⟨s, hs0, hs1, hsj⟩ := hint j hj
+    have hCD : R.V (pQ (j + 1)) - R.V (pQ j) ≠ 0 :=
+      sub_ne_zero.mpr (fun hc => (R.simpleQ.1 j) hc.symm)
+    refine straddle_of_interior hs0 hs1 (by rw [← hsj]; simp only [orientR]; ring) ?_
+    rintro ⟨hA, hB⟩
+    refine hzne j hj ?_
+    rw [off_eq_orientR]
+    exact collinear_trans hCD hA hB (by simp only [orientR]; ring)
+
+#print axioms orientR_lin_three
+#print axioms collinear_trans
+
+#print axioms count_grows_from_interior
 
 end Pair9Shift
 end Heptagon
