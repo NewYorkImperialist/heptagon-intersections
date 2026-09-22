@@ -558,7 +558,7 @@ non-negative integer. ∎
 | **7** | **(R2)** at every apex, some incident side pair has all four `D`'s `≢ 0` with the straddle leading-sign pattern | **PROVED ON PAPER** (per-apex, and the per-apex choices provably do not interfere) | `eps_uniform` Finding 1 + Finding 4; `e9_directions` |
 | **8** | **(CI)** the count inequality for the §9.1 motion | **PROVED ON PAPER — §2 of this document.** 285/285 with two firing controls | §2.3, §2.4; `independent/akr_9_assembly/` |
 | **9** | **(Simp-stable)** small perturbations preserve `SimpleClosed`, including along a linear motion | **VERIFIED IN LEAN**, kernel-checked | `lean/SimplicityStable.lean`, `heptagon_simplicity_stable_linear` |
-| **10** | **(Sign-exp)** `SimpleClosed` is a Boolean function of the sign vector of the witness family `W` | **NOT PROVED.** Small, and needed to bootstrap (9) from "for small enough α" to "on all of `(0,ε₀)`" | `eps_uniform` Finding 4's table asserts it; `SimplicityStable.meet_eq_singleton_of_cornerVec_ne_zero` supplies the corner half |
+| **10** | **(Sign-exp)** `SimpleClosed` is a Boolean function of the sign vector of the witness family `W` | **VERIFIED IN LEAN, 2026-09-21**, kernel-checked, zero `sorryAx`. `simpleClosed_iff_sign` in `lean/SignExp.lean`, via `cornerVec_ne_zero_iff_sign` (the corner half) and `disjoint_iff_sign` (the disjointness half, resting on `mem_segment_iff_sign`: a point lies on a closed segment iff a determinant vanishes **and** an inner product is non-positive — which is why the witness family needs dot products, not just determinants) | `eps_uniform` Finding 4's table asserts it; `SimplicityStable.meet_eq_singleton_of_cornerVec_ne_zero` supplies the corner half |
 | **11** | **(Avg)** §9.2's averaging identity, plus clauses 1–4 (simplicity, no new degeneracy, termination monovariant) | **PROVED ON PAPER**; 47 346 exact tests, 0 violations | `docs/akr-9-2-obligation.md` §4, §5 |
 | **12** | **(NC)** at every side §9.2 must shift, that side's two endpoint-triples are non-collinear | **OPEN — and §2.5 shows §9.1 cannot supply it** | §2.5; `akr-9-2-obligation.md` §3.1 |
 | **13** | **(Fin-out)** Phase 1's *output* pair still has finite boundary intersection | **ADDED 2026-09-21 — this was missing, and the theorem above was false without it.** Hypothesis 1 gives finiteness of the *input*; hypothesis 11, §9.2's averaging identity, needs it of the *intermediate* pair, and nothing carried it there. It is **not automatic**: `R3.md` Finding R3-1 is an exact certificate of an AKR-admissible direction making `∂P(α) ∩ ∂Q(α)` infinite for every `α>0`. It follows from 5′, and from (R3) below | `independent/eps_uniform/R3.md` Finding R3-1 and Theorem R3-F; `e9_directions` finiteness section |
@@ -616,7 +616,8 @@ non-negative integer. ∎
   and `AKR9.points_le_38_of_no_vertex_on_boundary` between them removed it. Any
   document still saying the project imports it is out of date.
 * **"The perturbed polygons are still simple."** Gone as an unwarranted clause:
-  hypothesis 9, kernel-checked. (Hypothesis 10 is the small residue.)
+  hypothesis 9, kernel-checked. **(Hypothesis 10, its "small residue", is also
+  gone as of 2026-09-21 — `lean/SignExp.lean`.)**
 * **The existence of the directions `E_i`.** Gone: hypothesis 4.
 * **A quantitative sine-law O(α²) estimate.** Not needed. Hypotheses 6 and 7
   replace it; see §1.2(i).
