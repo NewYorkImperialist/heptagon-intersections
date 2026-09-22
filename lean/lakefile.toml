@@ -5432,3 +5432,6 @@ name = "TiltedShift"
 
 [[lean_lib]]
 name = "CrossTransport"
+
+[[lean_lib]]
+name = "CIInstance"
