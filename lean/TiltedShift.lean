@@ -411,15 +411,11 @@ theorem averaging_sum {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → �
     Finset.sum_congr rfl (fun i hi => averaging_identity hN hδ (hy i hi) (hz i hi))]
   simp [Finset.sum_const, Nat.mul_comm]
 
-/-- **What §9.2 actually uses.**  The averaging identity is never needed as an
-identity; it is needed to license a *choice*.  Since the two directions'
-totals sum to twice the original count, at least one of them is no larger than
-the original — so there is always a shift direction that does not increase the
-number of intersections.
+/-- One direction does not *increase* the count.
 
-This is the step that lets §9.2 remove a vertex-side degeneracy without paying
-for it, and it is the reason the section can iterate: each shift kills a
-degeneracy and the bound never goes up. -/
+**This is not the direction §9.2 uses** — see `exists_sign_not_decreasing`
+below, and the note there.  It is kept because it is the other half of the
+same pigeonhole and costs one line. -/
 theorem exists_sign_not_increasing {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → ℝ)
     (hN : 0 < N) (hδ : δ ≠ 0)
     (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
@@ -428,6 +424,33 @@ theorem exists_sign_not_increasing {ι : Type*} (S : Finset ι) (N δ : ℝ) (y 
   have h := averaging_sum S N δ y z hN hδ hy hz
   omega
 
+/-- **What §9.2 actually uses.**  Since the two directions' totals sum to
+*twice* the original count, at least one of them is no **smaller** than the
+original: there is always a shift direction along which the intersection count
+**does not drop**.
+
+That is the direction the section needs, and it is worth being explicit about
+why, because the opposite reading is natural and wrong.  §9.2's purpose is to
+bound the count of a *degenerate* pair.  It shifts to a *nondegenerate* pair,
+where the enumeration gives `≤ 38`, and then argues
+
+>  `count(original) ≤ count(shifted) ≤ 38`.
+
+The first inequality is the one that needs proving, so the count must not
+**decrease**.  A direction that merely fails to *increase* the count would give
+nothing at all here.
+
+An earlier version of this file described `exists_sign_not_increasing` as "the
+step §9.2 uses".  That was wrong; this is the step. -/
+theorem exists_sign_not_decreasing {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → ℝ)
+    (hN : 0 < N) (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
+    S.card ≤ (∑ i ∈ S, crossCount δ N (y i) (z i)) ∨
+      S.card ≤ (∑ i ∈ S, crossCount (-δ) N (y i) (z i)) := by
+  have h := averaging_sum S N δ y z hN hδ hy hz
+  omega
+
+#print axioms exists_sign_not_decreasing
 #print axioms averaging_sum
 #print axioms exists_sign_not_increasing
 
@@ -455,17 +478,17 @@ theorem ip_nrm_self_pos {u : ℝ × ℝ} (hu : u ≠ 0) : 0 < ip (nrm u) (nrm u)
 
 /-- **The §9.2 repair, assembled.**  For any nonzero side direction `u`, shifting
 along the tilted direction `nrm u` gives a well-defined, strictly positive normal
-displacement, and hence a choice of sign that does not increase the intersection
-count — at every vertex, straight or not.
+displacement, and hence a choice of sign along which the intersection count
+**does not drop** — at every vertex, straight or not.
 
 The hypotheses `hy`, `hz` are the `δ₀` bound and nothing else. -/
 theorem tilted_shift_admits_averaging {u : ℝ × ℝ} (hu : u ≠ 0) {ι : Type*}
     (S : Finset ι) (y z : ι → ℝ) {δ : ℝ} (hδ : δ ≠ 0)
     (hy : ∀ i ∈ S, |δ| * ip (nrm u) (nrm u) < |y i|)
     (hz : ∀ i ∈ S, |δ| * ip (nrm u) (nrm u) < |z i|) :
-    (∑ i ∈ S, crossCount δ (ip (nrm u) (nrm u)) (y i) (z i)) ≤ S.card ∨
-      (∑ i ∈ S, crossCount (-δ) (ip (nrm u) (nrm u)) (y i) (z i)) ≤ S.card :=
-  exists_sign_not_increasing S _ δ y z (ip_nrm_self_pos hu) hδ hy hz
+    S.card ≤ (∑ i ∈ S, crossCount δ (ip (nrm u) (nrm u)) (y i) (z i)) ∨
+      S.card ≤ (∑ i ∈ S, crossCount (-δ) (ip (nrm u) (nrm u)) (y i) (z i)) :=
+  exists_sign_not_decreasing S _ δ y z (ip_nrm_self_pos hu) hδ hy hz
 
 #print axioms ip_nrm_self_pos
 #print axioms tilted_shift_admits_averaging

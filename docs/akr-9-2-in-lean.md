@@ -96,7 +96,7 @@ The last line is what makes the tilt parameter free to spend elsewhere.
 | `averaging_local` | the two directions' local counts sum to `2`, with **no hypothesis on the corner's shape** |
 | `straddle_iff_sign` | the honest geometric condition, and the fact that AKR's sign criterion is its *small-δ* form |
 | `averaging_fails_without_smallness` | at `N=1, y=z=1, δ=2` both shifts overshoot the corner and the counts sum to **0** — the identity is **false** without a `δ₀`-style bound, which the sentence does not mention |
-| `averaging_sum`, `exists_sign_not_increasing` | the configuration-level form, and the pigeonhole step the section actually uses: `a + b = 2n` forces `min(a,b) ≤ n` |
+| `averaging_sum`, `exists_sign_not_decreasing` | the configuration-level form, and the pigeonhole step the section actually uses: `a + b = 2n` forces `max(a,b) ≥ n`, so some direction does **not drop** the count. The *decreasing* direction is the one needed — §9.2 bounds a degenerate pair by shifting to a nondegenerate one where the enumeration gives `≤ 38`, and argues `count(original) ≤ count(shifted) ≤ 38`. An earlier version of this table named `exists_sign_not_increasing`, which is the opposite direction and proves nothing here; corrected 2026-09-22. |
 | `exists_mem_openSegment_off_eq` | the counted points are real points, via an **explicit ratio** — no intermediate-value theorem is needed, because the offset is affine along the edge |
 
 If the two incident offsets agree in sign the count goes 2 then 0 — AKR's
