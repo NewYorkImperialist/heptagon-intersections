@@ -553,5 +553,65 @@ theorem crossing_mem_side {a A Y w : ℝ × ℝ} {s δ t ν : ℝ}
 #print axioms lin_mem_openSegment
 #print axioms crossing_mem_side
 
+/-! ### An explicit bound on the displacement
+
+`crossing_param` leaves `ν` implicit.  For the *tilted* direction `w = nrm a`
+the two defining equations collapse, because `⟪a, nrm a⟫ = 0` and
+`a × nrm a = ‖a‖²`: the whole displacement is `ν = δ · ⟪a, Y − A − s·a⟫ / y`.
+That is small enough to bound outright. -/
+
+/-- The tilted direction's two defining equations, solved. -/
+theorem crossing_param_tilted {a A Y : ℝ × ℝ} (s δ : ℝ)
+    (hn2 : a.1 * a.1 + a.2 * a.2 ≠ 0) (hy : off a A Y ≠ 0) :
+    ((lin A a s).1 + (δ * (a.1 * a.1 + a.2 * a.2) / off a A Y) * (Y.1 - (lin A a s).1)
+        - δ * (nrm a).1,
+     (lin A a s).2 + (δ * (a.1 * a.1 + a.2 * a.2) / off a A Y) * (Y.2 - (lin A a s).2)
+        - δ * (nrm a).2)
+      = lin A a (s + δ * (a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2))
+          / off a A Y) := by
+  unfold off at hy
+  refine crossing_param hn2 ?_ ?_
+  · simp only [off, nrm]
+    rw [div_mul_cancel₀ _ hy]
+    ring
+  · simp only [off, nrm]
+    field_simp
+    try ring
+
+/-- **An explicit `δ₀` for the line-versus-side step.**  With integer
+coordinates the offset `y = a × (Y − A)` is a nonzero integer determinant, hence
+`1 ≤ |y|` — that is the hypothesis `hy`, and it is the only place integrality
+is used.  The displacement is then bounded by `|δ|` times a quantity depending
+on the configuration alone, with no division left in it.
+
+Combined with `crossing_mem_side`, this turns "shift by a small enough `δ`" into
+an inequality a reader can check. -/
+theorem nu_abs_le {a A Y : ℝ × ℝ} {s δ : ℝ} (hs0 : 0 ≤ s) (hs1 : s ≤ 1)
+    (hy : 1 ≤ |off a A Y|) :
+    |δ * (a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2)) / off a A Y|
+      ≤ |δ| * (|a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2)| + (a.1 * a.1 + a.2 * a.2)) := by
+  have hn2nn : (0:ℝ) ≤ a.1 * a.1 + a.2 * a.2 := by
+    nlinarith [mul_self_nonneg a.1, mul_self_nonneg a.2]
+  have hsn0 : 0 ≤ s * (a.1 * a.1 + a.2 * a.2) := mul_nonneg hs0 hn2nn
+  have hsn1 : s * (a.1 * a.1 + a.2 * a.2) ≤ a.1 * a.1 + a.2 * a.2 := by nlinarith
+  have hQ : |a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2)|
+      ≤ |a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2)| + (a.1 * a.1 + a.2 * a.2) := by
+    have hrw : a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2)
+        = (a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2)) - s * (a.1 * a.1 + a.2 * a.2) := by
+      ring
+    rw [hrw, abs_le]
+    have h1 := le_abs_self (a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2))
+    have h2 := neg_abs_le (a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2))
+    constructor <;> linarith
+  rw [abs_div, abs_mul]
+  calc |δ| * |a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2)| / |off a A Y|
+      ≤ |δ| * |a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2)| :=
+        div_le_self (by positivity) hy
+    _ ≤ |δ| * (|a.1 * (Y.1 - A.1) + a.2 * (Y.2 - A.2)| + (a.1 * a.1 + a.2 * a.2)) :=
+        mul_le_mul_of_nonneg_left hQ (abs_nonneg δ)
+
+#print axioms crossing_param_tilted
+#print axioms nu_abs_le
+
 end TiltedShift
 end Heptagon
