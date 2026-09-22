@@ -134,5 +134,42 @@ theorem exists_degSetQ_empty (R : Pair9) (t : ℝ) :
 #print axioms degSetQ_eq_degSetOf_swap
 #print axioms exists_degSetQ_empty
 
+/-! ## The third interleaving: the `P`-side shift keeps `degSetQ` clear
+
+Composing the three halves needs each step to preserve what the earlier ones
+achieved. The `P`-side shift moves `P`-vertices, which could land on `Q`-side
+lines and so undo the mirror half. Affine again, finite again. -/
+
+/-- **The `P`-side shift can be chosen to keep every `P`-vertex off the
+`Q`-side lines.** -/
+theorem exists_delta_preserving_degSetQ (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hfree : degSetQ V = ∅) {δ₁ : ℝ} (hδ₁ : 0 < δ₁) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₁ ∧ degSetQ (RotationLaw.shiftV V i t δ) = ∅ := by
+  classical
+  have hne : ∀ p : Fin 7 × Fin 7,
+      orientR (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2)) ≠ 0 := by
+    intro p
+    rw [Finset.eq_empty_iff_forall_notMem] at hfree
+    intro hz
+    exact hfree p (by
+      simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and]; exact hz)
+  obtain ⟨δ, hδ0, hδlt, hkeep⟩ :=
+    Pair9Shift.exists_good_delta_affine' (Finset.univ : Finset (Fin 7 × Fin 7))
+      (fun p => orientR (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2)))
+      (fun p => Pair9Shift.dcoef (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2))
+        (RotationLaw.tilt (V (pP (i + 1)) - V (pP i)) t)
+        (if pQ p.1 = pP i ∨ pQ p.1 = pP (i + 1) then 1 else 0)
+        (if pQ (p.1 + 1) = pP i ∨ pQ (p.1 + 1) = pP (i + 1) then 1 else 0)
+        (if pP p.2 = pP i ∨ pP p.2 = pP (i + 1) then 1 else 0))
+      (fun p _ => hne p) hδ₁
+  refine ⟨δ, hδ0, hδlt, ?_⟩
+  rw [Finset.eq_empty_iff_forall_notMem]
+  intro p hp
+  simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+  rw [Pair9Shift.orientR_shiftV_affine] at hp
+  exact hkeep p (Finset.mem_univ _) hp
+
+#print axioms exists_delta_preserving_degSetQ
+
 end SwapPQ
 end Heptagon
