@@ -126,6 +126,47 @@ such an endpoint and no shift can ever break the collinearity. -/
 theorem akr_fails_at_straight {w u : ℝ × ℝ} (h : cross w u = 0) :
     ip w (nrm u) = 0 := (ip_nrm_eq_zero_iff w u).mpr h
 
+/-! ## Why it is a *parallel* shift
+
+`REPAIR.md` §1.1 chooses the normalisation so that both moved endpoints land on
+the **same** translate of the side's line, whatever `(a,b)` are:
+
+> "both new endpoints lie on `ℓ_δ = {x : ⟪x−A, n⟫ = δN}`, the parallel
+> translate of the line of `s` at parameter `δ`. The choice of `(a,b)` only
+> decides *where on `ℓ_δ`* the two endpoints land."
+
+That is an algebraic identity and it is the reason the tilt is free: it moves
+the endpoint along `ℓ_δ` without changing which `ℓ_δ` it is on. -/
+
+/-- Move `A` by `c` in direction `a`. -/
+def shiftPt (A a : ℝ × ℝ) (c : ℝ) : ℝ × ℝ := (A.1 + c * a.1, A.2 + c * a.2)
+
+theorem ip_shiftPt (A a n : ℝ × ℝ) (c : ℝ) :
+    ip (shiftPt A a c) n = ip A n + c * ip a n := by
+  simp only [ip, shiftPt]; ring
+
+/-- **Both endpoints land on the same parallel line.**  `u = B − A` is
+orthogonal to `n`, so the `B` end starts on the same line as the `A` end and
+the two normalised displacements are equal. -/
+theorem shift_parallel {A B a b n : ℝ × ℝ} {δ N : ℝ}
+    (ha : ip a n ≠ 0) (hb : ip b n ≠ 0)
+    (hperp : ip B n = ip A n) :
+    ip (shiftPt A a (δ * N / ip a n)) n = ip A n + δ * N ∧
+    ip (shiftPt B b (δ * N / ip b n)) n = ip A n + δ * N := by
+  constructor
+  · rw [ip_shiftPt, div_mul_cancel₀ _ ha]
+  · rw [ip_shiftPt, div_mul_cancel₀ _ hb, hperp]
+
+/-- The hypothesis of `shift_parallel` is automatic for a genuine side: the
+side direction is orthogonal to its own normal. -/
+theorem side_perp (A B : ℝ × ℝ) : ip B (nrm (B - A)) = ip A (nrm (B - A)) := by
+  have h : ip (B - A) (nrm (B - A)) = 0 := ip_u_nrm _
+  simp only [ip, nrm, Prod.fst_sub, Prod.snd_sub] at h ⊢
+  linarith
+
+#print axioms shift_parallel
+#print axioms side_perp
+
 #print axioms akr_admissible_iff
 #print axioms akr_fails_at_straight
 
