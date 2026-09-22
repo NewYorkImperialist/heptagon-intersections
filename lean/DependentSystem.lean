@@ -439,6 +439,95 @@ theorem move_of_theorem17 (S : DepSystem (Fin 14)) (hR : S.Reaches)
     rw [hmx, hmy]
     exact ⟨⟨(hx' e).1, (hy' e).1⟩, ⟨(hx' e).2, (hy' e).2⟩⟩
 
+/-! ## 5b. From vertex-side degeneracies to a `DepSystem`
+
+AKR's relation (1): at each vertex-side degeneracy a point `A` of one polygon
+lies on a side `BC` of the other, so `A = t·B + (1−t)·C` with `t ∈ (0,1)`, and
+the perturbation maintains that relation with the same `t`.  This packages such
+a family and produces the `DepSystem` together with `Reaches`, so
+`theorem17` applies to the real configuration with no hypothesis left over. -/
+
+/-- A family of vertex-side degeneracies on a vertex map `V`. -/
+structure VSDeg {ι : Type*} [Fintype ι] [DecidableEq ι] (V : ι → ℝ × ℝ) where
+  /-- The dependent vertices. -/
+  dep : Finset ι
+  /-- The first vertex each dependent vertex lies between. -/
+  b : ι → ι
+  /-- The second. -/
+  c : ι → ι
+  /-- The barycentric ratio, maintained by the motion. -/
+  t : ι → ℝ
+  ht0 : ∀ i ∈ dep, 0 < t i
+  ht1 : ∀ i ∈ dep, t i < 1
+  hne : ∀ i ∈ dep, V (b i) ≠ V (c i)
+  hrep : ∀ i ∈ dep, V i = t i • V (b i) + (1 - t i) • V (c i)
+
+namespace VSDeg
+
+variable {ι : Type*} [Fintype ι] [DecidableEq ι] {V : ι → ℝ × ℝ} (D : VSDeg V)
+
+theorem bc_ne {i : ι} (hi : i ∈ D.dep) : D.b i ≠ D.c i := by
+  intro h; exact D.hne i hi (by rw [h])
+
+/-- The dependence system it induces. -/
+noncomputable def toDepSystem : DepSystem ι where
+  dep := D.dep
+  lam := fun i j =>
+    if i ∈ D.dep then
+      (if j = D.b i then D.t i else if j = D.c i then 1 - D.t i else 0)
+    else 0
+  lam_nonneg := by
+    intro i j
+    by_cases hi : i ∈ D.dep
+    · simp only [if_pos hi]
+      by_cases h1 : j = D.b i
+      · simp only [if_pos h1]; exact le_of_lt (D.ht0 i hi)
+      · by_cases h2 : j = D.c i
+        · simp only [if_neg h1, if_pos h2]; linarith [D.ht1 i hi]
+        · simp only [if_neg h1, if_neg h2]
+          exact le_refl 0
+    · simp only [if_neg hi]
+      exact le_refl 0
+  lam_sum := by
+    intro i hi
+    have hbc := D.bc_ne hi
+    simp only [if_pos hi]
+    have hsplit : ∀ j : ι,
+        (if j = D.b i then D.t i else if j = D.c i then 1 - D.t i else 0)
+          = (if j = D.b i then D.t i else 0) + (if j = D.c i then 1 - D.t i else 0) := by
+      intro j
+      by_cases h1 : j = D.b i
+      · subst h1; simp [hbc]
+      · by_cases h2 : j = D.c i
+        · subst h2; simp [Ne.symm hbc]
+        · simp [h1, h2]
+    rw [Finset.sum_congr rfl fun j _ => hsplit j, Finset.sum_add_distrib,
+      Finset.sum_ite_eq' Finset.univ (D.b i) (fun _ => D.t i),
+      Finset.sum_ite_eq' Finset.univ (D.c i) (fun _ => 1 - D.t i)]
+    simp
+
+theorem arc_b {i : ι} (hi : i ∈ D.dep) : (D.toDepSystem).Arc i (D.b i) := by
+  refine ⟨hi, ?_⟩
+  simp only [toDepSystem, if_pos hi, if_pos rfl]
+  exact D.ht0 i hi
+
+theorem arc_c {i : ι} (hi : i ∈ D.dep) : (D.toDepSystem).Arc i (D.c i) := by
+  refine ⟨hi, ?_⟩
+  have hbc := D.bc_ne hi
+  simp only [toDepSystem, if_pos hi, if_neg (Ne.symm hbc)]
+  simp only [if_pos trivial]
+  linarith [D.ht1 i hi]
+
+/-- **`Reaches` holds for a real family of vertex-side degeneracies.**  So
+`theorem17` applies with nothing assumed about the dependence graph. -/
+theorem reaches : (D.toDepSystem).Reaches := by
+  refine (D.toDepSystem).reaches_of_strict_between V ?_
+  intro i hi
+  exact ⟨D.b i, D.c i, D.arc_b hi, D.arc_c hi, D.hne i hi,
+    D.t i, D.ht0 i hi, D.ht1 i hi, D.hrep i hi⟩
+
+end VSDeg
+
 /-! ## 6. Axiom check -/
 
 #print axioms Heptagon.DependentSystem.DepSystem.eq_zero_of_homogeneous
@@ -453,6 +542,7 @@ theorem move_of_theorem17 (S : DepSystem (Fin 14)) (hR : S.Reaches)
 #print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_between
 #print axioms Heptagon.DependentSystem.DepSystem.lex_lt_of_strict_between
 #print axioms Heptagon.DependentSystem.DepSystem.reaches_of_strict_between
+#print axioms Heptagon.DependentSystem.VSDeg.reaches
 #print axioms Heptagon.DependentSystem.DepSystem.theorem17
 #print axioms Heptagon.DependentSystem.move_of_theorem17
 
