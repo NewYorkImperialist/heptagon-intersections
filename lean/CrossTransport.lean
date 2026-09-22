@@ -156,6 +156,31 @@ theorem classC0_survives {Vp Vq : ℝ → ℝ × ℝ} {e : ℝ} (h : Vp e = Vq e
     Vp e ∈ segment ℝ (Vp e) Vp' ∧ Vp e ∈ segment ℝ (Vq e) Vq' :=
   ⟨left_mem_segment ℝ _ _, by rw [h]; exact left_mem_segment ℝ _ _⟩
 
+/-! ## Injectivity: distinct crossing pairs give distinct points
+
+The remaining half of Theorem CI is that `Φ_α` is injective.  For class (a)
+that reduces to the fact underneath `DegBound.lemmaCL_regular`: a point
+interior to two sides determines the pair.  Stated here in the form the
+transport needs — if two crossing pairs share a common point, and that point is
+regular for the moved configuration, the pairs coincide. -/
+
+/-- Two side pairs sharing a regular common point are the same pair.  This is
+the class-(a) diagonal of the injectivity table. -/
+theorem pair_unique_of_shared {V : Fin 14 → ℝ × ℝ} {i₁ i₂ j₁ j₂ : Fin 7}
+    {x : ℝ × ℝ}
+    (hi : ∀ i k : Fin 7, x ∈ segment ℝ (V (pP i)) (V (pP (i + 1))) →
+      x ∈ segment ℝ (V (pP k)) (V (pP (k + 1))) → i = k)
+    (hj : ∀ j l : Fin 7, x ∈ segment ℝ (V (pQ j)) (V (pQ (j + 1))) →
+      x ∈ segment ℝ (V (pQ l)) (V (pQ (l + 1))) → j = l)
+    (h₁P : x ∈ segment ℝ (V (pP i₁)) (V (pP (i₁ + 1))))
+    (h₂P : x ∈ segment ℝ (V (pP i₂)) (V (pP (i₂ + 1))))
+    (h₁Q : x ∈ segment ℝ (V (pQ j₁)) (V (pQ (j₁ + 1))))
+    (h₂Q : x ∈ segment ℝ (V (pQ j₂)) (V (pQ (j₂ + 1)))) :
+    (i₁, j₁) = (i₂, j₂) :=
+  Prod.ext (hi i₁ i₂ h₁P h₂P) (hj j₁ j₂ h₁Q h₂Q)
+
+#print axioms pair_unique_of_shared
+
 #print axioms classB_survives
 #print axioms classC0_survives
 
