@@ -121,6 +121,70 @@ theorem mem_crossPairs_of_reg (hno : NoOverlap R) {x : ℝ × ℝ} (hx : x ∈ r
       (endP_not_mem R hno hx i j hi hj) (endP1_not_mem R hno hx i j hi hj)
       (endQ_not_mem R hno hx i j hi hj) (endQ1_not_mem R hno hx i j hi hj))
 
+/-! ## Lemma CL's uniqueness half, without AKR §9
+
+`AKR9.sideP9_unique` proves a point lies on exactly one side of each polygon,
+but takes §9's conclusion as a hypothesis, using it only to know the point is
+not a vertex.  For a **regular** point that is true by definition, so the same
+argument runs with no import at all.  This is the uniqueness half of Lemma CL
+of `docs/akr-9-assembly.md` §2.2. -/
+
+theorem sideP_unique_reg {x : ℝ × ℝ} (hx : x ∈ regPts R) {i k : Fin 7}
+    (hi : x ∈ sideP9 R i) (hk : x ∈ sideP9 R k) : i = k := by
+  by_contra hne
+  by_cases hadj : LowerBound.Adjacent i k
+  · rcases hadj with h | h | h
+    · exact hne h
+    · subst h
+      have := R.simpleP.2.2 i
+      rw [← fin7_succ_succ i] at this
+      have hm : x ∈ ({R.V (pP (i + 1))} : Set (ℝ × ℝ)) := by
+        rw [← this]; exact ⟨hi, hk⟩
+      exact hx.2 (by rw [Set.mem_singleton_iff.mp hm]; exact vertP_mem R (i + 1))
+    · subst h
+      have := R.simpleP.2.2 k
+      rw [← fin7_succ_succ k] at this
+      have hm : x ∈ ({R.V (pP (k + 1))} : Set (ℝ × ℝ)) := by
+        rw [← this]; exact ⟨hk, hi⟩
+      exact hx.2 (by rw [Set.mem_singleton_iff.mp hm]; exact vertP_mem R (k + 1))
+  · exact Set.disjoint_left.mp (R.simpleP.2.1 i k hadj) hi hk
+
+theorem sideQ_unique_reg {x : ℝ × ℝ} (hx : x ∈ regPts R) {j l : Fin 7}
+    (hj : x ∈ sideQ9 R j) (hl : x ∈ sideQ9 R l) : j = l := by
+  by_contra hne
+  by_cases hadj : LowerBound.Adjacent j l
+  · rcases hadj with h | h | h
+    · exact hne h
+    · subst h
+      have := R.simpleQ.2.2 j
+      rw [← fin7_succ_succ j] at this
+      have hm : x ∈ ({R.V (pQ (j + 1))} : Set (ℝ × ℝ)) := by
+        rw [← this]; exact ⟨hj, hl⟩
+      exact hx.2 (by rw [Set.mem_singleton_iff.mp hm]; exact vertQ_mem R (j + 1))
+    · subst h
+      have := R.simpleQ.2.2 l
+      rw [← fin7_succ_succ l] at this
+      have hm : x ∈ ({R.V (pQ (l + 1))} : Set (ℝ × ℝ)) := by
+        rw [← this]; exact ⟨hl, hj⟩
+      exact hx.2 (by rw [Set.mem_singleton_iff.mp hm]; exact vertQ_mem R (l + 1))
+  · exact Set.disjoint_left.mp (R.simpleQ.2.1 j l hadj) hj hl
+
+/-- **Lemma CL, regular case.**  A regular intersection point lies in the open
+interior of exactly one side of each polygon, and that pair crosses properly. -/
+theorem lemmaCL_regular (hno : NoOverlap R) {x : ℝ × ℝ} (hx : x ∈ regPts R) :
+    ∃! p : Fin 7 × Fin 7,
+      x ∈ openSegment ℝ (R.V (pP p.1)) (R.V (pP (p.1 + 1))) ∧
+      x ∈ openSegment ℝ (R.V (pQ p.2)) (R.V (pQ (p.2 + 1))) ∧
+      p ∈ crossPairsOf R.V := by
+  obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx.1.1
+  obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hx.1.2
+  refine ⟨(i, j), ⟨reg_mem_openP R hx i hi, reg_mem_openQ R hx j hj,
+    mem_crossPairs_of_reg R hno hx i j hi hj⟩, ?_⟩
+  rintro ⟨i', j'⟩ ⟨hi', hj', -⟩
+  have hiP : x ∈ sideP9 R i' := openSegment_subset_segment ℝ _ _ hi'
+  have hjQ : x ∈ sideQ9 R j' := openSegment_subset_segment ℝ _ _ hj'
+  exact Prod.ext (sideP_unique_reg R hx hiP hi) (sideQ_unique_reg R hx hjQ hj)
+
 /-! ## The injection -/
 
 noncomputable def pIdx (x : ℝ × ℝ) : Fin 7 :=
@@ -211,6 +275,7 @@ theorem points9_ncard_le_38_add_deg' (hfin : (points9 R).Finite) :
 #print axioms points9_ncard_le_38_add_deg
 #print axioms regPts_ncard_le_38
 #print axioms mem_crossPairs_of_reg
+#print axioms lemmaCL_regular
 #print axioms noOverlap_of_finite
 #print axioms points9_ncard_le_38_add_deg'
 
