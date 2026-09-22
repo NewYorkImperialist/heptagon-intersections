@@ -55,6 +55,7 @@ namespace E9Directions
 
 open Heptagon.Pair9Shift Heptagon.RealConfig Heptagon.RealUpperBound
 open Heptagon.TiltedShift Heptagon.R3Construct
+open Heptagon.AKR9 Heptagon.ResidualSym
 
 /-! ## 1. The apex-only move -/
 
@@ -231,6 +232,49 @@ theorem exists_good_cone_direction {ak bl : ℝ × ℝ} (h : cross ak bl ≠ 0)
 #print axioms not_properCrossR_of_cross_eq
 #print axioms exists_direction_four_ray
 #print axioms exists_good_cone_direction
+
+/-! ## 7. At an actual coincidence of a `Pair9`
+
+Everything above is in apex-origin coordinates. `ProperCrossR` is translation
+invariant, so it transfers to a coincidence `P_i = Q_j` of a real
+configuration without any further geometry. -/
+
+theorem orientR_translate (a b c v : ℝ × ℝ) :
+    orientR (a + v) (b + v) (c + v) = orientR a b c := by
+  simp only [orientR, Prod.fst_add, Prod.snd_add]; ring
+
+theorem properCrossR_translate (a b c d v : ℝ × ℝ) :
+    ProperCrossR (a + v) (b + v) (c + v) (d + v) ↔ ProperCrossR a b c d := by
+  simp only [ProperCrossR, orientR_translate]
+
+/-- **§9.1's move at a real coincidence.**  If `P_i = Q_j` and the `P`-ray to
+`P_{i+1}` is not parallel to the `Q`-ray to `Q_{j+1}`, then moving **only**
+`P_i`, to `P_i + ε·E`, makes the moved `P`-side cross that `Q`-side properly —
+for every `ε > 0`.
+
+The direction is `E = Q_{j+1} − P_{i+1}`, about as explicit as one can be. -/
+theorem coincidence_direction (R : Pair9) (i j : Fin 7)
+    (hco : R.V (pP i) = R.V (pQ j))
+    (hnp : cross (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i)) ≠ 0)
+    {e : ℝ} (he : 0 < e) :
+    ProperCrossR
+      (qStart (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i)) 1 e
+        + R.V (pP i))
+      (R.V (pP (i + 1))) (R.V (pQ j)) (R.V (pQ (j + 1))) := by
+  have h1 := (properCrossR_translate
+    (qStart (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i)) 1 e)
+    (qEnd (R.V (pP (i + 1)) - R.V (pP i))) 0
+    (R.V (pQ (j + 1)) - R.V (pP i)) (R.V (pP i))).mpr
+      (properCrossR_of_cross_ne hnp he)
+  have e1 : qEnd (R.V (pP (i + 1)) - R.V (pP i)) + R.V (pP i) = R.V (pP (i + 1)) := by
+    simp [qEnd]
+  have e2 : (0 : ℝ × ℝ) + R.V (pP i) = R.V (pQ j) := by rw [zero_add, hco]
+  have e3 : R.V (pQ (j + 1)) - R.V (pP i) + R.V (pP i) = R.V (pQ (j + 1)) := by simp
+  rw [e1, e2, e3] at h1
+  exact h1
+
+#print axioms properCrossR_translate
+#print axioms coincidence_direction
 
 end E9Directions
 end Heptagon
