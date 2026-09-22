@@ -179,52 +179,39 @@ This is the part that matters, and it is not small.
    all. `akr9_simpleClosed_iff` is the bridge; `shiftPoly_eq_add_smul` then
    shows the shift *is* a linear perturbation, so
    `heptagon_simplicity_stable_linear` applies unchanged.
-2. **The count inequality is not assembled.** The remaining work is now one
-   named obligation, not a vague gap. `Pair9Shift` §9 isolates the counting
-   from the geometry as `card_add_le_of_disjoint_new`, whose four hypotheses
-   are exactly what the geometry must supply:
+2. **The count inequality — assembled at the pair level, 2026-09-22.**
+   `count_grows_by_degeneracies`: for a non-degenerate `P`-side carrying the
+   degenerate `Q`-vertices `D`, some arbitrarily small nonzero shift gives
 
-   | hypothesis | meaning | status |
-   |---|---|---|
-   | `hmono` | old crossings survive | **proved** (`crossPairsOf_mono_shift`) |
-   | `hdisjA` | a newly crossing pair was not crossing before | **proved** (`degenerate_not_mem_crossPairs`) |
-   | `hdisj` | distinct degeneracies give disjoint pair sets | **geometric content proved** (`no_consecutive_degeneracy`); `Finset` packaging left |
-   | `hsum` | the degeneracies yield ≥ `D.card` new crossings **in total** | **bridged, not yet summed** — see below |
+   >  `|crossPairsOf| + |D| ≤ |crossPairsOf of the shifted pair|`.
 
-   `hsum` was the real one, and the bridge from `crossCount` to
-   `crossPairsOf` is now built. The two conjuncts of `ProperCrossR` turn out to
-   be discharged by entirely different machinery:
+   The pair count grows by at least the number of degeneracies removed — which
+   is the point, since each degenerate point was an intersection contributing
+   to **no** pair at all. All four obligations of the counting skeleton are
+   discharged:
 
-   * the conjunct against the **shifted `P`-side** is `Straddle` *verbatim*
-     (`straddle_iff_first_conjunct`) — a rewrite, not an estimate;
-   * the conjunct against the **fixed `Q`-edge** is a *strict* inequality at
-     `δ = 0`, hence an open condition, so order-type preservation already keeps
-     it (`second_conjunct_persists`) — no new machinery at all.
+   | hypothesis | status |
+   |---|---|
+   | `hmono` | `crossPairsOf_mono_shift` |
+   | `hdisjA` | `degenerate_not_mem_crossPairs` — a vanishing determinant rules out a *proper* crossing |
+   | `hdisj` | `no_consecutive_degeneracy` + `incident_disjoint` |
+   | `hsum` | `hsum_for_side` — the averaging identity, finally doing the work it was proved for |
 
-   Together: `mem_crossPairs_of_straddle` and `..._prev`, one for each of the
-   two `Q`-edges a degenerate vertex lies on. That it lies on *two* is the
-   point-versus-pair entanglement itself — the same one behind Theorem CI's
-   `ncard` defect and the honest `38 + d`.
+   Checked independently: 1,500 configurations with a `Q`-vertex forced onto a
+   `P`-side and the hypotheses *verified* rather than assumed — 0 violations,
+   and the bound **attained** in 407 of them, so `|D|` is the right quantity
+   and not a conservative stand-in.
 
-   **What is left is bookkeeping, and only bookkeeping:** define `newOf j` as
-   the incident pairs crossing after the shift, prove `|newOf j| = crossCount`
-   (which needs the *converse* of the two bridge lemmas, not just the direction
-   proved), and sum. No further geometry.
+   **What is still missing**, and it is not small: this is about
+   `crossPairsOf`, not `points9`. Converting it needs `DegBound`'s
+   `|points9| = |regPts| + |degPts|` together with `|regPts| ≤ |crossPairsOf|`.
+   It also treats **one** `P`-side's degeneracies — iterating over all seven,
+   and over `P`-vertices lying on `Q`-sides, is not done.
 
-   Note also that `hsum` is a **sum** hypothesis, not a per-degeneracy one. An
-   earlier version of the skeleton demanded `1 ≤ |newOf d|` for each `d`, which
-   the averaging identity cannot supply and never could — a shift may kill one
-   degeneracy's contribution while doubling another's. Only the total is
-   preserved.
-
-   Two findings from building the skeleton are worth keeping. `hdisj` is *not*
-   automatic — consecutive degenerate vertices would share a pair — and holds
-   only because of **(Fin)**; and `hdisjA` is the precise statement of why
-   `crossPairsOf` undercounts `points9`: a degenerate point contributes to
-   **no** pair at all.
-
-   A commit message on 2026-09-22 called this step "a definitional bridge, not
-   a new idea". That was wrong and is retracted.
+   `(Fin)` enters twice and in different roles: through `hfin`, to stop two
+   *adjacent* degenerate vertices sharing an incident pair; and through the
+   neighbour-offset hypotheses, to make the averaging identity's smallness
+   condition satisfiable at all.
 
 3. **The `δ₀`s are not reconciled.** Three independent sources, three different
    shapes; the uniform bound over a whole configuration *along a motion* —
