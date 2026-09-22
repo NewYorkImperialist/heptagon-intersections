@@ -120,5 +120,43 @@ theorem exists_shifted_pair9 (R : Pair9) (i : Fin 7) (t : ℝ) :
 #print axioms shiftV_pP
 #print axioms exists_shifted_pair9
 
+/-! ## 4. One shift that does both
+
+`exists_delta0_simpleClosed` gives a `δ₀` below which simplicity survives — a
+*universal* statement over small `δ`.  `shift_clears_side` gives a particular
+`δ`, as small as required, clearing the side — an *existential*.  They compose
+in the only order that works: take the simplicity bound first, then choose the
+shift inside it. -/
+
+/-- **§9.2's step, as far as it goes.**  For every `Pair9`, every non-degenerate
+`P`-side, and every tilt, there is a single nonzero shift which
+
+* yields a genuine `Pair9` — both heptagons still simple — and
+* leaves **no** `Q`-vertex on that side's line.
+
+So the side's `Q`-vertex degeneracies all vanish in one step, and the result is
+still an object the rest of the development can talk about.
+
+What it does **not** say is anything about `points9`: the intersection count is
+not mentioned, and the averaging identity, the line-versus-side bound, and the
+rotation bound are not yet combined into a claim that it does not drop. -/
+theorem exists_good_shifted_pair9 (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hside : R.V (pP (i + 1)) - R.V (pP i) ≠ 0) :
+    ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      ∀ j : Fin 7,
+        off (R'.V (pP (i + 1)) - R'.V (pP i)) (R'.V (pP i)) (R'.V (pQ j)) ≠ 0 := by
+  obtain ⟨δ₀, hδ₀, hsimp⟩ :=
+    exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ, hδ0, hδlt, hclear⟩ := shift_clears_side R.V i t hside hδ₀
+  have hP : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pP k)) := by
+    simpa only [shiftV_pP] using hsimp δ (le_of_lt hδlt)
+  have hQ : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) := by
+    have hEq : (fun k : Fin 7 => shiftV R.V i t δ (pQ k)) = fun k => R.V (pQ k) := by
+      funext k; exact shiftV_Q R.V i t δ k
+    rw [hEq]; exact R.simpleQ
+  exact ⟨δ, ⟨shiftV R.V i t δ, hP, hQ⟩, hδ0, rfl, hclear⟩
+
+#print axioms exists_good_shifted_pair9
+
 end Pair9Shift
 end Heptagon

@@ -14,7 +14,7 @@ and the last section says precisely why.
 Everything below is `sorry`-free, `native_decide`-free, and depends on no
 axioms beyond `propext`, `Classical.choice`, `Quot.sound` — most results on a
 strict subset of those. Sweep of the eleven §9 modules: exit 0, **239**
-`#print axioms` lines, **0** `sorryAx`.
+`#print axioms` lines, **0** `sorryAx`; plus the leaf module `Pair9Shift`.
 
 ---
 
@@ -168,11 +168,17 @@ it was never written is the point.
 
 This is the part that matters, and it is not small.
 
-1. **No `Pair9`.** Every result is about bare points or a raw `V : Fin 14 → ℝ × ℝ`.
-   Building a `Pair9` from a shifted configuration requires re-establishing
-   `SimpleClosed`, which is hypothesis 9's obligation and belongs to
-   `SimplicityStable.lean`. Until that is connected, none of this composes into
-   a statement about `points9`.
+1. ~~**No `Pair9`.**~~ **Closed 2026-09-22**, `lean/Pair9Shift.lean`.
+   `exists_good_shifted_pair9`: for every `Pair9`, every non-degenerate
+   `P`-side and every tilt there is a single nonzero shift yielding a genuine
+   `Pair9` with **no** `Q`-vertex left on that side's line. The obstacle was
+   never the geometry — the development carries *two* definitions of
+   `SimpleClosed` (`AKR9`'s three-clause `Prop`, which `Pair9` is built from,
+   and `SimplicityStable`'s structure, which the stability theorems are stated
+   for), and without a bridge the stability theorems could not reach `Pair9` at
+   all. `akr9_simpleClosed_iff` is the bridge; `shiftPoly_eq_add_smul` then
+   shows the shift *is* a linear perturbation, so
+   `heptagon_simplicity_stable_linear` applies unchanged.
 2. **The count inequality is not assembled.** The averaging identity, the
    line-versus-side bound, and the rotation bound each produce a `δ₀`. Nothing
    yet takes their minimum and concludes that the intersection count does not
