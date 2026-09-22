@@ -826,5 +826,111 @@ theorem card_incident_eq_crossCount (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t :
 #print axioms card_filter_pair
 #print axioms card_incident_eq_crossCount
 
+/-! ## 17. Summing over the degeneracies
+
+Two helpers, then the assembly. -/
+
+theorem n2_pos_of_ne {u : ℝ × ℝ} (hu : u ≠ 0) : 0 < u.1 * u.1 + u.2 * u.2 := by
+  have h : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  rcases h with h1 | h2
+  · nlinarith [mul_self_pos.mpr h1, mul_self_nonneg u.2]
+  · nlinarith [mul_self_pos.mpr h2, mul_self_nonneg u.1]
+
+/-- The smallness bound the averaging identity needs, uniform over a finite
+family: a single `δ₀` below which the shift's normal displacement is smaller
+than every neighbour offset. -/
+theorem exists_delta0_smallness {ι : Type*} (D : Finset ι) {N : ℝ} (hN : 0 < N)
+    (y z : ι → ℝ) (hy : ∀ j ∈ D, y j ≠ 0) (hz : ∀ j ∈ D, z j ≠ 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      (∀ j ∈ D, |δ| * N < |y j|) ∧ (∀ j ∈ D, |δ| * N < |z j|) := by
+  classical
+  rcases D.eq_empty_or_nonempty with hE | hne
+  · exact ⟨1, one_pos, fun δ _ => ⟨by simp [hE], by simp [hE]⟩⟩
+  · refine ⟨D.inf' hne (fun j => min |y j| |z j| / N), ?_, ?_⟩
+    · rw [Finset.lt_inf'_iff]
+      intro j hj
+      exact div_pos (lt_min (abs_pos.mpr (hy j hj)) (abs_pos.mpr (hz j hj))) hN
+    · intro δ hδ
+      have key : ∀ j ∈ D, |δ| * N < min |y j| |z j| := by
+        intro j hj
+        have hle : D.inf' hne (fun j => min |y j| |z j| / N) ≤ min |y j| |z j| / N :=
+          Finset.inf'_le _ hj
+        have hmul := mul_lt_mul_of_pos_right (lt_of_lt_of_le hδ hle) hN
+        rwa [div_mul_cancel₀ _ (ne_of_gt hN)] at hmul
+      exact ⟨fun j hj => lt_of_lt_of_le (key j hj) (min_le_left _ _),
+             fun j hj => lt_of_lt_of_le (key j hj) (min_le_right _ _)⟩
+
+#print axioms n2_pos_of_ne
+#print axioms exists_delta0_smallness
+
+/-- **`hsum`, discharged.**  For a non-degenerate `P`-side and the finite set
+`D` of degenerate `Q`-vertices on it, there is an arbitrarily small nonzero
+shift after which the incident pairs that cross number **at least `D.card` in
+total** — the last hypothesis of the counting skeleton.
+
+The hypotheses are the geometry this rests on, all already identified:
+
+* `hD` — `D` really is the degenerate set;
+* `hyne`, `hzne` — the two neighbouring `Q`-vertices are *off* the side's line.
+  This follows from `(Fin)`: a neighbour on the line would put a sub-segment of
+  the `Q`-edge inside the `P`-side (the degenerate vertex being interior to it
+  by `(VV)`), an overlap, making `∂P ∩ ∂Q` infinite. Carried as a hypothesis
+  rather than re-derived, so the dependency stays visible in the statement;
+* `hsepPrev`, `hsepNext` — the two `Q`-edges genuinely cross the `P`-side's line
+  at the degenerate vertex, which is `(VV)` plus `(Fin)` again.
+
+The sign is **chosen, not given**: `exists_sign_not_decreasing` supplies one of
+`±δ`, and the two branches return different shifts with the same bound. -/
+theorem hsum_for_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (D : Finset (Fin 7))
+    (hD : ∀ j ∈ D, off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0)
+    (hyne : ∀ j ∈ D, off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j - 1))) ≠ 0)
+    (hzne : ∀ j ∈ D, off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j + 1))) ≠ 0)
+    (hsepPrev : ∀ j ∈ D, orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP i)) *
+        orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (i + 1))) < 0)
+    (hsepNext : ∀ j ∈ D, orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP i)) *
+        orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (i + 1))) < 0)
+    {δtop : ℝ} (hδtop : 0 < δtop) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δtop ∧
+      D.card ≤ ∑ j ∈ D, ((({(i, j - 1), (i, j)} : Finset (Fin 7 × Fin 7)).filter
+        (fun q => q ∈ crossPairsOf (shiftV V i t δ))).card) := by
+  classical
+  have hN : 0 < (V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+      + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2 :=
+    n2_pos_of_ne hu
+  obtain ⟨δ₁, h₁, hsmall⟩ :=
+    exists_delta0_smallness D hN
+      (fun j => off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j - 1))))
+      (fun j => off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j + 1))))
+      hyne hzne
+  obtain ⟨δ₂, h₂, hcard⟩ := card_incident_eq_crossCount V i t
+  have hmpos : 0 < min δtop (min δ₁ δ₂) := lt_min hδtop (lt_min h₁ h₂)
+  set d : ℝ := min δtop (min δ₁ δ₂) / 2 with hd
+  have hdpos : 0 < d := by rw [hd]; linarith
+  have hdlt : d < min δtop (min δ₁ δ₂) := by rw [hd]; linarith
+  have habs : |d| = d := abs_of_pos hdpos
+  have hdtop : d < δtop := lt_of_lt_of_le hdlt (min_le_left _ _)
+  have hd1 : d < δ₁ := lt_of_lt_of_le hdlt ((min_le_right _ _).trans (min_le_left _ _))
+  have hd2 : d < δ₂ := lt_of_lt_of_le hdlt ((min_le_right _ _).trans (min_le_right _ _))
+  have hlt_top : |d| < δtop := by rw [habs]; exact hdtop
+  have hlt_1 : |d| < δ₁ := by rw [habs]; exact hd1
+  have hlt_2 : |d| < δ₂ := by rw [habs]; exact hd2
+  obtain ⟨hy, hz⟩ := hsmall d hlt_1
+  have hnabs : |(-d)| = d := by rw [abs_neg, habs]
+  rcases exists_sign_not_decreasing D _ d _ _ hN (ne_of_gt hdpos) hy hz with h | h
+  · refine ⟨d, ne_of_gt hdpos, hlt_top, h.trans_eq ?_⟩
+    exact Finset.sum_congr rfl fun j hj =>
+      (hcard d hlt_2 j (hD j hj) (hsepPrev j hj) (hsepNext j hj)).symm
+  · refine ⟨-d, neg_ne_zero.mpr (ne_of_gt hdpos), by rw [hnabs]; exact hdtop,
+      h.trans_eq ?_⟩
+    exact Finset.sum_congr rfl fun j hj =>
+      (hcard (-d) (by rw [hnabs]; exact hd2) j (hD j hj) (hsepPrev j hj)
+        (hsepNext j hj)).symm
+
+#print axioms hsum_for_side
+
 end Pair9Shift
 end Heptagon
