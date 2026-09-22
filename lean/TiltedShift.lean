@@ -395,5 +395,41 @@ theorem straddle_iff_off {a A X Y : ℝ × ℝ} {δ N y : ℝ}
 #print axioms exists_mem_openSegment_off_eq
 #print axioms straddle_iff_off
 
+/-! ### The averaging identity, summed — and what §9.2 actually uses
+
+AKR's sentence is about a *configuration*, not a single vertex: "the average
+number of intersections over the two possible directions is always the same as
+before."  Summing the per-vertex identity gives that, and the conclusion the
+section actually needs follows by pigeonhole. -/
+
+theorem averaging_sum {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → ℝ)
+    (hN : 0 < N) (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
+    (∑ i ∈ S, crossCount δ N (y i) (z i)) + (∑ i ∈ S, crossCount (-δ) N (y i) (z i))
+      = 2 * S.card := by
+  rw [← Finset.sum_add_distrib,
+    Finset.sum_congr rfl (fun i hi => averaging_identity hN hδ (hy i hi) (hz i hi))]
+  simp [Finset.sum_const, Nat.mul_comm]
+
+/-- **What §9.2 actually uses.**  The averaging identity is never needed as an
+identity; it is needed to license a *choice*.  Since the two directions'
+totals sum to twice the original count, at least one of them is no larger than
+the original — so there is always a shift direction that does not increase the
+number of intersections.
+
+This is the step that lets §9.2 remove a vertex-side degeneracy without paying
+for it, and it is the reason the section can iterate: each shift kills a
+degeneracy and the bound never goes up. -/
+theorem exists_sign_not_increasing {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → ℝ)
+    (hN : 0 < N) (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
+    (∑ i ∈ S, crossCount δ N (y i) (z i)) ≤ S.card ∨
+      (∑ i ∈ S, crossCount (-δ) N (y i) (z i)) ≤ S.card := by
+  have h := averaging_sum S N δ y z hN hδ hy hz
+  omega
+
+#print axioms averaging_sum
+#print axioms exists_sign_not_increasing
+
 end TiltedShift
 end Heptagon
