@@ -1262,5 +1262,52 @@ theorem exists_degeneracy_free_mono (R : Pair9) (t : ℝ) :
 #print axioms reach_crossPairs_mono
 #print axioms exists_degeneracy_free_mono
 
+/-! ## 23. Which half of `(A9)` this is
+
+`degSetOf = ∅` says no `Q`-vertex lies on a `P`-side line. That kills `degQ`
+outright — but **not** `degP`, the `P`-vertices lying on `Q`-sides. The
+procedure above shifts `P`-sides; removing `degP` is the mirror-image argument,
+shifting `Q`-sides, and the two have to be done without undoing each other. -/
+
+/-- **A degeneracy-free `degSetOf` kills `degQ`.** -/
+theorem degQ_empty_of_degSet_empty (R : Pair9) (h : degSetOf R.V = ∅) : degQ R = ∅ := by
+  ext x
+  simp only [degQ, Set.mem_inter_iff, Set.mem_range, Set.mem_empty_iff_false, iff_false,
+    not_and]
+  rintro hx ⟨j, rfl⟩
+  obtain ⟨k, hk⟩ := Set.mem_iUnion.mp hx.1
+  have hzero : orientR (R.V (pP k)) (R.V (pP (k + 1))) (R.V (pQ j)) = 0 := by
+    rw [← off_eq_orientR]
+    exact off_eq_zero_of_mem_segment hk
+  have : (k, j) ∈ degSetOf R.V := by
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hzero
+  rw [h] at this
+  exact absurd this (Finset.notMem_empty _)
+
+/-- **What the procedure delivers, exactly.**  A pair with no `Q`-vertex on any
+`P`-side, at least the original's crossing pairs, and therefore
+
+>  `|points9| ≤ 38 + |degP|`.
+
+The `38` is free — `crossPairs_card_le_38_of_simple` bounds *any* simple pair.
+What the procedure buys is the disappearance of `degQ` from the count. The
+residue `degP` is the other half of `(A9)` and is untouched: it needs the
+mirror-image procedure on the `Q`-sides. -/
+theorem points9_le_38_add_degP (R : Pair9) (hfin : (points9 R).Finite)
+    (h : degSetOf R.V = ∅) :
+    (points9 R).ncard ≤ 38 + (degP R).ncard := by
+  have hdeg : degPts R = degP R := by
+    rw [← degP_union_degQ, degQ_empty_of_degSet_empty R h, Set.union_empty]
+  calc (points9 R).ncard
+      ≤ (crossPairsOf R.V).card + (degPts R).ncard :=
+        points9_ncard_le_crossPairs_add_deg R hfin
+    _ ≤ 38 + (degP R).ncard := by
+        rw [hdeg]
+        exact Nat.add_le_add_right (RawConfig.raw_crossPairs_card_le_38 (AKR9.toRawPair R)) _
+
+#print axioms degQ_empty_of_degSet_empty
+#print axioms points9_le_38_add_degP
+
 end Pair9Shift
 end Heptagon
