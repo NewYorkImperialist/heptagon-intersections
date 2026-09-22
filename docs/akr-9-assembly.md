@@ -216,6 +216,14 @@ endpoint would have to be the unique common point `x`, contradicting
 interiority.)* That gives `ProperCrossR`. For (c), `x = P_i = Q_j`; `x` cannot
 lie on a third `P`-side by the same simplicity argument. ∎
 
+> **In Lean as of 2026-09-22** (`lean/DegBound.lean`, kernel-checked, zero
+> `sorryAx`): `lemmaCL_classify` for the three-way split,
+> `sideP_unique_reg` / `sideQ_unique_reg` for uniqueness, and
+> `lemmaCL_regular` for the regular case — a unique side pair, crossing
+> properly. It imports **nothing** from §9: the four endpoint conditions come
+> from `NoOverlap`, which `noOverlap_of_finite` derives from finiteness. So the
+> note below is now a theorem rather than a claim.
+
 Note what Lemma CL needs and what it does not: **simplicity and finiteness
 only.** `NoVertexOnOther` is not used. Contrast `AKR9.sideP9_unique`, which
 carries `h9 : NoVertexOnOther` — it must, because there `x` is an arbitrary

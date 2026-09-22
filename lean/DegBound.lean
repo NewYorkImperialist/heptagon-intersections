@@ -252,6 +252,43 @@ theorem noOverlap_of_finite (hfin : (points9 R).Finite) : NoOverlap R := by
   exact ⟨Set.mem_iUnion.mpr ⟨i, (convex_segment _ _).segment_subset hxP hyP hz⟩,
          Set.mem_iUnion.mpr ⟨j, (convex_segment _ _).segment_subset hxQ hyQ hz⟩⟩
 
+/-! ## The degenerate classes
+
+Lemma CL's other two classes: a point that *is* a vertex belongs to exactly one
+polygon's vertex set, or to both.  Unlike the regular case this needs nothing
+at all — it is a partition of `degPts` by which polygon the vertex belongs to. -/
+
+/-- `P`-vertices among the intersection points. -/
+def degP : Set (ℝ × ℝ) := points9 R ∩ (Set.range fun i : Fin 7 => R.V (pP i))
+
+/-- `Q`-vertices among the intersection points. -/
+def degQ : Set (ℝ × ℝ) := points9 R ∩ (Set.range fun j : Fin 7 => R.V (pQ j))
+
+/-- **Lemma CL, the classification.**  Every intersection point is regular, a
+`P`-vertex, or a `Q`-vertex; the last two overlap exactly at a coincidence. -/
+theorem lemmaCL_classify {x : ℝ × ℝ} (hx : x ∈ points9 R) :
+    x ∈ regPts R ∨ x ∈ degP R ∨ x ∈ degQ R := by
+  by_cases hv : x ∈ verts R
+  · rcases hv with h | h
+    · exact Or.inr (Or.inl ⟨hx, h⟩)
+    · exact Or.inr (Or.inr ⟨hx, h⟩)
+  · exact Or.inl ⟨hx, hv⟩
+
+/-- The three classes cover `points9`, and `degP ∪ degQ = degPts`. -/
+theorem degP_union_degQ : degP R ∪ degQ R = degPts R := by
+  ext x
+  simp only [degP, degQ, degPts, verts, Set.mem_union, Set.mem_inter_iff]
+  constructor
+  · rintro (⟨h1, h2⟩ | ⟨h1, h2⟩)
+    · exact ⟨h1, Or.inl h2⟩
+    · exact ⟨h1, Or.inr h2⟩
+  · rintro ⟨h1, h2 | h2⟩
+    · exact Or.inl ⟨h1, h2⟩
+    · exact Or.inr ⟨h1, h2⟩
+
+#print axioms lemmaCL_classify
+#print axioms degP_union_degQ
+
 /-! ## The bound -/
 
 /-- **`|∂P ∩ ∂Q| ≤ 38 + d`**, importing nothing from AKR §9. -/
