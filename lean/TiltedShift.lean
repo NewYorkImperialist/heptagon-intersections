@@ -470,5 +470,88 @@ theorem tilted_shift_admits_averaging {u : ℝ × ℝ} (hu : u ≠ 0) {ι : Type
 #print axioms ip_nrm_self_pos
 #print axioms tilted_shift_admits_averaging
 
+/-! ### The second place `δ₀` is needed: line versus side
+
+`averaging_identity` counts crossings of the `Q`-edges with the shifted side's
+**line**.  §9.2 needs crossings with the shifted **side**, which is a segment.
+These differ, and the gap is not mentioned in §9.2's prose at all.
+
+The crossing point `Z` is computed here in closed form, and its position along
+the side is shown to be *affine in the shift parameter*: if `X` sits at relative
+position `s` inside the side, then after shifting, the crossing sits at `s + ν`
+with `ν` proportional to `δ`.  So the crossing stays on the side exactly when
+`|ν| < min s (1 - s)` — a bound of `δ₀`'s kind, controlled by how far `X` is
+from the side's endpoints.
+
+That `s` is strictly between `0` and `1` — that `X` is interior to the side, not
+an endpoint — is precisely §9.1's output `(VV)`, which is the structural reason
+§9.1 must come before §9.2. -/
+
+/-- The point at relative position `s` along the side from `A` in direction `a`. -/
+def lin (A a : ℝ × ℝ) (s : ℝ) : ℝ × ℝ := (A.1 + s * a.1, A.2 + s * a.2)
+
+/-- **The crossing point's position along the side is affine in the shift.**
+
+`t` is the parameter of the crossing along the `Q`-edge (`ht` is `t * y = δ * N`,
+the defining equation, cleared of denominators), and `ν` is the displacement
+along the side (`hν`, likewise cleared).  The conclusion is that undoing the
+shift puts the crossing back on the *original* side line, at parameter `s + ν`.
+
+Stated with the denominators cleared, so there is no division anywhere and the
+hypotheses are polynomial identities. -/
+theorem crossing_param {a A Y w : ℝ × ℝ} {s δ t ν : ℝ}
+    (hn2 : a.1 * a.1 + a.2 * a.2 ≠ 0)
+    (ht : t * (-a.2 * (Y.1 - A.1) + a.1 * (Y.2 - A.2)) = δ * (a.1 * w.2 - a.2 * w.1))
+    (hν : ν * (a.1 * a.1 + a.2 * a.2)
+            = t * (a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2))
+              - δ * (a.1 * w.1 + a.2 * w.2)) :
+    ((lin A a s).1 + t * (Y.1 - (lin A a s).1) - δ * w.1,
+     (lin A a s).2 + t * (Y.2 - (lin A a s).2) - δ * w.2) = lin A a (s + ν) := by
+  have g1 : (t * (Y.1 - A.1 - s * a.1) - δ * w.1) * (a.1 * a.1 + a.2 * a.2)
+      = (ν * a.1) * (a.1 * a.1 + a.2 * a.2) := by
+    linear_combination (-a.1) * hν - a.2 * ht
+  have g2 : (t * (Y.2 - A.2 - s * a.2) - δ * w.2) * (a.1 * a.1 + a.2 * a.2)
+      = (ν * a.2) * (a.1 * a.1 + a.2 * a.2) := by
+    linear_combination (-a.2) * hν + a.1 * ht
+  have e1 := mul_right_cancel₀ hn2 g1
+  have e2 := mul_right_cancel₀ hn2 g2
+  refine Prod.ext ?_ ?_ <;> simp only [lin]
+  · linear_combination e1
+  · linear_combination e2
+
+/-- A point at relative position strictly between `0` and `1` really is in the
+open side. -/
+theorem lin_mem_openSegment {A a : ℝ × ℝ} {σ : ℝ} (h0 : 0 < σ) (h1 : σ < 1) :
+    lin A a σ ∈ openSegment ℝ A (lin A a 1) :=
+  ⟨1 - σ, σ, by linarith, h0, by ring, by
+    simp only [lin, Prod.ext_iff, Prod.fst_add, Prod.snd_add, Prod.smul_fst, Prod.smul_snd,
+      smul_eq_mul]
+    constructor <;> ring⟩
+
+/-- **The crossing lands on the side exactly when the shift is small enough.**
+`s` is `X`'s relative position inside the side — strictly between `0` and `1` by
+§9.1's `(VV)` — and `ν` is the shift-induced displacement.  The hypothesis is a
+`δ₀` bound and the conclusion is that the counted point is a genuine point of
+the shifted side. -/
+theorem crossing_mem_side {a A Y w : ℝ × ℝ} {s δ t ν : ℝ}
+    (hn2 : a.1 * a.1 + a.2 * a.2 ≠ 0)
+    (ht : t * (-a.2 * (Y.1 - A.1) + a.1 * (Y.2 - A.2)) = δ * (a.1 * w.2 - a.2 * w.1))
+    (hν : ν * (a.1 * a.1 + a.2 * a.2)
+            = t * (a.1 * (Y.1 - A.1 - s * a.1) + a.2 * (Y.2 - A.2 - s * a.2))
+              - δ * (a.1 * w.1 + a.2 * w.2))
+    (hs0 : 0 < s) (hs1 : s < 1) (hsmall : |ν| < min s (1 - s)) :
+    ((lin A a s).1 + t * (Y.1 - (lin A a s).1) - δ * w.1,
+     (lin A a s).2 + t * (Y.2 - (lin A a s).2) - δ * w.2)
+      ∈ openSegment ℝ A (lin A a 1) := by
+  rw [crossing_param hn2 ht hν]
+  have hb := abs_lt.mp hsmall
+  have hmin1 : min s (1 - s) ≤ s := min_le_left _ _
+  have hmin2 : min s (1 - s) ≤ 1 - s := min_le_right _ _
+  exact lin_mem_openSegment (by linarith [hb.1]) (by linarith [hb.2])
+
+#print axioms crossing_param
+#print axioms lin_mem_openSegment
+#print axioms crossing_mem_side
+
 end TiltedShift
 end Heptagon

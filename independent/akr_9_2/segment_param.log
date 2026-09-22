@@ -1,0 +1,5 @@
+instances      : 37516  skipped: 2484
+identity fails : 0
+Z off shifted  : 0
+example sigma outside (0,1): (0.72, 0.022556390977443608, 24.213432835820896, 1.2661676579508472)
+control (wrong mu) fires: 1980 /2000
