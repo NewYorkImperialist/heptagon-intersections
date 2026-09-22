@@ -356,5 +356,115 @@ theorem pivot_degeneracy_isolated {F A V w : ℝ × ℝ} (hm : cross w (V - F) �
 #print axioms pivot_tilt_dichotomy
 #print axioms pivot_degeneracy_isolated
 
+/-! ### Two tilt directions are not enough — the one-parameter family
+
+`pivot_tilt_dichotomy` is per-degeneracy, and that is all it is.  With *two*
+pivot degeneracies the two tilts can be defeated simultaneously: take
+`u = (1,0)`, so the tilts are `nrm u = (0,1)` and `nrm u + u = (1,1)`, and take
+`x₁ = (0,1)`, `x₂ = (1,1)`.  Then `x₁` kills the first tilt, `x₂` kills the
+second, and neither choice serves both.  (Exact certificate in
+`independent/akr_9_2/pivot_dichotomy.py`.)
+
+The repair is the one-parameter family `tilt u t = nrm u + t·u`, which recovers
+`nrm u` at `t = 0` and `nrm u + u` at `t = 1`.  For a *fixed* degeneracy the
+badness condition is **affine in `t`**, so each degeneracy rules out at most one
+value — and finitely many degeneracies rule out finitely many values.
+
+This is the same shape as Theorem C⁺'s rule for the §9.1 directions (`t ∈
+{1,2,3}`, forbidding `E ∥` each of four rays), and for the same reason. -/
+
+/-- The tilt family: `tilt u 0 = nrm u`, `tilt u 1 = nrm u + u`. -/
+def tilt (u : ℝ × ℝ) (t : ℝ) : ℝ × ℝ := (-u.2 + t * u.1, u.1 + t * u.2)
+
+theorem tilt_zero (u : ℝ × ℝ) : tilt u 0 = nrm u := by
+  simp only [tilt, nrm, Prod.ext_iff]; constructor <;> ring
+
+theorem tilt_one (u : ℝ × ℝ) : tilt u 1 = nrm u + u := by
+  simp only [tilt, nrm, Prod.ext_iff, Prod.fst_add, Prod.snd_add]; constructor <;> ring
+
+/-- **The badness condition is affine in `t`.**  This is the whole reason the
+family works. -/
+theorem cross_tilt (u x : ℝ × ℝ) (t : ℝ) :
+    cross (tilt u t) x = cross (nrm u) x + t * cross u x := by
+  simp only [cross, tilt, nrm]; ring
+
+theorem cross_nrm_self {u : ℝ × ℝ} (hu : u ≠ 0) : cross (nrm u) u ≠ 0 := by
+  have h : u.1 ≠ 0 ∨ u.2 ≠ 0 := by
+    by_contra hc
+    push_neg at hc
+    exact hu (Prod.ext hc.1 hc.2)
+  have key : cross (nrm u) u = -(u.1 * u.1 + u.2 * u.2) := by
+    simp only [cross, nrm]; ring
+  rw [key]
+  have hpos : 0 < u.1 * u.1 + u.2 * u.2 := by
+    rcases h with h1 | h2
+    · nlinarith [mul_self_pos.mpr h1, mul_self_nonneg u.2]
+    · nlinarith [mul_self_pos.mpr h2, mul_self_nonneg u.1]
+  exact ne_of_lt (by linarith)
+
+/-- Each pivot degeneracy rules out **at most one** member of the tilt family. -/
+theorem bad_tilt_unique {u x : ℝ × ℝ} (hu : u ≠ 0) (hx : x ≠ 0) {t t' : ℝ}
+    (ht : cross (tilt u t) x = 0) (ht' : cross (tilt u t') x = 0) : t = t' := by
+  rw [cross_tilt] at ht ht'
+  by_cases hc : cross u x = 0
+  · exact absurd (eq_zero_of_cross_both (cross_nrm_self hu)
+      (by rw [hc, mul_zero, add_zero] at ht; exact ht) hc) hx
+  · have : (t - t') * cross u x = 0 := by linarith
+    rcases mul_eq_zero.mp this with h | h
+    · linarith [sub_eq_zero.mp h]
+    · exact absurd h hc
+
+/-- **A single tilt serving every pivot degeneracy at once**, chosen from any
+finite candidate set larger than the number of degeneracies.  With `k`
+degeneracies, `k + 1` candidates suffice — the direct analogue of Theorem C⁺'s
+`t ∈ {1,2,3}`. -/
+theorem exists_good_tilt {ι : Type*} [DecidableEq ι] (S : Finset ι) {u : ℝ × ℝ} (hu : u ≠ 0)
+    (x : ι → ℝ × ℝ) (hx : ∀ i ∈ S, x i ≠ 0) (T : Finset ℝ) (hT : S.card < T.card) :
+    ∃ t ∈ T, ∀ i ∈ S, cross (tilt u t) (x i) ≠ 0 := by
+  classical
+  set B : Finset ℝ := S.image (fun i =>
+    if cross u (x i) = 0 then 0 else -cross (nrm u) (x i) / cross u (x i)) with hB
+  have hBcard : B.card ≤ S.card := Finset.card_image_le
+  have hsub : ¬ T ⊆ B := fun hs => by
+    have := Finset.card_le_card hs
+    omega
+  obtain ⟨t, htT, htB⟩ := Finset.not_subset.mp hsub
+  refine ⟨t, htT, fun i hi hz => ?_⟩
+  rw [cross_tilt] at hz
+  by_cases hc : cross u (x i) = 0
+  · exact hx i hi (eq_zero_of_cross_both (cross_nrm_self hu)
+      (by rw [hc, mul_zero, add_zero] at hz; exact hz) hc)
+  · refine htB ?_
+    rw [hB]
+    refine Finset.mem_image.mpr ⟨i, hi, ?_⟩
+    rw [if_neg hc]
+    field_simp
+    linarith [hz]
+
+/-- **Every member of the family is a valid shift direction.**  `cross u u = 0`,
+so the normal displacement is `cross (nrm u) u` for *every* `t` — the family
+cannot wander into a direction that fails to move the side. -/
+theorem cross_tilt_self {u : ℝ × ℝ} (hu : u ≠ 0) (t : ℝ) : cross (tilt u t) u ≠ 0 := by
+  rw [cross_tilt]
+  have h : cross u u = 0 := by simp only [cross]; ring
+  rw [h, mul_zero, add_zero]
+  exact cross_nrm_self hu
+
+/-- **The whole family shifts the side to the same parallel line.**  `⟪nrm u, u⟫ = 0`,
+so the normal displacement `⟪nrm u, tilt u t⟫` is independent of `t`.  This
+generalises `ip_tilt_nrm`, and means the averaging machinery of
+`TiltedShift.lean` applies uniformly across the family: choosing `t` to dodge
+the pivot degeneracies costs nothing in the count. -/
+theorem ip_nrm_tilt (u : ℝ × ℝ) (t : ℝ) : ip (nrm u) (tilt u t) = ip (nrm u) (nrm u) := by
+  simp only [ip, nrm, tilt]; ring
+
+#print axioms cross_tilt_self
+#print axioms ip_nrm_tilt
+#print axioms tilt_zero
+#print axioms tilt_one
+#print axioms cross_tilt
+#print axioms bad_tilt_unique
+#print axioms exists_good_tilt
+
 end RotationLaw
 end Heptagon
