@@ -686,5 +686,48 @@ theorem mem_crossPairs_of_straddle (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : 
 #print axioms second_conjunct_persists
 #print axioms mem_crossPairs_of_straddle
 
+/-! ## 14. The other incident pair
+
+A degenerate `Q`-vertex `j` lies on **two** `Q`-edges — that is the whole
+source of the point-versus-pair discrepancy — so the same bridge is needed for
+`(i, j−1)`, where the degenerate vertex occupies the *second* slot. -/
+
+theorem straddle_iff_first_conjunct' (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ y : ℝ)
+    (c d : ℝ × ℝ)
+    (hc : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) c = y)
+    (hd : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) d = 0) :
+    orientR (shiftV V i t δ (pP i)) (shiftV V i t δ (pP (i + 1))) c *
+        orientR (shiftV V i t δ (pP i)) (shiftV V i t δ (pP (i + 1))) d < 0
+      ↔ Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2) y := by
+  rw [orientR_shifted_side, orientR_shifted_side, hc, hd]
+  simp only [Straddle, zero_sub]
+  rw [mul_comm]
+
+theorem mem_crossPairs_of_straddle_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ j : Fin 7,
+      off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP i)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (i + 1))) < 0 →
+      Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2)
+        (off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ (j - 1)))) →
+      (i, j - 1) ∈ crossPairsOf (shiftV V i t δ) := by
+  obtain ⟨δ₀, hδ₀, hsec⟩ := second_conjunct_persists V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ j hdeg hsep hstr => ?_⟩
+  have hj : j - 1 + 1 = j := by simp
+  simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  unfold ProperCrossR
+  rw [hj]
+  constructor
+  · rw [shiftV_Q, shiftV_Q]
+    exact (straddle_iff_first_conjunct' V i t δ _ _ _ rfl hdeg).mpr hstr
+  · have h := hsec δ hδ (j - 1) (by rw [hj]; exact hsep)
+    rw [hj] at h
+    exact h
+
+#print axioms straddle_iff_first_conjunct'
+#print axioms mem_crossPairs_of_straddle_prev
+
 end Pair9Shift
 end Heptagon
