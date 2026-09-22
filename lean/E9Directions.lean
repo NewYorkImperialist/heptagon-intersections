@@ -350,5 +350,141 @@ theorem exists_moved_pair9 (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) :
 #print axioms moveV_ne_of_coincidence
 #print axioms exists_moved_pair9
 
+/-! ## 9. The move preserves the order type
+
+One moving vertex makes every determinant **affine** in `ε` — even more
+directly than §9.2's shift, where two vertices move and the `δ²` term cancels
+only because they move by the same vector. So the open-condition argument
+applies verbatim. -/
+
+theorem moveV_eq_add_smul (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (k : Fin 14) :
+    moveV V i E e k = V k + (e * (if k = pP i then 1 else 0)) • E := by
+  simp only [moveV]
+  split_ifs with h
+  · simp
+  · simp
+
+theorem orientR_moveV_affine (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (a b c : Fin 14) :
+    orientR (moveV V i E e a) (moveV V i E e b) (moveV V i E e c)
+      = orientR (V a) (V b) (V c)
+        + e * Pair9Shift.dcoef (V a) (V b) (V c) E
+            (if a = pP i then 1 else 0) (if b = pP i then 1 else 0)
+            (if c = pP i then 1 else 0) := by
+  rw [moveV_eq_add_smul, moveV_eq_add_smul, moveV_eq_add_smul,
+    Pair9Shift.orientR_shift_affine]
+
+/-- **The order type is preserved.** -/
+theorem exists_eps0_order_type (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| < e₀ → ∀ a b c : Fin 14,
+      orientR (V a) (V b) (V c) ≠ 0 →
+        0 < orientR (V a) (V b) (V c) *
+            orientR (moveV V i E e a) (moveV V i E e b) (moveV V i E e c) := by
+  classical
+  obtain ⟨e₀, he₀, h⟩ :=
+    RotationLaw.exists_uniform_rotation
+      (Finset.univ.filter
+        (fun p : Fin 14 × Fin 14 × Fin 14 => orientR (V p.1) (V p.2.1) (V p.2.2) ≠ 0))
+      (fun p => orientR (V p.1) (V p.2.1) (V p.2.2))
+      (fun p => Pair9Shift.dcoef (V p.1) (V p.2.1) (V p.2.2) E
+        (if p.1 = pP i then 1 else 0) (if p.2.1 = pP i then 1 else 0)
+        (if p.2.2 = pP i then 1 else 0))
+      (fun p hp => (Finset.mem_filter.mp hp).2)
+  refine ⟨e₀, he₀, fun e he a b c habc => ?_⟩
+  rw [orientR_moveV_affine]
+  exact h e he (a, b, c) (Finset.mem_filter.mpr ⟨Finset.mem_univ _, habc⟩)
+
+/-- **No proper crossing is lost**, and hence the crossing-pair count does not
+drop. §9.1's move buys a *new* crossing at the apex without paying for it
+anywhere else. -/
+theorem crossPairsOf_mono_move (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| < e₀ →
+      RealPerturb.crossPairsOf V ⊆ RealPerturb.crossPairsOf (moveV V i E e) := by
+  obtain ⟨e₀, he₀, h⟩ := exists_eps0_order_type V i E
+  refine ⟨e₀, he₀, fun e he p hp => ?_⟩
+  simp only [RealPerturb.crossPairsOf, Finset.mem_filter, Finset.mem_univ,
+    true_and] at hp ⊢
+  obtain ⟨h1, h2⟩ := hp
+  have n1 : orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h1; exact lt_irrefl 0 h1
+  have n2 : orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ (p.2 + 1))) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h1; exact lt_irrefl 0 h1
+  have n3 : orientR (V (pQ p.2)) (V (pQ (p.2 + 1))) (V (pP p.1)) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h2; exact lt_irrefl 0 h2
+  have n4 : orientR (V (pQ p.2)) (V (pQ (p.2 + 1))) (V (pP (p.1 + 1))) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h2; exact lt_irrefl 0 h2
+  exact ⟨RotationLaw.prod_neg_of_signs (h e he _ _ _ n1) (h e he _ _ _ n2) h1,
+         RotationLaw.prod_neg_of_signs (h e he _ _ _ n3) (h e he _ _ _ n4) h2⟩
+
+#print axioms orientR_moveV_affine
+#print axioms exists_eps0_order_type
+#print axioms crossPairsOf_mono_move
+
+/-! ## 10. The move strictly increases the crossing count
+
+At the coincidence itself the pair `(i, j)` is **not** a proper crossing —
+`P_i = Q_j` makes a determinant vanish. After the move it is. Combined with
+§9 above, where no old crossing is lost, the count strictly grows. -/
+
+theorem succ_ne_self (i : Fin 7) : i + 1 ≠ i := by revert i; decide
+
+theorem coincidence_not_mem_crossPairs (V : Fin 14 → ℝ × ℝ) {i j : Fin 7}
+    (hco : V (pP i) = V (pQ j)) : (i, j) ∉ RealPerturb.crossPairsOf V := by
+  simp only [RealPerturb.crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  refine Pair9Shift.not_properCrossR_of_left_zero ?_
+  rw [← hco]
+  simp only [orientR]; ring
+
+/-- **§9.1's move buys a crossing and pays nothing.**  At a coincidence whose
+`P`- and `Q`-rays are not parallel, some arbitrarily small nonzero move of
+`P_i` alone yields a `Pair9` in which
+
+* the coincidence is gone, and
+* the crossing-pair count is **strictly larger**.
+
+The gain is the pair `(i, j)` itself, which could not have been a crossing
+before: `P_i = Q_j` forces one of its determinants to vanish. -/
+theorem crossPairs_card_lt_move (R : Pair9) (i j : Fin 7)
+    (hco : R.V (pP i) = R.V (pQ j))
+    (hnp : cross (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i)) ≠ 0)
+    {e₁ : ℝ} (he₁ : 0 < e₁) :
+    ∃ e : ℝ, 0 < e ∧ e < e₁ ∧
+      (RealPerturb.crossPairsOf R.V).card
+        < (RealPerturb.crossPairsOf
+            (moveV R.V i (R.V (pQ (j + 1)) - R.V (pP (i + 1))) e)).card := by
+  classical
+  set E := R.V (pQ (j + 1)) - R.V (pP (i + 1)) with hE
+  obtain ⟨e₀, he₀, hmono⟩ := crossPairsOf_mono_move R.V i E
+  refine ⟨min e₀ e₁ / 2, by positivity, by
+    have : min e₀ e₁ ≤ e₁ := min_le_right _ _
+    linarith [lt_min he₀ he₁], ?_⟩
+  set e := min e₀ e₁ / 2 with he
+  have hepos : 0 < e := by
+    have := lt_min he₀ he₁; rw [he]; linarith
+  have heabs : |e| < e₀ := by
+    rw [abs_of_pos hepos, he]
+    have := lt_min he₀ he₁
+    have h2 : min e₀ e₁ ≤ e₀ := min_le_left _ _
+    linarith
+  refine Finset.card_lt_card ((Finset.ssubset_iff_of_subset (hmono e heabs)).mpr
+    ⟨(i, j), ?_, coincidence_not_mem_crossPairs R.V hco⟩)
+  -- the apex pair crosses after the move
+  simp only [RealPerturb.crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  have hfar : moveV R.V i E e (pP (i + 1)) = R.V (pP (i + 1)) := by
+    simp only [moveV]
+    rw [if_neg (fun hc => succ_ne_self i (Pair9Shift.pP_inj hc))]
+  rw [moveV_apex, hfar, moveV_Q, moveV_Q]
+  have hmain := coincidence_direction R i j hco hnp hepos
+  have hq : qStart (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i)) 1 e
+        + R.V (pP i) = R.V (pP i) + e • E := by
+    simp only [qStart, hE, one_mul, Prod.ext_iff, Prod.fst_add, Prod.snd_add,
+      Prod.fst_sub, Prod.snd_sub, Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+    constructor <;> ring
+  rwa [hq] at hmain
+
+#print axioms coincidence_not_mem_crossPairs
+#print axioms crossPairs_card_lt_move
+
 end E9Directions
 end Heptagon
