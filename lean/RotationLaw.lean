@@ -115,6 +115,18 @@ theorem lemmaT_sq {v ea w : ℝ × ℝ} (hv : cross v ea ≠ 0) :
   have hw : 0 ≤ n2 w := by simp only [n2]; nlinarith [mul_self_nonneg w.1, mul_self_nonneg w.2]
   nlinarith [h, hw]
 
+/-- The cross product vanishes exactly when the Cauchy–Schwarz bound is tight
+against the dot product — the degenerate case Lemma T never needs but which
+makes the inequality's shape clear. -/
+theorem cross_eq_zero_iff_dot_sq {u v : ℝ × ℝ} :
+    cross u v = 0 ↔ dot u v ^ 2 = n2 u * n2 v := by
+  have h := lagrange u v
+  constructor
+  · intro hc; rw [hc] at h; linarith
+  · intro hd; nlinarith [h, sq_nonneg (cross u v)]
+
+#print axioms cross_eq_zero_iff_dot_sq
+
 #print axioms lagrange
 #print axioms cross_sq_le
 #print axioms lemmaT_sq
