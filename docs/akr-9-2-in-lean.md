@@ -189,14 +189,33 @@ This is the part that matters, and it is not small.
    | `hmono` | old crossings survive | **proved** (`crossPairsOf_mono_shift`) |
    | `hdisjA` | a newly crossing pair was not crossing before | **proved** (`degenerate_not_mem_crossPairs`) |
    | `hdisj` | distinct degeneracies give disjoint pair sets | **geometric content proved** (`no_consecutive_degeneracy`); `Finset` packaging left |
-   | `hcard` | each degeneracy yields ≥ 1 new crossing | **open** — this is the averaging identity |
+   | `hsum` | the degeneracies yield ≥ `D.card` new crossings **in total** | **bridged, not yet summed** — see below |
 
-   `hcard` is the real one. The averaging identity is stated about
-   `crossCount`; the skeleton wants `crossPairsOf`. Bridging them is where
-   Fact (E) gets used, and it also has to respect that a degenerate `Q`-vertex
-   is **one point** lying on **two** `Q`-edges — the same point-versus-pair
-   entanglement that makes Theorem CI's `ncard` inequality false without
-   **(Fin-out)** and the honest bound `38 + d` rather than `38`.
+   `hsum` was the real one, and the bridge from `crossCount` to
+   `crossPairsOf` is now built. The two conjuncts of `ProperCrossR` turn out to
+   be discharged by entirely different machinery:
+
+   * the conjunct against the **shifted `P`-side** is `Straddle` *verbatim*
+     (`straddle_iff_first_conjunct`) — a rewrite, not an estimate;
+   * the conjunct against the **fixed `Q`-edge** is a *strict* inequality at
+     `δ = 0`, hence an open condition, so order-type preservation already keeps
+     it (`second_conjunct_persists`) — no new machinery at all.
+
+   Together: `mem_crossPairs_of_straddle` and `..._prev`, one for each of the
+   two `Q`-edges a degenerate vertex lies on. That it lies on *two* is the
+   point-versus-pair entanglement itself — the same one behind Theorem CI's
+   `ncard` defect and the honest `38 + d`.
+
+   **What is left is bookkeeping, and only bookkeeping:** define `newOf j` as
+   the incident pairs crossing after the shift, prove `|newOf j| = crossCount`
+   (which needs the *converse* of the two bridge lemmas, not just the direction
+   proved), and sum. No further geometry.
+
+   Note also that `hsum` is a **sum** hypothesis, not a per-degeneracy one. An
+   earlier version of the skeleton demanded `1 ≤ |newOf d|` for each `d`, which
+   the averaging identity cannot supply and never could — a shift may kill one
+   degeneracy's contribution while doubling another's. Only the total is
+   preserved.
 
    Two findings from building the skeleton are worth keeping. `hdisj` is *not*
    automatic — consecutive degenerate vertices would share a pair — and holds
