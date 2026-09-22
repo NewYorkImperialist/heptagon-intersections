@@ -1090,5 +1090,89 @@ theorem points9_ncard_le_crossPairs_add_deg (R : Pair9) (hfin : (points9 R).Fini
 #print axioms points9_ncard_eq
 #print axioms points9_ncard_le_crossPairs_add_deg
 
+/-! ## 21. The iteration step: the degeneracy set strictly shrinks
+
+`exists_good_delta_affine` required every slope to be nonzero. For *not
+creating* a degeneracy that is the wrong hypothesis: a condition false at
+`δ = 0` with **zero** slope stays false for free, and demanding a nonzero slope
+would exclude exactly the easy cases. -/
+
+/-- The `δ`-choice for conditions that are already **false** and must stay
+false. No hypothesis on the slopes: a zero slope is harmless here. -/
+theorem exists_good_delta_affine' {ι : Type*} [DecidableEq ι] (S : Finset ι) (c m : ι → ℝ)
+    (hc : ∀ p ∈ S, c p ≠ 0) {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ p ∈ S, c p + δ * m p ≠ 0 := by
+  classical
+  set B : Finset ℝ := S.image (fun p => if m p = 0 then 0 else -c p / m p) with hB
+  have hinf : (Set.Ioo (0:ℝ) δ₀ \ (B : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite hδ₀).diff B.finite_toSet
+  obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ := hinf.nonempty
+  refine ⟨δ, ne_of_gt hpos, by rw [abs_of_pos hpos]; exact hlt, fun p hp hz => ?_⟩
+  by_cases hm : m p = 0
+  · rw [hm, mul_zero, add_zero] at hz
+    exact hc p hp hz
+  · refine hnot ?_
+    rw [Finset.mem_coe, hB]
+    exact Finset.mem_image.mpr ⟨p, hp, by rw [if_neg hm]; field_simp; linarith⟩
+
+/-- The degeneracies of a configuration, as `(P`-side, `Q`-vertex`)` pairs —
+using the side's **line**, which over-approximates the segment and is the
+monovariant the iteration runs on. Reaching zero here means no `Q`-vertex lies
+on any `P`-side *line*, which is stronger than needed. -/
+noncomputable def degSetOf (V : Fin 14 → ℝ × ℝ) : Finset (Fin 7 × Fin 7) :=
+  Finset.univ.filter
+    (fun p => orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) = 0)
+
+/-- **The iteration step.**  If `P`-side `i` carries a degeneracy, some
+arbitrarily small nonzero shift of it strictly decreases the **total**
+degeneracy count — over all seven sides at once, not just side `i`.
+
+That the count does not merely fail to rise elsewhere is the content: shifting
+side `i` moves two `P`-vertices, so sides `i−1` and `i+1` rotate and could
+acquire degeneracies of their own. Every such condition is affine in `δ`
+(`orientR_shiftV_affine`), so the bad shifts are finite in number and are
+avoided. -/
+theorem degSet_card_lt (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (j₀ : Fin 7) (hj₀ : (i, j₀) ∈ degSetOf V)
+    {δtop : ℝ} (hδtop : 0 < δtop) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δtop ∧
+      (degSetOf (shiftV V i t δ)).card < (degSetOf V).card := by
+  classical
+  obtain ⟨δ, hδne, hδlt, hkeep⟩ :=
+    exists_good_delta_affine' (Finset.univ.filter
+        (fun p : Fin 7 × Fin 7 =>
+          orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) ≠ 0))
+      (fun p => orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)))
+      (fun p => dcoef (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2))
+        (tilt (V (pP (i + 1)) - V (pP i)) t)
+        (if pP p.1 = pP i ∨ pP p.1 = pP (i + 1) then 1 else 0)
+        (if pP (p.1 + 1) = pP i ∨ pP (p.1 + 1) = pP (i + 1) then 1 else 0)
+        (if pQ p.2 = pP i ∨ pQ p.2 = pP (i + 1) then 1 else 0))
+      (fun p hp => (Finset.mem_filter.mp hp).2) hδtop
+  refine ⟨δ, hδne, hδlt, ?_⟩
+  -- the shifted degeneracy set is contained in the old one …
+  have hsub : degSetOf (shiftV V i t δ) ⊆ degSetOf V := by
+    intro p hp
+    by_contra hnot
+    have hne : orientR (V (pP p.1)) (V (pP (p.1 + 1))) (V (pQ p.2)) ≠ 0 := by
+      simpa [degSetOf] using hnot
+    have := hkeep p (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hne⟩)
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+    rw [orientR_shiftV_affine] at hp
+    exact this hp
+  -- … and it has lost `(i, j₀)`
+  have hgone : (i, j₀) ∉ degSetOf (shiftV V i t δ) := by
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [← off_eq_orientR, shiftV_dir, shiftV_P, shiftV_Q, off_base_mov]
+    have h0 : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) (V (pQ j₀)) = 0 := by
+      rw [off_eq_orientR]
+      simpa [degSetOf] using hj₀
+    rw [h0, zero_sub, neg_eq_zero]
+    exact mul_ne_zero hδne (ne_of_gt (n2_pos_of_ne hu))
+  exact degeneracy_monovariant hsub hj₀ hgone
+
+#print axioms exists_good_delta_affine'
+#print axioms degSet_card_lt
+
 end Pair9Shift
 end Heptagon
