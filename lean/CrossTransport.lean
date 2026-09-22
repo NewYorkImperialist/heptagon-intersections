@@ -86,6 +86,32 @@ theorem sameSign_eval_zero (w : Wit) (h0 : w.ord = 0) {e : ℝ}
   · exact absurd hpos (by rw [h]; simp)
   · exact Or.inl ⟨h, by nlinarith⟩
 
+/-- **Class (a), assembled.**  A side pair crossing in the unperturbed
+configuration, whose four determinants are witnessed with nonzero constant
+term, still crosses at every parameter in `(0, ρ)`.  This is the class-(a) row
+of Theorem CI, with `move_zero` supplying the identification of the parameter-0
+configuration with `V0`. -/
+theorem properCrossR_survives (V0 E : Fin 14 → ℝ × ℝ) (a b c d : Fin 14)
+    (w₁ w₂ w₃ w₄ : Wit)
+    (hw₁ : ∀ e : ℝ, w₁.eval e = orientR (move V0 E e a) (move V0 E e b) (move V0 E e c))
+    (hw₂ : ∀ e : ℝ, w₂.eval e = orientR (move V0 E e a) (move V0 E e b) (move V0 E e d))
+    (hw₃ : ∀ e : ℝ, w₃.eval e = orientR (move V0 E e c) (move V0 E e d) (move V0 E e a))
+    (hw₄ : ∀ e : ℝ, w₄.eval e = orientR (move V0 E e c) (move V0 E e d) (move V0 E e b))
+    (o₁ : w₁.ord = 0) (o₂ : w₂.ord = 0) (o₃ : w₃.ord = 0) (o₄ : w₄.ord = 0)
+    {e : ℝ} (he0 : 0 < e)
+    (k₁ : e < w₁.rho) (k₂ : e < w₂.rho) (k₃ : e < w₃.rho) (k₄ : e < w₄.rho)
+    (hcross : ProperCrossR (V0 a) (V0 b) (V0 c) (V0 d)) :
+    ProperCrossR (move V0 E e a) (move V0 E e b) (move V0 E e c) (move V0 E e d) := by
+  have s₁ := sameSign_eval_zero w₁ o₁ he0 k₁
+  have s₂ := sameSign_eval_zero w₂ o₂ he0 k₂
+  have s₃ := sameSign_eval_zero w₃ o₃ he0 k₃
+  have s₄ := sameSign_eval_zero w₄ o₄ he0 k₄
+  rw [hw₁, hw₁, hw₂, hw₂, hw₃, hw₃, hw₄, hw₄] at *
+  rw [move_zero] at s₁ s₂ s₃ s₄
+  exact (properCrossR_congr s₁ s₂ s₃ s₄).mp hcross
+
+#print axioms properCrossR_survives
+
 #print axioms eval_zero
 #print axioms sameSign_eval_zero
 
