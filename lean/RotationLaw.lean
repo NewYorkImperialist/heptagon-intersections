@@ -546,5 +546,84 @@ theorem shiftPoly_offset_snd (W : Fin 7 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
 #print axioms shiftPoly_offset_fst
 #print axioms shiftPoly_offset_snd
 
+/-! ### Choosing `δ`: removal and non-creation are the same lemma
+
+For a fixed `Q`-vertex `V`, "V lies on the shifted side's line" is affine in
+`δ`, and the coefficient is `‖u‖² ≠ 0`.  So it holds at **exactly one** `δ`, and
+which one tells the whole story:
+
+* if `V` was *already* on the line, that `δ` is `0` — so **every** nonzero shift
+  removes the degeneracy;
+* if `V` was *not* on the line, that `δ` is nonzero — a single value to avoid,
+  so almost every shift **creates** nothing.
+
+Removal and non-creation are therefore not two arguments but one. -/
+
+/-- Moving the base point of an offset by `δ · tilt u t` shifts every offset by
+`δ‖u‖²`, independently of `t`. -/
+theorem off_base_mov (u A V : ℝ × ℝ) (t δ : ℝ) :
+    off u (mov A (tilt u t) δ) V = off u A V - δ * (u.1 * u.1 + u.2 * u.2) := by
+  simp only [off, mov, tilt]; ring
+
+/-- **The degeneracy condition holds at exactly one `δ`.** -/
+theorem off_shifted_eq_zero_iff {u : ℝ × ℝ} (A V : ℝ × ℝ) (t δ : ℝ)
+    (hu2 : u.1 * u.1 + u.2 * u.2 ≠ 0) :
+    off u (mov A (tilt u t) δ) V = 0 ↔ δ = off u A V / (u.1 * u.1 + u.2 * u.2) := by
+  rw [off_base_mov]
+  constructor
+  · intro h
+    rw [eq_div_iff hu2]
+    linarith
+  · intro h
+    rw [h, div_mul_cancel₀ _ hu2]
+    ring
+
+/-- **Every nonzero shift removes an existing degeneracy.** -/
+theorem shift_removes_degeneracy {u : ℝ × ℝ} (A : ℝ × ℝ) {V : ℝ × ℝ} (t : ℝ) {δ : ℝ}
+    (hu2 : u.1 * u.1 + u.2 * u.2 ≠ 0) (hV : off u A V = 0) (hδ : δ ≠ 0) :
+    off u (mov A (tilt u t) δ) V ≠ 0 := by
+  intro h
+  rw [off_shifted_eq_zero_iff A V t δ hu2, hV, zero_div] at h
+  exact hδ h
+
+/-- **Almost every shift creates none.** -/
+theorem shift_creates_no_degeneracy {u : ℝ × ℝ} (A V : ℝ × ℝ) (t : ℝ) {δ : ℝ}
+    (hu2 : u.1 * u.1 + u.2 * u.2 ≠ 0)
+    (hδ : δ ≠ off u A V / (u.1 * u.1 + u.2 * u.2)) :
+    off u (mov A (tilt u t) δ) V ≠ 0 := by
+  intro h
+  rw [off_shifted_eq_zero_iff A V t δ hu2] at h
+  exact hδ h
+
+/-- **§9.2's choice of `δ`, made.**  Given the finitely many `Q`-vertices, there
+is a shift that is nonzero, smaller than any prescribed `δ₀`, and leaves **no**
+`Q`-vertex on the shifted side's line — so the target degeneracy is removed and
+none is created there.
+
+The bound `δ₀` is left as a parameter because it is supplied from elsewhere:
+`nu_abs_le` and `exists_uniform_shift` for the line-versus-side condition,
+`exists_uniform_rotation` for the rotating neighbours. -/
+theorem exists_good_delta {ι : Type*} [DecidableEq ι] (S : Finset ι) (V : ι → ℝ × ℝ)
+    {u : ℝ × ℝ} (A : ℝ × ℝ) (t : ℝ) (hu2 : u.1 * u.1 + u.2 * u.2 ≠ 0)
+    {δ₀ : ℝ} (hδ₀ : 0 < δ₀) :
+    ∃ δ : ℝ, δ ≠ 0 ∧ |δ| < δ₀ ∧ ∀ i ∈ S, off u (mov A (tilt u t) δ) (V i) ≠ 0 := by
+  classical
+  set B : Finset ℝ :=
+    S.image (fun i => off u A (V i) / (u.1 * u.1 + u.2 * u.2)) with hB
+  have hinf : (Set.Ioo (0:ℝ) δ₀ \ (B : Set ℝ)).Infinite :=
+    (Set.Ioo_infinite hδ₀).diff B.finite_toSet
+  obtain ⟨δ, ⟨hpos, hlt⟩, hnot⟩ := hinf.nonempty
+  refine ⟨δ, ne_of_gt hpos, ?_, fun i hi => ?_⟩
+  · rw [abs_of_pos hpos]; exact hlt
+  · refine shift_creates_no_degeneracy A (V i) t hu2 (fun heq => hnot ?_)
+    rw [Finset.mem_coe, hB]
+    exact Finset.mem_image.mpr ⟨i, hi, heq.symm⟩
+
+#print axioms off_base_mov
+#print axioms off_shifted_eq_zero_iff
+#print axioms shift_removes_degeneracy
+#print axioms shift_creates_no_degeneracy
+#print axioms exists_good_delta
+
 end RotationLaw
 end Heptagon
