@@ -586,5 +586,47 @@ theorem degenerate_not_adjacent (R : Pair9) (hfin : (points9 R).Finite) (i j : F
 #print axioms no_consecutive_degeneracy
 #print axioms degenerate_not_adjacent
 
+/-! ## 12. Half of `hsum`: `Straddle` **is** a conjunct of `ProperCrossR`
+
+The averaging identity is stated about `TiltedShift.Straddle`, and the skeleton
+wants `crossPairsOf`, which is about `ProperCrossR`. Half of that bridge is an
+identity rather than an argument: after the shift, the *first* conjunct of
+`ProperCrossR` for a pair at a degenerate vertex is literally `Straddle`. -/
+
+/-- Every orientation determinant against the **shifted** `P`-side is the
+original offset, displaced by `δ‖u‖²`. -/
+theorem orientR_shifted_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (X : ℝ × ℝ) :
+    orientR (shiftV V i t δ (pP i)) (shiftV V i t δ (pP (i + 1))) X
+      = off (V (pP (i + 1)) - V (pP i)) (V (pP i)) X
+        - δ * ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2) := by
+  rw [← off_eq_orientR, shiftV_dir, shiftV_P, off_base_mov]
+
+/-- **`Straddle` is exactly the `Q`-side conjunct of `ProperCrossR`.**
+
+`c` is the degenerate `Q`-vertex — offset `0` before the shift — and `d` the
+other endpoint of the `Q`-edge, at offset `z`. The condition that the shifted
+`P`-side's *line* separates them is, verbatim, `Straddle δ ‖u‖² z`, which is
+what `averaging_local` counts.
+
+So the averaging identity is not merely *analogous* to the crossing count; it
+is the crossing count, for this conjunct. What the full bridge still needs is
+the **other** conjunct — that the shifted `P`-side's endpoints are separated by
+the `Q`-edge's line — which is the line-versus-side bound
+(`TiltedShift.crossing_mem_side`), not the averaging identity. -/
+theorem straddle_iff_first_conjunct (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ z : ℝ)
+    (c d : ℝ × ℝ)
+    (hc : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) c = 0)
+    (hd : off (V (pP (i + 1)) - V (pP i)) (V (pP i)) d = z) :
+    orientR (shiftV V i t δ (pP i)) (shiftV V i t δ (pP (i + 1))) c *
+        orientR (shiftV V i t δ (pP i)) (shiftV V i t δ (pP (i + 1))) d < 0
+      ↔ Straddle δ ((V (pP (i + 1)) - V (pP i)).1 * (V (pP (i + 1)) - V (pP i)).1
+             + (V (pP (i + 1)) - V (pP i)).2 * (V (pP (i + 1)) - V (pP i)).2) z := by
+  rw [orientR_shifted_side, orientR_shifted_side, hc, hd]
+  simp only [Straddle, zero_sub]
+
+#print axioms orientR_shifted_side
+#print axioms straddle_iff_first_conjunct
+
 end Pair9Shift
 end Heptagon
