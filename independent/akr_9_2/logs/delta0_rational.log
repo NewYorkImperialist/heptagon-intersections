@@ -1,0 +1,133 @@
+======================================================================
+A.  Term-by-term and composite verification of the a-priori bound
+======================================================================
+----------------------------------------------------------------------
+k=7 grid=7 seed=2026 : pairs drawn 400, usable 100
+  tilt       {'tested': 700}
+     slack delta_0 / apriori :  min 4.13e+05   median 1.28e+07   max 2.13e+08
+     in binary orders log2   :  min 18.66   median 23.61   max 27.67
+  translate  {'tested': 700}
+     slack delta_0 / apriori :  min 4.13e+05   median 1.28e+07   max 2.13e+08
+     in binary orders log2   :  min 18.66   median 23.61   max 27.67
+  akr        {'BOUND FAILS K_end': 42, 'skip:undefined (G fails)': 62, 'tested': 638}
+     slack delta_0 / apriori :  min 3.29e+05   median 1e+07   max 1.42e+08
+     in binary orders log2   :  min 18.33   median 23.26   max 27.08
+  min(empty) sentinel hit for: {'tau1': 284}
+----------------------------------------------------------------------
+k=7 grid=9 seed=4242 : pairs drawn 300, usable 123
+  tilt       {'tested': 861}
+     slack delta_0 / apriori :  min 8.56e+05   median 5.22e+07   max 1.32e+09
+     in binary orders log2   :  min 19.71   median 25.64   max 30.30
+  translate  {'tested': 861}
+     slack delta_0 / apriori :  min 8.56e+05   median 5.22e+07   max 1.32e+09
+     in binary orders log2   :  min 19.71   median 25.64   max 30.30
+  akr        {'BOUND FAILS K_end': 89, 'skip:undefined (G fails)': 44, 'tested': 817}
+     slack delta_0 / apriori :  min 6.34e+05   median 4.29e+07   max 1.32e+09
+     in binary orders log2   :  min 19.27   median 25.36   max 30.30
+  min(empty) sentinel hit for: {'tau1': 472}
+----------------------------------------------------------------------
+k=6 grid=5 seed=77 : pairs drawn 300, usable 40
+  tilt       {'tested': 240}
+     slack delta_0 / apriori :  min 1.51e+05   median 1.69e+06   max 1.07e+07
+     in binary orders log2   :  min 17.21   median 20.69   max 23.36
+  translate  {'tested': 240}
+     slack delta_0 / apriori :  min 1.51e+05   median 1.69e+06   max 1.07e+07
+     in binary orders log2   :  min 17.21   median 20.69   max 23.36
+  akr        {'BOUND FAILS K_end': 7, 'skip:undefined (G fails)': 33, 'tested': 207}
+     slack delta_0 / apriori :  min 1.51e+05   median 1.44e+06   max 7.5e+06
+     in binary orders log2   :  min 17.21   median 20.46   max 22.84
+  min(empty) sentinel hit for: {'tau1': 131}
+----------------------------------------------------------------------
+k=7 grid=12 seed=999 : pairs drawn 200, usable 144
+  tilt       {'tested': 1008}
+     slack delta_0 / apriori :  min 3.48e+06   median 2.88e+08   max 7.47e+09
+     in binary orders log2   :  min 21.73   median 28.10   max 32.80
+  translate  {'tested': 1008}
+     slack delta_0 / apriori :  min 3.48e+06   median 2.88e+08   max 7.47e+09
+     in binary orders log2   :  min 21.73   median 28.10   max 32.80
+  akr        {'BOUND FAILS K_end': 94, 'skip:undefined (G fails)': 40, 'tested': 968}
+     slack delta_0 / apriori :  min 2.14e+06   median 2.11e+08   max 6.49e+09
+     in binary orders log2   :  min 21.03   median 27.65   max 32.60
+  min(empty) sentinel hit for: {'tau1': 539}
+----------------------------------------------------------------------
+k=5 grid=4 seed=31 : pairs drawn 300, usable 24
+  tilt       {'tested': 120}
+     slack delta_0 / apriori :  min 2.99e+04   median 4.72e+05   max 2.24e+06
+     in binary orders log2   :  min 14.87   median 18.85   max 21.09
+  translate  {'tested': 120}
+     slack delta_0 / apriori :  min 2.99e+04   median 4.72e+05   max 2.24e+06
+     in binary orders log2   :  min 14.87   median 18.85   max 21.09
+  akr        {'BOUND FAILS K_end': 2, 'skip:undefined (G fails)': 26, 'tested': 94}
+     slack delta_0 / apriori :  min 2.11e+04   median 3.54e+05   max 2.24e+06
+     in binary orders log2   :  min 14.37   median 18.43   max 21.09
+  min(empty) sentinel hit for: {'tau1': 69}
+
+======================================================================
+B.  NON-VACUITY: the same checker with the bound deliberately strengthened
+======================================================================
+  M understated by 2x       APRIORI BOUND FAILS:     0 /   511
+  M understated by 4x       APRIORI BOUND FAILS:     0 /   511
+  exponent 7 -> 5           APRIORI BOUND FAILS:     0 /   511
+  exponent 7 -> 3           APRIORI BOUND FAILS:     0 /   511
+  exponent 7 -> 1           APRIORI BOUND FAILS:     0 /   511
+  exponent 7 -> 0           APRIORI BOUND FAILS:     0 /   511
+  constant 61440 -> 1       APRIORI BOUND FAILS:     0 /   511
+  bound x 10^4 (const 6.144)  APRIORI BOUND FAILS:     0 /   511
+  bound x 10^5 (const 0.6144)  APRIORI BOUND FAILS:     0 /   511
+  bound x 10^6 (const 0.06144)  APRIORI BOUND FAILS:     5 /   511
+  bound x 10^7              APRIORI BOUND FAILS:   209 /   511
+  bound x 10^9              APRIORI BOUND FAILS:   511 /   511
+
+  per-term controls (each rho lower bound tightened 10x, each K upper
+  bound loosened... i.e. claim rho >= 10 x bound):
+   instances 511 ; violations of the 10x-tightened per-term claims:
+     K K_end             292
+     rho/tau rho2        504
+     rho/tau rho3        266
+     rho/tau rho4        511
+     rho/tau tau2          8
+
+======================================================================
+C.  The sharp constructive rational delta_0^Q, two-sided
+======================================================================
+  sqrt device lemma  lb^2 <= x <= ub^2 : 20000 ok, 0 BAD
+  control: the "round to nearest" variant used as a LOWER bound is
+           not one -- failures: 20000 / 20000
+  k=7 g=7 S=2^20  tilt       n=  434   UB/LB: max 1.00002   LB/apriori: min 4.132e+05 median 1.347e+07
+  k=7 g=7 S=2^20  translate  n=  434   UB/LB: max 1.00002   LB/apriori: min 4.132e+05 median 1.347e+07
+  k=7 g=7 S=2^40  tilt       n=  434   UB/LB: max 1   LB/apriori: min 4.132e+05 median 1.347e+07
+  k=7 g=7 S=2^40  translate  n=  434   UB/LB: max 1   LB/apriori: min 4.132e+05 median 1.347e+07
+  k=7 g=7 S=2^80  tilt       n=  434   UB/LB: max 1   LB/apriori: min 4.132e+05 median 1.347e+07
+  k=7 g=7 S=2^80  translate  n=  434   UB/LB: max 1   LB/apriori: min 4.132e+05 median 1.347e+07
+      min(empty) actually occurred: {'tau1': 143, 'rho2ii': 2} of 868 instances
+  k=7 g=12 S=2^20  tilt       n=  742   UB/LB: max 1.00005   LB/apriori: min 3.483e+06 median 2.752e+08
+  k=7 g=12 S=2^20  translate  n=  742   UB/LB: max 1.00005   LB/apriori: min 3.483e+06 median 2.752e+08
+  k=7 g=12 S=2^40  tilt       n=  742   UB/LB: max 1   LB/apriori: min 3.483e+06 median 2.752e+08
+  k=7 g=12 S=2^40  translate  n=  742   UB/LB: max 1   LB/apriori: min 3.483e+06 median 2.752e+08
+  k=7 g=12 S=2^80  tilt       n=  742   UB/LB: max 1   LB/apriori: min 3.483e+06 median 2.752e+08
+  k=7 g=12 S=2^80  translate  n=  742   UB/LB: max 1   LB/apriori: min 3.483e+06 median 2.752e+08
+      min(empty) actually occurred: {'tau1': 271, 'rho2ii': 6} of 1484 instances
+
+======================================================================
+D.  Scale invariance of delta_0  (carries the bound to RATIONAL data)
+======================================================================
+  brackets for delta_0(lambda P) and delta_0(P) OVERLAP :  544 yes, 16 NO
+     (delta_0^Q is NOT exactly scale-invariant -- the rational
+      rounding is not homogeneous -- but the TRUE delta_0 is, and
+      the two rigorous brackets must and do contain a common point.)
+  rational-data corollary  delta_0 >= 1/(61440 (D*M)^7) : 280 hold, 0 FAIL
+
+======================================================================
+E.  Where the slack lives: which term is loose?
+======================================================================
+  instances 434
+  term that is TIGHTEST (smallest true/bound ratio):
+     rho4         421
+     rho2          10
+     rho3           3
+  terms whose a-priori bound is within a factor 10 of the truth:
+     <10x K_end           248 / 434
+     <10x rho2            427 / 434
+     <10x rho3            210 / 434
+     <10x rho4            434 / 434
+     <10x tau2              6 / 434

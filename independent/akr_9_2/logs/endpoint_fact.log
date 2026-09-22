@@ -1,0 +1,11 @@
+{'disjoint': 4000, 'disj_viol': 0, 'disj_crit': 0, 'inter': 1373, 'inter_viol': 1101, 'r3': 2000, 'r3_viol': 849, 'r3_crit': 849, 'para': 111, 'para_viol': 0}
+
+planar disjoint pairs tested          : 4000
+  of which parallel                   : 111
+  interior critical point in (0,1)^2  : 0
+  VIOLATIONS of Fact (E)              : 0
+control (a) intersecting planar pairs : 1373
+  endpoint formula strictly wrong     : 1101   (true dist = 0, endpoint min > 0)
+control (b) segment pairs in R^3      : 2000
+  interior critical point in (0,1)^2  : 849
+  VIOLATIONS of Fact (E) in R^3       : 849

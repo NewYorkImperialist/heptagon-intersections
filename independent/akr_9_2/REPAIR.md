@@ -753,3 +753,202 @@ importing §9.2 — it would be proving the statement §9.2 asserts.
 **f(7,7) = 38 is not proved by anything in this document.** It remains a
 candidate resting on §9 of Ackerman–Keszegh–Rote, of which this closes, on
 paper and unreviewed, the vertex-side half's two structural defects.
+
+---
+
+# Revision of 2026-09-21 (later the same day), by a third agent: §2.4's (Loc) repaired
+
+**This section supersedes the proof of (Loc) in §2.4 above. §2.4 is left in
+place unchanged** — this project keeps superseded reasoning visible — but its
+proof of (Loc) is **incomplete as written** and should be read together with
+this revision. The *statement* of (Loc), the constant δ₀ of §2.3 and every
+other part of §2 are unaffected: **no new term is needed in δ₀.**
+
+Full write-up, all counts, and the verification code:
+[`LOC_AND_DELTA0.md`](LOC_AND_DELTA0.md), `endpoint_fact.py`, `loc_check.py`.
+Nothing here is in Lean; no Lean build was run; no git command was run;
+*f*(7,7) = 38 is not proved by any of it.
+
+## R1. The defect
+
+[`ATTACK.md`](ATTACK.md) §4.2 exhibits an exact certificate
+
+```
+P = (0,0) (10,0) (14,10) (4,18) (-8,12) (-12,4) (-6,-4)
+Q = (5, 2^-12) (11,20) (-2,22) (-4,6)      |dP n dQ| = 2, finite, no (VV), no vertex-side degeneracy
+shift side i = 1, delta = 2^-13:   AKR (2,2,2) identity TRUE
+                                   tilt / translate (2,4,2) identity FALSE
+```
+
+on which the **rotating** neighbour *s*⁻ sweeps across a *Q*-feature for one
+sign of δ only. This is **not** a counterexample to the theorem — δ₀ ≈ 2⁻²³·⁸
+excludes it, and at δ = 2⁻¹⁴ the identity is restored — but §2.4's proof does
+not exclude it. The offending *Q*-side *t* = [(5,2⁻¹²),(11,20)] **meets *s*⁺,
+and neither *s* nor *s*⁻**, so:
+
+* ρ₂(ii) is a minimum over *Q*-sides **disjoint from** *s*⁻ ∪ *s* ∪ *s*⁺ — silent;
+* *K*_rot and τ₁ are extrema over *Q*-sides **meeting *s*⁻** — silent.
+
+§2.4 step "since dist(*x*,*e*₀) < *r*/10 < ρ₂, *t* is not disjoint from
+*s*⁻ ∪ *s* ∪ *s*⁺; by δ₀ ≤ τ₁ and Lemma 1, *t* is not parallel to line(*e*_δ)"
+is therefore a **non sequitur**: it establishes only that *t* meets the
+*union*, while Lemma 1, τ₁ and *K*_rot all need *t* to meet **the particular
+base side that carries *x***.
+
+## R2. The missing fact, stated and proved
+
+> **Fact (E) (endpoint attainment, planar).** Let σ = [*p*,*q*] and *t* = [*c*,*d*]
+> be closed segments in **ℝ²** with **σ ∩ *t* = ∅**. Then
+> dist(σ,*t*) = min( dist(*p*,*t*), dist(*q*,*t*), dist(*c*,σ), dist(*d*,σ) ):
+> the distance is attained at a pair in which at least one point is an endpoint.
+
+*Proof.* Put **e** = *q*−*p*, **f** = *d*−*c* and
+*g*(*s*,τ) = ‖(*p*+*s***e**) − (*c*+τ**f**)‖² on the compact convex square
+[0,1]². A minimiser exists. If it is on ∂[0,1]² then *s* ∈ {0,1} or τ ∈ {0,1},
+which is the claim. Otherwise ∇*g* = 0 there, i.e. ⟨**v**,**e**⟩ =
+⟨**v**,**f**⟩ = 0 with **v** = *x*\*−*y*\*. Disjointness gives **v** ≠ 0; **in
+the plane** **v**^⊥ is one-dimensional, so **e** ∥ **f**, so the Hessian
+*H* = [[⟨**e**,**e**⟩,−⟨**e**,**f**⟩],[−⟨**e**,**f**⟩,⟨**f**,**f**⟩]] has
+det *H* = ‖**e**‖²‖**f**‖²−⟨**e**,**f**⟩² = 0. Along the kernel direction of *H*
+the quadratic *g* is affine with slope ⟨∇*g*,ν⟩ = 0, hence **constant**;
+following it to the boundary of the square (compact, convex) produces a
+minimiser with *s* ∈ {0,1} or τ ∈ {0,1}. ∎
+
+Both hypotheses are needed: for crossing segments the identity fails (left side
+0, right side positive), and in ℝ³ it fails for skew segments (*x*-axis vs
+*y*-axis at height 1). Neither (F), (VV) nor simplicity is used — this is plane
+geometry.
+
+> **Corollary (E′) / (Loc-1).** Under (F), **(VV)**, *P*, *Q* simple: if a side
+> σ of *P* and a side *t* of *Q* are **disjoint** then dist(σ,*t*) ≥ **ρ₂(i)**.
+> Contrapositive: **dist(σ,*t*) < 3*r* ⟹ σ ∩ *t* ≠ ∅**, since 3*r* ≤ ρ₂ ≤ ρ₂(i).
+>
+> *Proof.* By Fact (E) the distance equals one of four vertex-to-side
+> distances, each with the vertex **off** that side (else σ ∩ *t* ≠ ∅); each is
+> therefore one of the terms ρ₂(i) minimises over. ∎
+
+*(ATTACK.md §4.4's one-line version of this — "for every Q-side t with no
+endpoint on s⁻ and with C, A ∉ t, dist(s⁻,t) ≥ ρ₂(i)" — is **false**: a Q-side
+may cross s⁻ transversally with all four endpoints off the other segment. The
+hypothesis has to be disjointness, which is what Fact (E) needs.)*
+
+## R3. The repaired proof of (Loc)
+
+Replaces the paragraph beginning "*Proof.* ∂*P*(δ) and ∂*P* agree away from the
+three moving sides" in §2.4. Statement of (Loc), ℱ, *U*_p, *r* and δ₀ unchanged.
+
+*Proof.* Let 0 < |δ| < δ₀ and let *x* ∈ ∂*P*(δ) ∩ ∂*Q* lie on a moving side
+*e*_δ with base side *e*₀ ∈ {*s*⁻,*s*,*s*⁺}; let *t* ∋ *x* be a *Q*-side.
+
+1. Each moving side is a hinged image of its base: *C*+τ(*A*_δ−*C*) is at
+   distance τ|*A*_δ−*A*| ≤ |δ||*c*_a**a**| from *C*+τ(*A*−*C*) ∈ *s*⁻, and
+   symmetrically for [*B*_δ,*D*] and [*A*_δ,*B*_δ]. Hence
+   **dist(*x*, *e*₀) ≤ |δ|*K*_end < *r*/10** — the distance to **that side's
+   own base side**.
+2. So dist(*t*,*e*₀) < *r*/10 < 3*r*, and **(Loc-1) gives *t* ∩ *e*₀ ≠ ∅.**
+   *This is the step that was missing.*
+3. Lemma 1 now applies to (*t*,*e*₀): *t* ∦ *e*₀. For *e*₀ = *s* that is
+   ⟨**v**_t,**n**⟩ ≠ 0 (so *K*_slide covers *t*); for *e*₀ = *s*⁻ (resp. *s*⁺)
+   it is cross(**w**,**v**_t) ≠ 0, so *t* is one of the *Q*-sides τ₁ and
+   *K*_rot range over, and δ₀ ≤ τ₁ keeps *t* off line(*e*_δ) as well. Hence
+   *t* ∩ line(*e*_δ) = {*x*} and *t* ∩ line(*e*₀) = {*X*₀}, with
+   |*x*−*X*₀| ≤ |δ|max(*K*_slide,*K*_rot) < *r*/10.
+4. By step 2, ∅ ≠ *t* ∩ *e*₀ ⊆ *t* ∩ line(*e*₀) = {*X*₀}, so **X₀ ∈ e₀**, hence
+   *X*₀ ∈ 𝒟 ∩ (*s*⁻∪*s*∪*s*⁺) ⊆ ℱ and *x* ∈ *U*_{X₀} ⊆ *U*.
+5. Conversely every point of 𝒟 on a moving base side lies in ℱ, hence in *U*;
+   and ∂*P*(δ), ∂*P* agree off the moving sides. ρ₁ ≥ 3*r* makes the *U*_p
+   pairwise disjoint. ∎
+
+**The old second branch** — "if *X*₀ ∉ *e*₀ … ρ₂(i) forces *P*_k ∈ *t*" — is now
+**unreachable** (step 4), so the repaired proof is *shorter* than the one it
+replaces. It is left above as superseded reasoning.
+
+**§2.3 is unchanged.** What changes is only how ρ₂(i) is used: on **segment
+pairs**, via Fact (E), rather than on vertex–side pairs alone.
+
+## R4. Verification that the repaired constant covers the certificate
+
+`loc_check.py`, exact rationals, log `logs/loc_check.log`.
+
+On ATTACK.md's certificate: dist(*t*,*s*⁻)² = ρ₂(i)² = ε² = 2⁻²⁴ exactly, with
+both attained at the *Q*-vertex (5,ε) — an **endpoint** of *t*, as Fact (E)
+predicts. For all three rules 3*r* ≤ ρ₂ ✔, dist(*t*,*s*⁻) ≥ ρ₂(i) ≥ 3*r* ✔, and
+|δ|*K*_end < *r*/10 < dist(*t*,*s*⁻) ✔ (*K*_end = 10.77 for the repairs,
+11.60 for AKR; *r* = 8.138·10⁻⁵; δ₀ = 6.7194·10⁻⁸). Directly: the rotated *s*⁻
+meets *t* in **0 of 16** exact tests at |δ| ≤ 2⁻²⁴, for each rule.
+
+**Non-vacuity**, same code at larger δ: the rotated *s*⁻ **does** meet *t* at
+|δ| = 2⁻⁸ … **2⁻¹³**, sign + only, for the pure translation and the tilt, and
+at **no** exponent for AKR's rule. That is the sweep, isolated — one sign only,
+absent from AKR's rule, and switching off between 2⁻¹³ and 2⁻¹⁴ exactly where
+ATTACK.md's identity table flips back to (2,2,2).
+
+Random-configuration checks, all exact, all with (F) and ¬(vertex–vertex):
+
+| check | instances | violations | control |
+|---|---|---|---|
+| (Loc-1): disjoint ⟹ dist² ≥ ρ₂(i)² | **84 264** (*t*,σ) pairs | **0** | bound inflated 10× → **49 062** violations |
+| ρ₂(i) ≥ 3*r* | every (config, side) of both samples (≤ 4 732) | **0** | — |
+| ATTACK.md §4.4's class present (*t* meets the union but not σ) | **19 167** | covered **19 167 / 19 167** | — |
+| (Loc) as a set identity, δ below δ₀ | **18 450** (tilt 6 342, translate 6 342, AKR 5 766) | **0**; *U*_p always disjoint; no point in two *U*_p | same identity at δ = 2⁻², 2⁻⁴ → **7 292 / 10 926** violations |
+
+## R5. What this revision does not do
+
+It does not re-derive or re-audit *K*_end, *K*_slide, *K*_rot; step 3 uses them
+as §2.3 defines them, and their soundness rests on ≈ 26 000 instances in
+ATTACK.md plus 18 450 here — evidence, not proof. It does not touch (VV), i.e.
+§9.1, which remains open and necessary. It is pen-and-paper, by one agent,
+unreviewed, and **not machine-checked**.
+
+## R6. Three corrections to §2.3's δ₀ (same revision, 2026-09-21)
+
+Full statement, proof, numbers and controls:
+[`LOC_AND_DELTA0.md`](LOC_AND_DELTA0.md) §3; code `delta0_rational.py`.
+
+**(a) "finitely many strictly positive rationals" is false.** ρ₁–ρ₄ are
+distances and *K*_end, *K*_slide, *K*_rot are built from norms, so with integer
+input they are square roots of integers. Only τ₁ and τ₂ are rational. The
+sentence should read **"finitely many strictly positive reals"**.
+
+**(b) the empty `min`.** ρ₂(ii), ρ₃, τ₁ and τ₂ range over families that can be
+empty; **min ∅ := +∞** is the intended reading and must be said. ρ₁, ρ₂(i) and
+ρ₄ are never empty for *m*, *n* ≥ 3 under (F) + **[VV]**. **Measured: τ₁'s
+family is empty in 16–18 % of (configuration, side, rule) instances**, so this
+is not a corner case.
+
+**(c) δ₀ is not scale-invariant**, because of the `max(…, 1)` guard, whose
+constant 1 is not dimensionless while every *K* scales like λ. Measured: of
+560 rescalings, 16 break the invariance, all at λ < 1 with the guard binding.
+The guard only ever *shrinks* δ₀, so §2 is unaffected; but the invariance that
+should be quoted is the **equivariance of the operator**,
+*G*(λ*P*,*i*,δ) = λ*G*(*P*,*i*,δ), together with the scale-invariance of every
+conclusion of §2.
+
+**The constructive replacement.**
+
+> **Theorem (rational δ₀).** For every integer *M* ≥ 1, every *m*, *n* ≥ 3,
+> every pair of simple polygons *P*, *Q* with **integer** coordinates of
+> ‖·‖_∞ ≤ *M* satisfying **(F)** and **(VV)**, every side index *i*, and the
+> **tilt** or the **pure translation**: with min ∅ = +∞,
+>
+> > **δ₀ ≥ 1/(61440 *M*⁷) ≥ 2⁻¹⁶ *M*⁻⁷.**
+>
+> (For AKR's Fig.-28 rule, where it is defined, δ₀ ≥ 1/(353280 *M*⁹).)
+> For **rational** coordinates with common denominator *D*, apply this to
+> (*DP*, *DQ*) with *M* = *D*·max‖·‖_∞ and pull back along the equivariance.
+
+Proof in `LOC_AND_DELTA0.md` §3.4, from ρ₁ ≥ 1/(64*M*⁴), ρ₂ ≥ ρ₃ ≥ 1/(3*M*),
+ρ₄ ≥ 1, *K*_end ≤ 4*M*, *K*_slide ≤ 23*M*³, *K*_rot ≤ 32*M*³,
+τ₁ ≥ 1/(16*M*²), τ₂ ≥ 1/(8*M*²). **Fact (E) of R2 is used twice more, for
+ρ₂(ii) and ρ₃.** A formalisation may take δ := 2⁻¹⁷*M*⁻⁷ and never construct
+δ₀ at all.
+
+Verified on **2 929 exact instances per rule**, 0 failures of any of the ten
+term bounds or of the composite; **the bound is loose by ≥ 2¹⁴·⁹ everywhere
+sampled**, so it only breaks under a ≥ 10⁶ strengthening (5/511 at 10⁶,
+209/511 at 10⁷, 511/511 at 10⁹) — the naive "understate *M*" control, which
+works for `eps_uniform`'s Corollary U′, **does not fire here and is reported as
+not firing**. The *sharp* constructive bound δ₀^ℚ (square roots replaced by
+rational bounds at precision *S*) is by contrast exact to a relative 2⁻⁴⁰:
+rigorous two-sided brackets give max δ₀^UB/δ₀^ℚ = 1 at *S* = 2⁴⁰ over 1 176
+instances.

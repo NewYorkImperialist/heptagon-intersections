@@ -1,0 +1,80 @@
+======================================================================
+A.  The ATTACK.md 4.2 certificate under the repaired (Loc) step
+======================================================================
+  s- = ((Fraction(0, 1), Fraction(0, 1)), (Fraction(10, 1), Fraction(0, 1)))   s = ((Fraction(10, 1), Fraction(0, 1)), (Fraction(14, 1), Fraction(10, 1)))   s+ = ((Fraction(14, 1), Fraction(10, 1)), (Fraction(4, 1), Fraction(18, 1)))
+  offending Q-side t = ((Fraction(5, 1), Fraction(1, 4096)), (Fraction(11, 1), Fraction(20, 1)))
+    t n s- : none
+    t n s  : none
+    t n s+ : point
+  dist(t,s-)^2 = 1/16777216  = eps^2 ? True
+  rho_2(i)^2   = 1/16777216  attained at the Q-vertex (5,eps) vs s-: True
+  Fact (E): dist(t,s-) is attained at an ENDPOINT of t  -> True
+
+  rule akr        delta_0 = 6.719411e-08
+     r = 8.138021e-05   rho_2 = 2.441406e-04   3r <= rho_2 : True
+     dist(t,s-) >= rho_2(i) >= 3r : True    [the repaired step]
+     K_end = 11.6000 ; max displacement of s- at |delta|<delta_0 = |delta|*|c_a a| < 7.794517e-07
+     |delta|*K_end < r/10 < dist(t,s-) : True
+     rotated s- meets t at any |delta| <= 2^-24 (16 tests): 0
+     NON-VACUITY: (e,sign) with |delta|=2^-e at which the rotated s- DOES meet t:
+        NONE
+
+  rule translate  delta_0 = 6.719411e-08
+     r = 8.138021e-05   rho_2 = 2.441406e-04   3r <= rho_2 : True
+     dist(t,s-) >= rho_2(i) >= 3r : True    [the repaired step]
+     K_end = 10.7703 ; max displacement of s- at |delta|<delta_0 = |delta|*|c_a a| < 7.237027e-07
+     |delta|*K_end < r/10 < dist(t,s-) : True
+     rotated s- meets t at any |delta| <= 2^-24 (16 tests): 0
+     NON-VACUITY: (e,sign) with |delta|=2^-e at which the rotated s- DOES meet t:
+        [(8, 1), (9, 1), (10, 1), (11, 1), (12, 1), (13, 1)]
+
+  rule tilt       delta_0 = 6.719411e-08
+     r = 8.138021e-05   rho_2 = 2.441406e-04   3r <= rho_2 : True
+     dist(t,s-) >= rho_2(i) >= 3r : True    [the repaired step]
+     K_end = 10.7703 ; max displacement of s- at |delta|<delta_0 = |delta|*|c_a a| < 7.237027e-07
+     |delta|*K_end < r/10 < dist(t,s-) : True
+     rotated s- meets t at any |delta| <= 2^-24 (16 tests): 0
+     NON-VACUITY: (e,sign) with |delta|=2^-e at which the rotated s- DOES meet t:
+        [(8, 1), (9, 1), (10, 1), (11, 1), (12, 1), (13, 1)]
+
+======================================================================
+B.  (Loc-1) on random heptagon pairs  (seed 777, grid 7)
+======================================================================
+  pairs drawn 900, usable 231
+  (Q-side, base-side) pairs examined      : 33957
+    they MEET                             : 5205
+    they are DISJOINT                     : 28752
+  VIOLATIONS of  disjoint => dist^2 >= rho_2(i)^2 : 0
+  VIOLATIONS of  rho_2(i) >= 3r                   : 0
+
+  PHENOMENON (ATTACK.md 4.4 class): t meets s- u s u s+ but not the
+    particular base side sigma           : 6552
+    of these, covered by rho_2(i) >= 3r  : 6552
+
+  NON-VACUITY CONTROL: same checker, bound inflated by 10x
+    violations of  disjoint => dist^2 >= (10 rho_2(i))^2 : 18852 / 28752
+
+======================================================================
+B.  (Loc-1) on random heptagon pairs  (seed 1234, grid 9)
+======================================================================
+  pairs drawn 900, usable 445
+  (Q-side, base-side) pairs examined      : 65415
+    they MEET                             : 9903
+    they are DISJOINT                     : 55512
+  VIOLATIONS of  disjoint => dist^2 >= rho_2(i)^2 : 0
+  VIOLATIONS of  rho_2(i) >= 3r                   : 0
+
+  PHENOMENON (ATTACK.md 4.4 class): t meets s- u s u s+ but not the
+    particular base side sigma           : 12615
+    of these, covered by rho_2(i) >= 3r  : 12615
+
+  NON-VACUITY CONTROL: same checker, bound inflated by 10x
+    violations of  disjoint => dist^2 >= (10 rho_2(i))^2 : 30210 / 55512
+
+======================================================================
+C.  (Loc) itself: (dP(d) n dQ) \ U  ==  (dP n dQ) \ U   (seed 808)
+======================================================================
+  pairs drawn 600, usable 151
+  tilt       {'above:2^-2 LOC VIOLATION': 1344, 'above:2^-2 skip': 429, 'above:2^-2 tested': 1685, 'above:2^-4 LOC VIOLATION': 1374, 'above:2^-4 skip': 33, 'above:2^-4 tested': 2081, 'below tested': 6342}
+  translate  {'above:2^-2 LOC VIOLATION': 1349, 'above:2^-2 skip': 428, 'above:2^-2 tested': 1686, 'above:2^-4 LOC VIOLATION': 1374, 'above:2^-4 skip': 33, 'above:2^-4 tested': 2081, 'below tested': 6342}
+  akr        {'above:2^-2 LOC VIOLATION': 797, 'above:2^-2 skip': 395, 'above:2^-2 tested': 1527, 'above:2^-4 LOC VIOLATION': 1054, 'above:2^-4 skip': 56, 'above:2^-4 tested': 1866, 'below tested': 5766, 'skip': 96}
