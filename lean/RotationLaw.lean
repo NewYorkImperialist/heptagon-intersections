@@ -1,4 +1,5 @@
 import R3Construct
+import RealUpperBound
 
 /-!
 # The exact rotation law
@@ -23,6 +24,8 @@ Nothing here is an axiom and nothing here proves `f(7,7) = 38`.
 
 namespace Heptagon
 namespace RotationLaw
+
+open Heptagon.RealConfig Heptagon.RealUpperBound
 
 open Heptagon.R3Construct
 
@@ -134,6 +137,150 @@ theorem cross_eq_zero_iff_dot_sq {u v : ℝ × ℝ} :
 #print axioms plucker
 #print axioms rot_displacement
 #print axioms rot_displacement_zero_of_parallel
+
+/-! ## The rotating neighbour: why the count does not drop
+
+The tilted shift of `TiltedShift.lean` removes hypothesis **(NC)** — it is
+defined at a straight vertex, where AKR's slide along an adjacent side line is
+not. It pays for that with a new obligation. AKR's slide is designed so the
+*adjacent* sides stay on their own lines and merely change length; a tilted
+shift moves the side's endpoints off those lines, so each adjacent side
+**rotates** about its fixed far endpoint.
+
+So the tilted repair owes an argument that intersections on a rotating
+neighbour are not lost. This section gives it, in the form the count needs.
+
+Every orientation determinant between a rotating side and a fixed `Q`-side is
+**affine** in the shift parameter: one endpoint moves affinely and the rest is
+fixed. A proper crossing is a conjunction of strict sign conditions on such
+determinants, so it is an *open* condition, and the only question is how small
+the shift must be. That is answered explicitly. -/
+
+/-- **An affine quantity keeps its sign while the shift is smaller than the
+ratio of value to slope.** `c` is the determinant at `δ = 0` and `m` its rate of
+change; the conclusion `0 < c * (c + δ * m)` says the perturbed determinant is
+nonzero with the *same* sign. -/
+theorem sign_preserved_affine {c m δ : ℝ} (hδ : |δ| * |m| < |c|) :
+    0 < c * (c + δ * m) := by
+  have habs : |δ * m| < |c| := by rw [abs_mul]; exact hδ
+  have hc : 0 < |c| := lt_of_le_of_lt (abs_nonneg _) habs
+  have e1 : -(|c| * |δ * m|) ≤ c * (δ * m) := by
+    have h := neg_abs_le (c * (δ * m))
+    rw [abs_mul] at h
+    linarith
+  have e2 : |c| * |δ * m| < |c| * |c| := mul_lt_mul_of_pos_left habs hc
+  have e3 : |c| * |c| = c * c := abs_mul_abs_self c
+  nlinarith [e1, e2, e3]
+
+/-- The ratio form of `sign_preserved_affine`, with `1 + |m|` in the denominator
+so that a determinant which does not move at all (`m = 0`) needs no special
+case. -/
+theorem sign_preserved_of_lt {c m δ : ℝ} (hδ : |δ| < |c| / (1 + |m|)) :
+    0 < c * (c + δ * m) := by
+  have hden : (0:ℝ) < 1 + |m| := by positivity
+  have hmul := mul_lt_mul_of_pos_right hδ hden
+  rw [div_mul_cancel₀ _ (ne_of_gt hden)] at hmul
+  refine sign_preserved_affine (lt_of_le_of_lt ?_ hmul)
+  exact mul_le_mul_of_nonneg_left (by linarith [abs_nonneg m]) (abs_nonneg δ)
+
+/-- **One rotation small enough for every determinant at once.**  Given the
+finitely many orientation determinants that certify the crossings on a rotating
+neighbour — each nonzero at `δ = 0`, each with its own rate `m i` — a single
+`δ₀` keeps all of them nonzero and of unchanged sign.
+
+The bound `|c i| / (1 + |m i|)` is used rather than `|c i| / |m i|` so that a
+determinant which does not move at all (`m i = 0`) needs no special case. -/
+theorem exists_uniform_rotation {ι : Type*} (S : Finset ι) (c m : ι → ℝ)
+    (hc : ∀ i ∈ S, c i ≠ 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ i ∈ S, 0 < c i * (c i + δ * m i) := by
+  rcases S.eq_empty_or_nonempty with hE | hS
+  · exact ⟨1, one_pos, by simp [hE]⟩
+  · refine ⟨S.inf' hS (fun i => |c i| / (1 + |m i|)), ?_, ?_⟩
+    · rw [Finset.lt_inf'_iff]
+      intro i hi
+      exact div_pos (abs_pos.mpr (hc i hi)) (by positivity)
+    · intro δ hδ i hi
+      exact sign_preserved_of_lt (lt_of_lt_of_le hδ (Finset.inf'_le _ hi))
+
+/-- The same conclusion in the form the count uses: the perturbed determinant is
+nonzero, so no certified crossing is lost. -/
+theorem ne_zero_of_uniform_rotation {c m δ : ℝ} (h : 0 < c * (c + δ * m)) :
+    c + δ * m ≠ 0 := by
+  intro hz
+  rw [hz, mul_zero] at h
+  exact lt_irrefl 0 h
+
+#print axioms sign_preserved_affine
+#print axioms exists_uniform_rotation
+#print axioms ne_zero_of_uniform_rotation
+
+/-! ### The geometric statement
+
+The abstract results above are anchored here: the determinants of a rotating
+side really are affine in the shift, and a proper crossing really does survive.
+-/
+
+/-- The endpoint `A` displaced by `δ · w`; the side's other endpoint is fixed,
+so the side rotates about it. -/
+def mov (A w : ℝ × ℝ) (δ : ℝ) : ℝ × ℝ := (A.1 + δ * w.1, A.2 + δ * w.2)
+
+/-- A determinant with the moving point in the **second** slot is affine in `δ`. -/
+theorem orientR_mov_mid (F A C w : ℝ × ℝ) (δ : ℝ) :
+    orientR F (mov A w δ) C
+      = orientR F A C + δ * (w.1 * (C.2 - F.2) - w.2 * (C.1 - F.1)) := by
+  simp only [orientR, mov]; ring
+
+/-- A determinant with the moving point in the **third** slot is affine in `δ`. -/
+theorem orientR_mov_last (C D A w : ℝ × ℝ) (δ : ℝ) :
+    orientR C D (mov A w δ)
+      = orientR C D A + δ * ((D.1 - C.1) * w.2 - (D.2 - C.2) * w.1) := by
+  simp only [orientR, mov]; ring
+
+/-- If two quantities keep their signs, a product of them that was negative
+stays negative. -/
+theorem prod_neg_of_signs {a a' b b' : ℝ} (ha : 0 < a * a') (hb : 0 < b * b')
+    (hab : a * b < 0) : a' * b' < 0 := by
+  nlinarith [mul_pos ha hb]
+
+/-- **A proper crossing survives a small rotation of the neighbouring side.**
+
+`F` is the fixed far endpoint, `A` the endpoint the tilted shift moves, and
+`[C, D]` a `Q`-side crossing it. There is a `δ₀ > 0` such that every smaller
+rotation leaves the crossing proper — so the tilted shift's rotating
+neighbours lose no intersections, which is the obligation the tilt incurs in
+exchange for not needing **(NC)**. -/
+theorem properCrossR_persists_rotating {F A C D : ℝ × ℝ} (w : ℝ × ℝ)
+    (h0 : ProperCrossR F A C D) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ProperCrossR F (mov A w δ) C D := by
+  obtain ⟨h1, h2⟩ := h0
+  -- the three determinants that move, and the one that does not
+  set c0 := orientR F A C with hc0
+  set c1 := orientR F A D with hc1
+  set c2 := orientR C D A with hc2
+  set m0 := w.1 * (C.2 - F.2) - w.2 * (C.1 - F.1) with hm0
+  set m1 := w.1 * (D.2 - F.2) - w.2 * (D.1 - F.1) with hm1
+  set m2 := (D.1 - C.1) * w.2 - (D.2 - C.2) * w.1 with hm2
+  have hc0ne : c0 ≠ 0 := fun h => by rw [h, zero_mul] at h1; exact lt_irrefl 0 h1
+  have hc1ne : c1 ≠ 0 := fun h => by rw [h, mul_zero] at h1; exact lt_irrefl 0 h1
+  have hc2ne : c2 ≠ 0 := fun h => by rw [h, mul_zero] at h2; exact lt_irrefl 0 h2
+  have hFne : orientR C D F ≠ 0 := fun h => by rw [h, zero_mul] at h2; exact lt_irrefl 0 h2
+  refine ⟨min (min (|c0| / (1 + |m0|)) (|c1| / (1 + |m1|))) (|c2| / (1 + |m2|)), ?_, ?_⟩
+  · refine lt_min (lt_min ?_ ?_) ?_ <;>
+      exact div_pos (abs_pos.mpr (by assumption)) (by positivity)
+  · intro δ hδ
+    have d0 : |δ| < |c0| / (1 + |m0|) := lt_of_lt_of_le hδ ((min_le_left _ _).trans (min_le_left _ _))
+    have d1 : |δ| < |c1| / (1 + |m1|) := lt_of_lt_of_le hδ ((min_le_left _ _).trans (min_le_right _ _))
+    have d2 : |δ| < |c2| / (1 + |m2|) := lt_of_lt_of_le hδ (min_le_right _ _)
+    constructor
+    · rw [orientR_mov_mid, orientR_mov_mid, ← hc0, ← hc1, ← hm0, ← hm1]
+      exact prod_neg_of_signs (sign_preserved_of_lt d0) (sign_preserved_of_lt d1) h1
+    · rw [orientR_mov_last, ← hc2, ← hm2]
+      exact prod_neg_of_signs (mul_self_pos.mpr hFne) (sign_preserved_of_lt d2) h2
+
+#print axioms orientR_mov_mid
+#print axioms orientR_mov_last
+#print axioms prod_neg_of_signs
+#print axioms properCrossR_persists_rotating
 
 end RotationLaw
 end Heptagon
