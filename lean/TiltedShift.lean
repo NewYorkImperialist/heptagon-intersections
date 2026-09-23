@@ -743,5 +743,94 @@ theorem exists_sign_contrib_not_decreasing {ι : Type*} (S : Finset ι) (N δ : 
 #print axioms averaging_contrib_sum
 #print axioms exists_sign_contrib_not_decreasing
 
+/-! ### Rotation: different points shift by different amounts
+
+`Straddle` carries a single normal displacement `N`, right for a *translation*
+— every point of the line moves by the same amount. Under a rotation the
+offset change depends on where along the line the point sits, so the degenerate
+vertex and its neighbour get **separate** coefficients: the vertex, at offset
+`0`, moves to `−δa`; its neighbour, at offset `y`, moves to `y − δb`.
+
+**What this does and does not buy.** It is a generalisation of *hypotheses*,
+not of behaviour. `straddle₂_iff` shows the neighbour's coefficient `b` drops
+out once `|δb| < |y|` — the condition reduces to the sign of `δa·y`, exactly as
+`straddle_iff_sign` reduces to the sign of `δy`. Checked: on 45,368 instances
+satisfying both sets of hypotheses the two models give **identical** counts.
+
+What it actually adds is that `a` may have **either sign** (the single-`N` form
+needs `N > 0`) and that each neighbour's smallness is stated with its own
+coefficient rather than a shared one. Those are exactly the two things a
+rotating neighbour fails to provide. -/
+
+def Straddle₂ (δ a b y : ℝ) : Prop := (-(δ * a)) * (y - δ * b) < 0
+
+/-- For a small enough shift the condition reduces to a sign test on `δa·y` —
+the neighbour's own coefficient `b` drops out, because `y − δb` still has the
+sign of `y`. -/
+theorem straddle₂_iff {δ a b y : ℝ} (hb : |δ * b| < |y|) :
+    Straddle₂ δ a b y ↔ 0 < (δ * a) * y := by
+  unfold Straddle₂
+  have h := abs_lt.mp hb
+  rcases lt_trichotomy y 0 with hy | hy | hy
+  · rw [abs_of_neg hy] at h
+    constructor <;> intro hc <;> nlinarith
+  · exfalso
+    rw [hy, abs_zero] at hb
+    exact absurd hb (not_lt.mpr (abs_nonneg _))
+  · rw [abs_of_pos hy] at h
+    constructor <;> intro hc <;> nlinarith
+
+theorem straddle₂_neg_iff {δ a b y : ℝ} (hb : |δ * b| < |y|) :
+    Straddle₂ (-δ) a b y ↔ (δ * a) * y < 0 := by
+  unfold Straddle₂
+  have h := abs_lt.mp hb
+  rcases lt_trichotomy y 0 with hy | hy | hy
+  · rw [abs_of_neg hy] at h
+    constructor <;> intro hc <;> nlinarith
+  · exfalso
+    rw [hy, abs_zero] at hb
+    exact absurd hb (not_lt.mpr (abs_nonneg _))
+  · rw [abs_of_pos hy] at h
+    constructor <;> intro hc <;> nlinarith
+
+open Classical in
+/-- **Exactly one of the two directions crosses this edge** — the rotating
+analogue of `one_of_two_signs`, with the neighbour carrying its own
+coefficient. -/
+theorem one_of_two_straddle₂ {δ a b y : ℝ} (ha : δ * a ≠ 0) (hb : |δ * b| < |y|) :
+    (if Straddle₂ δ a b y then 1 else 0)
+      + (if Straddle₂ (-δ) a b y then 1 else 0) = 1 := by
+  have hyne : y ≠ 0 := by
+    intro h
+    rw [h, abs_zero] at hb
+    exact absurd hb (not_lt.mpr (abs_nonneg _))
+  have hprod : (δ * a) * y ≠ 0 := mul_ne_zero ha hyne
+  rw [if_congr (straddle₂_iff hb) rfl rfl, if_congr (straddle₂_neg_iff hb) rfl rfl]
+  rcases lt_or_gt_of_ne hprod with h | h
+  · rw [if_neg (by linarith), if_pos h]
+  · rw [if_pos h, if_neg (by linarith)]
+
+open Classical in
+/-- The rotating local count. -/
+noncomputable def crossCount₂ (δ a b c y z : ℝ) : ℕ :=
+  (if Straddle₂ δ a b y then 1 else 0) + (if Straddle₂ δ a c z then 1 else 0)
+
+/-- **The averaging identity for a rotating side.**  The vertex's own
+coefficient `a` is shared by both incident edges — it is the vertex that moves
+off the line — while each neighbour keeps its own `b`, `c`. -/
+theorem averaging_identity₂ {δ a b c y z : ℝ} (ha : δ * a ≠ 0)
+    (hb : |δ * b| < |y|) (hc : |δ * c| < |z|) :
+    crossCount₂ δ a b c y z + crossCount₂ (-δ) a b c y z = 2 := by
+  have e1 := one_of_two_straddle₂ ha hb
+  have e2 := one_of_two_straddle₂ ha hc
+  have hnb : |(-δ) * b| = |δ * b| := by rw [neg_mul, abs_neg]
+  have hnc : |(-δ) * c| = |δ * c| := by rw [neg_mul, abs_neg]
+  simp only [crossCount₂, neg_neg] at *
+  omega
+
+#print axioms straddle₂_iff
+#print axioms one_of_two_straddle₂
+#print axioms averaging_identity₂
+
 end TiltedShift
 end Heptagon

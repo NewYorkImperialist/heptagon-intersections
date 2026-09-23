@@ -1,0 +1,4 @@
+instances (b and c INDEPENDENT of a, i.e. genuine rotation): 81824
+  sum != 2 : 0
+  distribution: {2: 81824}
+rotation vs translation model differ on 0 of 45368  <- the two models AGREE under the smallness hypotheses
