@@ -1719,5 +1719,96 @@ theorem first_conjunct_aff (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) 
 #print axioms shiftCoef_eq_zero
 #print axioms first_conjunct_aff
 
+/-- The second conjunct persists, for **any** `P`-side. -/
+theorem second_conjunct_persists_any (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ k j : Fin 7,
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP k)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (k + 1))) < 0 →
+      orientR (shiftV V i t δ (pQ j)) (shiftV V i t δ (pQ (j + 1)))
+            (shiftV V i t δ (pP k)) *
+          orientR (shiftV V i t δ (pQ j)) (shiftV V i t δ (pQ (j + 1)))
+            (shiftV V i t δ (pP (k + 1))) < 0 := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_delta0_order_type V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ k j h0 => ?_⟩
+  have n1 : orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP k)) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h0; exact lt_irrefl 0 h0
+  have n2 : orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (k + 1))) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h0; exact lt_irrefl 0 h0
+  exact prod_neg_of_signs (h δ hδ _ _ _ n1) (h δ hδ _ _ _ n2) h0
+
+/-- **The membership bridge, for any `P`-side.**  At a degenerate vertex of
+side `k`, the pair `(k, j)` crosses after the shift exactly when the affine
+straddle holds — the shape `TiltedShift.localContribAff` counts. -/
+theorem mem_crossPairs_iff_aff (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ k j : Fin 7,
+      orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP k)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (k + 1))) < 0 →
+      ((k, j) ∈ crossPairsOf (shiftV V i t δ) ↔
+        (δ * shiftCoef V i t k (pQ j))
+          * (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j + 1)))
+              + δ * shiftCoef V i t k (pQ (j + 1))) < 0) := by
+  obtain ⟨δ₀, hδ₀, hsec⟩ := second_conjunct_persists_any V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ k j hdeg hsep => ⟨fun hin => ?_, fun hstr => ?_⟩⟩
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+    exact (first_conjunct_aff V i t δ k j hdeg).mp hin.1
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact ⟨(first_conjunct_aff V i t δ k j hdeg).mpr hstr, hsec δ hδ k j hsep⟩
+
+#print axioms second_conjunct_persists_any
+#print axioms mem_crossPairs_iff_aff
+
+/-- The mirrored bridge: the pair `(k, j−1)`, whose `Q`-edge has the degenerate
+vertex as its **second** endpoint. -/
+theorem mem_crossPairs_iff_aff_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ k j : Fin 7,
+      orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP k)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (k + 1))) < 0 →
+      ((k, j - 1) ∈ crossPairsOf (shiftV V i t δ) ↔
+        (δ * shiftCoef V i t k (pQ j))
+          * (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j - 1)))
+              + δ * shiftCoef V i t k (pQ (j - 1))) < 0) := by
+  obtain ⟨δ₀, hδ₀, hsec⟩ := second_conjunct_persists_any V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ k j hdeg hsep => ?_⟩
+  have hj : j - 1 + 1 = j := by simp
+  constructor
+  · intro hin
+    simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+    rw [hj] at hin
+    have h1 := hin.1
+    rw [orientR_shift_side, orientR_shift_side, hdeg, zero_add] at h1
+    linarith [h1, mul_comm
+      (δ * shiftCoef V i t k (pQ j))
+      (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j - 1)))
+        + δ * shiftCoef V i t k (pQ (j - 1)))]
+  · intro hstr
+    simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [hj]
+    refine ⟨?_, ?_⟩
+    · rw [orientR_shift_side, orientR_shift_side, hdeg, zero_add]
+      linarith [hstr, mul_comm
+        (δ * shiftCoef V i t k (pQ j))
+        (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j - 1)))
+          + δ * shiftCoef V i t k (pQ (j - 1)))]
+    · have h := hsec δ hδ k (j - 1) (by rw [hj]; exact hsep)
+      rw [hj] at h
+      exact h
+
+/-- A degenerate vertex kills both incident pairs, for **any** side. -/
+theorem degenerate_not_mem_crossPairs_any (V : Fin 14 → ℝ × ℝ) (k j : Fin 7)
+    (hdeg : orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0) :
+    (k, j) ∉ crossPairsOf V ∧ (k, j - 1) ∉ crossPairsOf V := by
+  constructor
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact not_properCrossR_of_left_zero hdeg
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    have hj : j - 1 + 1 = j := by simp
+    rw [hj]
+    exact not_properCrossR_of_right_zero hdeg
+
+#print axioms mem_crossPairs_iff_aff_prev
+#print axioms degenerate_not_mem_crossPairs_any
+
 end Pair9Shift
 end Heptagon

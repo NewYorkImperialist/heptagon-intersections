@@ -29,19 +29,31 @@ would suffice (`points9_le_38_of_sum_bound`), and the chain would give it if
 the quantity `crossPairs + degSetOf + degSetQ` were **non-decreasing** along
 it — the endpoint has both index sets empty and `|crossPairs| ≤ 38`.
 
-It is not proved, and the obstruction is identified rather than vague. A step
-that clears `P`-side `i` gains at least `|D|` crossing pairs
-(`Pair9Shift.count_grows_from_interior`), which pays for the `|D|` index pairs
-it removes. But the step also **rotates the neighbouring sides** `i ± 1`, and a
-degeneracy sitting on one of *those* can be destroyed with no compensating
-gain: that degenerate point was a genuine intersection, and after the rotation
-it may simply be gone. So the sum can fall.
+**That non-decreasing invariant is false**, and §7 below exhibits why. It is
+stated here rather than buried because an earlier version of this note proposed
+it as the route, and it is not one.
 
-That is precisely the case AKR's averaging identity exists to handle — over
-the two shift directions the degenerate contributions sum to twice the
-original, so one direction does not lose. `TiltedShift.exists_sign_not_decreasing`
-is that statement and is proved; applying it to the *neighbours'* degeneracies
-rather than the shifted side's own is the unwritten work.
+`degSetOf` is about the side's **line**. A `Q`-vertex can sit on a `P`-side's
+line while being far off the *segment* — `P`-side `[(0,0),(1,0)]` and
+`Q`-vertex `(5,0)` — in which case it is **not an intersection point at all**
+and contributes nothing to `points9`. Shifting the side clears that entry for
+free: `degSetOf` drops by one and `crossPairsOf` does not move, so the sum
+falls. `line_degeneracy_can_be_free` checks exactly this.
+
+The invariant has to be stated with a degeneracy measure that counts only
+**genuine intersection points** — segment membership, i.e. `degPts` itself.
+That measure also has the property the counting needs and the line-based one
+lacks: `Pair9Shift.no_consecutive_degeneracy` forbids two *adjacent* degenerate
+`Q`-vertices on one side, which is what makes the incident pair sets disjoint.
+For line-degeneracies adjacency is perfectly possible — two consecutive
+`Q`-vertices on the line just means that `Q`-side is collinear with it.
+
+With `|crossPairs| + |degPts|` the obstruction reduces to the one the averaging
+identity handles: a step clearing side `i` also **rotates** sides `i ± 1`, and
+a genuine degeneracy on one of those can be destroyed. `localContribAff` and
+`exists_sign_contrib_aff` are that argument, with `m₀ = 0` covering the
+vertices the rotation does not move. Instantiating them at a configuration's
+neighbour degeneracies is the unwritten work.
 
 This file is a leaf.
 -/
@@ -337,6 +349,24 @@ theorem points9_le_38_of_sum_bound (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms degPts_subset
 #print axioms degPts_ncard_le
 #print axioms points9_le_38_of_sum_bound
+
+/-! ## 7. Why the line-based measure cannot carry the invariant
+
+A `Q`-vertex on a `P`-side's **line** need not be on the **segment**, and then
+it is not an intersection point at all. Clearing it costs nothing, so a sum
+involving `degSetOf` can fall with no compensating gain. -/
+
+theorem line_degeneracy_can_be_free :
+    orientR ((0 : ℝ), (0 : ℝ)) (1, 0) (5, 0) = 0 ∧
+    orientR ((0 : ℝ), (1/10 : ℝ)) (1, 1/10) (5, 0) ≠ 0 ∧
+    ((5 : ℝ), (0 : ℝ)) ∉ segment ℝ ((0 : ℝ), (0 : ℝ)) ((1 : ℝ), (0 : ℝ)) := by
+  refine ⟨by norm_num [orientR], by norm_num [orientR], ?_⟩
+  rintro ⟨a, b, ha, hb, hab, h⟩
+  have h1 : a * 0 + b * 1 = 5 := congrArg Prod.fst h
+  simp only [mul_zero, mul_one, zero_add] at h1
+  linarith
+
+#print axioms line_degeneracy_can_be_free
 
 end Compose
 end Heptagon
