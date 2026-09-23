@@ -28,6 +28,7 @@ namespace Compose
 open Heptagon.AKR9 Heptagon.ResidualSym Heptagon.RealConfig
 open Heptagon.RealUpperBound Heptagon.RealPerturb
 open Heptagon.Pair9Shift Heptagon.E9Directions Heptagon.SwapPQ
+open Heptagon.DegBound
 
 /-! ## 1. One `P`-side shift holding both other invariants -/
 
@@ -179,6 +180,58 @@ theorem exists_all_three (R : Pair9) (t : ℝ) :
 #print axioms coincSet_swap_empty
 #print axioms exists_degQFree_holding_two
 #print axioms exists_all_three
+
+/-! ## 5. The output really has no degeneracies — and so at most 38 points
+
+`degSetOf` and `degSetQ` are about *lines*, which is stronger than being about
+sides. So with both empty, **no vertex of either polygon can be an intersection
+point at all**, `degPts` is empty, and `DegBound`'s `38 + d` collapses to
+`38`. -/
+
+theorem degP_empty_of_degSetQ_empty (R : Pair9) (h : degSetQ R.V = ∅) :
+    degP R = ∅ := by
+  ext x
+  simp only [degP, Set.mem_inter_iff, Set.mem_range, Set.mem_empty_iff_false,
+    iff_false, not_and]
+  rintro hx ⟨i, rfl⟩
+  obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hx.2
+  have hzero : orientR (R.V (pQ j)) (R.V (pQ (j + 1))) (R.V (pP i)) = 0 := by
+    rw [← off_eq_orientR]
+    exact off_eq_zero_of_mem_segment hj
+  have hmem : (j, i) ∈ degSetQ R.V := by
+    simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hzero
+  rw [h] at hmem
+  exact absurd hmem (Finset.notMem_empty _)
+
+theorem degPts_empty_of_invariants (R : Pair9)
+    (hd : degSetOf R.V = ∅) (hq : degSetQ R.V = ∅) : degPts R = ∅ := by
+  rw [← degP_union_degQ, degP_empty_of_degSetQ_empty R hq,
+    degQ_empty_of_degSet_empty R hd, Set.union_empty]
+
+/-- **The output satisfies `(A9)`'s conclusion.**  A `Pair9` with no
+`Q`-vertex on a `P`-side line and no `P`-vertex on a `Q`-side line has at most
+**38** boundary intersection points — `DegBound`'s `38 + d` with `d = 0`. -/
+theorem points9_le_38_of_invariants (R : Pair9) (hfin : (points9 R).Finite)
+    (hd : degSetOf R.V = ∅) (hq : degSetQ R.V = ∅) :
+    (points9 R).ncard ≤ 38 := by
+  have h := points9_ncard_le_38_add_deg' R hfin
+  rw [degPts_empty_of_invariants R hd hq] at h
+  simpa using h
+
+/-- **§9's target, reached.**  From any `Pair9` there is a reachable `Pair9`
+which is degeneracy-free in every sense, has **at most 38** intersection
+points, and has at least as many crossing pairs as the original. -/
+theorem exists_all_three_le_38 (R : Pair9) (t : ℝ) :
+    ∃ R' : Pair9, coincSet R'.V = ∅ ∧ degSetOf R'.V = ∅ ∧ degSetQ R'.V = ∅ ∧
+      (crossPairsOf R.V).card ≤ (crossPairsOf R'.V).card ∧
+      ((points9 R').Finite → (points9 R').ncard ≤ 38) := by
+  obtain ⟨R', hc, hd, hq, hcard⟩ := exists_all_three R t
+  exact ⟨R', hc, hd, hq, hcard, fun hfin => points9_le_38_of_invariants R' hfin hd hq⟩
+
+#print axioms degP_empty_of_degSetQ_empty
+#print axioms points9_le_38_of_invariants
+#print axioms exists_all_three_le_38
 
 end Compose
 end Heptagon
