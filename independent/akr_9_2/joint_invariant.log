@@ -1,0 +1,6 @@
+shifts tested: 1200  with 20 magnitudes down to 2^-25, both signs
+total never maintained: 21
+  attributable to a vertex-vertex COINCIDENCE   : 12
+  attributable to a SELF-INTERSECTING polygon   : 9
+  UNEXPLAINED                                   : 0
+first unexplained (before, best, side, t): []
