@@ -32,6 +32,7 @@ namespace Heptagon
 namespace Pair9Shift
 
 open Heptagon.AKR9 Heptagon.RotationLaw Heptagon.TiltedShift Heptagon.ResidualSym
+open Heptagon.R3Construct
 open Heptagon.RealConfig Heptagon.RealUpperBound Heptagon.RealPerturb
 open Heptagon.DegBound
 
@@ -1809,6 +1810,59 @@ theorem degenerate_not_mem_crossPairs_any (V : Fin 14 → ℝ × ℝ) (k j : Fin
 
 #print axioms mem_crossPairs_iff_aff_prev
 #print axioms degenerate_not_mem_crossPairs_any
+
+/-! ## 28. When does a rotating neighbour fail to move a degeneracy?
+
+`localContribAff`'s `m₀ = 0` branch — the vertex staying on the line — is what
+lets rotating neighbours be handled at all. But for the *counting* it matters
+when that branch is actually taken, because a vertex that stays on the line
+still contributes to the degeneracy count rather than to `crossPairsOf`.
+
+The answer is sharp: on a side rotating about `F`, the rate at a point `X` is
+`w × (X − F)`, so it vanishes exactly when `X` lies on the line through `F` in
+direction `w`. Intersected with the side's own line that is just `{F}` —
+**unless the tilt is parallel to the side**, in which case the side merely
+slides along itself and nothing moves at all. -/
+
+theorem orientR_eq_cross (F A X : ℝ × ℝ) :
+    orientR F A X = cross (A.1 - F.1, A.2 - F.2) (X.1 - F.1, X.2 - F.2) := by
+  simp only [orientR, cross]
+
+/-- **The rate vanishes only at the rotation centre.**  If the tilt `w` is
+transverse to the side `F A`, then a degenerate point of that side has nonzero
+rate unless it *is* `F` — which, `F` being a `P`-vertex, is a vertex–vertex
+coincidence and so excluded by §9.1. -/
+theorem rate_ne_zero_of_transverse {F A X w : ℝ × ℝ}
+    (hw : cross w (A.1 - F.1, A.2 - F.2) ≠ 0) (hXF : (X.1 - F.1, X.2 - F.2) ≠ 0)
+    (hdeg : orientR F A X = 0) :
+    cross w (X.1 - F.1, X.2 - F.2) ≠ 0 := by
+  intro hz
+  rw [orientR_eq_cross] at hdeg
+  exact hXF (RotationLaw.eq_zero_of_cross_both hw hz hdeg)
+
+/-- **A tilt transverse to both neighbours exists.**  An instance of
+`RotationLaw.exists_good_tilt`: each neighbour direction forbids at most one
+value of `t`, so three candidates suffice for two neighbours. -/
+theorem exists_tilt_transverse {u a b : ℝ × ℝ} (hu : u ≠ 0) (ha : a ≠ 0) (hb : b ≠ 0)
+    (T : Finset ℝ) (hT : 2 < T.card) :
+    ∃ t ∈ T, cross (tilt u t) a ≠ 0 ∧ cross (tilt u t) b ≠ 0 := by
+  classical
+  obtain ⟨t, htT, ht⟩ :=
+    RotationLaw.exists_good_tilt ({a, b} : Finset (ℝ × ℝ)) hu id
+      (by
+        intro x hx
+        simp only [Finset.mem_insert, Finset.mem_singleton] at hx
+        rcases hx with rfl | rfl
+        · exact ha
+        · exact hb)
+      T (by
+        have h1 : ({a, b} : Finset (ℝ × ℝ)).card ≤ 2 :=
+          le_trans (Finset.card_insert_le _ _) (by simp)
+        omega)
+  exact ⟨t, htT, ht a (by simp), ht b (by simp)⟩
+
+#print axioms orientR_eq_cross
+#print axioms rate_ne_zero_of_transverse
 
 end Pair9Shift
 end Heptagon
