@@ -1,0 +1,4 @@
+instances satisfying the hypotheses : 147814  (of which N=0: 98159 )
+VIOLATIONS of 2 <= sum              : 0
+distribution of the sum             : {2: 147814}
+control (smallness violated): 100000 / 100000  sums below 2  <- must be > 0

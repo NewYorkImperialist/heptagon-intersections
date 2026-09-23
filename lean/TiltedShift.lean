@@ -679,5 +679,69 @@ theorem exists_uniform_delta0 {ι : Type*} (S : Finset ι) (s C : ι → ℝ) (�
 #print axioms exists_uniform_shift
 #print axioms exists_uniform_delta0
 
+/-! ### The averaging identity for a *rotating* side
+
+`averaging_identity` assumes the side is displaced with a nonzero normal
+displacement `N`. On a **rotating neighbour** the displacement of a given
+degenerate vertex is still affine in `δ`, but its coefficient can vanish — and
+when it does, the vertex stays on the side's line and the intersection point
+is simply **not lost**.
+
+So the right local quantity is not `crossCount` but:
+
+>  one, if the vertex does not move off the line; otherwise `crossCount`.
+
+With that, the averaging bound holds with **no** hypothesis on `N` beyond
+non-negativity, which is what lets the neighbours be handled alongside the
+shifted side itself. -/
+
+/-- The local contribution of a degenerate vertex: it still counts as one
+intersection if the displacement does not move it off the line. -/
+noncomputable def localContrib (δ N y z : ℝ) : ℕ :=
+  if δ * N = 0 then 1 else crossCount δ N y z
+
+/-- **The averaging bound, uniformly.**  Over the two shift directions the
+local contributions sum to **at least two** — whether the vertex moves off the
+line or not. -/
+theorem averaging_local_contrib {δ N y z : ℝ} (hδ : δ ≠ 0) (hN : 0 ≤ N)
+    (hy : |δ| * N < |y|) (hz : |δ| * N < |z|) :
+    2 ≤ localContrib δ N y z + localContrib (-δ) N y z := by
+  rcases eq_or_lt_of_le hN with hN0 | hNpos
+  · -- the vertex does not move off the line: it is still an intersection
+    have h1 : δ * N = 0 := by rw [← hN0]; ring
+    have h2 : (-δ) * N = 0 := by rw [← hN0]; ring
+    simp [localContrib, h1, h2]
+  · -- it does move: the two counts sum to exactly two
+    have h1 : δ * N ≠ 0 := mul_ne_zero hδ (ne_of_gt hNpos)
+    have h2 : (-δ) * N ≠ 0 := mul_ne_zero (neg_ne_zero.mpr hδ) (ne_of_gt hNpos)
+    simp only [localContrib, if_neg h1, if_neg h2]
+    exact le_of_eq (averaging_identity hNpos hδ hy hz).symm
+
+/-- The configuration-level form. -/
+theorem averaging_contrib_sum {ι : Type*} (S : Finset ι) (N δ : ℝ) (y z : ι → ℝ)
+    (hN : 0 ≤ N) (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
+    2 * S.card ≤ (∑ i ∈ S, localContrib δ N (y i) (z i))
+      + (∑ i ∈ S, localContrib (-δ) N (y i) (z i)) := by
+  rw [← Finset.sum_add_distrib]
+  calc 2 * S.card = ∑ _i ∈ S, 2 := by simp [Nat.mul_comm]
+    _ ≤ ∑ i ∈ S, (localContrib δ N (y i) (z i) + localContrib (-δ) N (y i) (z i)) :=
+        Finset.sum_le_sum fun i hi => averaging_local_contrib hδ hN (hy i hi) (hz i hi)
+
+/-- **The step §9.2 needs, now covering the rotating neighbours.**  One of the
+two directions does not drop the count — and the vertices whose displacement
+coefficient vanishes are carried along for free rather than excluded. -/
+theorem exists_sign_contrib_not_decreasing {ι : Type*} (S : Finset ι) (N δ : ℝ)
+    (y z : ι → ℝ) (hN : 0 ≤ N) (hδ : δ ≠ 0)
+    (hy : ∀ i ∈ S, |δ| * N < |y i|) (hz : ∀ i ∈ S, |δ| * N < |z i|) :
+    S.card ≤ (∑ i ∈ S, localContrib δ N (y i) (z i)) ∨
+      S.card ≤ (∑ i ∈ S, localContrib (-δ) N (y i) (z i)) := by
+  have h := averaging_contrib_sum S N δ y z hN hδ hy hz
+  omega
+
+#print axioms averaging_local_contrib
+#print axioms averaging_contrib_sum
+#print axioms exists_sign_contrib_not_decreasing
+
 end TiltedShift
 end Heptagon
