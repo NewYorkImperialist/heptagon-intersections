@@ -171,5 +171,37 @@ theorem exists_delta_preserving_degSetQ (V : Fin 14 → ℝ × ℝ) (i : Fin 7) 
 
 #print axioms exists_delta_preserving_degSetQ
 
+/-- The `degSetQ` obligation as a finite set of forbidden shifts, so it can be
+unioned with the others. -/
+theorem exists_degSetQ_bad_set (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hfree : degSetQ V = ∅) :
+    ∃ bad : Finset ℝ, ∀ δ : ℝ, δ ∉ bad →
+      degSetQ (RotationLaw.shiftV V i t δ) = ∅ := by
+  classical
+  have hne : ∀ p ∈ (Finset.univ : Finset (Fin 7 × Fin 7)),
+      orientR (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2)) ≠ 0 := by
+    intro p _
+    rw [Finset.eq_empty_iff_forall_notMem] at hfree
+    intro hz
+    exact hfree p (by
+      simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and]; exact hz)
+  obtain ⟨bad, hbad⟩ :=
+    Pair9Shift.affine_bad_set (Finset.univ : Finset (Fin 7 × Fin 7))
+      (fun p => orientR (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2)))
+      (fun p => Pair9Shift.dcoef (V (pQ p.1)) (V (pQ (p.1 + 1))) (V (pP p.2))
+        (RotationLaw.tilt (V (pP (i + 1)) - V (pP i)) t)
+        (if pQ p.1 = pP i ∨ pQ p.1 = pP (i + 1) then 1 else 0)
+        (if pQ (p.1 + 1) = pP i ∨ pQ (p.1 + 1) = pP (i + 1) then 1 else 0)
+        (if pP p.2 = pP i ∨ pP p.2 = pP (i + 1) then 1 else 0))
+      hne
+  refine ⟨bad, fun δ hδ => ?_⟩
+  rw [Finset.eq_empty_iff_forall_notMem]
+  intro p hp
+  simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+  rw [Pair9Shift.orientR_shiftV_affine] at hp
+  exact hbad δ hδ p (Finset.mem_univ _) hp
+
+#print axioms exists_degSetQ_bad_set
+
 end SwapPQ
 end Heptagon

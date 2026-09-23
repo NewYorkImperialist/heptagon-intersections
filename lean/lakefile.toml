@@ -5450,3 +5450,6 @@ name = "E9Directions"
 
 [[lean_lib]]
 name = "SwapPQ"
+
+[[lean_lib]]
+name = "Compose"

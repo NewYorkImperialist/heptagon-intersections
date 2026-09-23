@@ -1650,5 +1650,23 @@ theorem degSet_card_lt_avoiding (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ
 #print axioms exists_good_delta_affine_avoiding
 #print axioms degSet_card_lt_avoiding
 
+/-- **Every affine obligation as a bad set.**  The primitive the composition
+runs on: rather than each step choosing its own `δ`, each *names the finitely
+many shifts it forbids*, and the caller takes the union. -/
+theorem affine_bad_set {ι : Type*} [DecidableEq ι] (S : Finset ι) (c m : ι → ℝ)
+    (hc : ∀ p ∈ S, c p ≠ 0) :
+    ∃ bad : Finset ℝ, ∀ δ : ℝ, δ ∉ bad → ∀ p ∈ S, c p + δ * m p ≠ 0 := by
+  classical
+  refine ⟨S.image (fun p => if m p = 0 then 0 else -c p / m p), fun δ hδ p hp hz => ?_⟩
+  by_cases hm : m p = 0
+  · rw [hm, mul_zero, add_zero] at hz
+    exact hc p hp hz
+  · refine hδ (Finset.mem_image.mpr ⟨p, hp, ?_⟩)
+    rw [if_neg hm]
+    field_simp
+    linarith
+
+#print axioms affine_bad_set
+
 end Pair9Shift
 end Heptagon
