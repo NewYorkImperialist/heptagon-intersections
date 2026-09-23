@@ -1969,5 +1969,105 @@ theorem points9_le_38_of_seg_sum (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms degPts_ncard_le_seg
 #print axioms points9_le_38_of_seg_sum
 
+/-! ## 30. Disjointness of the incident pair sets, across sides
+
+Each degeneracy `(k, j)` claims the two pairs `(k, j−1)` and `(k, j)`. Two
+degeneracies claim disjoint sets unless they share a side *and* are adjacent —
+which `segDeg_not_adjacent` forbids. -/
+
+open scoped Classical in
+/-- The pairs a degeneracy converts into. -/
+noncomputable def incidentPairs (d : Fin 7 × Fin 7) : Finset (Fin 7 × Fin 7) :=
+  {(d.1, d.2 - 1), (d.1, d.2)}
+
+theorem incidentPairs_disjoint (R : Pair9) (hfin : (points9 R).Finite)
+    {d e : Fin 7 × Fin 7} (hd : d ∈ segDeg R) (he : e ∈ segDeg R) (hne : d ≠ e) :
+    Disjoint (incidentPairs d) (incidentPairs e) := by
+  classical
+  by_cases hk : d.1 = e.1
+  · -- same side: the two vertex indices are distinct and non-adjacent
+    have hj : d.2 ≠ e.2 := fun h => hne (Prod.ext hk h)
+    have h1 : e.2 ≠ d.2 + 1 := by
+      intro h
+      refine segDeg_not_adjacent R hfin hd ?_
+      have : (d.1, d.2 + 1) = e := by rw [← h]; exact Prod.ext hk rfl
+      rw [this]; exact he
+    have h2 : d.2 ≠ e.2 + 1 := by
+      intro h
+      refine segDeg_not_adjacent R hfin he ?_
+      have : (e.1, e.2 + 1) = d := by rw [← h]; exact Prod.ext hk.symm rfl
+      rw [this]; exact hd
+    have hA : d.2 - 1 ≠ e.2 - 1 := fun h => hj (sub_left_inj.mp h)
+    have hB : d.2 - 1 ≠ e.2 := fun h => h2 (sub_eq_iff_eq_add.mp h)
+    have hC : d.2 ≠ e.2 - 1 := fun h => h1 (eq_sub_iff_add_eq.mp h).symm
+    simp only [incidentPairs, Finset.disjoint_left, Finset.mem_insert,
+      Finset.mem_singleton]
+    rintro q (rfl | rfl) <;> simp [Prod.ext_iff, hA, hB, hC, hj, hk]
+  · -- different sides: every pair differs in its first coordinate
+    simp only [incidentPairs, Finset.disjoint_left, Finset.mem_insert,
+      Finset.mem_singleton]
+    rintro q (rfl | rfl) <;> simp [Prod.ext_iff, hk]
+
+/-- A degeneracy's incident pairs are not crossings before the shift. -/
+theorem incidentPairs_disjoint_crossPairs (R : Pair9) {d : Fin 7 × Fin 7}
+    (hd : d ∈ segDeg R) : Disjoint (incidentPairs d) (crossPairsOf R.V) := by
+  classical
+  have hdeg : orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ d.2)) = 0 := by
+    have := segDeg_subset_degSetOf R hd
+    simpa [degSetOf] using this
+  obtain ⟨h1, h2⟩ := degenerate_not_mem_crossPairs_any R.V d.1 d.2 hdeg
+  simp only [incidentPairs, Finset.disjoint_left, Finset.mem_insert,
+    Finset.mem_singleton]
+  rintro q (rfl | rfl)
+  · exact h2
+  · exact h1
+
+#print axioms incidentPairs_disjoint
+#print axioms incidentPairs_disjoint_crossPairs
+
+/-- **The counting skeleton, in its sharp form.**  `card_add_le_of_disjoint_new`
+concludes `A.card + D.card ≤ A'.card` from a lower bound on the sum; this keeps
+the sum itself, which is what the averaging identity actually bounds. -/
+theorem card_add_sum_le {P ι : Type*} [DecidableEq P] [DecidableEq ι]
+    (A A' : Finset P) (D : Finset ι) (newOf : ι → Finset P)
+    (hmono : A ⊆ A') (hnew : ∀ d ∈ D, newOf d ⊆ A')
+    (hdisjA : ∀ d ∈ D, Disjoint (newOf d) A)
+    (hdisj : ∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newOf d) (newOf d')) :
+    A.card + ∑ d ∈ D, (newOf d).card ≤ A'.card := by
+  classical
+  have hUcard : ∑ d ∈ D, (newOf d).card = (D.biUnion newOf).card :=
+    (Finset.card_biUnion hdisj).symm
+  have hdisjAU : Disjoint A (D.biUnion newOf) := by
+    rw [Finset.disjoint_biUnion_right]
+    exact fun d hd => (hdisjA d hd).symm
+  have hsub : A ∪ D.biUnion newOf ⊆ A' := by
+    intro x hx
+    rcases Finset.mem_union.mp hx with h | h
+    · exact hmono h
+    · obtain ⟨d, hd, hxd⟩ := Finset.mem_biUnion.mp h
+      exact hnew d hd hxd
+  calc A.card + ∑ d ∈ D, (newOf d).card
+      = A.card + (D.biUnion newOf).card := by rw [hUcard]
+    _ = (A ∪ D.biUnion newOf).card := (Finset.card_union_of_disjoint hdisjAU).symm
+    _ ≤ A'.card := Finset.card_le_card hsub
+
+open scoped Classical in
+/-- **Instantiated at a configuration.**  The crossing count grows by at least
+the total number of incident pairs the degeneracies convert into. -/
+theorem crossPairs_card_add_sum_le (R : Pair9) (hfin : (points9 R).Finite)
+    (V' : Fin 14 → ℝ × ℝ) (hmono : crossPairsOf R.V ⊆ crossPairsOf V') :
+    (crossPairsOf R.V).card
+        + ∑ d ∈ segDeg R, ((incidentPairs d).filter (fun q => q ∈ crossPairsOf V')).card
+      ≤ (crossPairsOf V').card := by
+  classical
+  refine card_add_sum_le _ _ _ _ hmono (fun d _ q hq => (Finset.mem_filter.mp hq).2)
+    (fun d hd => Finset.disjoint_of_subset_left (Finset.filter_subset _ _)
+      (incidentPairs_disjoint_crossPairs R hd))
+    (fun d hd e he hne => Finset.disjoint_filter_filter
+      (incidentPairs_disjoint R hfin hd he hne))
+
+#print axioms card_add_sum_le
+#print axioms crossPairs_card_add_sum_le
+
 end Pair9Shift
 end Heptagon
