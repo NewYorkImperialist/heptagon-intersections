@@ -2458,5 +2458,36 @@ Neither is written. This is the actual remaining content of §9's count, and it
 is not bookkeeping — the mutual dependence is the thing AKR's §9 handles by
 treating the two degeneracy types in one pass. -/
 
+/-! ## 39. The two degeneracy families cannot claim the same pair
+
+The joint accounting of §38 needs the pairs a `segDeg` entry converts into to
+be disjoint from those a `segDegP` entry converts into. They can only collide
+when the two entries sit on *the same* `P`-side and `Q`-side — and then that
+side pair contains two distinct points of `∂P ∩ ∂Q`, which `(Fin)` forbids. -/
+
+/-- **A `segDeg` and a `segDegP` entry on the same side pair force a
+coincidence.**  `Q_j` lies on `P`-side `v`, and `P_v` lies on `Q`-side `j`, so
+both points lie in `sideP9 v ∩ sideQ9 j`; `NoOverlap` — which `(Fin)` supplies
+— makes them equal, and that is a vertex–vertex coincidence. -/
+theorem segDeg_segDegP_collision (R : Pair9) (hfin : (points9 R).Finite) (v j : Fin 7)
+    (hQ : R.V (pQ j) ∈ sideP9 R v) (hP : R.V (pP v) ∈ sideQ9 R j) :
+    R.V (pP v) = R.V (pQ j) := by
+  have hno := noOverlap_of_finite R hfin
+  refine (hno v j (R.V (pP v)) (R.V (pQ j)) ?_ hP ?_ ?_).symm ▸ rfl
+  · exact left_mem_segment ℝ _ _
+  · exact hQ
+  · exact left_mem_segment ℝ _ _
+
+/-- The contrapositive, in the form the disjointness uses: on a
+coincidence-free configuration the two families never meet on the same side
+pair. -/
+theorem no_segDeg_segDegP_overlap (R : Pair9) (hfin : (points9 R).Finite) (v j : Fin 7)
+    (hne : R.V (pP v) ≠ R.V (pQ j)) (hQ : R.V (pQ j) ∈ sideP9 R v) :
+    R.V (pP v) ∉ sideQ9 R j :=
+  fun hP => hne (segDeg_segDegP_collision R hfin v j hQ hP)
+
+#print axioms segDeg_segDegP_collision
+#print axioms no_segDeg_segDegP_overlap
+
 end Pair9Shift
 end Heptagon
