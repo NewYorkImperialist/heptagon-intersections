@@ -1668,5 +1668,56 @@ theorem affine_bad_set {ι : Type*} [DecidableEq ι] (S : Finset ι) (c m : ι �
 
 #print axioms affine_bad_set
 
+/-! ## 27. The rate coefficients of a configuration
+
+`orientR_shiftV_affine` gives every determinant as `c + δ·m`. Naming the `m`
+lets the averaging machinery of `TiltedShift` be instantiated at an arbitrary
+`P`-side — including the **rotating neighbours** `i ± 1`, which is the case the
+chain invariant is stuck on. -/
+
+/-- The rate at which the determinant of `P`-side `k` against the vertex `a`
+changes under a shift of side `i`. -/
+noncomputable def shiftCoef (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (k : Fin 7)
+    (a : Fin 14) : ℝ :=
+  dcoef (V (pP k)) (V (pP (k + 1))) (V a) (tilt (V (pP (i + 1)) - V (pP i)) t)
+    (if pP k = pP i ∨ pP k = pP (i + 1) then 1 else 0)
+    (if pP (k + 1) = pP i ∨ pP (k + 1) = pP (i + 1) then 1 else 0)
+    (if a = pP i ∨ a = pP (i + 1) then 1 else 0)
+
+theorem orientR_shift_side (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (k : Fin 7)
+    (a : Fin 14) :
+    orientR (shiftV V i t δ (pP k)) (shiftV V i t δ (pP (k + 1))) (shiftV V i t δ a)
+      = orientR (V (pP k)) (V (pP (k + 1))) (V a) + δ * shiftCoef V i t k a :=
+  orientR_shiftV_affine V i t δ _ _ _
+
+/-- **A side that does not move has rate zero.**  For `k ∉ {i−1, i, i+1}` the
+whole determinant is constant in `δ`, which is why only the shifted side and
+its two neighbours ever need the averaging argument. -/
+theorem shiftCoef_eq_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (k : Fin 7)
+    (a : Fin 14)
+    (h1 : ¬(pP k = pP i ∨ pP k = pP (i + 1)))
+    (h2 : ¬(pP (k + 1) = pP i ∨ pP (k + 1) = pP (i + 1)))
+    (h3 : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t k a = 0 := by
+  simp only [shiftCoef, if_neg h1, if_neg h2, if_neg h3, dcoef]
+  ring
+
+/-- **The first conjunct of `ProperCrossR` at a degenerate vertex, in affine
+form.**  Exactly the shape `TiltedShift.localContribAff` consumes — for **any**
+`P`-side `k`, not only the shifted one. -/
+theorem first_conjunct_aff (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (k j : Fin 7)
+    (hdeg : orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0) :
+    (orientR (shiftV V i t δ (pP k)) (shiftV V i t δ (pP (k + 1)))
+        (shiftV V i t δ (pQ j)))
+      * (orientR (shiftV V i t δ (pP k)) (shiftV V i t δ (pP (k + 1)))
+        (shiftV V i t δ (pQ (j + 1)))) < 0
+      ↔ (δ * shiftCoef V i t k (pQ j))
+          * (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j + 1)))
+              + δ * shiftCoef V i t k (pQ (j + 1))) < 0 := by
+  rw [orientR_shift_side, orientR_shift_side, hdeg, zero_add]
+
+#print axioms shiftCoef_eq_zero
+#print axioms first_conjunct_aff
+
 end Pair9Shift
 end Heptagon

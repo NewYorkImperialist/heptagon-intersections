@@ -832,5 +832,79 @@ theorem averaging_identity₂ {δ a b c y z : ℝ} (ha : δ * a ≠ 0)
 #print axioms one_of_two_straddle₂
 #print axioms averaging_identity₂
 
+/-! ### The affine form — the shape a configuration actually presents
+
+`Pair9Shift.orientR_shiftV_affine` says every determinant of a shifted
+configuration is `c + δ·m`. At a degenerate vertex `c = 0`, so the first
+conjunct of `ProperCrossR` for an incident pair is literally
+
+>  `(δ·m₀) · (y + δ·m₁) < 0`
+
+with `m₀` the *vertex's* rate and `m₁` the *neighbour's*. That is `Straddle₂`
+with the signs absorbed, and it is the form the instantiation can use without
+any further translation. -/
+
+theorem straddle₂_affine_form (δ m₀ m₁ y : ℝ) :
+    Straddle₂ δ (-m₀) (-m₁) y ↔ (δ * m₀) * (y + δ * m₁) < 0 := by
+  unfold Straddle₂
+  rw [show (-(δ * -m₀)) * (y - δ * -m₁) = δ * m₀ * (y + δ * m₁) from by ring]
+
+open Classical in
+theorem one_of_two_aff {δ m₀ m₁ y : ℝ} (h0 : δ * m₀ ≠ 0) (h1 : |δ * m₁| < |y|) :
+    (if (δ * m₀) * (y + δ * m₁) < 0 then 1 else 0)
+      + (if ((-δ) * m₀) * (y + (-δ) * m₁) < 0 then 1 else 0) = 1 := by
+  have ha : δ * (-m₀) ≠ 0 := by
+    rw [mul_neg, neg_ne_zero]; exact h0
+  have hb : |δ * (-m₁)| < |y| := by rw [mul_neg, abs_neg]; exact h1
+  have e := one_of_two_straddle₂ ha hb
+  rw [if_congr (straddle₂_affine_form δ m₀ m₁ y) rfl rfl,
+    if_congr (straddle₂_affine_form (-δ) m₀ m₁ y) rfl rfl] at e
+  exact e
+
+open Classical in
+/-- **The local contribution of a degenerate vertex, in full generality.**
+`m₀` is the vertex's own rate of departure from the side's line; `m₁`, `m₂`
+are its two neighbours'. If `m₀` makes the vertex stay put, the intersection
+point is not lost and counts once; otherwise the incident edges are counted. -/
+noncomputable def localContribAff (δ m₀ m₁ m₂ y z : ℝ) : ℕ :=
+  if δ * m₀ = 0 then 1 else
+    (if (δ * m₀) * (y + δ * m₁) < 0 then 1 else 0)
+      + (if (δ * m₀) * (z + δ * m₂) < 0 then 1 else 0)
+
+/-- **The averaging bound with every coefficient arbitrary.**  No hypothesis on
+`m₀` at all — which is what the rotating neighbours need, since theirs can
+vanish — and each neighbour carries its own smallness bound. -/
+theorem averaging_local_contrib_aff {δ m₀ m₁ m₂ y z : ℝ}
+    (hy : |δ * m₁| < |y|) (hz : |δ * m₂| < |z|) :
+    2 ≤ localContribAff δ m₀ m₁ m₂ y z + localContribAff (-δ) m₀ m₁ m₂ y z := by
+  by_cases h0 : δ * m₀ = 0
+  · have h0' : (-δ) * m₀ = 0 := by rw [neg_mul, h0, neg_zero]
+    simp [localContribAff, h0, h0']
+  · have h0' : (-δ) * m₀ ≠ 0 := by rw [neg_mul, neg_ne_zero]; exact h0
+    have e1 := one_of_two_aff h0 hy
+    have e2 := one_of_two_aff h0 hz
+    simp only [localContribAff, if_neg h0, if_neg h0', neg_neg]
+    omega
+
+/-- The configuration-level form, and the sign choice. -/
+theorem exists_sign_contrib_aff {ι : Type*} (S : Finset ι) (δ : ℝ)
+    (m₀ m₁ m₂ y z : ι → ℝ)
+    (hy : ∀ i ∈ S, |δ * m₁ i| < |y i|) (hz : ∀ i ∈ S, |δ * m₂ i| < |z i|) :
+    S.card ≤ (∑ i ∈ S, localContribAff δ (m₀ i) (m₁ i) (m₂ i) (y i) (z i)) ∨
+      S.card ≤ (∑ i ∈ S, localContribAff (-δ) (m₀ i) (m₁ i) (m₂ i) (y i) (z i)) := by
+  have hsum : 2 * S.card
+      ≤ (∑ i ∈ S, localContribAff δ (m₀ i) (m₁ i) (m₂ i) (y i) (z i))
+        + (∑ i ∈ S, localContribAff (-δ) (m₀ i) (m₁ i) (m₂ i) (y i) (z i)) := by
+    rw [← Finset.sum_add_distrib]
+    calc 2 * S.card = ∑ _i ∈ S, 2 := by simp [Nat.mul_comm]
+      _ ≤ _ := Finset.sum_le_sum fun i hi =>
+          averaging_local_contrib_aff (hy i hi) (hz i hi)
+  omega
+
+#print axioms straddle₂_affine_form
+#print axioms one_of_two_aff
+#print axioms averaging_local_contrib_aff
+#print axioms exists_sign_contrib_aff
+
 end TiltedShift
 end Heptagon
