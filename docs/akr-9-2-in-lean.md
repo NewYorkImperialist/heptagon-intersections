@@ -14,7 +14,7 @@ and the last section says precisely why.
 Everything below is `sorry`-free, `native_decide`-free, and depends on no
 axioms beyond `propext`, `Classical.choice`, `Quot.sound` — most results on a
 strict subset of those. Sweep of the eleven §9 modules: exit 0, **239**
-`#print axioms` lines, **0** `sorryAx`; plus the leaf modules `Pair9Shift` and `FactE`.
+`#print axioms` lines, **0** `sorryAx`; plus the leaf modules `Pair9Shift`, `FactE`, `E9Directions`, `SwapPQ` and `Compose`. Sixteen modules, **376** declarations.
 
 ---
 
