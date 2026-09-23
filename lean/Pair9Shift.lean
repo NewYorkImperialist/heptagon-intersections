@@ -1864,5 +1864,110 @@ theorem exists_tilt_transverse {u a b : ℝ × ℝ} (hu : u ≠ 0) (ha : a ≠ 0
 #print axioms orientR_eq_cross
 #print axioms rate_ne_zero_of_transverse
 
+/-! ## 29. The segment-based degeneracy measure
+
+`degSetOf` counts `Q`-vertices on a `P`-side's **line**, which includes points
+that are not intersections at all (`Compose.line_degeneracy_can_be_free`). The
+measure the counting needs is **segment** membership. -/
+
+open scoped Classical in
+/-- The genuine `Q`-vertex degeneracies: on the `P`-**side**, not just its
+line. -/
+noncomputable def segDeg (R : Pair9) : Finset (Fin 7 × Fin 7) :=
+  Finset.univ.filter (fun p => R.V (pQ p.2) ∈ sideP9 R p.1)
+
+theorem segDeg_subset_degSetOf (R : Pair9) : segDeg R ⊆ degSetOf R.V := by
+  classical
+  intro p hp
+  simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at hp
+  simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  rw [← off_eq_orientR]
+  exact off_eq_zero_of_mem_segment hp
+
+/-- **No two adjacent entries.**  This is what makes the incident pair sets
+disjoint, and it is exactly what the line-based measure lacks. -/
+theorem segDeg_not_adjacent (R : Pair9) (hfin : (points9 R).Finite) {k j : Fin 7}
+    (h : (k, j) ∈ segDeg R) : (k, j + 1) ∉ segDeg R := by
+  classical
+  simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢
+  exact degenerate_not_adjacent R hfin k j h
+
+/-- Every degenerate `Q`-point is indexed by `segDeg`. -/
+theorem degQ_ncard_le_segDeg (R : Pair9) : (degQ R).ncard ≤ (segDeg R).card := by
+  classical
+  have hsub : degQ R ⊆ ((segDeg R).image (fun p => R.V (pQ p.2)) : Finset (ℝ × ℝ)) := by
+    rintro x ⟨hx, j, rfl⟩
+    obtain ⟨k, hk⟩ := Set.mem_iUnion.mp hx.1
+    refine Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨(k, j), ?_, rfl⟩)
+    simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hk
+  have hcoe : (((segDeg R).image (fun p => R.V (pQ p.2)) : Finset (ℝ × ℝ)) :
+      Set (ℝ × ℝ)).ncard = ((segDeg R).image (fun p => R.V (pQ p.2))).card := by
+    simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
+  calc (degQ R).ncard
+      ≤ (((segDeg R).image (fun p => R.V (pQ p.2)) : Finset (ℝ × ℝ)) :
+          Set (ℝ × ℝ)).ncard :=
+        Set.ncard_le_ncard hsub (Finset.finite_toSet _)
+    _ = ((segDeg R).image (fun p => R.V (pQ p.2))).card := hcoe
+    _ ≤ (segDeg R).card := Finset.card_image_le
+
+#print axioms segDeg_subset_degSetOf
+#print axioms segDeg_not_adjacent
+#print axioms degQ_ncard_le_segDeg
+
+open scoped Classical in
+/-- The mirror: genuine `P`-vertex degeneracies, on a `Q`-**side**. -/
+noncomputable def segDegP (R : Pair9) : Finset (Fin 7 × Fin 7) :=
+  Finset.univ.filter (fun p => R.V (pP p.2) ∈ sideQ9 R p.1)
+
+theorem degP_ncard_le_segDegP (R : Pair9) : (degP R).ncard ≤ (segDegP R).card := by
+  classical
+  have hsub : degP R ⊆ ((segDegP R).image (fun p => R.V (pP p.2)) : Finset (ℝ × ℝ)) := by
+    rintro x ⟨hx, i, rfl⟩
+    obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hx.2
+    refine Finset.mem_coe.mpr (Finset.mem_image.mpr ⟨(j, i), ?_, rfl⟩)
+    simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hj
+  have hcoe : (((segDegP R).image (fun p => R.V (pP p.2)) : Finset (ℝ × ℝ)) :
+      Set (ℝ × ℝ)).ncard = ((segDegP R).image (fun p => R.V (pP p.2))).card := by
+    simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
+  calc (degP R).ncard
+      ≤ (((segDegP R).image (fun p => R.V (pP p.2)) : Finset (ℝ × ℝ)) :
+          Set (ℝ × ℝ)).ncard :=
+        Set.ncard_le_ncard hsub (Finset.finite_toSet _)
+    _ = ((segDegP R).image (fun p => R.V (pP p.2))).card := hcoe
+    _ ≤ (segDegP R).card := Finset.card_image_le
+
+/-- **`|degPts| ≤ |segDeg| + |segDegP|`**, the segment-based replacement for
+`Compose.degPts_ncard_le`. Unlike the line-based version, both summands count
+only genuine intersection points — which is what makes them payable. -/
+theorem degPts_ncard_le_seg (R : Pair9) (hfin : (points9 R).Finite) :
+    (degPts R).ncard ≤ (segDeg R).card + (segDegP R).card := by
+  have hfP : (degP R).Finite := hfin.subset (fun _ hx => hx.1)
+  have hfQ : (degQ R).Finite := hfin.subset (fun _ hx => hx.1)
+  calc (degPts R).ncard
+      = (degP R ∪ degQ R).ncard := by rw [degP_union_degQ]
+    _ ≤ (degP R).ncard + (degQ R).ncard := Set.ncard_union_le _ _
+    _ ≤ (segDegP R).card + (segDeg R).card :=
+        Nat.add_le_add (degP_ncard_le_segDegP R) (degQ_ncard_le_segDeg R)
+    _ = (segDeg R).card + (segDegP R).card := Nat.add_comm _ _
+
+/-- **The bound the corrected invariant would give.**  Same shape as
+`Compose.points9_le_38_of_sum_bound`, but with the *segment-based* measures —
+the ones a chain can actually preserve. -/
+theorem points9_le_38_of_seg_sum (R : Pair9) (hfin : (points9 R).Finite)
+    (h : (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card ≤ 38) :
+    (points9 R).ncard ≤ 38 := by
+  calc (points9 R).ncard
+      ≤ (crossPairsOf R.V).card + (degPts R).ncard :=
+        points9_ncard_le_crossPairs_add_deg R hfin
+    _ ≤ (crossPairsOf R.V).card + ((segDeg R).card + (segDegP R).card) :=
+        Nat.add_le_add_left (degPts_ncard_le_seg R hfin) _
+    _ ≤ 38 := by omega
+
+#print axioms degP_ncard_le_segDegP
+#print axioms degPts_ncard_le_seg
+#print axioms points9_le_38_of_seg_sum
+
 end Pair9Shift
 end Heptagon
