@@ -2364,5 +2364,99 @@ theorem mem_touched_iff (i k : Fin 7) :
 #print axioms shiftCoef_far
 #print axioms shiftCoef_dichotomy
 
+/-! ## 37. The per-step invariant, instantiated
+
+All the geometry is in place. This is `step_invariant_abstract` with the
+configuration's own objects substituted. -/
+
+/-- The local contribution of a degeneracy of a configuration. -/
+noncomputable def lcAt (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    (d : Fin 7 × Fin 7) : ℕ :=
+  TiltedShift.localContribAff δ (shiftCoef V i t d.1 (pQ d.2))
+    (shiftCoef V i t d.1 (pQ (d.2 - 1))) (shiftCoef V i t d.1 (pQ (d.2 + 1)))
+    (orientR (V (pP d.1)) (V (pP (d.1 + 1))) (V (pQ (d.2 - 1))))
+    (orientR (V (pP d.1)) (V (pP (d.1 + 1))) (V (pQ (d.2 + 1))))
+
+theorem lcAt_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    {d : Fin 7 × Fin 7} (h : d.1 ∉ touched i) : lcAt V i t δ d = 1 := by
+  have h1 : d.1 ≠ i := fun hc => h (by rw [mem_touched_iff]; exact Or.inl hc)
+  have h2 : d.1 ≠ i + 1 := fun hc => h (by rw [mem_touched_iff]; exact Or.inr (Or.inl hc))
+  have h3 : d.1 ≠ i - 1 := fun hc => h (by rw [mem_touched_iff]; exact Or.inr (Or.inr hc))
+  have hz : shiftCoef V i t d.1 (pQ d.2) = 0 := by
+    refine shiftCoef_far V i t h1 h2 h3 (pQ d.2) ?_
+    rintro (hc | hc)
+    · exact pP_ne_pQ i d.2 hc.symm
+    · exact pP_ne_pQ (i + 1) d.2 hc.symm
+  simp [lcAt, TiltedShift.localContribAff, hz]
+
+open scoped Classical in
+/-- **The per-step invariant.**  `crossPairs + segDeg` does not decrease.
+
+The three hypotheses are what the geometry must supply, and each is a theorem
+elsewhere in this file or in `TiltedShift`:
+
+* `hbridge` — on a touched side the incident-pair count *is* the local
+  contribution (`card_incident_eq_localContribAff`, once the rate is known
+  nonzero by §§33–35);
+* `hsurv` — degeneracies on untouched sides survive (`segDeg_mem_of_untouched`);
+* `havg` — the averaging identity (`TiltedShift.exists_sign_contrib_aff`). -/
+theorem step_invariant (R R' : Pair9) (hfin : (points9 R).Finite) (i : Fin 7) (t δ : ℝ)
+    (hmono : crossPairsOf R.V ⊆ crossPairsOf R'.V)
+    (hbridge : ∀ d ∈ segDeg R, d.1 ∈ touched i →
+      ((incidentPairs d).filter (fun q => q ∈ crossPairsOf R'.V)).card
+        = lcAt R.V i t δ d)
+    (hsurv : ∀ d ∈ segDeg R, d.1 ∉ touched i → d ∈ segDeg R')
+    (havg : (segDeg R).card ≤ ∑ d ∈ segDeg R, lcAt R.V i t δ d) :
+    (crossPairsOf R.V).card + (segDeg R).card
+      ≤ (crossPairsOf R'.V).card + (segDeg R').card := by
+  classical
+  refine step_invariant_abstract _ _ (segDeg R)
+    ((segDeg R).filter (fun d => d.1 ∉ touched i)) (segDeg R')
+    (fun d => (incidentPairs d).filter (fun q => q ∈ crossPairsOf R'.V))
+    (lcAt R.V i t δ) (Finset.filter_subset _ _)
+    (crossPairs_card_add_sum_le R hfin R'.V hmono) ?_ ?_ ?_ havg
+  · intro d hd hdZ
+    refine hbridge d hd ?_
+    by_contra hc
+    exact hdZ (Finset.mem_filter.mpr ⟨hd, hc⟩)
+  · intro d hd
+    obtain ⟨-, hnt⟩ := Finset.mem_filter.mp hd
+    exact lcAt_untouched R.V i t δ hnt
+  · refine Finset.card_le_card ?_
+    intro d hd
+    obtain ⟨hdD, hnt⟩ := Finset.mem_filter.mp hd
+    exact hsurv d hdD hnt
+
+#print axioms lcAt_untouched
+#print axioms step_invariant
+
+/-! ## 38. Why one measure is not enough, and what that costs
+
+`step_invariant` carries `crossPairs + segDeg`. The bound `(A9)` needs
+`crossPairs + segDeg + segDegP ≤ 38` (`points9_le_38_of_seg_sum`), so the
+mirror measure has to be carried too — and a `P`-side shift moves `P`-vertices,
+so it can take one **off** a `Q`-side and lose that intersection point.
+
+Two routes suggest themselves and both have a catch worth recording.
+
+**Route 1 — clear `segDegP` first, then preserve it.** `SwapPQ`'s
+`exists_delta_preserving_degSetQ` does keep `P`-vertices off `Q`-side *lines*,
+hence off `Q`-sides, so during the `P`-phase `segDegP = ∅` and only `segDeg`
+needs carrying. But the `Q`-phase that clears `segDegP` in the first place
+moves `Q`-vertices, and *its* losses fall on `segDeg`. The order is circular
+unless one phase's losses are shown payable while the other measure is still
+nonzero.
+
+**Route 2 — carry both at once.** Symmetric: `segDegP` of a configuration is
+`segDeg` of the exchanged one (`SwapPQ.swapV` sends `sideQ9` to `sideP9` and
+`pP` to `pQ`), so the mirror accounting is this development transported rather
+than a second one. What is *not* transported is the interaction: a single
+`P`-shift changes both measures, so the two accountings share a `δ` and must be
+proved together rather than composed.
+
+Neither is written. This is the actual remaining content of §9's count, and it
+is not bookkeeping — the mutual dependence is the thing AKR's §9 handles by
+treating the two degeneracy types in one pass. -/
+
 end Pair9Shift
 end Heptagon

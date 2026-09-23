@@ -203,5 +203,6 @@ theorem exists_degSetQ_bad_set (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
 
 #print axioms exists_degSetQ_bad_set
 
+
 end SwapPQ
 end Heptagon
