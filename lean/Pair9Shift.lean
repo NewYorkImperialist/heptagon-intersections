@@ -2454,9 +2454,21 @@ than a second one. What is *not* transported is the interaction: a single
 `P`-shift changes both measures, so the two accountings share a `δ` and must be
 proved together rather than composed.
 
-Neither is written. This is the actual remaining content of §9's count, and it
-is not bookkeeping — the mutual dependence is the thing AKR's §9 handles by
-treating the two degeneracy types in one pass. -/
+**Route 2 is the one taken**, in §§40–45. `step_invariant_joint` carries both
+measures across a single shift with a single `δ`, which is exactly what could
+not be obtained by composing the two accountings; `points9_le_38_of_joint` then
+turns a chain ending degeneracy-free into `(A9)`'s bound on the **original**
+configuration.
+
+What made it work is that each of the three disjointness obligations the joint
+counting needs is the same kind of fact as everything else here: within
+`segDeg` it is `segDeg_not_adjacent`, within `segDegP` it is
+`segDegP_not_adjacent`, and **across** the two it is
+`incidentPairs_disjoint_P` — two entries can only claim a common pair when
+their indices line up in one of four ways, and each way puts two points of
+`∂P ∩ ∂Q` on one side pair, which `NoOverlap` collapses to a vertex–vertex
+coincidence. `(Fin)` and §9.1 having run are what exclude it, as everywhere
+else. -/
 
 /-! ## 39. The two degeneracy families cannot claim the same pair
 
@@ -2488,6 +2500,375 @@ theorem no_segDeg_segDegP_overlap (R : Pair9) (hfin : (points9 R).Finite) (v j :
 
 #print axioms segDeg_segDegP_collision
 #print axioms no_segDeg_segDegP_overlap
+
+/-! ## 40. The joint arithmetic
+
+§38 named the obstruction: `(A9)` needs `crossPairs + segDeg + segDegP`, and a
+single shift changes **both** degeneracy measures, so the two accountings share
+a `δ` and must be proved together. This is that, as arithmetic. -/
+
+/-- The counting skeleton for **two** families of converted pairs. -/
+theorem card_add_sum2_le {P ι κ : Type*} [DecidableEq P] [DecidableEq ι] [DecidableEq κ]
+    (A A' : Finset P) (D : Finset ι) (E : Finset κ)
+    (newD : ι → Finset P) (newE : κ → Finset P)
+    (hmono : A ⊆ A')
+    (hnewD : ∀ d ∈ D, newD d ⊆ A') (hnewE : ∀ e ∈ E, newE e ⊆ A')
+    (hdisjAD : ∀ d ∈ D, Disjoint (newD d) A) (hdisjAE : ∀ e ∈ E, Disjoint (newE e) A)
+    (hdisjD : ∀ d ∈ D, ∀ d' ∈ D, d ≠ d' → Disjoint (newD d) (newD d'))
+    (hdisjE : ∀ e ∈ E, ∀ e' ∈ E, e ≠ e' → Disjoint (newE e) (newE e'))
+    (hcross : ∀ d ∈ D, ∀ e ∈ E, Disjoint (newD d) (newE e)) :
+    A.card + (∑ d ∈ D, (newD d).card + ∑ e ∈ E, (newE e).card) ≤ A'.card := by
+  classical
+  have hUD : ∑ d ∈ D, (newD d).card = (D.biUnion newD).card :=
+    (Finset.card_biUnion hdisjD).symm
+  have hUE : ∑ e ∈ E, (newE e).card = (E.biUnion newE).card :=
+    (Finset.card_biUnion hdisjE).symm
+  have hAD : Disjoint A (D.biUnion newD) := by
+    rw [Finset.disjoint_biUnion_right]; exact fun d hd => (hdisjAD d hd).symm
+  have hAE : Disjoint A (E.biUnion newE) := by
+    rw [Finset.disjoint_biUnion_right]; exact fun e he => (hdisjAE e he).symm
+  have hDE : Disjoint (D.biUnion newD) (E.biUnion newE) := by
+    rw [Finset.disjoint_biUnion_left]
+    intro d hd
+    rw [Finset.disjoint_biUnion_right]
+    exact fun e he => hcross d hd e he
+  have hAU : Disjoint A (D.biUnion newD ∪ E.biUnion newE) := by
+    rw [Finset.disjoint_union_right]; exact ⟨hAD, hAE⟩
+  have hsub : A ∪ (D.biUnion newD ∪ E.biUnion newE) ⊆ A' := by
+    intro x hx
+    rcases Finset.mem_union.mp hx with h | h
+    · exact hmono h
+    · rcases Finset.mem_union.mp h with h' | h'
+      · obtain ⟨d, hd, hxd⟩ := Finset.mem_biUnion.mp h'
+        exact hnewD d hd hxd
+      · obtain ⟨e, he, hxe⟩ := Finset.mem_biUnion.mp h'
+        exact hnewE e he hxe
+  calc A.card + (∑ d ∈ D, (newD d).card + ∑ e ∈ E, (newE e).card)
+      = A.card + ((D.biUnion newD).card + (E.biUnion newE).card) := by rw [hUD, hUE]
+    _ = A.card + (D.biUnion newD ∪ E.biUnion newE).card := by
+        rw [Finset.card_union_of_disjoint hDE]
+    _ = (A ∪ (D.biUnion newD ∪ E.biUnion newE)).card :=
+        (Finset.card_union_of_disjoint hAU).symm
+    _ ≤ A'.card := Finset.card_le_card hsub
+
+/-- **The joint step invariant, abstractly.**  Both degeneracy families are
+carried at once; the two averaging bounds and the one growth bound combine. -/
+theorem step_invariant_abstract2 {ι κ P : Type*}
+    [DecidableEq ι] [DecidableEq κ] [DecidableEq P]
+    (A A' : Finset P) (D Z D' : Finset ι) (E W E' : Finset κ)
+    (newD : ι → Finset P) (newE : κ → Finset P) (lcD : ι → ℕ) (lcE : κ → ℕ)
+    (hZD : Z ⊆ D) (hWE : W ⊆ E)
+    (hgrow : A.card + (∑ d ∈ D, (newD d).card + ∑ e ∈ E, (newE e).card) ≤ A'.card)
+    (hND : ∀ d ∈ D, d ∉ Z → (newD d).card = lcD d)
+    (hNE : ∀ e ∈ E, e ∉ W → (newE e).card = lcE e)
+    (hZ1 : ∀ d ∈ Z, lcD d = 1) (hW1 : ∀ e ∈ W, lcE e = 1)
+    (hD' : Z.card ≤ D'.card) (hE' : W.card ≤ E'.card)
+    (havgD : D.card ≤ ∑ d ∈ D, lcD d) (havgE : E.card ≤ ∑ e ∈ E, lcE e) :
+    A.card + D.card + E.card ≤ A'.card + D'.card + E'.card := by
+  classical
+  have hsplitD : ∑ d ∈ D \ Z, lcD d + ∑ d ∈ Z, lcD d = ∑ d ∈ D, lcD d :=
+    Finset.sum_sdiff hZD
+  have hsplitE : ∑ e ∈ E \ W, lcE e + ∑ e ∈ W, lcE e = ∑ e ∈ E, lcE e :=
+    Finset.sum_sdiff hWE
+  have hZsum : ∑ d ∈ Z, lcD d = Z.card := by
+    rw [Finset.sum_congr rfl (fun d hd => hZ1 d hd)]; simp
+  have hWsum : ∑ e ∈ W, lcE e = W.card := by
+    rw [Finset.sum_congr rfl (fun e he => hW1 e he)]; simp
+  have hDiffD : ∑ d ∈ D \ Z, lcD d ≤ ∑ d ∈ D, (newD d).card := by
+    calc ∑ d ∈ D \ Z, lcD d = ∑ d ∈ D \ Z, (newD d).card :=
+          Finset.sum_congr rfl fun d hd => by
+            obtain ⟨hdD, hdZ⟩ := Finset.mem_sdiff.mp hd
+            exact (hND d hdD hdZ).symm
+      _ ≤ ∑ d ∈ D, (newD d).card := Finset.sum_le_sum_of_subset Finset.sdiff_subset
+  have hDiffE : ∑ e ∈ E \ W, lcE e ≤ ∑ e ∈ E, (newE e).card := by
+    calc ∑ e ∈ E \ W, lcE e = ∑ e ∈ E \ W, (newE e).card :=
+          Finset.sum_congr rfl fun e he => by
+            obtain ⟨heE, heW⟩ := Finset.mem_sdiff.mp he
+            exact (hNE e heE heW).symm
+      _ ≤ ∑ e ∈ E, (newE e).card := Finset.sum_le_sum_of_subset Finset.sdiff_subset
+  omega
+
+#print axioms card_add_sum2_le
+#print axioms step_invariant_abstract2
+
+/-! ## 41. The mirror family: what a `segDegP` entry converts into -/
+
+theorem not_properCrossR_of_third_zero {a b c d : ℝ × ℝ} (h : orientR c d a = 0) :
+    ¬ ProperCrossR a b c d := by
+  rintro ⟨-, h2⟩
+  rw [h, zero_mul] at h2
+  exact lt_irrefl 0 h2
+
+theorem not_properCrossR_of_fourth_zero {a b c d : ℝ × ℝ} (h : orientR c d b = 0) :
+    ¬ ProperCrossR a b c d := by
+  rintro ⟨-, h2⟩
+  rw [h, mul_zero] at h2
+  exact lt_irrefl 0 h2
+
+/-- Two consecutive `P`-vertices on one `Q`-side would put a whole `P`-side
+inside it — the mirror of `no_consecutive_degeneracy`. -/
+theorem no_consecutive_degeneracyP (R : Pair9) (hfin : (points9 R).Finite) (m v : Fin 7)
+    (h1 : R.V (pP v) ∈ sideQ9 R m) (h2 : R.V (pP (v + 1)) ∈ sideQ9 R m) : False := by
+  have hsub : sideP9 R v ⊆ sideQ9 R m :=
+    (convex_segment (R.V (pQ m)) (R.V (pQ (m + 1)))).segment_subset h1 h2
+  have hne : R.V (pP v) ≠ R.V (pP (v + 1)) := R.simpleP.1 v
+  have hinf : (sideP9 R v).Infinite := segment_infinite hne
+  have hsub2 : sideP9 R v ⊆ points9 R := fun x hx =>
+    ⟨Set.mem_iUnion.mpr ⟨v, hx⟩, Set.mem_iUnion.mpr ⟨m, hsub hx⟩⟩
+  exact hinf (hfin.subset hsub2)
+
+theorem segDegP_not_adjacent (R : Pair9) (hfin : (points9 R).Finite) {m v : Fin 7}
+    (h : (m, v) ∈ segDegP R) : (m, v + 1) ∉ segDegP R := by
+  classical
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢
+  exact fun h2 => no_consecutive_degeneracyP R hfin m v h h2
+
+open scoped Classical in
+/-- The pairs a `segDegP` entry `(m, v)` converts into: the two `P`-sides at
+vertex `v`, each against `Q`-side `m`. -/
+noncomputable def incidentPairsP (e : Fin 7 × Fin 7) : Finset (Fin 7 × Fin 7) :=
+  {(e.2 - 1, e.1), (e.2, e.1)}
+
+theorem incidentPairsP_disjoint_crossPairs (R : Pair9) {e : Fin 7 × Fin 7}
+    (he : e ∈ segDegP R) : Disjoint (incidentPairsP e) (crossPairsOf R.V) := by
+  classical
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at he
+  have hz : orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP e.2)) = 0 := by
+    rw [← off_eq_orientR]
+    exact off_eq_zero_of_mem_segment he
+  have hv : e.2 - 1 + 1 = e.2 := by simp
+  simp only [incidentPairsP, Finset.disjoint_left, Finset.mem_insert,
+    Finset.mem_singleton]
+  rintro q (rfl | rfl) <;>
+    simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+  · rw [hv]
+    exact not_properCrossR_of_fourth_zero hz
+  · exact not_properCrossR_of_third_zero hz
+
+theorem incidentPairsP_disjoint (R : Pair9) (hfin : (points9 R).Finite)
+    {e f : Fin 7 × Fin 7} (he : e ∈ segDegP R) (hf : f ∈ segDegP R) (hne : e ≠ f) :
+    Disjoint (incidentPairsP e) (incidentPairsP f) := by
+  classical
+  by_cases hm : e.1 = f.1
+  · have hv : e.2 ≠ f.2 := fun h => hne (Prod.ext hm h)
+    have h1 : f.2 ≠ e.2 + 1 := by
+      intro h
+      refine segDegP_not_adjacent R hfin (m := e.1) (v := e.2) ?_ ?_
+      · exact (Prod.mk.eta ▸ he)
+      · have : (e.1, e.2 + 1) = f := by rw [← h]; exact Prod.ext hm rfl
+        rw [this]; exact hf
+    have h2 : e.2 ≠ f.2 + 1 := by
+      intro h
+      refine segDegP_not_adjacent R hfin (m := f.1) (v := f.2) ?_ ?_
+      · exact (Prod.mk.eta ▸ hf)
+      · have : (f.1, f.2 + 1) = e := by rw [← h]; exact Prod.ext hm.symm rfl
+        rw [this]; exact he
+    have hA : e.2 - 1 ≠ f.2 - 1 := fun h => hv (sub_left_inj.mp h)
+    have hB : e.2 - 1 ≠ f.2 := fun h => h2 (sub_eq_iff_eq_add.mp h)
+    have hC : e.2 ≠ f.2 - 1 := fun h => h1 (eq_sub_iff_add_eq.mp h).symm
+    simp only [incidentPairsP, Finset.disjoint_left, Finset.mem_insert,
+      Finset.mem_singleton]
+    rintro q (rfl | rfl) <;> simp [Prod.ext_iff, hA, hB, hC, hv, hm]
+  · simp only [incidentPairsP, Finset.disjoint_left, Finset.mem_insert,
+      Finset.mem_singleton]
+    rintro q (rfl | rfl) <;> simp [Prod.ext_iff, hm]
+
+#print axioms no_consecutive_degeneracyP
+#print axioms incidentPairsP_disjoint_crossPairs
+#print axioms incidentPairsP_disjoint
+
+/-! ## 42. Cross-family disjointness
+
+A `segDeg` entry and a `segDegP` entry can only claim the same pair when their
+side indices line up in one of four ways — and each puts **two** points of
+`∂P ∩ ∂Q` on one side pair, so `NoOverlap` identifies them and the
+configuration has a vertex–vertex coincidence. -/
+
+theorem collision_absurd (R : Pair9) (hfin : (points9 R).Finite) (k m v j : Fin 7)
+    (hne : R.V (pP v) ≠ R.V (pQ j))
+    (h1 : R.V (pP v) ∈ sideP9 R k) (h2 : R.V (pP v) ∈ sideQ9 R m)
+    (h3 : R.V (pQ j) ∈ sideP9 R k) (h4 : R.V (pQ j) ∈ sideQ9 R m) : False :=
+  hne (noOverlap_of_finite R hfin k m _ _ h1 h2 h3 h4)
+
+theorem mem_sideP9_pred (R : Pair9) (v : Fin 7) : R.V (pP v) ∈ sideP9 R (v - 1) := by
+  have h : v - 1 + 1 = v := by simp
+  simp only [sideP9, h]
+  exact right_mem_segment ℝ _ _
+
+theorem mem_sideQ9_pred (R : Pair9) (j : Fin 7) : R.V (pQ j) ∈ sideQ9 R (j - 1) := by
+  have h : j - 1 + 1 = j := by simp
+  simp only [sideQ9, h]
+  exact right_mem_segment ℝ _ _
+
+theorem incidentPairs_disjoint_P (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {d e : Fin 7 × Fin 7} (hd : d ∈ segDeg R) (he : e ∈ segDegP R) :
+    Disjoint (incidentPairs d) (incidentPairsP e) := by
+  classical
+  simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at hd
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at he
+  -- `hd : Q_{d.2} ∈ sideP9 d.1`,  `he : P_{e.2} ∈ sideQ9 e.1`
+  simp only [incidentPairs, incidentPairsP, Finset.disjoint_left, Finset.mem_insert,
+    Finset.mem_singleton]
+  rintro q (rfl | rfl) <;> rintro (hq | hq) <;>
+    obtain ⟨hk, hm⟩ := Prod.mk.injEq _ _ _ _ ▸ hq
+  · -- (d.1, d.2 − 1) = (e.2 − 1, e.1)
+    exact collision_absurd R hfin d.1 e.1 e.2 d.2 (hcoinc _ _)
+      (hk ▸ mem_sideP9_pred R e.2) he hd (hm ▸ mem_sideQ9_pred R d.2)
+  · -- (d.1, d.2 − 1) = (e.2, e.1)
+    exact collision_absurd R hfin d.1 e.1 e.2 d.2 (hcoinc _ _)
+      (hk ▸ left_mem_segment ℝ _ _) he hd (hm ▸ mem_sideQ9_pred R d.2)
+  · -- (d.1, d.2) = (e.2 − 1, e.1)
+    exact collision_absurd R hfin d.1 e.1 e.2 d.2 (hcoinc _ _)
+      (hk ▸ mem_sideP9_pred R e.2) he hd (hm ▸ left_mem_segment ℝ _ _)
+  · -- (d.1, d.2) = (e.2, e.1)
+    exact collision_absurd R hfin d.1 e.1 e.2 d.2 (hcoinc _ _)
+      (hk ▸ left_mem_segment ℝ _ _) he hd (hm ▸ left_mem_segment ℝ _ _)
+
+#print axioms collision_absurd
+#print axioms incidentPairs_disjoint_P
+
+/-! ## 43. The mirror rate and local contribution -/
+
+/-- The rate of a `Q`-side's determinant against a vertex, under a shift of
+`P`-side `i`. -/
+noncomputable def coefQ (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (m : Fin 7)
+    (a : Fin 14) : ℝ :=
+  dcoef (V (pQ m)) (V (pQ (m + 1))) (V a) (tilt (V (pP (i + 1)) - V (pP i)) t)
+    (if pQ m = pP i ∨ pQ m = pP (i + 1) then 1 else 0)
+    (if pQ (m + 1) = pP i ∨ pQ (m + 1) = pP (i + 1) then 1 else 0)
+    (if a = pP i ∨ a = pP (i + 1) then 1 else 0)
+
+/-- The `P`-vertices the shift moves. -/
+def touchedP (i : Fin 7) : Finset (Fin 7) := {i, i + 1}
+
+theorem mem_touchedP_iff (i v : Fin 7) : v ∈ touchedP i ↔ (v = i ∨ v = i + 1) := by
+  simp [touchedP]
+
+/-- The mirror local contribution. -/
+noncomputable def lcAtP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    (e : Fin 7 × Fin 7) : ℕ :=
+  TiltedShift.localContribAff δ (coefQ V i t e.1 (pP e.2))
+    (coefQ V i t e.1 (pP (e.2 - 1))) (coefQ V i t e.1 (pP (e.2 + 1)))
+    (orientR (V (pQ e.1)) (V (pQ (e.1 + 1))) (V (pP (e.2 - 1))))
+    (orientR (V (pQ e.1)) (V (pQ (e.1 + 1))) (V (pP (e.2 + 1))))
+
+theorem coefQ_eq_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (m v : Fin 7)
+    (h1 : v ≠ i) (h2 : v ≠ i + 1) : coefQ V i t m (pP v) = 0 := by
+  have hq1 : ¬(pQ m = pP i ∨ pQ m = pP (i + 1)) := by
+    rintro (h | h)
+    · exact pP_ne_pQ i m h.symm
+    · exact pP_ne_pQ (i + 1) m h.symm
+  have hq2 : ¬(pQ (m + 1) = pP i ∨ pQ (m + 1) = pP (i + 1)) := by
+    rintro (h | h)
+    · exact pP_ne_pQ i (m + 1) h.symm
+    · exact pP_ne_pQ (i + 1) (m + 1) h.symm
+  have hv : ¬(pP v = pP i ∨ pP v = pP (i + 1)) := by
+    rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  simp only [coefQ, if_neg hq1, if_neg hq2, if_neg hv, dcoef]
+  ring
+
+theorem lcAtP_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    {e : Fin 7 × Fin 7} (h : e.2 ∉ touchedP i) : lcAtP V i t δ e = 1 := by
+  have h1 : e.2 ≠ i := fun hc => h (by rw [mem_touchedP_iff]; exact Or.inl hc)
+  have h2 : e.2 ≠ i + 1 := fun hc => h (by rw [mem_touchedP_iff]; exact Or.inr hc)
+  have hz : coefQ V i t e.1 (pP e.2) = 0 := coefQ_eq_zero V i t e.1 e.2 h1 h2
+  simp [lcAtP, TiltedShift.localContribAff, hz]
+
+#print axioms coefQ_eq_zero
+#print axioms lcAtP_untouched
+
+/-! ## 44. The joint step invariant
+
+§38's obstruction, discharged: `crossPairs + segDeg + segDegP` does not
+decrease across a shift. Both degeneracy families are carried at once, with a
+single `δ`, which is what §38 said had to happen and could not be done by
+composing the two accountings. -/
+
+open scoped Classical in
+theorem step_invariant_joint (R R' : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) (t δ : ℝ)
+    (hmono : crossPairsOf R.V ⊆ crossPairsOf R'.V)
+    (hbridgeD : ∀ d ∈ segDeg R, d.1 ∈ touched i →
+      ((incidentPairs d).filter (fun q => q ∈ crossPairsOf R'.V)).card
+        = lcAt R.V i t δ d)
+    (hbridgeE : ∀ e ∈ segDegP R, e.2 ∈ touchedP i →
+      ((incidentPairsP e).filter (fun q => q ∈ crossPairsOf R'.V)).card
+        = lcAtP R.V i t δ e)
+    (hsurvD : ∀ d ∈ segDeg R, d.1 ∉ touched i → d ∈ segDeg R')
+    (hsurvE : ∀ e ∈ segDegP R, e.2 ∉ touchedP i → e ∈ segDegP R')
+    (havgD : (segDeg R).card ≤ ∑ d ∈ segDeg R, lcAt R.V i t δ d)
+    (havgE : (segDegP R).card ≤ ∑ e ∈ segDegP R, lcAtP R.V i t δ e) :
+    (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+      ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
+  classical
+  refine step_invariant_abstract2 _ _ (segDeg R)
+    ((segDeg R).filter (fun d => d.1 ∉ touched i)) (segDeg R')
+    (segDegP R) ((segDegP R).filter (fun e => e.2 ∉ touchedP i)) (segDegP R')
+    (fun d => (incidentPairs d).filter (fun q => q ∈ crossPairsOf R'.V))
+    (fun e => (incidentPairsP e).filter (fun q => q ∈ crossPairsOf R'.V))
+    (lcAt R.V i t δ) (lcAtP R.V i t δ)
+    (Finset.filter_subset _ _) (Finset.filter_subset _ _) ?_ ?_ ?_ ?_ ?_ ?_ ?_ havgD havgE
+  · -- the crossings grow by both families' converted pairs
+    refine card_add_sum2_le _ _ _ _ _ _ hmono
+      (fun d _ q hq => (Finset.mem_filter.mp hq).2)
+      (fun e _ q hq => (Finset.mem_filter.mp hq).2)
+      (fun d hd => Finset.disjoint_of_subset_left (Finset.filter_subset _ _)
+        (incidentPairs_disjoint_crossPairs R hd))
+      (fun e he => Finset.disjoint_of_subset_left (Finset.filter_subset _ _)
+        (incidentPairsP_disjoint_crossPairs R he))
+      (fun d hd d' hd' hne => Finset.disjoint_filter_filter
+        (incidentPairs_disjoint R hfin hd hd' hne))
+      (fun e he e' he' hne => Finset.disjoint_filter_filter
+        (incidentPairsP_disjoint R hfin he he' hne))
+      (fun d hd e he => Finset.disjoint_filter_filter
+        (incidentPairs_disjoint_P R hfin hcoinc hd he))
+  · intro d hd hdZ
+    refine hbridgeD d hd ?_
+    by_contra hc
+    exact hdZ (Finset.mem_filter.mpr ⟨hd, hc⟩)
+  · intro e he heW
+    refine hbridgeE e he ?_
+    by_contra hc
+    exact heW (Finset.mem_filter.mpr ⟨he, hc⟩)
+  · intro d hd
+    obtain ⟨-, hnt⟩ := Finset.mem_filter.mp hd
+    exact lcAt_untouched R.V i t δ hnt
+  · intro e he
+    obtain ⟨-, hnt⟩ := Finset.mem_filter.mp he
+    exact lcAtP_untouched R.V i t δ hnt
+  · refine Finset.card_le_card (fun d hd => ?_)
+    obtain ⟨hdD, hnt⟩ := Finset.mem_filter.mp hd
+    exact hsurvD d hdD hnt
+  · refine Finset.card_le_card (fun e he => ?_)
+    obtain ⟨heE, hnt⟩ := Finset.mem_filter.mp he
+    exact hsurvE e heE hnt
+
+#print axioms step_invariant_joint
+
+/-! ## 45. What the joint invariant buys
+
+Carried along a chain that ends degeneracy-free, it gives `(A9)`'s bound on the
+**original** configuration — which is the thing every earlier version of this
+file could not reach. -/
+
+/-- **The bound, from the invariant.**  If the joint quantity does not decrease
+along the way to a configuration with both degeneracy measures empty, then the
+*original* has at most 38 intersection points. -/
+theorem points9_le_38_of_joint (R Rend : Pair9) (hfin : (points9 R).Finite)
+    (hsum : (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+      ≤ (crossPairsOf Rend.V).card + (segDeg Rend).card + (segDegP Rend).card)
+    (hclear : segDeg Rend = ∅) (hclearP : segDegP Rend = ∅) :
+    (points9 R).ncard ≤ 38 := by
+  have hend : (crossPairsOf Rend.V).card ≤ 38 :=
+    RawConfig.raw_crossPairs_card_le_38 (AKR9.toRawPair Rend)
+  rw [hclear, hclearP] at hsum
+  simp only [Finset.card_empty, Nat.add_zero] at hsum
+  exact points9_le_38_of_seg_sum R hfin (by omega)
+
+#print axioms points9_le_38_of_joint
 
 end Pair9Shift
 end Heptagon
