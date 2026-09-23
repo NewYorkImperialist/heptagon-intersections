@@ -17,6 +17,32 @@ works — provided each obligation *names the shifts it forbids* instead of
 choosing its own, which is what `Pair9Shift.affine_bad_set` and the
 `exists_*_bad_set` lemmas are for.
 
+## What is still missing, exactly
+
+`exists_all_three_le_38` reaches a configuration with **at most 38** points.
+That is not `(A9)`, which bounds the **original**. The gap reduces to one
+inequality, and §6 below makes it explicit:
+
+>  `|crossPairsOf R| + |degSetOf R| + |degSetQ R| ≤ 38`
+
+would suffice (`points9_le_38_of_sum_bound`), and the chain would give it if
+the quantity `crossPairs + degSetOf + degSetQ` were **non-decreasing** along
+it — the endpoint has both index sets empty and `|crossPairs| ≤ 38`.
+
+It is not proved, and the obstruction is identified rather than vague. A step
+that clears `P`-side `i` gains at least `|D|` crossing pairs
+(`Pair9Shift.count_grows_from_interior`), which pays for the `|D|` index pairs
+it removes. But the step also **rotates the neighbouring sides** `i ± 1`, and a
+degeneracy sitting on one of *those* can be destroyed with no compensating
+gain: that degenerate point was a genuine intersection, and after the rotation
+it may simply be gone. So the sum can fall.
+
+That is precisely the case AKR's averaging identity exists to handle — over
+the two shift directions the degenerate contributions sum to twice the
+original, so one direction does not lose. `TiltedShift.exists_sign_not_decreasing`
+is that statement and is proved; applying it to the *neighbours'* degeneracies
+rather than the shifted side's own is the unwritten work.
+
 This file is a leaf.
 -/
 
@@ -232,6 +258,85 @@ theorem exists_all_three_le_38 (R : Pair9) (t : ℝ) :
 #print axioms degP_empty_of_degSetQ_empty
 #print axioms points9_le_38_of_invariants
 #print axioms exists_all_three_le_38
+
+/-! ## 6. The degenerate points are bounded by the index sets
+
+`degPts` is a set of *points*; `degSetOf` and `degSetQ` are `Finset`s of index
+pairs. The chain carries the latter, so the two have to be related. A
+degenerate point **is** a vertex, and its index determines it, so the count of
+points is bounded by the count of indices. -/
+
+/-- The `Q`-vertices that are degenerate. -/
+noncomputable def degIdxQ (V : Fin 14 → ℝ × ℝ) : Finset (Fin 7) :=
+  (degSetOf V).image Prod.snd
+
+/-- The `P`-vertices that are degenerate. -/
+noncomputable def degIdxP (V : Fin 14 → ℝ × ℝ) : Finset (Fin 7) :=
+  (degSetQ V).image Prod.snd
+
+theorem degPts_subset (R : Pair9) :
+    degPts R ⊆ ((degIdxQ R.V).image (fun j => R.V (pQ j))
+      ∪ (degIdxP R.V).image (fun i => R.V (pP i)) : Finset (ℝ × ℝ)) := by
+  classical
+  rintro x ⟨hx, hv⟩
+  rcases hv with ⟨i, rfl⟩ | ⟨j, rfl⟩
+  · -- a `P`-vertex: it lies on some `Q`-side, so on that side's line
+    obtain ⟨j, hj⟩ := Set.mem_iUnion.mp hx.2
+    refine Finset.mem_coe.mpr (Finset.mem_union_right _ (Finset.mem_image.mpr ⟨i, ?_, rfl⟩))
+    refine Finset.mem_image.mpr ⟨(j, i), ?_, rfl⟩
+    simp only [degSetQ, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [← off_eq_orientR]
+    exact off_eq_zero_of_mem_segment hj
+  · -- a `Q`-vertex: it lies on some `P`-side
+    obtain ⟨k, hk⟩ := Set.mem_iUnion.mp hx.1
+    refine Finset.mem_coe.mpr (Finset.mem_union_left _ (Finset.mem_image.mpr ⟨j, ?_, rfl⟩))
+    refine Finset.mem_image.mpr ⟨(k, j), ?_, rfl⟩
+    simp only [degSetOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    rw [← off_eq_orientR]
+    exact off_eq_zero_of_mem_segment hk
+
+/-- **`|degPts| ≤ |degSetOf| + |degSetQ|`.** -/
+theorem degPts_ncard_le (R : Pair9) :
+    (degPts R).ncard ≤ (degSetOf R.V).card + (degSetQ R.V).card := by
+  classical
+  set S : Finset (ℝ × ℝ) := (degIdxQ R.V).image (fun j => R.V (pQ j))
+    ∪ (degIdxP R.V).image (fun i => R.V (pP i)) with hS
+  have hcoe : ((S : Finset (ℝ × ℝ)) : Set (ℝ × ℝ)).ncard = S.card := by
+    simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
+  calc (degPts R).ncard
+      ≤ ((S : Finset (ℝ × ℝ)) : Set (ℝ × ℝ)).ncard :=
+        Set.ncard_le_ncard (degPts_subset R) (Finset.finite_toSet _)
+    _ = S.card := hcoe
+    _ ≤ ((degIdxQ R.V).image (fun j => R.V (pQ j))).card
+          + ((degIdxP R.V).image (fun i => R.V (pP i))).card := Finset.card_union_le _ _
+    _ ≤ (degIdxQ R.V).card + (degIdxP R.V).card :=
+        Nat.add_le_add Finset.card_image_le Finset.card_image_le
+    _ ≤ (degSetOf R.V).card + (degSetQ R.V).card :=
+        Nat.add_le_add Finset.card_image_le Finset.card_image_le
+
+/-- **The bound the chain would need.**  With `|degPts| ≤ |degSetOf| + |degSetQ|`
+in hand, `|points9 R| ≤ 38` follows from
+
+>  `|crossPairsOf R| + |degSetOf R| + |degSetQ R| ≤ 38`,
+
+which is what a chain preserving `crossPairs + degSetOf + degSetQ` would give,
+since the endpoint has both index sets empty and `|crossPairs| ≤ 38`.
+
+Stated as an implication because the antecedent is **not proved**: see the
+module note. -/
+theorem points9_le_38_of_sum_bound (R : Pair9) (hfin : (points9 R).Finite)
+    (h : (crossPairsOf R.V).card + (degSetOf R.V).card + (degSetQ R.V).card ≤ 38) :
+    (points9 R).ncard ≤ 38 := by
+  calc (points9 R).ncard
+      ≤ (crossPairsOf R.V).card + (degPts R).ncard :=
+        points9_ncard_le_crossPairs_add_deg R hfin
+    _ ≤ (crossPairsOf R.V).card + ((degSetOf R.V).card + (degSetQ R.V).card) :=
+        Nat.add_le_add_left (degPts_ncard_le R) _
+    _ ≤ 38 := by omega
+
+#print axioms degPts_subset
+#print axioms degPts_ncard_le
+#print axioms points9_le_38_of_sum_bound
 
 end Compose
 end Heptagon
