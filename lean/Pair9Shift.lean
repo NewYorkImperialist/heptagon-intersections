@@ -2069,5 +2069,128 @@ theorem crossPairs_card_add_sum_le (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms card_add_sum_le
 #print axioms crossPairs_card_add_sum_le
 
+/-! ## 31. The incident-pair count equals the affine local count -/
+
+open scoped Classical in
+/-- **The bridge, for any side.**  The number of a degeneracy's incident pairs
+that cross after the shift is exactly the affine local count that
+`TiltedShift.localContribAff` is built from. -/
+theorem card_incident_eq_aff (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ k j : Fin 7,
+      orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP k)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (k + 1))) < 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP k)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (k + 1))) < 0 →
+      ((incidentPairs (k, j)).filter (fun q => q ∈ crossPairsOf (shiftV V i t δ))).card
+        = (if (δ * shiftCoef V i t k (pQ j))
+              * (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j - 1)))
+                  + δ * shiftCoef V i t k (pQ (j - 1))) < 0 then 1 else 0)
+          + (if (δ * shiftCoef V i t k (pQ j))
+              * (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j + 1)))
+                  + δ * shiftCoef V i t k (pQ (j + 1))) < 0 then 1 else 0) := by
+  classical
+  obtain ⟨δ₁, h₁, hprev⟩ := mem_crossPairs_iff_aff_prev V i t
+  obtain ⟨δ₂, h₂, hnext⟩ := mem_crossPairs_iff_aff V i t
+  refine ⟨min δ₁ δ₂, lt_min h₁ h₂, fun δ hδ k j hdeg hsepP hsepN => ?_⟩
+  have hd1 : |δ| < δ₁ := lt_of_lt_of_le hδ (min_le_left _ _)
+  have hd2 : |δ| < δ₂ := lt_of_lt_of_le hδ (min_le_right _ _)
+  rw [show incidentPairs (k, j) = {(k, j - 1), (k, j)} from rfl,
+    card_filter_pair _ _ (pred_ne_self k j)]
+  exact congrArg₂ (· + ·)
+    (if_congr (hprev δ hd1 k j hdeg hsepP) rfl rfl)
+    (if_congr (hnext δ hd2 k j hdeg hsepN) rfl rfl)
+
+#print axioms card_incident_eq_aff
+
+open scoped Classical in
+/-- **The incident-pair count *is* the local contribution**, when the
+degeneracy's rate is nonzero. -/
+theorem card_incident_eq_localContribAff (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ k j : Fin 7,
+      δ * shiftCoef V i t k (pQ j) ≠ 0 →
+      orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0 →
+      orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP k)) *
+          orientR (V (pQ (j - 1))) (V (pQ j)) (V (pP (k + 1))) < 0 →
+      orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP k)) *
+          orientR (V (pQ j)) (V (pQ (j + 1))) (V (pP (k + 1))) < 0 →
+      ((incidentPairs (k, j)).filter (fun q => q ∈ crossPairsOf (shiftV V i t δ))).card
+        = TiltedShift.localContribAff δ (shiftCoef V i t k (pQ j))
+            (shiftCoef V i t k (pQ (j - 1))) (shiftCoef V i t k (pQ (j + 1)))
+            (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j - 1))))
+            (orientR (V (pP k)) (V (pP (k + 1))) (V (pQ (j + 1)))) := by
+  obtain ⟨δ₀, hδ₀, h⟩ := card_incident_eq_aff V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ k j hrate hdeg hP hN => ?_⟩
+  rw [h δ hδ k j hdeg hP hN]
+  simp only [TiltedShift.localContribAff, if_neg hrate]
+
+/-- **A degeneracy on a side the shift does not touch stays put.**  Its rate is
+zero by `shiftCoef_eq_zero`, and — since nothing about that side or that vertex
+moved — it is still on the segment, so it is still counted. -/
+theorem segDeg_mem_of_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ)
+    (R R' : Pair9) (hR : R.V = V) (hR' : R'.V = shiftV V i t δ) {k j : Fin 7}
+    (hmem : (k, j) ∈ segDeg R)
+    (h1 : ¬(pP k = pP i ∨ pP k = pP (i + 1)))
+    (h2 : ¬(pP (k + 1) = pP i ∨ pP (k + 1) = pP (i + 1))) :
+    (k, j) ∈ segDeg R' := by
+  classical
+  simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at hmem ⊢
+  have e1 : R'.V (pP k) = R.V (pP k) := by
+    rw [hR', hR, shiftV]
+    exact if_neg h1
+  have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+    rw [hR', hR, shiftV]
+    exact if_neg h2
+  have e3 : R'.V (pQ j) = R.V (pQ j) := by rw [hR', hR]; exact shiftV_Q V i t δ j
+  simpa only [sideP9, e1, e2, e3] using hmem
+
+#print axioms card_incident_eq_localContribAff
+#print axioms segDeg_mem_of_untouched
+
+/-! ## 32. The per-step invariant, as arithmetic
+
+Everything geometric is now in place; what remains is the bookkeeping that
+turns it into `crossPairs + segDeg` being non-decreasing. Isolating it as pure
+`Finset` arithmetic makes the geometric hypotheses visible as exactly five
+facts. -/
+
+/-- **The step invariant, abstractly.**  `D` are the degeneracies, `Z ⊆ D`
+those the shift does not touch, `newOf d` the incident pairs `d` converts into,
+and `lc d` its local contribution.
+
+* `hgrow`  — the crossings grow by the converted pairs (`crossPairs_card_add_sum_le`);
+* `hN`     — off `Z` the converted count *is* the local contribution
+             (`card_incident_eq_localContribAff`);
+* `hZ1`    — on `Z` the local contribution is one (the vertex does not move);
+* `hD'`    — the untouched degeneracies survive (`segDeg_mem_of_untouched`);
+* `havg`   — the averaging identity (`TiltedShift.exists_sign_contrib_aff`).
+
+Conclusion: `|A| + |D| ≤ |A'| + |D'|`. -/
+theorem step_invariant_abstract {ι P : Type*} [DecidableEq ι] [DecidableEq P]
+    (A A' : Finset P) (D Z D' : Finset ι) (newOf : ι → Finset P) (lc : ι → ℕ)
+    (hZD : Z ⊆ D)
+    (hgrow : A.card + ∑ d ∈ D, (newOf d).card ≤ A'.card)
+    (hN : ∀ d ∈ D, d ∉ Z → (newOf d).card = lc d)
+    (hZ1 : ∀ d ∈ Z, lc d = 1)
+    (hD' : Z.card ≤ D'.card)
+    (havg : D.card ≤ ∑ d ∈ D, lc d) :
+    A.card + D.card ≤ A'.card + D'.card := by
+  classical
+  have hsplit : ∑ d ∈ D \ Z, lc d + ∑ d ∈ Z, lc d = ∑ d ∈ D, lc d :=
+    Finset.sum_sdiff hZD
+  have hZsum : ∑ d ∈ Z, lc d = Z.card := by
+    rw [Finset.sum_congr rfl (fun d hd => hZ1 d hd)]
+    simp
+  have hDiff : ∑ d ∈ D \ Z, lc d ≤ ∑ d ∈ D, (newOf d).card := by
+    calc ∑ d ∈ D \ Z, lc d = ∑ d ∈ D \ Z, (newOf d).card :=
+          Finset.sum_congr rfl fun d hd => by
+            obtain ⟨hdD, hdZ⟩ := Finset.mem_sdiff.mp hd
+            exact (hN d hdD hdZ).symm
+      _ ≤ ∑ d ∈ D, (newOf d).card :=
+          Finset.sum_le_sum_of_subset (Finset.sdiff_subset)
+  omega
+
+#print axioms step_invariant_abstract
+
 end Pair9Shift
 end Heptagon
