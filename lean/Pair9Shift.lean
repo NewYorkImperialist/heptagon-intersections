@@ -2274,5 +2274,95 @@ theorem shiftCoef_next_ne_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
 #print axioms shiftCoef_next
 #print axioms shiftCoef_next_ne_zero
 
+/-! ## 35. The rate on the backward neighbour
+
+Side `i−1` has its *second* endpoint moved, so the rate is `w × (X − F)` with
+`F` the fixed first endpoint — the mirror of §34. -/
+
+theorem pred_ne (i : Fin 7) : i - 1 ≠ i ∧ i - 1 ≠ i + 1 := by
+  revert i; decide
+
+theorem shiftCoef_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (a : Fin 14)
+    (ha : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t (i - 1) a
+      = cross (tilt (V (pP (i + 1)) - V (pP i)) t) (V a - V (pP (i - 1))) := by
+  obtain ⟨h1, h2⟩ := pred_ne i
+  have hA : ¬(pP (i - 1) = pP i ∨ pP (i - 1) = pP (i + 1)) := by
+    rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  have hji : i - 1 + 1 = i := by simp
+  simp only [shiftCoef, hji, dcoef, cross, Prod.fst_sub, Prod.snd_sub, if_neg ha,
+    if_neg hA, eq_self_iff_true, or_true, true_or, if_true]
+  ring
+
+/-- **The backward neighbour's rate is nonzero**, under the mirror hypotheses. -/
+theorem shiftCoef_prev_ne_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (j : Fin 7)
+    (htr : cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+        ((V (pP i)).1 - (V (pP (i - 1))).1, (V (pP i)).2 - (V (pP (i - 1))).2) ≠ 0)
+    (hne : ((V (pQ j)).1 - (V (pP (i - 1))).1,
+            (V (pQ j)).2 - (V (pP (i - 1))).2) ≠ 0)
+    (hdeg : orientR (V (pP (i - 1))) (V (pP i)) (V (pQ j)) = 0) :
+    shiftCoef V i t (i - 1) (pQ j) ≠ 0 := by
+  have haQ : ¬(pQ j = pP i ∨ pQ j = pP (i + 1)) := by
+    rintro (h | h)
+    · exact pP_ne_pQ i j h.symm
+    · exact pP_ne_pQ (i + 1) j h.symm
+  rw [shiftCoef_prev V i t (pQ j) haQ]
+  have hrate := rate_ne_zero_of_transverse htr hne hdeg
+  intro hz
+  refine hrate ?_
+  simp only [cross, Prod.fst_sub, Prod.snd_sub] at hz ⊢
+  linarith
+
+#print axioms shiftCoef_prev
+#print axioms shiftCoef_prev_ne_zero
+
+/-! ## 36. The dichotomy
+
+A side is either one of the three the shift touches — `i−1`, `i`, `i+1` — or
+its rate is identically zero and its degeneracies are untouched. -/
+
+theorem shiftCoef_far (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) {k : Fin 7}
+    (h1 : k ≠ i) (h2 : k ≠ i + 1) (h3 : k ≠ i - 1) (a : Fin 14)
+    (ha : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t k a = 0 := by
+  refine shiftCoef_eq_zero V i t k a ?_ ?_ ha
+  · rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  · rintro (h | h)
+    · exact h3 (by
+        have := pP_inj h
+        rw [← this]; simp)
+    · exact h1 (by
+        have := pP_inj h
+        exact add_right_cancel this)
+
+/-- **The dichotomy, for a `Q`-vertex.**  Either the side is one of the three
+the shift touches, or the rate vanishes. -/
+theorem shiftCoef_dichotomy (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (k j : Fin 7) :
+    (k = i ∨ k = i + 1 ∨ k = i - 1) ∨ shiftCoef V i t k (pQ j) = 0 := by
+  by_cases h1 : k = i
+  · exact Or.inl (Or.inl h1)
+  by_cases h2 : k = i + 1
+  · exact Or.inl (Or.inr (Or.inl h2))
+  by_cases h3 : k = i - 1
+  · exact Or.inl (Or.inr (Or.inr h3))
+  refine Or.inr (shiftCoef_far V i t h1 h2 h3 (pQ j) ?_)
+  rintro (h | h)
+  · exact pP_ne_pQ i j h.symm
+  · exact pP_ne_pQ (i + 1) j h.symm
+
+/-- The three touched sides, as a `Finset`. -/
+def touched (i : Fin 7) : Finset (Fin 7) := {i, i + 1, i - 1}
+
+theorem mem_touched_iff (i k : Fin 7) :
+    k ∈ touched i ↔ (k = i ∨ k = i + 1 ∨ k = i - 1) := by
+  simp [touched]
+
+#print axioms shiftCoef_far
+#print axioms shiftCoef_dichotomy
+
 end Pair9Shift
 end Heptagon
