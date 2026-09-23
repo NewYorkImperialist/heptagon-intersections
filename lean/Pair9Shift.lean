@@ -2192,5 +2192,87 @@ theorem step_invariant_abstract {ι P : Type*} [DecidableEq ι] [DecidableEq P]
 
 #print axioms step_invariant_abstract
 
+/-! ## 33. The rate on the shifted side itself
+
+For the side being shifted, both endpoints move together, and the rate
+collapses to `w × u` — **independent of the vertex**. It is nonzero for every
+`t`, by `cross_tilt_self`, so every degeneracy on the shifted side is payable
+with no further hypothesis. -/
+
+theorem shiftCoef_self (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (a : Fin 14)
+    (ha : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t i a
+      = cross (tilt (V (pP (i + 1)) - V (pP i)) t) (V (pP (i + 1)) - V (pP i)) := by
+  simp only [shiftCoef, dcoef, cross, Prod.fst_sub, Prod.snd_sub, if_neg ha,
+    eq_self_iff_true, or_true, true_or, if_true]
+  ring
+
+/-- **Every degeneracy on the shifted side has nonzero rate.** -/
+theorem shiftCoef_self_ne_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (a : Fin 14)
+    (ha : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t i a ≠ 0 := by
+  rw [shiftCoef_self V i t a ha]
+  exact RotationLaw.cross_tilt_self hu t
+
+/-- In particular for a `Q`-vertex, which never coincides with a `P`-index. -/
+theorem shiftCoef_self_Q_ne_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (hu : V (pP (i + 1)) - V (pP i) ≠ 0) (j : Fin 7) :
+    shiftCoef V i t i (pQ j) ≠ 0 := by
+  refine shiftCoef_self_ne_zero V i t hu (pQ j) ?_
+  rintro (h | h)
+  · exact pP_ne_pQ i j h.symm
+  · exact pP_ne_pQ (i + 1) j h.symm
+
+#print axioms shiftCoef_self
+#print axioms shiftCoef_self_Q_ne_zero
+
+/-! ## 34. The rate on the forward neighbour
+
+Side `i+1` has its *first* endpoint moved and its second fixed, so the rate is
+`w × (F − X)` with `F` the fixed endpoint — vanishing exactly when `X − F` is
+parallel to the tilt. -/
+
+theorem succ_succ_ne (i : Fin 7) : i + 1 + 1 ≠ i ∧ i + 1 + 1 ≠ i + 1 := by
+  revert i; decide
+
+theorem shiftCoef_next (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (a : Fin 14)
+    (ha : ¬(a = pP i ∨ a = pP (i + 1))) :
+    shiftCoef V i t (i + 1) a
+      = cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+          (V (pP (i + 1 + 1)) - V a) := by
+  obtain ⟨h1, h2⟩ := succ_succ_ne i
+  have hb : ¬(pP (i + 1 + 1) = pP i ∨ pP (i + 1 + 1) = pP (i + 1)) := by
+    rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  simp only [shiftCoef, dcoef, cross, Prod.fst_sub, Prod.snd_sub, if_neg ha, if_neg hb,
+    eq_self_iff_true, or_true, true_or, if_true]
+  ring
+
+/-- **The forward neighbour's rate is nonzero**, given a tilt transverse to it
+and no coincidence at its fixed endpoint. -/
+theorem shiftCoef_next_ne_zero (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (j : Fin 7)
+    (htr : cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+        ((V (pP (i + 1))).1 - (V (pP (i + 1 + 1))).1,
+         (V (pP (i + 1))).2 - (V (pP (i + 1 + 1))).2) ≠ 0)
+    (hne : ((V (pQ j)).1 - (V (pP (i + 1 + 1))).1,
+            (V (pQ j)).2 - (V (pP (i + 1 + 1))).2) ≠ 0)
+    (hdeg : orientR (V (pP (i + 1 + 1))) (V (pP (i + 1))) (V (pQ j)) = 0) :
+    shiftCoef V i t (i + 1) (pQ j) ≠ 0 := by
+  have haQ : ¬(pQ j = pP i ∨ pQ j = pP (i + 1)) := by
+    rintro (h | h)
+    · exact pP_ne_pQ i j h.symm
+    · exact pP_ne_pQ (i + 1) j h.symm
+  rw [shiftCoef_next V i t (pQ j) haQ]
+  have hrate := rate_ne_zero_of_transverse htr hne hdeg
+  intro hz
+  refine hrate ?_
+  simp only [cross, Prod.fst_sub, Prod.snd_sub] at hz ⊢
+  linarith
+
+#print axioms shiftCoef_next
+#print axioms shiftCoef_next_ne_zero
+
 end Pair9Shift
 end Heptagon
