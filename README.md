@@ -88,6 +88,36 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > `f(7,7) = 38` is still **not** a Lean theorem — nothing proves (E9), and the
 > §9 audit advises against attempting it. `verification-status.md` row 51.
 
+> **Update, 2026-09-24 (rows 113, 121): §9's import is now NARROWER — §9.2's
+> half is proved.** `lean/Pair9Shift.lean` proves
+> `points9_le_38_of_coincFree (R : Pair9) (hfin : (points9 R).Finite)
+> (hcoinc : ∀ v j, R.V (pP v) ≠ R.V (pQ j)) : (points9 R).ncard ≤ 38` — the
+> point count under a **strictly weaker** hypothesis than (E9). (E9) forbids a
+> vertex anywhere on the other boundary; this forbids only vertex-**equals**-
+> vertex. A `Q`-vertex sitting in the **interior** of a `P`-side is now
+> **allowed**, and is handled by a proved chain of tilted shifts rather than
+> assumed away. Since (E9) implies coincidence-freeness,
+> `isGreatest_38_of_coincFree` **subsumes** `isGreatest_38_of_E9`.
+>
+> **What this does and does not change.** §9.2's job — removing vertex–**side**
+> degeneracies — is no longer imported; it is a theorem, with the chain shown
+> to terminate and both of its standing hypotheses shown to reproduce
+> themselves along it. **§9.1's job — removing vertex–vertex coincidences — is
+> still imported**, and is exactly the `hcoinc` above. The measure that drives
+> §9.2's chain is provably the **wrong** one for §9.1 (row 117: a coincidence
+> is one point but four incidences, and all 4,159 admissible moves on a
+> committed witness drop it by exactly 3); the replacement is identified and
+> supported numerically but **not proved** (rows 124, 130).
+>
+> Two checks worth stating: the bound is **attained** under the weaker
+> hypothesis — `certPair9_tight` gives `≤ 38` on a configuration whose count is
+> *exactly* 38, so the hypotheses are satisfiable and the bound is not slack —
+> and an adversarial search over 251,003 configurations, 94% of them carrying a
+> genuine degeneracy, found **nothing above 38** (row 126).
+>
+> `f(7,7) = 38` is still **not** a Lean theorem: §9.1's conclusion is assumed,
+> and none of this has been reviewed by a mathematician.
+
 >
 > **(b) The general-position reduction — not moved.** It is **imported as
 > prose**: AKR §9 for "no vertex of one polygon on the other's boundary" (five
@@ -256,7 +286,7 @@ full table. In brief:
 | Reproduced by a second implementation | the finite graph/profile reduction down to the 225-triple set, exact match (C++, different enumeration). **It does not run the final avoiding-pair filter** — that step has certificate and Lean independence but no second implementation (K-20) |
 | Independently reimplemented and externally cross-checked | the 135 order types (**exact set equality** with the TU Graz `otypes07.b08` database) and the exceptional classification (14/14 on every profile field), by `independent/order_type_audit/` — a fresh audit that does not import `chiro.py`/`geom.py` |
 | Needs independent reproduction | the final avoiding-pair elimination (K-20); the reading of the external lemmas, which every implementation here shares; the upper bound as a whole. *Each of these concerns the historical route; the general-position upper bound of rows 42–44 depends on none of them* |
-| Not formalized at all | the **general-position reduction** — AKR §9, plus the "count is unchanged" half of §3's clause. *Corrected 2026-09-17: this cell said "the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int`". The §9.1 citation is wrong (see row 4). The Jordan curve theorem is **not claimed and not needed** — row 29 says so, and row 30 proves the polygon is a simple closed curve without it. And "everything is orientation-level" no longer holds: rows 26, 29, 30, 44 and 45 are statements about point sets in `ℝ × ℝ`. What is still restricted to `Int × Int` is the* configuration *(row 45)* |
+| Not formalized at all | *(narrowed 2026-09-24, rows 113/121: **§9.2's half is now formalized** — `points9_le_38_of_coincFree` proves the point bound allowing a vertex in the interior of the other's side, so what is imported is **§9.1's half alone**, no vertex equal to a vertex. §9.1's step is **not** proved; its measure question is rows 117/124/130.)* the **general-position reduction** — AKR §9, plus the "count is unchanged" half of §3's clause. *Corrected 2026-09-17: this cell said "the Jordan-curve step and AKR §9.1's general-position reduction — everything is orientation-level over `Int × Int`". The §9.1 citation is wrong (see row 4). The Jordan curve theorem is **not claimed and not needed** — row 29 says so, and row 30 proves the polygon is a simple closed curve without it. And "everything is orientation-level" no longer holds: rows 26, 29, 30, 44 and 45 are statements about point sets in `ℝ × ℝ`. What is still restricted to `Int × Int` is the* configuration *(row 45)* |
 
 ## Reproducibility
 
