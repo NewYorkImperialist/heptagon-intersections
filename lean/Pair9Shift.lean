@@ -3486,6 +3486,7 @@ turns back is a real case and is **not** covered here. -/
 open scoped Classical in
 theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
     (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) (t : ℝ)
+    {δtop : ℝ} (hδtop : 0 < δtop)
     (htrN : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
         ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
          (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0)
@@ -3506,7 +3507,7 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
     (hsepNE : ∀ y ∈ segDegP R,
       orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
         orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
-    ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+    ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
   classical
@@ -3519,15 +3520,16 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
   obtain ⟨r4, hr4, hD⟩ := exists_delta0_havg_free R hfin hcoinc i t
   obtain ⟨r5, hr5, hE⟩ :=
     exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
-  obtain ⟨δ₀, hδ₀, hl1, hl2, hl3, hl4, hl5⟩ :
-      ∃ x : ℝ, 0 < x ∧ x ≤ r1 ∧ x ≤ r2 ∧ x ≤ r3 ∧ x ≤ r4 ∧ x ≤ r5 :=
-    ⟨min (min r1 r2) (min (min r3 r4) r5),
-      lt_min (lt_min hr1 hr2) (lt_min (lt_min hr3 hr4) hr5),
+  obtain ⟨δ₀, hδ₀, hl1, hl2, hl3, hl4, hl5, hl6⟩ :
+      ∃ x : ℝ, 0 < x ∧ x ≤ r1 ∧ x ≤ r2 ∧ x ≤ r3 ∧ x ≤ r4 ∧ x ≤ r5 ∧ x ≤ δtop :=
+    ⟨min (min r1 r2) (min (min r3 r4) (min r5 δtop)),
+      lt_min (lt_min hr1 hr2) (lt_min (lt_min hr3 hr4) (lt_min hr5 hδtop)),
       le_trans (min_le_left _ _) (min_le_left _ _),
       le_trans (min_le_left _ _) (min_le_right _ _),
       le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_left _ _)),
       le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_right _ _)),
-      le_trans (min_le_right _ _) (min_le_right _ _)⟩
+      le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_left _ _)),
+      le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_right _ _))⟩
   -- one magnitude serves every bound; only the SIGN is still to be chosen
   have key : ∀ σ : ℝ, σ ≠ 0 → |σ| < δ₀ →
       ((segDeg R).card + (segDegP R).card
@@ -3561,11 +3563,12 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
   have hhalfne : δ₀ / 2 ≠ 0 := ne_of_gt (by linarith)
   rcases hD (δ₀ / 2) (lt_of_lt_of_le hhalf hl4) with hpos | hneg
   · obtain ⟨R', hR'V, hbound⟩ := key (δ₀ / 2) hhalfne hhalf hpos
-    exact ⟨δ₀ / 2, R', hhalfne, hR'V, hbound⟩
+    exact ⟨δ₀ / 2, R', hhalfne, lt_of_lt_of_le hhalf hl6, hR'V, hbound⟩
   · have habs : |(-(δ₀ / 2))| < δ₀ := by rw [abs_neg]; exact hhalf
     obtain ⟨R', hR'V, hbound⟩ :=
       key (-(δ₀ / 2)) (neg_ne_zero.mpr hhalfne) habs hneg
-    exact ⟨-(δ₀ / 2), R', neg_ne_zero.mpr hhalfne, hR'V, hbound⟩
+    exact ⟨-(δ₀ / 2), R', neg_ne_zero.mpr hhalfne, lt_of_lt_of_le habs hl6,
+      hR'V, hbound⟩
 
 #print axioms exists_joint_step
 
@@ -3627,6 +3630,7 @@ open scoped Classical in
 standing ones are the four transversality conditions. -/
 theorem exists_joint_step_tilted (R : Pair9) (hfin : (points9 R).Finite)
     (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7)
+    {δtop : ℝ} (hδtop : 0 < δtop)
     (hsepPD : ∀ x ∈ segDeg R,
       orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP x.1)) *
         orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP (x.1 + 1))) < 0)
@@ -3639,13 +3643,13 @@ theorem exists_joint_step_tilted (R : Pair9) (hfin : (points9 R).Finite)
     (hsepNE : ∀ y ∈ segDegP R,
       orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
         orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
-    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
   obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
-  obtain ⟨δ, R', hδ, hR', hb⟩ :=
-    exists_joint_step R hfin hcoinc i t h1 h2 h3 hsepPD hsepND hsepPE hsepNE
-  exact ⟨t, δ, R', hδ, hR', hb⟩
+  obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
+    exists_joint_step R hfin hcoinc i t hδtop h1 h2 h3 hsepPD hsepND hsepPE hsepNE
+  exact ⟨t, δ, R', hδ, hδt, hR', hb⟩
 
 #print axioms coordSub_ne_zero
 #print axioms exists_good_tilt_pair9
@@ -3766,11 +3770,12 @@ It is a statement about **one step**. It does not by itself give `(A9)`: that
 needs the chain to terminate, and `f(7,7) = 38` remains conditional on AKR §9,
 which this does not close. -/
 theorem exists_joint_step_free (R : Pair9) (hfin : (points9 R).Finite)
-    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) :
-    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7)
+    {δtop : ℝ} (hδtop : 0 < δtop) :
+    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card :=
-  exists_joint_step_tilted R hfin hcoinc i
+  exists_joint_step_tilted R hfin hcoinc i hδtop
     (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
     (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
     (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
@@ -3900,6 +3905,79 @@ theorem exists_delta0_deg_exact (R : Pair9) (i : Fin 7) (t : ℝ)
 #print axioms segDeg_untouched_iff
 #print axioms segDegP_untouched_iff
 #print axioms exists_delta0_deg_exact
+
+/-! ## 58. The strictly decreasing step
+
+§56 gives a step that does not lose ground; §57 gives one that gains.  They
+use the same tilt and the same `δ`, so they compose: choosing the edge to
+carry a degeneracy, one shift both preserves the joint measure **and** strictly
+drops the degeneracy count. -/
+
+open scoped Classical in
+theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7)
+    (hsome : (∃ x ∈ segDeg R, x.1 ∈ touched i) ∨
+             (∃ y ∈ segDegP R, y.2 ∈ touchedP i)) :
+    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+        ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
+      (segDeg R').card + (segDegP R').card
+        < (segDeg R).card + (segDegP R).card := by
+  classical
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
+  obtain ⟨δ₀, hδ₀, hexact⟩ := exists_delta0_deg_exact R i t hu h1 h2 h3 hcoinc
+  obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
+    exists_joint_step R hfin hcoinc i t hδ₀ h1 h2 h3
+      (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
+      (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
+      (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
+      (fun _ hy => segDegP_transversal_next R hfin hcoinc hy)
+  obtain ⟨hD, hE⟩ := hexact δ hδ hδt R' hR'
+  refine ⟨t, δ, R', hδ, hR', hb, ?_⟩
+  rw [hD, hE]
+  have hle1 : ((segDeg R).filter (fun x => x.1 ∉ touched i)).card
+      ≤ (segDeg R).card := Finset.card_le_card (Finset.filter_subset _ _)
+  have hle2 : ((segDegP R).filter (fun y => y.2 ∉ touchedP i)).card
+      ≤ (segDegP R).card := Finset.card_le_card (Finset.filter_subset _ _)
+  rcases hsome with ⟨x, hx, hxt⟩ | ⟨y, hy, hyt⟩
+  · have hlt : ((segDeg R).filter (fun x => x.1 ∉ touched i)).card
+        < (segDeg R).card :=
+      Finset.card_lt_card
+        ((Finset.ssubset_iff_of_subset (Finset.filter_subset _ _)).mpr
+          ⟨x, hx, fun hc => (Finset.mem_filter.mp hc).2 hxt⟩)
+    omega
+  · have hlt : ((segDegP R).filter (fun y => y.2 ∉ touchedP i)).card
+        < (segDegP R).card :=
+      Finset.card_lt_card
+        ((Finset.ssubset_iff_of_subset (Finset.filter_subset _ _)).mpr
+          ⟨y, hy, fun hc => (Finset.mem_filter.mp hc).2 hyt⟩)
+    omega
+
+open scoped Classical in
+/-- **A degeneracy always gives a strictly decreasing step.**  The edge is
+chosen to carry one: a `segDeg` entry `x` is touched by the shift at `x.1`, a
+`segDegP` entry `y` by the shift at `y.2`. -/
+theorem exists_joint_step_decreasing_of_deg (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    (hne : (segDeg R).Nonempty ∨ (segDegP R).Nonempty) :
+    ∃ (i : Fin 7) (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+        ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
+      (segDeg R').card + (segDegP R').card
+        < (segDeg R).card + (segDegP R).card := by
+  classical
+  rcases hne with ⟨x, hx⟩ | ⟨y, hy⟩
+  · obtain ⟨t, δ, R', h⟩ := exists_joint_step_decreasing R hfin hcoinc x.1
+      (Or.inl ⟨x, hx, by rw [mem_touched_iff]; exact Or.inl rfl⟩)
+    exact ⟨x.1, t, δ, R', h⟩
+  · obtain ⟨t, δ, R', h⟩ := exists_joint_step_decreasing R hfin hcoinc y.2
+      (Or.inr ⟨y, hy, by rw [mem_touchedP_iff]; exact Or.inl rfl⟩)
+    exact ⟨y.2, t, δ, R', h⟩
+
+#print axioms exists_joint_step_decreasing
+#print axioms exists_joint_step_decreasing_of_deg
 
 #print axioms sep_of_strict_between
 #print axioms segDeg_transversal_next
