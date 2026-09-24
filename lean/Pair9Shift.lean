@@ -2910,5 +2910,43 @@ theorem rate_ne_zero_of_touched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ
 #print axioms orientR_swap
 #print axioms rate_ne_zero_of_touched
 
+/-! ## 47. Discharging the bridge hypothesis
+
+`step_invariant_joint` takes `hbridgeD` as a hypothesis. With §46's dichotomy
+it is no longer one: on a touched side the rate is nonzero, so
+`card_incident_eq_localContribAff` applies. -/
+
+open scoped Classical in
+theorem exists_delta0_bridgeD (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0)
+    (htrN : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+         (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0)
+    (htrP : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+         (R.V (pP i)).2 - (R.V (pP (i - 1))).2) ≠ 0)
+    (hnc : ∀ v m : Fin 7, R.V (pP v) ≠ R.V (pQ m))
+    (hsepP : ∀ d ∈ segDeg R,
+      orientR (R.V (pQ (d.2 - 1))) (R.V (pQ d.2)) (R.V (pP d.1)) *
+        orientR (R.V (pQ (d.2 - 1))) (R.V (pQ d.2)) (R.V (pP (d.1 + 1))) < 0)
+    (hsepN : ∀ d ∈ segDeg R,
+      orientR (R.V (pQ d.2)) (R.V (pQ (d.2 + 1))) (R.V (pP d.1)) *
+        orientR (R.V (pQ d.2)) (R.V (pQ (d.2 + 1))) (R.V (pP (d.1 + 1))) < 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, δ ≠ 0 → |δ| < δ₀ → ∀ d ∈ segDeg R, d.1 ∈ touched i →
+      ((incidentPairs d).filter
+          (fun q => q ∈ crossPairsOf (shiftV R.V i t δ))).card
+        = lcAt R.V i t δ d := by
+  classical
+  obtain ⟨δ₀, hδ₀, h⟩ := card_incident_eq_localContribAff R.V i t
+  refine ⟨δ₀, hδ₀, fun δ hδne hδ d hd hdt => ?_⟩
+  have hdeg : orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ d.2)) = 0 := by
+    have := segDeg_subset_degSetOf R hd
+    simpa [degSetOf] using this
+  have hrate : δ * shiftCoef R.V i t d.1 (pQ d.2) ≠ 0 :=
+    mul_ne_zero hδne (rate_ne_zero_of_touched R.V i t hdt hu hdeg htrN htrP hnc)
+  exact h δ hδ d.1 d.2 hrate hdeg (hsepP d hd) (hsepN d hd)
+
+#print axioms exists_delta0_bridgeD
+
 end Pair9Shift
 end Heptagon
