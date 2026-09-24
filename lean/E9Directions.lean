@@ -1285,13 +1285,6 @@ theorem exists_coincFree_le_38 (R : Pair9) (hfin : (points9 R).Finite) :
 
 #print axioms exists_coincFree_le_38
 
-#print axioms pair9_coincSet_step_finite
-#print axioms exists_coincFree_finite
-#print axioms coincFree_of_coincSet_empty
-
-#print axioms exists_eps0_clearing_apex
-#print axioms exists_eps0_coincSet_lt
-
 /-! ### The move creates no new degeneracies
 
 The delegated sweep of `independent/e9_directions/move_effect_report.log`
@@ -1366,6 +1359,57 @@ theorem exists_eps0_segDegP_subset (R : Pair9) (i : Fin 7) (E : ℝ × ℝ)
 
 #print axioms exists_eps0_segDeg_subset
 #print axioms exists_eps0_segDegP_subset
+
+open scoped Classical in
+/-- **One §9.1 move, everything at once.**  A single `e` serving six bounds:
+the result is again a `Pair9`, the coincidence count strictly drops, `(Fin)`
+survives, no crossing is lost, and neither degeneracy family grows.
+
+This is the complete structural package for a move.  What it does **not**
+give, and what `(A9)` still needs, is a *measure* that does not fall — see
+row 117: `crossPairs + segDeg + segDegP` is refuted, and the point-counting
+replacement is unproved. -/
+theorem pair9_move_package (R : Pair9) (hfin : (points9 R).Finite)
+    (i j : Fin 7) (hij : (i, j) ∈ coincSet R.V) :
+    ∃ R' : Pair9, (coincSet R'.V).card < (coincSet R.V).card ∧
+      (points9 R').Finite ∧
+      RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V ∧
+      segDeg R' ⊆ segDeg R ∧ segDegP R' ⊆ segDegP R := by
+  classical
+  obtain ⟨E, hE, hgQ, hgN, hgP⟩ := exists_good_dir_pair9 R i
+  obtain ⟨e₁, h₁, hpair⟩ := exists_moved_pair9 R i E
+  obtain ⟨e₂, h₂, hmono⟩ := crossPairsOf_mono_move R.V i E
+  obtain ⟨e₃, h₃, hco⟩ := exists_eps0_coincSet_lt R.V i j hij hE
+  obtain ⟨e₄, h₄, hfn⟩ := exists_eps0_finite_move R hfin i E hgN hgP
+  obtain ⟨e₅, h₅, hsd⟩ := exists_eps0_segDeg_subset R i E hgN hgP
+  obtain ⟨e₆, h₆, hsp⟩ := exists_eps0_segDegP_subset R i E hgQ
+  obtain ⟨e₀, he₀, hl1, hl2, hl3, hl4, hl5, hl6⟩ :
+      ∃ x : ℝ, 0 < x ∧ x ≤ e₁ ∧ x ≤ e₂ ∧ x ≤ e₃ ∧ x ≤ e₄ ∧ x ≤ e₅ ∧ x ≤ e₆ :=
+    ⟨min (min e₁ e₂) (min (min e₃ e₄) (min e₅ e₆)),
+      lt_min (lt_min h₁ h₂) (lt_min (lt_min h₃ h₄) (lt_min h₅ h₆)),
+      le_trans (min_le_left _ _) (min_le_left _ _),
+      le_trans (min_le_left _ _) (min_le_right _ _),
+      le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_left _ _)),
+      le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_right _ _)),
+      le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_left _ _)),
+      le_trans (min_le_right _ _) (le_trans (min_le_right _ _) (min_le_right _ _))⟩
+  have hhalf : |e₀ / 2| < e₀ := by rw [abs_of_pos (by linarith)]; linarith
+  have hne : e₀ / 2 ≠ 0 := ne_of_gt (by linarith)
+  obtain ⟨R', hR'⟩ := hpair (e₀ / 2) (le_of_lt (lt_of_lt_of_le hhalf hl1))
+  refine ⟨R', ?_, hfn _ hne (lt_of_lt_of_le hhalf hl4) R' hR', ?_,
+    hsd _ hne (lt_of_lt_of_le hhalf hl5) R' hR',
+    hsp _ hne (lt_of_lt_of_le hhalf hl6) R' hR'⟩
+  · rw [hR']; exact hco _ hne (lt_of_lt_of_le hhalf hl3)
+  · rw [hR']; exact hmono _ (lt_of_lt_of_le hhalf hl2)
+
+#print axioms pair9_move_package
+
+#print axioms pair9_coincSet_step_finite
+#print axioms exists_coincFree_finite
+#print axioms coincFree_of_coincSet_empty
+
+#print axioms exists_eps0_clearing_apex
+#print axioms exists_eps0_coincSet_lt
 
 #print axioms orientR_move_ne_zero
 #print axioms exists_eps0_finite_move
