@@ -3776,6 +3776,131 @@ theorem exists_joint_step_free (R : Pair9) (hfin : (points9 R).Finite)
     (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
     (fun _ hy => segDegP_transversal_next R hfin hcoinc hy)
 
+/-! ## 57. The monovariant
+
+`exists_joint_step_free` gives a step that does not *lose* ground.  For the
+chain to terminate we need it to *gain*: this section shows the shift removes
+**exactly** the degeneracies on the touched sides and creates **none**, so the
+combined degeneracy count strictly drops whenever the edge is chosen to carry
+one. -/
+
+theorem shiftV_pP_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) {k : Fin 7}
+    (h1 : k ≠ i) (h2 : k ≠ i + 1) : shiftV V i t δ (pP k) = V (pP k) := by
+  rw [shiftV]
+  refine if_neg ?_
+  rintro (h | h)
+  · exact h1 (pP_inj h)
+  · exact h2 (pP_inj h)
+
+open scoped Classical in
+theorem segDeg_untouched_iff (R R' : Pair9) (i : Fin 7) (t δ : ℝ)
+    (hR' : R'.V = shiftV R.V i t δ) {k j : Fin 7} (hnt : k ∉ touched i) :
+    ((k, j) ∈ segDeg R' ↔ (k, j) ∈ segDeg R) := by
+  classical
+  have h1 : k ≠ i := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inl hc)
+  have h2 : k ≠ i + 1 := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inr (Or.inl hc))
+  have h3 : k ≠ i - 1 := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inr (Or.inr hc))
+  have e1 : R'.V (pP k) = R.V (pP k) := by
+    rw [hR']; exact shiftV_pP_untouched R.V i t δ h1 h2
+  have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+    rw [hR']
+    refine shiftV_pP_untouched R.V i t δ (fun hc => h3 (eq_sub_of_add_eq hc))
+      (fun hc => h1 (add_right_cancel hc))
+  have e3 : R'.V (pQ j) = R.V (pQ j) := by rw [hR']; exact shiftV_Q R.V i t δ j
+  constructor <;> intro h <;>
+    simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢ <;>
+    simpa only [sideP9, e1, e2, e3] using h
+
+open scoped Classical in
+theorem segDegP_untouched_iff (R R' : Pair9) (i : Fin 7) (t δ : ℝ)
+    (hR' : R'.V = shiftV R.V i t δ) {m v : Fin 7} (hnt : v ∉ touchedP i) :
+    ((m, v) ∈ segDegP R' ↔ (m, v) ∈ segDegP R) := by
+  classical
+  have h1 : v ≠ i := fun hc => hnt (by rw [mem_touchedP_iff]; exact Or.inl hc)
+  have h2 : v ≠ i + 1 := fun hc => hnt (by rw [mem_touchedP_iff]; exact Or.inr hc)
+  have e1 : R'.V (pQ m) = R.V (pQ m) := by rw [hR']; exact shiftV_Q R.V i t δ m
+  have e2 : R'.V (pQ (m + 1)) = R.V (pQ (m + 1)) := by
+    rw [hR']; exact shiftV_Q R.V i t δ (m + 1)
+  have e3 : R'.V (pP v) = R.V (pP v) := by
+    rw [hR']; exact shiftV_pP_untouched R.V i t δ h1 h2
+  constructor <;> intro h <;>
+    simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢ <;>
+    simpa only [sideQ9, e1, e2, e3] using h
+
+open scoped Classical in
+/-- **The shift removes exactly the touched degeneracies, in both families.** -/
+theorem exists_delta0_deg_exact (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0)
+    (htrN : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+         (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0)
+    (htrP : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+         (R.V (pP i)).2 - (R.V (pP (i - 1))).2) ≠ 0)
+    (ht : ∀ m : Fin 7, cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0)
+    (hnc : ∀ v m : Fin 7, R.V (pP v) ≠ R.V (pQ m)) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, δ ≠ 0 → |δ| < δ₀ →
+      ∀ R' : Pair9, R'.V = shiftV R.V i t δ →
+        segDeg R' = (segDeg R).filter (fun x => x.1 ∉ touched i) ∧
+        segDegP R' = (segDegP R).filter (fun y => y.2 ∉ touchedP i) := by
+  classical
+  obtain ⟨δ₀, hδ₀, hord⟩ := exists_delta0_order_type R.V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ0 hδ R' hR' => ⟨?_, ?_⟩⟩
+  · ext p
+    simp only [Finset.mem_filter]
+    constructor
+    · intro hp
+      have hzero : orientR (shiftV R.V i t δ (pP p.1))
+          (shiftV R.V i t δ (pP (p.1 + 1))) (shiftV R.V i t δ (pQ p.2)) = 0 := by
+        have hmem : R'.V (pQ p.2) ∈ sideP9 R' p.1 := by
+          simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+        rw [← hR']
+        rw [← off_eq_orientR]
+        exact off_eq_zero_of_mem_segment hmem
+      have hnt : p.1 ∉ touched i := by
+        intro hct
+        by_cases horig :
+            orientR (R.V (pP p.1)) (R.V (pP (p.1 + 1))) (R.V (pQ p.2)) = 0
+        · have hr := rate_ne_zero_of_touched R.V i t hct hu horig htrN htrP hnc
+          rw [orientR_shift_side, horig, zero_add] at hzero
+          exact (mul_ne_zero hδ0 hr) hzero
+        · have hs := hord δ hδ (pP p.1) (pP (p.1 + 1)) (pQ p.2) horig
+          rw [hzero, mul_zero] at hs
+          exact lt_irrefl 0 hs
+      exact ⟨(segDeg_untouched_iff R R' i t δ hR' hnt).mp hp, hnt⟩
+    · rintro ⟨hp, hnt⟩
+      exact (segDeg_untouched_iff R R' i t δ hR' hnt).mpr hp
+  · ext p
+    simp only [Finset.mem_filter]
+    constructor
+    · intro hp
+      have hzero : orientR (shiftV R.V i t δ (pQ p.1))
+          (shiftV R.V i t δ (pQ (p.1 + 1))) (shiftV R.V i t δ (pP p.2)) = 0 := by
+        have hmem : R'.V (pP p.2) ∈ sideQ9 R' p.1 := by
+          simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+        rw [← hR']
+        rw [← off_eq_orientR]
+        exact off_eq_zero_of_mem_segment hmem
+      have hnt : p.2 ∉ touchedP i := by
+        intro hct
+        by_cases horig :
+            orientR (R.V (pQ p.1)) (R.V (pQ (p.1 + 1))) (R.V (pP p.2)) = 0
+        · have hr := coefQ_ne_zero_of_touchedP R.V i t p.1 p.2 hct (ht p.1)
+          rw [orientR_shift_Qside, horig, zero_add] at hzero
+          exact (mul_ne_zero hδ0 hr) hzero
+        · have hs := hord δ hδ (pQ p.1) (pQ (p.1 + 1)) (pP p.2) horig
+          rw [hzero, mul_zero] at hs
+          exact lt_irrefl 0 hs
+      exact ⟨(segDegP_untouched_iff R R' i t δ hR' hnt).mp hp, hnt⟩
+    · rintro ⟨hp, hnt⟩
+      exact (segDegP_untouched_iff R R' i t δ hR' hnt).mpr hp
+
+#print axioms shiftV_pP_untouched
+#print axioms segDeg_untouched_iff
+#print axioms segDegP_untouched_iff
+#print axioms exists_delta0_deg_exact
+
 #print axioms sep_of_strict_between
 #print axioms segDeg_transversal_next
 #print axioms segDeg_transversal_prev
