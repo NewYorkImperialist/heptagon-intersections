@@ -4724,6 +4724,346 @@ theorem segDeg_fiber_at_coincidence (R : Pair9) {v j : Fin 7}
     · exact ⟨by rw [← h]
                 exact (vertexP_mem_sideP_iff R v (v - 1)).mpr (Or.inr rfl), rfl⟩
 
+/-! ### The coincidence pairs, and the slots they occupy -/
+
+open scoped Classical in
+/-- The vertex–vertex coincidences, as a `Finset` of index pairs.  Definitionally
+`E9Directions.coincSet R.V`, restated here so the counting can live beside
+`degPts`. -/
+noncomputable def coincPairs (R : Pair9) : Finset (Fin 7 × Fin 7) :=
+  Finset.univ.filter (fun p => R.V (pP p.1) = R.V (pQ p.2))
+
+open scoped Classical in
+theorem mem_coincPairs {R : Pair9} {p : Fin 7 × Fin 7} :
+    p ∈ coincPairs R ↔ R.V (pP p.1) = R.V (pQ p.2) := by
+  simp [coincPairs]
+
+/-- Distinct coincidences have distinct `Q`-indices. -/
+theorem coincPairs_snd_inj (R : Pair9) {p q : Fin 7 × Fin 7}
+    (hp : p ∈ coincPairs R) (hq : q ∈ coincPairs R) (h : p.2 = q.2) : p = q := by
+  have hp' := mem_coincPairs.mp hp
+  have hq' := mem_coincPairs.mp hq
+  have hv : p.1 = q.1 := by
+    refine vertexP_inj R ?_
+    rw [hp', hq', h]
+  exact Prod.ext hv h
+
+open scoped Classical in
+/-- **The `segDeg` slots occupied by coincidences.**  Exactly two per
+coincidence, and the pairs for distinct coincidences are disjoint. -/
+theorem segDeg_coinc_part (R : Pair9) :
+    (segDeg R).filter (fun p => ∃ v : Fin 7, R.V (pP v) = R.V (pQ p.2))
+      = (coincPairs R).biUnion (fun c => {(c.1, c.2), (c.1 - 1, c.2)}) := by
+  classical
+  ext p
+  simp only [Finset.mem_filter, Finset.mem_biUnion, Finset.mem_insert,
+    Finset.mem_singleton]
+  constructor
+  · rintro ⟨hseg, v, hv⟩
+    have hmem : R.V (pP v) ∈ sideP9 R p.1 := by
+      rw [hv]
+      simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hseg
+    refine ⟨(v, p.2), mem_coincPairs.mpr hv, ?_⟩
+    rcases (vertexP_mem_sideP_iff R v p.1).mp hmem with hk | hk
+    · exact Or.inl (Prod.ext hk rfl)
+    · exact Or.inr (Prod.ext hk rfl)
+  · rintro ⟨c, hc, hp⟩
+    have hcv := mem_coincPairs.mp hc
+    rcases hp with rfl | rfl
+    · exact ⟨(coincidence_mem_segDeg R hcv).1, c.1, hcv⟩
+    · exact ⟨(coincidence_mem_segDeg R hcv).2, c.1, hcv⟩
+
+open scoped Classical in
+theorem segDeg_coinc_card (R : Pair9) :
+    ((segDeg R).filter (fun p => ∃ v : Fin 7, R.V (pP v) = R.V (pQ p.2))).card
+      = 2 * (coincPairs R).card := by
+  classical
+  rw [segDeg_coinc_part, Finset.card_biUnion]
+  · rw [Finset.sum_congr rfl (fun c _ => ?_), Finset.sum_const, smul_eq_mul,
+      Nat.mul_comm]
+    rw [Finset.card_insert_of_notMem (by
+      simp only [Finset.mem_singleton]
+      exact coincidence_segDeg_ne c.1 c.2), Finset.card_singleton]
+  · intro a ha b hb hab
+    simp only [Finset.disjoint_left, Finset.mem_insert, Finset.mem_singleton]
+    intro x hxa hxb
+    have h2a : x.2 = a.2 := by rcases hxa with rfl | rfl <;> rfl
+    have h2b : x.2 = b.2 := by rcases hxb with rfl | rfl <;> rfl
+    exact hab (coincPairs_snd_inj R ha hb (h2a.symm.trans h2b))
+
+/-- Distinct coincidences have distinct `P`-indices.  The mirror of
+`coincPairs_snd_inj`, run through `vertexQ_inj` instead. -/
+theorem coincPairs_fst_inj (R : Pair9) {p q : Fin 7 × Fin 7}
+    (hp : p ∈ coincPairs R) (hq : q ∈ coincPairs R) (h : p.1 = q.1) : p = q := by
+  have hp' := mem_coincPairs.mp hp
+  have hq' := mem_coincPairs.mp hq
+  have hj : p.2 = q.2 := by
+    refine vertexQ_inj R ?_
+    rw [← hp', ← hq', h]
+  exact Prod.ext h hj
+
+open scoped Classical in
+/-- **The `segDegP` slots occupied by coincidences.**  The mirror of
+`segDeg_coinc_part`: a coincidence `P_v = Q_j` is an endpoint of the two
+`Q`-sides `j` and `j−1`, and of no other. -/
+theorem segDegP_coinc_part (R : Pair9) :
+    (segDegP R).filter (fun p => ∃ j : Fin 7, R.V (pP p.2) = R.V (pQ j))
+      = (coincPairs R).biUnion (fun c => {(c.2, c.1), (c.2 - 1, c.1)}) := by
+  classical
+  ext p
+  simp only [Finset.mem_filter, Finset.mem_biUnion, Finset.mem_insert,
+    Finset.mem_singleton]
+  constructor
+  · rintro ⟨hseg, j, hj⟩
+    have hmem : R.V (pQ j) ∈ sideQ9 R p.1 := by
+      rw [← hj]
+      simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hseg
+    refine ⟨(p.2, j), mem_coincPairs.mpr hj, ?_⟩
+    rcases (vertexQ_mem_sideQ_iff R j p.1).mp hmem with hk | hk
+    · exact Or.inl (Prod.ext hk rfl)
+    · exact Or.inr (Prod.ext hk rfl)
+  · rintro ⟨c, hc, hp⟩
+    have hcv := mem_coincPairs.mp hc
+    rcases hp with rfl | rfl
+    · exact ⟨(coincidence_mem_segDegP R hcv).1, c.2, hcv⟩
+    · exact ⟨(coincidence_mem_segDegP R hcv).2, c.2, hcv⟩
+
+open scoped Classical in
+theorem segDegP_coinc_card (R : Pair9) :
+    ((segDegP R).filter (fun p => ∃ j : Fin 7, R.V (pP p.2) = R.V (pQ j))).card
+      = 2 * (coincPairs R).card := by
+  classical
+  rw [segDegP_coinc_part, Finset.card_biUnion]
+  · rw [Finset.sum_congr rfl (fun c _ => ?_), Finset.sum_const, smul_eq_mul,
+      Nat.mul_comm]
+    rw [Finset.card_insert_of_notMem (by
+      simp only [Finset.mem_singleton]
+      exact coincidence_segDegP_ne c.1 c.2), Finset.card_singleton]
+  · intro a ha b hb hab
+    simp only [Finset.disjoint_left, Finset.mem_insert, Finset.mem_singleton]
+    intro x hxa hxb
+    have h2a : x.2 = a.1 := by rcases hxa with rfl | rfl <;> rfl
+    have h2b : x.2 = b.1 := by rcases hxb with rfl | rfl <;> rfl
+    exact hab (coincPairs_fst_inj R ha hb (h2a.symm.trans h2b))
+
+open scoped Classical in
+/-- The coincidence **points** — one per coincidence pair, sitting inside
+`degPtsF`. -/
+noncomputable def coincPts (R : Pair9) : Finset (ℝ × ℝ) :=
+  (coincPairs R).image (fun c => R.V (pP c.1))
+
+open scoped Classical in
+theorem coincPts_card (R : Pair9) : (coincPts R).card = (coincPairs R).card := by
+  classical
+  refine Finset.card_image_of_injOn ?_
+  intro a ha b hb hab
+  simp only [Finset.mem_coe] at ha hb
+  have hab' : R.V (pP a.1) = R.V (pP b.1) := hab
+  exact coincPairs_fst_inj R ha hb (vertexP_inj R hab')
+
+open scoped Classical in
+theorem coincPts_subset (R : Pair9) : coincPts R ⊆ degPtsF R := by
+  classical
+  intro x hx
+  obtain ⟨c, hc, rfl⟩ := Finset.mem_image.mp hx
+  have hcv := mem_coincPairs.mp hc
+  simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+    Finset.mem_univ, true_and]
+  exact ⟨Or.inl ⟨c.1, rfl⟩,
+    ⟨Set.mem_iUnion.mpr ⟨c.1, left_mem_segment ℝ _ _⟩,
+     Set.mem_iUnion.mpr ⟨c.2, by rw [hcv]; exact left_mem_segment ℝ _ _⟩⟩⟩
+
+/-! ### The non-coincident slots, and the bijection onto the remaining points
+
+Everything `segDeg`/`segDegP` counts that is **not** at a coincidence is a
+degenerate point occupied exactly once: one `Q`-vertex on one `P`-side, or one
+`P`-vertex on one `Q`-side, and never both.  So the two non-coincident families
+together biject onto `degPtsF \ coincPts`. -/
+
+open scoped Classical in
+/-- The `segDeg` slots that are **not** at a coincidence. -/
+noncomputable def segDegN (R : Pair9) : Finset (Fin 7 × Fin 7) :=
+  (segDeg R).filter (fun p => ¬ ∃ v : Fin 7, R.V (pP v) = R.V (pQ p.2))
+
+open scoped Classical in
+/-- The `segDegP` slots that are **not** at a coincidence. -/
+noncomputable def segDegPN (R : Pair9) : Finset (Fin 7 × Fin 7) :=
+  (segDegP R).filter (fun p => ¬ ∃ j : Fin 7, R.V (pP p.2) = R.V (pQ j))
+
+open scoped Classical in
+/-- **Pointwise side-uniqueness.**  A `Q`-vertex that is not a `P`-vertex lies
+on at most one `P`-side, so a non-coincident `segDeg` entry is determined by
+its `Q`-vertex.  (`segDeg_side_unique_of_coincFree` assumes the *whole*
+configuration is coincidence-free; here only the one point is.) -/
+theorem segDegN_injOn (R : Pair9) :
+    Set.InjOn (fun p : Fin 7 × Fin 7 => R.V (pQ p.2)) ↑(segDegN R) := by
+  classical
+  intro a ha b hb hab
+  simp only [Finset.mem_coe, segDegN, Finset.mem_filter] at ha hb
+  have hab' : R.V (pQ a.2) = R.V (pQ b.2) := hab
+  have hj : a.2 = b.2 := vertexQ_inj R hab'
+  have hk : a.1 = b.1 := by
+    by_contra hne
+    have m1 : R.V (pQ a.2) ∈ sideP9 R a.1 := by
+      simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using ha.1
+    have m2 : R.V (pQ a.2) ∈ sideP9 R b.1 := by
+      rw [hj]
+      simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hb.1
+    obtain ⟨v, hv⟩ := mem_two_sidesP_imp_vertex R hne m1 m2
+    exact ha.2 ⟨v, hv.symm⟩
+  exact Prod.ext hk hj
+
+open scoped Classical in
+/-- The mirror of `segDegN_injOn`. -/
+theorem segDegPN_injOn (R : Pair9) :
+    Set.InjOn (fun p : Fin 7 × Fin 7 => R.V (pP p.2)) ↑(segDegPN R) := by
+  classical
+  intro a ha b hb hab
+  simp only [Finset.mem_coe, segDegPN, Finset.mem_filter] at ha hb
+  have hab' : R.V (pP a.2) = R.V (pP b.2) := hab
+  have hv : a.2 = b.2 := vertexP_inj R hab'
+  have hm : a.1 = b.1 := by
+    by_contra hne
+    have m1 : R.V (pP a.2) ∈ sideQ9 R a.1 := by
+      simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using ha.1
+    have m2 : R.V (pP a.2) ∈ sideQ9 R b.1 := by
+      rw [hv]
+      simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hb.1
+    obtain ⟨j, hj⟩ := mem_two_sidesQ_imp_vertex R hne m1 m2
+    exact ha.2 ⟨j, hj⟩
+  exact Prod.ext hm hv
+
+open scoped Classical in
+/-- The two non-coincident families hit **disjoint** point sets: a common value
+would be a `P`-vertex equal to a `Q`-vertex, i.e. a coincidence. -/
+theorem noncoinc_image_disjoint (R : Pair9) :
+    Disjoint ((segDegN R).image (fun p => R.V (pQ p.2)))
+      ((segDegPN R).image (fun p => R.V (pP p.2))) := by
+  classical
+  rw [Finset.disjoint_left]
+  intro x hx hy
+  obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
+  obtain ⟨b, -, hbe⟩ := Finset.mem_image.mp hy
+  simp only [segDegN, Finset.mem_filter] at ha
+  exact ha.2 ⟨b.2, hbe⟩
+
+open scoped Classical in
+/-- **Surjectivity as well.**  Together the two non-coincident families cover
+exactly the degenerate points that are not coincidences. -/
+theorem noncoinc_image_union (R : Pair9) :
+    ((segDegN R).image (fun p => R.V (pQ p.2)))
+      ∪ ((segDegPN R).image (fun p => R.V (pP p.2)))
+      = degPtsF R \ coincPts R := by
+  classical
+  apply Finset.Subset.antisymm
+  · refine Finset.union_subset ?_ ?_
+    · intro x hx
+      obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hx
+      simp only [segDegN, Finset.mem_filter] at hp
+      refine Finset.mem_sdiff.mpr ⟨?_, ?_⟩
+      · have hm : R.V (pQ p.2) ∈ sideP9 R p.1 := by
+          simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hp.1
+        simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+          Finset.mem_univ, true_and]
+        exact ⟨Or.inr ⟨p.2, rfl⟩,
+          ⟨Set.mem_iUnion.mpr ⟨p.1, hm⟩,
+           Set.mem_iUnion.mpr ⟨p.2, left_mem_segment ℝ _ _⟩⟩⟩
+      · intro hc
+        obtain ⟨c, -, hce⟩ := Finset.mem_image.mp hc
+        exact hp.2 ⟨c.1, hce⟩
+    · intro x hx
+      obtain ⟨p, hp, rfl⟩ := Finset.mem_image.mp hx
+      simp only [segDegPN, Finset.mem_filter] at hp
+      refine Finset.mem_sdiff.mpr ⟨?_, ?_⟩
+      · have hm : R.V (pP p.2) ∈ sideQ9 R p.1 := by
+          simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hp.1
+        simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+          Finset.mem_univ, true_and]
+        exact ⟨Or.inl ⟨p.2, rfl⟩,
+          ⟨Set.mem_iUnion.mpr ⟨p.2, left_mem_segment ℝ _ _⟩,
+           Set.mem_iUnion.mpr ⟨p.1, hm⟩⟩⟩
+      · intro hc
+        obtain ⟨c, hcm, hce⟩ := Finset.mem_image.mp hc
+        have hvv : c.1 = p.2 := vertexP_inj R hce
+        refine hp.2 ⟨c.2, ?_⟩
+        rw [← hvv]
+        exact mem_coincPairs.mp hcm
+  · intro x hx
+    rw [Finset.mem_sdiff] at hx
+    obtain ⟨hxd, hxc⟩ := hx
+    simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+      Finset.mem_univ, true_and] at hxd
+    obtain ⟨hvert, hpt⟩ := hxd
+    rcases hvert with ⟨v, rfl⟩ | ⟨j, rfl⟩
+    · obtain ⟨m, hm⟩ := Set.mem_iUnion.mp hpt.2
+      refine Finset.mem_union_right _ (Finset.mem_image.mpr ⟨(m, v), ?_, rfl⟩)
+      simp only [segDegPN, Finset.mem_filter]
+      refine ⟨?_, ?_⟩
+      · simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hm
+      · rintro ⟨j, hj⟩
+        exact hxc (Finset.mem_image.mpr ⟨(v, j), mem_coincPairs.mpr hj, rfl⟩)
+    · obtain ⟨k, hk⟩ := Set.mem_iUnion.mp hpt.1
+      refine Finset.mem_union_left _ (Finset.mem_image.mpr ⟨(k, j), ?_, rfl⟩)
+      simp only [segDegN, Finset.mem_filter]
+      refine ⟨?_, ?_⟩
+      · simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hk
+      · rintro ⟨v, hv⟩
+        exact hxc (Finset.mem_image.mpr ⟨(v, j), mem_coincPairs.mpr hv, hv⟩)
+
+open scoped Classical in
+/-- **`M_seg = M_pt + 3·|coinc|`.**  The identity of row 124, in full: each
+coincidence occupies four incidence slots while being one point, and every
+other degenerate point occupies exactly one slot.  Verified numerically on
+463,433 configurations and independently on 1,840 more, with no violation;
+this is the proof. -/
+theorem seg_card_eq_degPts_add_coinc (R : Pair9) :
+    (segDeg R).card + (segDegP R).card
+      = (degPts R).ncard + 3 * (coincPairs R).card := by
+  classical
+  have hsplitD :
+      ((segDeg R).filter (fun p => ∃ v : Fin 7, R.V (pP v) = R.V (pQ p.2))).card
+        + (segDegN R).card = (segDeg R).card := by
+    simp only [segDegN]
+    exact Finset.card_filter_add_card_filter_not _
+  have hsplitE :
+      ((segDegP R).filter (fun p => ∃ j : Fin 7, R.V (pP p.2) = R.V (pQ j))).card
+        + (segDegPN R).card = (segDegP R).card := by
+    simp only [segDegPN]
+    exact Finset.card_filter_add_card_filter_not _
+  have himD : ((segDegN R).image (fun p => R.V (pQ p.2))).card = (segDegN R).card :=
+    Finset.card_image_of_injOn (segDegN_injOn R)
+  have himE : ((segDegPN R).image (fun p => R.V (pP p.2))).card = (segDegPN R).card :=
+    Finset.card_image_of_injOn (segDegPN_injOn R)
+  have hun : (segDegN R).card + (segDegPN R).card = (degPtsF R \ coincPts R).card := by
+    rw [← himD, ← himE, ← Finset.card_union_of_disjoint (noncoinc_image_disjoint R),
+      noncoinc_image_union]
+  have hsd : (degPtsF R \ coincPts R).card
+      = (degPtsF R).card - (coincPairs R).card := by
+    rw [Finset.card_sdiff_of_subset (coincPts_subset R), coincPts_card]
+  have hle : (coincPairs R).card ≤ (degPtsF R).card := by
+    rw [← coincPts_card]
+    exact Finset.card_le_card (coincPts_subset R)
+  rw [degPts_ncard_eq]
+  rw [segDeg_coinc_card] at hsplitD
+  rw [segDegP_coinc_card] at hsplitE
+  omega
+
+#print axioms segDegN_injOn
+#print axioms segDegPN_injOn
+#print axioms noncoinc_image_disjoint
+#print axioms noncoinc_image_union
+#print axioms seg_card_eq_degPts_add_coinc
+
+#print axioms coincPairs_fst_inj
+#print axioms segDegP_coinc_part
+#print axioms segDegP_coinc_card
+#print axioms coincPts_card
+#print axioms coincPts_subset
+
+#print axioms coincPairs_snd_inj
+#print axioms segDeg_coinc_part
+#print axioms segDeg_coinc_card
+
 #print axioms vertexP_mem_sideP_iff
 #print axioms vertexQ_mem_sideQ_iff
 #print axioms segDeg_fiber_at_coincidence
