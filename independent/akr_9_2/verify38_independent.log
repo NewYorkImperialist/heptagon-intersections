@@ -1,0 +1,11 @@
+--- claimed 37-point degenerate ---
+  P simple: True ok  Q simple: True ok
+  coincidences: []
+  |points9| = 37    crossPairs = 36   segDeg = 0   segDegP = 1
+  general position: False (collinear triple (1, 8, 9))
+
+--- claimed NEW 38-point config ---
+  P simple: True ok  Q simple: True ok
+  coincidences: []
+  |points9| = 38    crossPairs = 38   segDeg = 0   segDegP = 0
+  general position: True 

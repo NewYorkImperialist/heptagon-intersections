@@ -1,0 +1,271 @@
+break38_search.py -- adversarial attack on
+  Pair9Shift.points9_le_38_of_coincFree   (lean/Pair9Shift.lean:4217)
+exact rational arithmetic only (fractions.Fraction); no floats.
+time budget: 1500 s
+
+==============================================================================
+SELF TESTS
+==============================================================================
+  [ok] orientR: ccw +, cw -, collinear 0, rational value exact
+  [ok] seg_int: transversal / parallel / disjoint / collinear overlap /
+       collinear endpoint touch / collinear disjoint / T contact /
+       endpoint touch / rational crossing / near miss
+  [ok] SimpleClosed accepts a heptagon with three collinear vertices
+       [(0, 0), (4, 0), (8, 0), (10, 5), (6, 9), (2, 9), (-2, 5)]
+  [ok] SimpleClosed rejects a self-crossing heptagon (non-adjacent sides 2,4 meet: ('point', (Fraction(13, 2), Fraction(27, 4))))
+  [ok] SimpleClosed rejects an adjacent-side backtrack (non-adjacent sides 0,2 meet: ('point', (Fraction(4, 1), Fraction(0, 1))))
+  [ok] SimpleClosed rejects a repeated adjacent vertex (degenerate side 2 (W2 = W3))
+  [ok] all nine hand-built test heptagons are SimpleClosed
+  [ok] control A: a horizontal bar crossed by a vertical bar
+       |points9| = 4 as hand-computed, points = (-1, -1), (-1, 1), (1, -1), (1, 1)
+  [ok] control B: six zigzag sides each cut the bar twice
+       |points9| = 12 as hand-computed
+  [ok] control C (NON-VACUITY / can the counter report large values?):
+       the Lean 38-point certificate counts as exactly 38.
+       This is the number Lean proves (certPair9_ncard), computed here
+       by two independent routines that agree.
+  [ok] control D: a configuration violating coincidence-freeness IS
+       detected and excluded -- shared vertex P[0] = Q[0] = (0, 0)
+  [ok] control E: a hand-built collinear side overlap IS detected and
+       excluded -- P-side 0 and Q-side 0 overlap in the segment (2, 0) -- (8, 0)
+  [ok] control F: a Q-vertex placed strictly inside a P-side is
+       accepted, the degeneracy is detected (ndeg = 1), the touch
+       point is shared by exactly 2 side pairs, and |points9| = 11
+       and |points9| = X + T = 10 + 1 = 11 holds.
+
+ALL SELF TESTS PASSED.
+
+==============================================================================
+PHASE 1 -- the 38-point certificate, and single-vertex snaps
+==============================================================================
+  certificate (lean/LowerBound.lean:52-69)
+    P = [(373, 157), (132, 5), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 38   crossPairs X = 38   degenerate incidences = 0   degenerate points = 0   max pairs per point = 1
+  crossing side pairs (38): [(0, 0), (0, 1), (0, 2), (0, 4), (0, 5), (0, 6), (1, 0), (1, 1), (1, 2), (1, 4), (1, 5), (1, 6), (2, 0), (2, 1), (2, 2), (2, 4), (2, 5), (2, 6), (3, 0), (3, 1), (3, 3), (3, 4), (3, 5), (3, 6), (4, 0), (4, 1), (4, 3), (4, 4), (4, 5), (4, 6), (5, 0), (5, 1), (5, 3), (5, 4), (5, 5), (5, 6), (6, 2), (6, 3)]
+  NON-crossing side pairs (11): [(0, 3), (1, 3), (2, 3), (3, 2), (4, 2), (5, 2), (6, 0), (6, 1), (6, 4), (6, 5), (6, 6)]
+
+  A P-vertex v landing on Q-side j costs the crossings (v-1,j),(v,j)
+  and buys one point.  The 39-point targets are therefore the v,j
+  with (v-1,j) and (v,j) both non-crossing:
+    [('P', 1, 3), ('P', 2, 3), ('P', 4, 2), ('P', 5, 2), ('Q', 0, 6), ('Q', 1, 6), ('Q', 5, 6), ('Q', 6, 6)]
+
+  tested 44663 single-vertex snaps; 15586 were admissible AND degenerate
+  best single-snap result: |points9| = 37  (P[1] onto side 1 at t = 43/90)
+  best single snap
+    P = [(373, 157), (9509/45, 7529/45), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Pvert 1 lies strictly inside Qside 1
+
+==============================================================================
+PHASE 1b -- EXHAUSTIVE single-vertex slide off the certificate
+==============================================================================
+  For each of the 14 vertices and each of the 7 sides of the OTHER
+  heptagon, every combinatorial type of the slide is visited (see
+  slide_samples).  If any single-vertex degeneracy could push the
+  certificate past 38, this finds it.
+
+    P[0] onto the seven sides of the other: -1, -1, -1, -1, -1, -1, -1
+    P[1] onto the seven sides of the other: 35, 37, 27, 29, 29, 31, 33
+    P[2] onto the seven sides of the other: 29, 27, 37, 37, 35, 33, 31
+    P[3] onto the seven sides of the other: 35, 37, 28, 28, 29, 31, 33
+    P[4] onto the seven sides of the other: 29, 27, 37, 37, 35, 33, 31
+    P[5] onto the seven sides of the other: 35, 37, 29, 27, 29, 31, 33
+    P[6] onto the seven sides of the other: -1, -1, -1, -1, -1, -1, -1
+    Q[0] onto the seven sides of the other: 37, 35, 33, 31, 29, 27, -1
+    Q[1] onto the seven sides of the other: 27, 29, 31, 33, 35, 37, 33
+    Q[2] onto the seven sides of the other: -1, -1, -1, -1, -1, -1, -1
+    Q[3] onto the seven sides of the other: 36, 36, 36, 36, 36, 36, 37
+    Q[4] onto the seven sides of the other: 32, 32, 32, 33, 35, 37, 32
+    Q[5] onto the seven sides of the other: 37, 35, 33, 31, 29, 27, 33
+    Q[6] onto the seven sides of the other: 27, 29, 31, 33, 35, 37, 33
+
+  5194 exhaustive slide samples evaluated.
+  best single-vertex slide: |points9| = 37 at ('P', 1, 1)
+  best exhaustive slide
+    P = [(373, 157), (15663/71, 157), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Pvert 1 lies strictly inside Qside 1
+==============================================================================
+PHASE 1c -- a SECOND exhaustive slide on top of the best first ones
+==============================================================================
+  19 first-slide results reached >= 36 points; stacking on them.
+  94218 stacked slide samples evaluated.
+  best two-vertex slide: |points9| = 37
+  best two-slide
+    P = [(373, 157), (15663/71, 157), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Pvert 1 lies strictly inside Qside 1
+
+==============================================================================
+PHASE 2 -- multi-vertex snapping (several simultaneous degeneracies)
+==============================================================================
+  208936 random multi-snap rounds, 11688 admissible-and-degenerate
+  best: |points9| = 37
+  best multi-snap
+    P = [(373, 157), (132, 5), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (16740/71, 20352/71)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Qvert 6 lies strictly inside Pside 5
+
+==============================================================================
+PHASE 3 -- hill climbing INSIDE the degenerate stratum
+==============================================================================
+  Q-vertices are pinned to P-sides (and P-vertices to Q-sides) at exact
+  rational parameters strictly inside, so every state visited HAS a
+  degeneracy.  The objective is (|points9|, #degenerate incidences).
+
+  235 restarts (alternating the |points9| and the X+segDeg+segDegP objectives).
+  best (|points9|, measure, ndeg) on the points objective = (38, 38, 0)
+  best of phase 3
+    P = [(336, 38), (122, 297), (333, -20), (372, 215), (264, 445), (345, 136), (161, 288)]
+    Q = [(370, 160), (1165/8, 827/6), (366, 168), (50, 197), (360, 258), (-54, 195), (368, 371)]
+    |points9| = 38   crossPairs X = 38   degenerate incidences = 0   degenerate points = 0   max pairs per point = 1
+
+==============================================================================
+PHASE 4 -- unconstrained integer hill climbing (generic control arm)
+==============================================================================
+  50 restarts.  best (|points9|, ndeg) = (38, 38, 0)
+  best of phase 4
+    P = [(387, 189), (231, 42), (383, 195), (55, 198), (357, 305), (-13, 218), (362, 346)]
+    Q = [(311, 55), (76, 319), (330, -7), (9643/25, 41831/200), (296, 345), (346, 79), (192, 306)]
+    |points9| = 38   crossPairs X = 38   degenerate incidences = 0   degenerate points = 0   max pairs per point = 1
+
+==============================================================================
+PHASE 5 -- engineered families (combs, zigzags, all-vertices-on-P)
+==============================================================================
+  comb/zigzag family: 190 configurations offered
+  all-seven-Q-vertices-on-a-P-side family: 232946 configurations offered
+
+==============================================================================
+PHASE 6 -- points hit by several side pairs at once
+==============================================================================
+  A point shared by k side pairs costs k-1 from the count, so this
+  cannot beat 38; it is run to confirm the counter deduplicates and to
+  record how multiplicity behaves.
+  43653 configurations; largest number of side pairs meeting at one point = 2
+  largest multiplicity
+    P = [(373, 157), (132, 5), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(1475/4, 14291/48), (89, 303), (345, 19), (373, 214), (1371/4, 4729/16), (325, 93), (192, 284)]
+    |points9| = 22   crossPairs X = 20   degenerate incidences = 2   degenerate points = 2   max pairs per point = 2
+      degeneracy: Qvert 0 lies strictly inside Pside 5
+      degeneracy: Qvert 4 lies strictly inside Pside 5
+
+==============================================================================
+PHASE 8 -- pinned re-optimisation around the best degenerate results
+==============================================================================
+  Each elite configuration that HAS a degeneracy has that degeneracy
+  turned into a pin, so the climb cannot escape the degenerate stratum
+  by simply pulling the vertex off the side.  Objective alternates
+  between |points9| and X + segDeg + segDegP.
+  400 elite bases available.
+  91 pinned re-optimisations run; best score (38, 38, 0)
+  best of phase 8
+    P = [(369, 173), (9907/45, 6577/45), (427, 110), (201, 136), (350, 230), (65, 274), (344, 272)]
+    Q = [(323, 48), (121, 281), (372, -22), (367, 195), (258, 302), (347, 70), (226, 345)]
+    |points9| = 38   crossPairs X = 38   degenerate incidences = 0   degenerate points = 0   max pairs per point = 1
+
+==============================================================================
+PHASE 7 -- exhaustive single-vertex slides off EVERY elite
+==============================================================================
+  Every configuration seen anywhere whose joint measure
+  X + segDeg + segDegP reached 36 is now used as a base for a fresh
+  exhaustive slide of each of its 14 vertices onto each of the 7 sides
+  of the other heptagon.
+  4000 elite bases; highest measure 38.
+  23 elite bases used, 117207 exhaustive slide samples evaluated.
+  best: |points9| = 37
+  best elite slide
+    P = [(373, 157), (15663/71, 157), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Pvert 1 lies strictly inside Qside 1
+
+==============================================================================
+RESULT
+==============================================================================
+  admissible configurations evaluated : 251003
+  of those, WITH a genuine degeneracy : 234788
+  MAXIMUM |points9| over all          : 38
+  MAXIMUM |points9| over DEGENERATE   : 37
+  distinct configurations attaining 38: 8596
+  of those, with a degeneracy present : 0
+  configurations with |points9| > 38  : 0
+  MAXIMUM crossPairs X alone          : 38  (raw bound says <= 38)
+  MAX of X + segDeg + segDegP         : 38  (the Lean joint measure;
+                                           the proof needs this <= 38)
+    attained with X = 38, degenerate incidences = 0, |points9| = 38 (certificate)
+  MAX of X + segDeg + segDegP over DEGENERATE instances : 37
+    attained with X = 36, degenerate incidences = 1, |points9| = 37 (cert snap P[1] -> side 1 t=43/90)
+  degenerate instances with |points9| = 38 : 0
+  degenerate instances with |points9| = 37 : 25320
+
+  how DEEP into the degenerate stratum the search actually got:
+    #simultaneous degeneracies : #admissible instances
+       0 : 16215
+       1 : 82830
+       2 : 107607
+       3 : 29282
+       4 : 11325
+       5 : 2297
+       6 : 318
+       7 : 1128
+       8 : 1
+    most degenerate admissible configuration found (8 simultaneous degeneracies):
+  
+    P = [(220, 393), (399, 250), (123151211/640000, 174244941/640000), (368, 226), (179, 267), (131, 246), (218, 311)]
+    Q = [(21849/100, 33109/100), (13003/80, 4313/16), (21971/100, 38111/100), (43613/160, 56159/160), (19799/100, 5921/20), (23381/100, 25511/100), (44933/256, 71491/256)]
+    |points9| = 10   crossPairs X = 2   degenerate incidences = 8   degenerate points = 8   max pairs per point = 2
+      degeneracy: Qvert 0 lies strictly inside Pside 6
+      degeneracy: Qvert 1 lies strictly inside Pside 5
+      degeneracy: Qvert 2 lies strictly inside Pside 6
+      degeneracy: Qvert 3 lies strictly inside Pside 0
+      degeneracy: Qvert 4 lies strictly inside Pside 5
+      degeneracy: Qvert 5 lies strictly inside Pside 3
+      degeneracy: Qvert 6 lies strictly inside Pside 5
+      degeneracy: Pvert 2 lies strictly inside Qside 5
+
+  |points9| histogram over DEGENERATE instances:
+       37 points : 25320 instances
+       36 points : 18253 instances
+       35 points : 15615 instances
+       34 points : 11204 instances
+       33 points : 12949 instances
+       32 points : 14981 instances
+       31 points : 17354 instances
+       30 points : 12355 instances
+       29 points : 14772 instances
+       28 points : 15278 instances
+       27 points : 14402 instances
+       26 points : 12689 instances
+       25 points : 7669 instances
+       24 points : 6313 instances
+
+  best overall (certificate):
+  
+    P = [(373, 157), (132, 5), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 38   crossPairs X = 38   degenerate incidences = 0   degenerate points = 0   max pairs per point = 1
+    independent recount: 38 points -- AGREES
+
+  best DEGENERATE (cert snap P[1] -> side 1 t=43/90):
+  
+    P = [(373, 157), (9509/45, 7529/45), (369, 182), (88, 157), (327, 282), (60, 272), (372, 298)]
+    Q = [(344, 24), (89, 303), (345, 19), (373, 214), (270, 338), (325, 93), (192, 284)]
+    |points9| = 37   crossPairs X = 36   degenerate incidences = 1   degenerate points = 1   max pairs per point = 2
+      degeneracy: Pvert 1 lies strictly inside Qside 1
+    independent recount: 37 points -- AGREES
+
+  NO configuration exceeded 38.  The theorem survived this attack.
+
+elapsed: 924.4 s
+
+==============================================================================
+SCALED-UP CROSS-CHECK of the |points9| counter
+==============================================================================
+  3000 admissible configurations cross-checked (754 of them degenerate).
+  the two independent counters agreed on 3000 of 3000 (PERFECT).
+  largest |points9| seen in the cross-check sample: 38
