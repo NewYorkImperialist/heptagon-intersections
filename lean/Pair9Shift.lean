@@ -3204,5 +3204,85 @@ theorem exists_delta0_bridgeE (R : Pair9) (i : Fin 7) (t : ℝ)
 #print axioms coefQ_ne_zero_of_touchedP
 #print axioms exists_delta0_bridgeE
 
+/-! ## 51. Discharging the averaging hypothesis
+
+The last open hypothesis of `step_invariant_joint` is `havg`.  It is supplied
+by `TiltedShift.exists_sign_contrib_aff_two`, whose four side conditions are
+all of the shape `|δ · m| < |c|` — the *smallness* the averaging identity
+needs, and without which `averaging_fails_without_smallness` shows it is false.
+
+`exists_uniform_smallness` is the smallness analogue of
+`RotationLaw.exists_uniform_rotation`: finitely many conditions, each an open
+condition at `δ = 0`, so one `δ₀` serves them all.  The hypothesis it needs is
+that each **neighbouring** determinant is nonzero, which is a genuine extra
+assumption — see §52. -/
+
+theorem exists_uniform_smallness {ι : Type*} (S : Finset ι) (c m : ι → ℝ)
+    (hc : ∀ i ∈ S, c i ≠ 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ i ∈ S, |δ * m i| < |c i| := by
+  rcases S.eq_empty_or_nonempty with hE | hS
+  · exact ⟨1, one_pos, by simp [hE]⟩
+  · refine ⟨S.inf' hS (fun i => |c i| / (1 + |m i|)), ?_, ?_⟩
+    · rw [Finset.lt_inf'_iff]
+      intro i hi
+      exact div_pos (abs_pos.mpr (hc i hi)) (by positivity)
+    · intro δ hδ i hi
+      have hpos : (0:ℝ) < 1 + |m i| := by positivity
+      have hle : |δ| < |c i| / (1 + |m i|) :=
+        lt_of_lt_of_le hδ (Finset.inf'_le _ hi)
+      rw [abs_mul]
+      calc |δ| * |m i|
+          ≤ |δ| * (1 + |m i|) :=
+            mul_le_mul_of_nonneg_left (by linarith) (abs_nonneg δ)
+        _ < (|c i| / (1 + |m i|)) * (1 + |m i|) :=
+            mul_lt_mul_of_pos_right hle hpos
+        _ = |c i| := div_mul_cancel₀ _ (ne_of_gt hpos)
+
+open scoped Classical in
+/-- **`havg`, discharged — for one of the two signs.**  Neither family need
+prefer that sign on its own; the combined total is what is bounded, which is
+precisely §38's point. -/
+theorem exists_delta0_havg (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hyD : ∀ d ∈ segDeg R,
+      orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ (d.2 - 1))) ≠ 0)
+    (hzD : ∀ d ∈ segDeg R,
+      orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ (d.2 + 1))) ≠ 0)
+    (hvE : ∀ e ∈ segDegP R,
+      orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP (e.2 - 1))) ≠ 0)
+    (hwE : ∀ e ∈ segDegP R,
+      orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP (e.2 + 1))) ≠ 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      ((segDeg R).card + (segDegP R).card
+          ≤ (∑ d ∈ segDeg R, lcAt R.V i t δ d)
+            + (∑ e ∈ segDegP R, lcAtP R.V i t δ e)) ∨
+      ((segDeg R).card + (segDegP R).card
+          ≤ (∑ d ∈ segDeg R, lcAt R.V i t (-δ) d)
+            + (∑ e ∈ segDegP R, lcAtP R.V i t (-δ) e)) := by
+  classical
+  obtain ⟨a, ha, hA⟩ := exists_uniform_smallness (segDeg R)
+    (fun d => orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ (d.2 - 1))))
+    (fun d => shiftCoef R.V i t d.1 (pQ (d.2 - 1))) hyD
+  obtain ⟨b, hb, hB⟩ := exists_uniform_smallness (segDeg R)
+    (fun d => orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ (d.2 + 1))))
+    (fun d => shiftCoef R.V i t d.1 (pQ (d.2 + 1))) hzD
+  obtain ⟨c, hc, hC⟩ := exists_uniform_smallness (segDegP R)
+    (fun e => orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP (e.2 - 1))))
+    (fun e => coefQ R.V i t e.1 (pP (e.2 - 1))) hvE
+  obtain ⟨d, hd, hD⟩ := exists_uniform_smallness (segDegP R)
+    (fun e => orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP (e.2 + 1))))
+    (fun e => coefQ R.V i t e.1 (pP (e.2 + 1))) hwE
+  refine ⟨min (min a b) (min c d), lt_min (lt_min ha hb) (lt_min hc hd),
+    fun δ hδ => ?_⟩
+  have h1 : |δ| < a := lt_of_lt_of_le hδ ((min_le_left _ _).trans (min_le_left _ _))
+  have h2 : |δ| < b := lt_of_lt_of_le hδ ((min_le_left _ _).trans (min_le_right _ _))
+  have h3 : |δ| < c := lt_of_lt_of_le hδ ((min_le_right _ _).trans (min_le_left _ _))
+  have h4 : |δ| < d := lt_of_lt_of_le hδ ((min_le_right _ _).trans (min_le_right _ _))
+  simp only [lcAt, lcAtP]
+  exact TiltedShift.exists_sign_contrib_aff_two _ _ δ _ _ _ _ _ _ _ _ _ _
+    (hA δ h1) (hB δ h2) (hC δ h3) (hD δ h4)
+
+#print axioms exists_uniform_smallness
+#print axioms exists_delta0_havg
+
 end Pair9Shift
 end Heptagon
