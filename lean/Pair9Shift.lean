@@ -4642,6 +4642,92 @@ theorem seg_card_eq_degPts (R : Pair9) (hfin : (points9 R).Finite)
     (segDeg R).card + (segDegP R).card = (degPts R).ncard :=
   le_antisymm (seg_card_le_degPts R hcoinc) (degPts_ncard_le_seg R hfin)
 
+/-! ### A vertex lies on exactly its two incident sides
+
+`coincidence_four_slots` gives `≥ 4`.  This gives **exactly**: a `P`-vertex
+lies on `P`-side `k` iff `k` is `v` or `v−1`.  The `←` direction is the two
+endpoints; the `→` direction is `SimpleClosed` twice — a non-adjacent side
+is disjoint from side `v`, and side `v+1` meets side `v` only at `P_{v+1}`,
+which would force `P_v = P_{v+1}`. -/
+
+theorem vertexP_mem_sideP_iff (R : Pair9) (v k : Fin 7) :
+    R.V (pP v) ∈ sideP9 R k ↔ (k = v ∨ k = v - 1) := by
+  constructor
+  · intro hm
+    by_contra hc
+    push_neg at hc
+    obtain ⟨h1, h2⟩ := hc
+    have hv : R.V (pP v) ∈ sideP9 R v := left_mem_segment ℝ _ _
+    by_cases hadj : LowerBound.Adjacent k v
+    · rcases hadj with h | h | h
+      · exact h1 h
+      · -- v = k + 1, so k = v - 1
+        exact h2 (by rw [h]; simp)
+      · -- k = v + 1 : sides v and v+1 meet only at P_{v+1}
+        subst h
+        have hx := R.simpleP.2.2 v
+        rw [← fin7_succ_succ v] at hx
+        have hmm : R.V (pP v) ∈ ({R.V (pP (v + 1))} : Set (ℝ × ℝ)) := by
+          rw [← hx]; exact ⟨hv, hm⟩
+        exact R.simpleP.1 v (Set.mem_singleton_iff.mp hmm)
+    · exact Set.disjoint_left.mp (R.simpleP.2.1 k v hadj) hm hv
+  · rintro (rfl | rfl)
+    · exact left_mem_segment ℝ _ _
+    · have hv : v - 1 + 1 = v := by simp
+      rw [sideP9, hv]
+      exact right_mem_segment ℝ _ _
+
+theorem vertexQ_mem_sideQ_iff (R : Pair9) (j m : Fin 7) :
+    R.V (pQ j) ∈ sideQ9 R m ↔ (m = j ∨ m = j - 1) := by
+  constructor
+  · intro hm
+    by_contra hc
+    push_neg at hc
+    obtain ⟨h1, h2⟩ := hc
+    have hv : R.V (pQ j) ∈ sideQ9 R j := left_mem_segment ℝ _ _
+    by_cases hadj : LowerBound.Adjacent m j
+    · rcases hadj with h | h | h
+      · exact h1 h
+      · exact h2 (by rw [h]; simp)
+      · subst h
+        have hx := R.simpleQ.2.2 j
+        rw [← fin7_succ_succ j] at hx
+        have hmm : R.V (pQ j) ∈ ({R.V (pQ (j + 1))} : Set (ℝ × ℝ)) := by
+          rw [← hx]; exact ⟨hv, hm⟩
+        exact R.simpleQ.1 j (Set.mem_singleton_iff.mp hmm)
+    · exact Set.disjoint_left.mp (R.simpleQ.2.1 m j hadj) hm hv
+  · rintro (rfl | rfl)
+    · exact left_mem_segment ℝ _ _
+    · have hj : j - 1 + 1 = j := by simp
+      rw [sideQ9, hj]
+      exact right_mem_segment ℝ _ _
+
+open scoped Classical in
+/-- **Exactly two, not merely at least two.**  At a coincidence `P_v = Q_j`
+the `segDeg` entries with second index `j` are precisely `(v, j)` and
+`(v−1, j)`. -/
+theorem segDeg_fiber_at_coincidence (R : Pair9) {v j : Fin 7}
+    (h : R.V (pP v) = R.V (pQ j)) :
+    (segDeg R).filter (fun p => p.2 = j) = {(v, j), (v - 1, j)} := by
+  classical
+  ext p
+  simp only [Finset.mem_filter, Finset.mem_insert, Finset.mem_singleton,
+    segDeg, Finset.mem_univ, true_and]
+  constructor
+  · rintro ⟨hmem, rfl⟩
+    have : R.V (pP v) ∈ sideP9 R p.1 := by rw [h]; exact hmem
+    rcases (vertexP_mem_sideP_iff R v p.1).mp this with hk | hk
+    · exact Or.inl (Prod.ext hk rfl)
+    · exact Or.inr (Prod.ext hk rfl)
+  · rintro (rfl | rfl)
+    · exact ⟨by rw [← h]; exact (vertexP_mem_sideP_iff R v v).mpr (Or.inl rfl), rfl⟩
+    · exact ⟨by rw [← h]
+                exact (vertexP_mem_sideP_iff R v (v - 1)).mpr (Or.inr rfl), rfl⟩
+
+#print axioms vertexP_mem_sideP_iff
+#print axioms vertexQ_mem_sideQ_iff
+#print axioms segDeg_fiber_at_coincidence
+
 #print axioms degPtsF_coe
 #print axioms seg_card_le_degPts
 #print axioms seg_card_eq_degPts
