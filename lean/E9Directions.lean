@@ -1425,5 +1425,213 @@ theorem pair9_move_package (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms segDegP_move_untouched_iff
 #print axioms moveV_pP_untouched
 
+/-! ## 17. The §9.1 step against the **point** measure
+
+`pair9_move_package` is the structural package for a move in a *good*
+direction.  It cannot be used here: the direction that buys the new crossing is
+forced to be `E = Q_{j+1} − P_{i+1}` (`crossPairs_card_lt_move`), and that `E`
+is **never** good in the sense of `exists_good_dir_pair9` — at the index
+`j+1` the outgoing rate is `E × (P_{i+1} − Q_{j+1}) = E × (−E) = 0`.
+
+That is not an accident and not fatal.  The vanishing rate says the determinant
+`orient(P_i(ε), P_{i+1}, Q_{j+1})` is **constant** along the move, and its
+constant value is `cross (P_{i+1} − P_i) (Q_{j+1} − P_i)` — which is exactly
+the non-parallelism hypothesis `hnp` that the crossing gain already needs.  So
+`hnp` repairs the one slot the good-direction machinery loses, and `(Fin)`
+still propagates: `exists_eps0_finite_move_coincDir` below.
+
+The measure is `Pair9Shift.M_pt = |crossPairs| + |degPts|`; `crossPairs +
+segDeg + segDegP` is refuted (a coincidence is one point but four incidences).
+What remains open, and is carried here as the named hypothesis `hslots`, is
+that the move destroys **at most the four slots of the dying coincidence**.
+It is false in general — a pivot can carry extra degenerate points off an
+incident side — so it is stated, not proved. -/
+
+open scoped Classical in
+/-- `coincSet` and `Pair9Shift.coincPairs` are the same filter. -/
+theorem coincSet_eq_coincPairs (R : Pair9) :
+    coincSet R.V = Pair9Shift.coincPairs R := by
+  classical
+  ext p
+  simp [coincSet, Pair9Shift.mem_coincPairs]
+
+/-- The move direction of `crossPairs_card_lt_move` is nonzero: if
+`Q_{j+1} = P_{i+1}` then `hnp` reads `cross u u ≠ 0`. -/
+theorem coincDir_ne_zero (R : Pair9) (i j : Fin 7)
+    (hnp : cross (R.V (pP (i + 1)) - R.V (pP i))
+      (R.V (pQ (j + 1)) - R.V (pP i)) ≠ 0) :
+    R.V (pQ (j + 1)) - R.V (pP (i + 1)) ≠ 0 := by
+  intro h
+  refine hnp ?_
+  rw [eq_of_sub_eq_zero h]
+  simp only [cross]
+  ring
+
+/-- **`hnp`, as an orientation determinant.**  `orientR a b c` and
+`cross (b − a) (c − a)` are the same polynomial. -/
+theorem orientR_apex_ne_zero (R : Pair9) (i j : Fin 7)
+    (hnp : cross (R.V (pP (i + 1)) - R.V (pP i))
+      (R.V (pQ (j + 1)) - R.V (pP i)) ≠ 0) :
+    orientR (R.V (pP i)) (R.V (pP (i + 1))) (R.V (pQ (j + 1))) ≠ 0 := by
+  intro h
+  refine hnp ?_
+  rw [show cross (R.V (pP (i + 1)) - R.V (pP i)) (R.V (pQ (j + 1)) - R.V (pP i))
+        = orientR (R.V (pP i)) (R.V (pP (i + 1))) (R.V (pQ (j + 1))) from by
+      simp only [cross, orientR, Prod.fst_sub, Prod.snd_sub]]
+  exact h
+
+open scoped Classical in
+/-- **`(Fin)` propagates across the *coincidence* move.**  Same statement as
+`exists_eps0_finite_move`, for the forced direction `E = Q_{j+1} − P_{i+1}`:
+the outgoing-side transversality is assumed only away from the index `j+1`,
+where it is structurally false, and the determinant there is supplied instead
+by `hnpD` — the move cannot change it, its rate being zero. -/
+theorem exists_eps0_finite_move_coincDir (R : Pair9) (hfin : (points9 R).Finite)
+    (i j : Fin 7) (hco : R.V (pP i) = R.V (pQ j))
+    (hnpD : orientR (R.V (pP i)) (R.V (pP (i + 1))) (R.V (pQ (j + 1))) ≠ 0)
+    (hgoodN : ∀ m : Fin 7, m ≠ j + 1 → R.V (pP (i + 1)) - R.V (pQ m) ≠ 0 →
+      cross (R.V (pQ (j + 1)) - R.V (pP (i + 1)))
+        (R.V (pP (i + 1)) - R.V (pQ m)) ≠ 0)
+    (hgoodP : ∀ m : Fin 7, R.V (pQ m) - R.V (pP (i - 1)) ≠ 0 →
+      cross (R.V (pQ (j + 1)) - R.V (pP (i + 1)))
+        (R.V (pQ m) - R.V (pP (i - 1))) ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      ∀ R' : Pair9,
+        R'.V = moveV R.V i (R.V (pQ (j + 1)) - R.V (pP (i + 1))) e →
+        (points9 R').Finite := by
+  classical
+  set E := R.V (pQ (j + 1)) - R.V (pP (i + 1)) with hEdef
+  obtain ⟨e₀, he₀, hord⟩ := exists_eps0_order_type R.V i E
+  refine ⟨e₀, he₀, fun e he hlt R' hR' => ?_⟩
+  have mcs : ∀ m : Fin 7, m ≠ j + 1 → R.V (pQ m) ≠ R.V (pP (i + 1)) →
+      moveCoef R.V i E i (pQ m) ≠ 0 := by
+    intro m hm hne
+    rw [moveCoef_self R.V i E (pQ m) (fun h => pP_ne_pQ i m h.symm)]
+    exact hgoodN m hm (sub_ne_zero.mpr (Ne.symm hne))
+  have hQj : R.V (pQ j) ≠ R.V (pP (i + 1)) := by
+    rw [← hco]; exact R.simpleP.1 i
+  refine points9_finite_of_pairwise R' (fun k m => ?_)
+  by_cases hkt : k ∈ touchedMove i
+  · refine sideP9_inter_sideQ9_finite R' k m ?_
+    rw [hR']
+    rcases (mem_touchedMove_iff i k).mp hkt with hk | hk
+    · rw [hk]
+      by_cases hm1 : m = j + 1
+      · refine Or.inl ?_
+        rw [orientR_move_Pside]
+        have hrate : moveCoef R.V i E i (pQ m) = 0 := by
+          rw [moveCoef_self R.V i E (pQ m) (fun h => pP_ne_pQ i m h.symm)]
+          have hneg : R.V (pP (i + 1)) - R.V (pQ m) = -E := by
+            rw [hm1, hEdef, neg_sub]
+          rw [hneg]
+          simp only [cross, Prod.fst_neg, Prod.snd_neg]
+          ring
+        rw [hrate, mul_zero, add_zero, hm1]
+        exact hnpD
+      · by_cases hm2 : R.V (pQ m) = R.V (pP (i + 1))
+        · refine Or.inr (orientR_move_ne_zero R i E hord he hlt i (m + 1)
+            (mcs (m + 1) ?_ ?_))
+          · intro hc
+            have hmj : m = j := add_right_cancel hc
+            rw [hmj] at hm2
+            exact hQj hm2
+          · exact fun hc => (R.simpleQ.1 m) (hm2.trans hc.symm)
+        · exact Or.inl (orientR_move_ne_zero R i E hord he hlt i m (mcs m hm1 hm2))
+    · rw [hk]
+      by_cases hm2 : R.V (pQ m) = R.V (pP (i - 1))
+      · exact Or.inr (orientR_move_ne_zero R i E hord he hlt (i - 1) (m + 1)
+          (moveCoef_ne_zero_prev R i E (m + 1) hgoodP
+            (fun hc => (R.simpleQ.1 m) (hm2.trans hc.symm))))
+      · exact Or.inl (orientR_move_ne_zero R i E hord he hlt (i - 1) m
+          (moveCoef_ne_zero_prev R i E m hgoodP hm2))
+  · have h1 : k ≠ i := fun hc => hkt (by rw [mem_touchedMove_iff]; exact Or.inl hc)
+    have h2 : k ≠ i - 1 := fun hc => hkt (by rw [mem_touchedMove_iff]; exact Or.inr hc)
+    have e1 : R'.V (pP k) = R.V (pP k) := by
+      rw [hR']; exact moveV_pP_untouched R.V i E e h1
+    have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+      rw [hR']
+      exact moveV_pP_untouched R.V i E e (fun hc => h2 (eq_sub_of_add_eq hc))
+    have eQ1 : R'.V (pQ m) = R.V (pQ m) := by rw [hR']; exact moveV_Q R.V i E e m
+    have eQ2 : R'.V (pQ (m + 1)) = R.V (pQ (m + 1)) := by
+      rw [hR']; exact moveV_Q R.V i E e (m + 1)
+    refine hfin.subset ?_
+    rintro x ⟨hxP, hxQ⟩
+    exact ⟨Set.mem_iUnion.mpr ⟨k, by simpa only [sideP9, e1, e2] using hxP⟩,
+           Set.mem_iUnion.mpr ⟨m, by simpa only [sideQ9, eQ1, eQ2] using hxQ⟩⟩
+
+open scoped Classical in
+/-- **One §9.1 move, against `M_pt`.**  From a `Pair9` with `(Fin)` and a
+vertex–vertex coincidence `P_i = Q_j`, given
+
+* `hnp`, the non-parallelism `crossPairs_card_lt_move` needs — the `P`-side out
+  of `P_i` is not parallel to the `Q`-side out of `Q_j`;
+* `hgoodN`, `hgoodP`, transversality of the forced direction to the outgoing
+  rates away from the structurally-degenerate index `j+1`, and to the incoming
+  rates — the genericity `(Fin)` needs;
+* `hslots`, the **open** geometric content: the move costs at most the four
+  incidence slots of the dying coincidence,
+
+there is a `Pair9` `R'` with strictly fewer coincidences, still `(Fin)`, and
+`M_pt R ≤ M_pt R'`.  The crossing gain is `crossPairs_card_lt_move`, the
+coincidence drop is `exists_eps0_coincSet_lt`, and the arithmetic that turns
+the two into a measure statement is `Pair9Shift.M_pt_le_of_coinc_step`. -/
+theorem exists_move_coinc_lt_M_pt_le (R : Pair9) (hfin : (points9 R).Finite)
+    (i j : Fin 7) (hco : R.V (pP i) = R.V (pQ j))
+    (hnp : cross (R.V (pP (i + 1)) - R.V (pP i))
+      (R.V (pQ (j + 1)) - R.V (pP i)) ≠ 0)
+    (hgoodN : ∀ m : Fin 7, m ≠ j + 1 → R.V (pP (i + 1)) - R.V (pQ m) ≠ 0 →
+      cross (R.V (pQ (j + 1)) - R.V (pP (i + 1)))
+        (R.V (pP (i + 1)) - R.V (pQ m)) ≠ 0)
+    (hgoodP : ∀ m : Fin 7, R.V (pQ m) - R.V (pP (i - 1)) ≠ 0 →
+      cross (R.V (pQ (j + 1)) - R.V (pP (i + 1)))
+        (R.V (pQ m) - R.V (pP (i - 1))) ≠ 0)
+    (hslots : ∀ e : ℝ, ∀ R' : Pair9,
+      R'.V = moveV R.V i (R.V (pQ (j + 1)) - R.V (pP (i + 1))) e →
+      (segDeg R).card + (segDegP R).card
+        ≤ (segDeg R').card + (segDegP R').card + 4) :
+    ∃ R' : Pair9,
+      (Pair9Shift.coincPairs R').card < (Pair9Shift.coincPairs R).card ∧
+      (points9 R').Finite ∧
+      Pair9Shift.M_pt R ≤ Pair9Shift.M_pt R' := by
+  classical
+  have hE : R.V (pQ (j + 1)) - R.V (pP (i + 1)) ≠ 0 := coincDir_ne_zero R i j hnp
+  have hnpD := orientR_apex_ne_zero R i j hnp
+  have hij : (i, j) ∈ coincSet R.V := by
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]
+    exact hco
+  obtain ⟨e₁, h₁, hpair⟩ :=
+    exists_moved_pair9 R i (R.V (pQ (j + 1)) - R.V (pP (i + 1)))
+  obtain ⟨e₃, h₃, hcoS⟩ := exists_eps0_coincSet_lt R.V i j hij hE
+  obtain ⟨e₄, h₄, hfn⟩ :=
+    exists_eps0_finite_move_coincDir R hfin i j hco hnpD hgoodN hgoodP
+  obtain ⟨e, hepos, helt, hcr⟩ :=
+    crossPairs_card_lt_move R i j hco hnp (e₁ := min e₁ (min e₃ e₄))
+      (lt_min h₁ (lt_min h₃ h₄))
+  have habs : |e| = e := abs_of_pos hepos
+  have hne : e ≠ 0 := ne_of_gt hepos
+  have hl1 : |e| ≤ e₁ := by
+    rw [habs]; exact le_of_lt (lt_of_lt_of_le helt (min_le_left _ _))
+  have hl3 : |e| < e₃ := by
+    rw [habs]
+    exact lt_of_lt_of_le helt (le_trans (min_le_right _ _) (min_le_left _ _))
+  have hl4 : |e| < e₄ := by
+    rw [habs]
+    exact lt_of_lt_of_le helt (le_trans (min_le_right _ _) (min_le_right _ _))
+  obtain ⟨R', hR'⟩ := hpair e hl1
+  have hcoinc : (Pair9Shift.coincPairs R').card < (Pair9Shift.coincPairs R).card := by
+    rw [← coincSet_eq_coincPairs R', ← coincSet_eq_coincPairs R, hR']
+    exact hcoS e hne hl3
+  have hcross : (RealPerturb.crossPairsOf R.V).card
+      < (RealPerturb.crossPairsOf R'.V).card := by
+    rw [hR']; exact hcr
+  exact ⟨R', hcoinc, hfn e hne hl4 R' hR',
+    Pair9Shift.M_pt_le_of_coinc_step R R' hcross hcoinc (hslots e R' hR')⟩
+
+#print axioms coincSet_eq_coincPairs
+#print axioms coincDir_ne_zero
+#print axioms orientR_apex_ne_zero
+#print axioms exists_eps0_finite_move_coincDir
+#print axioms exists_move_coinc_lt_M_pt_le
+
 end E9Directions
 end Heptagon

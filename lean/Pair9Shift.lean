@@ -5103,5 +5103,77 @@ theorem seg_card_eq_degPts_add_coinc (R : Pair9) :
 #print axioms segDegP_transversal_prev
 #print axioms exists_joint_step_free
 
+/-! ## The arithmetic core of the §9.1 step
+
+`M_seg = |segDeg| + |segDegP|` is **refuted** as the §9.1 measure: a
+coincidence is a single point occupying four incidence slots, so a step that
+kills one coincidence can destroy four `segDeg`/`segDegP` entries while the
+crossing count rises by only one.  The measure that survives is the *point*
+measure
+
+>  `M_pt R = |crossPairsOf R.V| + |degPts R|`,
+
+and `seg_card_eq_degPts_add_coinc` is exactly the dictionary between the two.
+The lemma below is the arithmetic it licenses: if one coincidence dies, the
+crossing count rises, and **only the coincidence's own four slots** are lost,
+then `M_pt` does not decrease.
+
+Everything is kept additive: `ncard` and `card` are `ℕ`, so `S - 3c` truncates;
+the identity is fed to `omega` in the form `S = D + 3c` instead. -/
+
+open scoped Classical in
+/-- **The §9.1 point measure.**  `M_pt = |crossPairsOf| + |degPts|`: proper
+crossings plus degenerate points, each counted once. -/
+noncomputable def M_pt (R : Pair9) : ℕ :=
+  (crossPairsOf R.V).card + (degPts R).ncard
+
+open scoped Classical in
+theorem M_pt_def (R : Pair9) :
+    M_pt R = (crossPairsOf R.V).card + (degPts R).ncard := rfl
+
+open scoped Classical in
+/-- **The arithmetic core of the §9.1 step.**  Write
+`S = |segDeg R| + |segDegP R|`, `c = |coincPairs R|`, `X = |crossPairsOf R.V|`,
+and likewise for `R'`.  Row 124's identity gives `S = D + 3c` and
+`S' = D' + 3c'` with `D = |degPts R|`, `D' = |degPts R'|`.  From
+`X < X'`, `c' < c` and `S ≤ S' + 4` we get `X + D ≤ X' + D'`:
+
+>  `X + D = X + S - 3c ≤ X + S' + 4 - 3c ≤ X + S' + 4 - 3c' - 3 ≤ X' + D'`,
+
+the last step because `X + 1 ≤ X'`.  The `+4` is exactly "only the
+coincidence's own four incidence slots die". -/
+theorem pt_measure_step_of_counts (R R' : Pair9)
+    (hcross : (crossPairsOf R.V).card < (crossPairsOf R'.V).card)
+    (hcoinc : (coincPairs R').card < (coincPairs R).card)
+    (hslots : (segDeg R).card + (segDegP R).card
+                ≤ (segDeg R').card + (segDegP R').card + 4) :
+    (crossPairsOf R.V).card + (degPts R).ncard
+      ≤ (crossPairsOf R'.V).card + (degPts R').ncard := by
+  classical
+  -- The two instances of row 124's identity, in additive form.
+  have hid : (segDeg R).card + (segDegP R).card
+      = (degPts R).ncard + 3 * (coincPairs R).card :=
+    seg_card_eq_degPts_add_coinc R
+  have hid' : (segDeg R').card + (segDegP R').card
+      = (degPts R').ncard + 3 * (coincPairs R').card :=
+    seg_card_eq_degPts_add_coinc R'
+  omega
+
+open scoped Classical in
+/-- **The corollary the §9.1 chain consumes.**  One coincidence dies, the
+crossing count strictly rises, at most the four slots of that coincidence are
+lost — and the point measure `M_pt` does not decrease. -/
+theorem M_pt_le_of_coinc_step (R R' : Pair9)
+    (hcross : (crossPairsOf R.V).card < (crossPairsOf R'.V).card)
+    (hcoinc : (coincPairs R').card < (coincPairs R).card)
+    (hslots : (segDeg R).card + (segDegP R).card
+                ≤ (segDeg R').card + (segDegP R').card + 4) :
+    M_pt R ≤ M_pt R' := by
+  simpa only [M_pt_def] using pt_measure_step_of_counts R R' hcross hcoinc hslots
+
+#print axioms M_pt_def
+#print axioms pt_measure_step_of_counts
+#print axioms M_pt_le_of_coinc_step
+
 end Pair9Shift
 end Heptagon
