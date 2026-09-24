@@ -1064,6 +1064,76 @@ theorem moveCoefQ_ne_zero_apex (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) (m : Fin
   exact hgood m (sub_ne_zero.mpr (Ne.symm (R.simpleQ.1 m)))
     (by rw [RotationLaw.cross_swap, hz, neg_zero])
 
+theorem orientR_move_ne_zero (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) {e₀ : ℝ}
+    (hord : ∀ e : ℝ, |e| < e₀ → ∀ a b c : Fin 14,
+      orientR (R.V a) (R.V b) (R.V c) ≠ 0 →
+        0 < orientR (R.V a) (R.V b) (R.V c) *
+            orientR (moveV R.V i E e a) (moveV R.V i E e b) (moveV R.V i E e c))
+    {e : ℝ} (he : e ≠ 0) (hlt : |e| < e₀) (k j : Fin 7)
+    (hrate : moveCoef R.V i E k (pQ j) ≠ 0) :
+    orientR (moveV R.V i E e (pP k)) (moveV R.V i E e (pP (k + 1)))
+      (moveV R.V i E e (pQ j)) ≠ 0 := by
+  by_cases horig : orientR (R.V (pP k)) (R.V (pP (k + 1))) (R.V (pQ j)) = 0
+  · rw [orientR_move_Pside, horig, zero_add]
+    exact mul_ne_zero he hrate
+  · intro hz
+    have hs := hord e hlt (pP k) (pP (k + 1)) (pQ j) horig
+    rw [hz, mul_zero] at hs
+    exact lt_irrefl 0 hs
+
+open scoped Classical in
+/-- **`(Fin)` propagates across a move.**  On a disturbed side the two
+`Q`-endpoints cannot both be the fixed far endpoint, so at least one
+determinant becomes nonzero — and `Pair9Shift.sideP9_inter_sideQ9_finite`
+needs only one.  An undisturbed side has not moved and neither has `Q`. -/
+theorem exists_eps0_finite_move (R : Pair9) (hfin : (points9 R).Finite)
+    (i : Fin 7) (E : ℝ × ℝ)
+    (hgoodN : ∀ j : Fin 7, R.V (pP (i + 1)) - R.V (pQ j) ≠ 0 →
+      cross E (R.V (pP (i + 1)) - R.V (pQ j)) ≠ 0)
+    (hgoodP : ∀ j : Fin 7, R.V (pQ j) - R.V (pP (i - 1)) ≠ 0 →
+      cross E (R.V (pQ j) - R.V (pP (i - 1))) ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      ∀ R' : Pair9, R'.V = moveV R.V i E e → (points9 R').Finite := by
+  classical
+  obtain ⟨e₀, he₀, hord⟩ := exists_eps0_order_type R.V i E
+  refine ⟨e₀, he₀, fun e he hlt R' hR' => ?_⟩
+  refine points9_finite_of_pairwise R' (fun k j => ?_)
+  by_cases hkt : k ∈ touchedMove i
+  · refine sideP9_inter_sideQ9_finite R' k j ?_
+    rw [hR']
+    rcases (mem_touchedMove_iff i k).mp hkt with hk | hk
+    · rw [hk]
+      by_cases hj : R.V (pQ j) = R.V (pP (i + 1))
+      · exact Or.inr (orientR_move_ne_zero R i E hord he hlt i (j + 1)
+          (moveCoef_ne_zero_self R i E (j + 1) hgoodN
+            (fun hc => (R.simpleQ.1 j) (hj.trans hc.symm))))
+      · exact Or.inl (orientR_move_ne_zero R i E hord he hlt i j
+          (moveCoef_ne_zero_self R i E j hgoodN hj))
+    · rw [hk]
+      by_cases hj : R.V (pQ j) = R.V (pP (i - 1))
+      · exact Or.inr (orientR_move_ne_zero R i E hord he hlt (i - 1) (j + 1)
+          (moveCoef_ne_zero_prev R i E (j + 1) hgoodP
+            (fun hc => (R.simpleQ.1 j) (hj.trans hc.symm))))
+      · exact Or.inl (orientR_move_ne_zero R i E hord he hlt (i - 1) j
+          (moveCoef_ne_zero_prev R i E j hgoodP hj))
+  · have h1 : k ≠ i := fun hc => hkt (by rw [mem_touchedMove_iff]; exact Or.inl hc)
+    have h2 : k ≠ i - 1 := fun hc => hkt (by rw [mem_touchedMove_iff]; exact Or.inr hc)
+    have e1 : R'.V (pP k) = R.V (pP k) := by
+      rw [hR']; exact moveV_pP_untouched R.V i E e h1
+    have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+      rw [hR']
+      exact moveV_pP_untouched R.V i E e (fun hc => h2 (eq_sub_of_add_eq hc))
+    have eQ1 : R'.V (pQ j) = R.V (pQ j) := by rw [hR']; exact moveV_Q R.V i E e j
+    have eQ2 : R'.V (pQ (j + 1)) = R.V (pQ (j + 1)) := by
+      rw [hR']; exact moveV_Q R.V i E e (j + 1)
+    refine hfin.subset ?_
+    rintro x ⟨hxP, hxQ⟩
+    exact ⟨Set.mem_iUnion.mpr ⟨k, by simpa only [sideP9, e1, e2] using hxP⟩,
+           Set.mem_iUnion.mpr ⟨j, by simpa only [sideQ9, eQ1, eQ2] using hxQ⟩⟩
+
+#print axioms orientR_move_ne_zero
+#print axioms exists_eps0_finite_move
+
 #print axioms moveCoef_ne_zero_self
 #print axioms moveCoef_ne_zero_prev
 #print axioms moveCoefQ_ne_zero_apex
