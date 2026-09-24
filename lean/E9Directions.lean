@@ -855,5 +855,71 @@ theorem exists_coincFree_degFree (R : Pair9) (t : ℝ) :
 #print axioms pair9_degStep_preserving_coinc
 #print axioms exists_coincFree_degFree
 
+/-! ## 16. The move's rate coefficients
+
+§9.2's development rests on the shift displacing vertices along a **common
+direction**, making every orientation determinant affine in the shift size.
+§9.1's move is the same kind of object — it displaces a *single* vertex along
+`E` — and `orientR_moveV_affine` (§7) already records that.  What §9.2 also
+needed, and this section supplies on the move side, are the **named rates**:
+one per side, so the degeneracy bookkeeping can be stated.
+
+This is what makes the joint-measure treatment available here. -/
+
+/-- The rate of a `P`-side determinant under the move. -/
+noncomputable def moveCoef (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (k : Fin 7)
+    (a : Fin 14) : ℝ :=
+  Pair9Shift.dcoef (V (pP k)) (V (pP (k + 1))) (V a) E
+    (if pP k = pP i then 1 else 0) (if pP (k + 1) = pP i then 1 else 0)
+    (if a = pP i then 1 else 0)
+
+/-- The rate of a `Q`-side determinant under the move. -/
+noncomputable def moveCoefQ (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (m : Fin 7)
+    (a : Fin 14) : ℝ :=
+  Pair9Shift.dcoef (V (pQ m)) (V (pQ (m + 1))) (V a) E
+    (if pQ m = pP i then 1 else 0) (if pQ (m + 1) = pP i then 1 else 0)
+    (if a = pP i then 1 else 0)
+
+theorem orientR_move_Pside (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (k : Fin 7) (a : Fin 14) :
+    orientR (moveV V i E e (pP k)) (moveV V i E e (pP (k + 1))) (moveV V i E e a)
+      = orientR (V (pP k)) (V (pP (k + 1))) (V a) + e * moveCoef V i E k a :=
+  orientR_moveV_affine V i E e _ _ _
+
+theorem orientR_move_Qside (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (m : Fin 7) (a : Fin 14) :
+    orientR (moveV V i E e (pQ m)) (moveV V i E e (pQ (m + 1))) (moveV V i E e a)
+      = orientR (V (pQ m)) (V (pQ (m + 1))) (V a) + e * moveCoefQ V i E m a :=
+  orientR_moveV_affine V i E e _ _ _
+
+/-- **The `Q`-side rate, in closed form.**  Both `Q`-endpoints are fixed and the
+only moving vertex is the apex, so the whole coefficient is one cross product —
+the exact analogue of `Pair9Shift.coefQ_touchedP`. -/
+theorem moveCoefQ_apex (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (m : Fin 7) :
+    moveCoefQ V i E m (pP i) = cross (V (pQ (m + 1)) - V (pQ m)) E := by
+  have h0 : ¬ ((pQ m : Fin 14) = pP i) := fun h => pP_ne_pQ i m h.symm
+  have h1 : ¬ ((pQ (m + 1) : Fin 14) = pP i) := fun h => pP_ne_pQ i (m + 1) h.symm
+  unfold moveCoefQ Pair9Shift.dcoef
+  rw [if_neg h0, if_neg h1, if_pos rfl]
+  simp only [cross, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+/-- The `P`-sides the move disturbs: side `i` (out of `P_i`) and side `i−1`
+(into `P_i`).  Compare `Pair9Shift.touched`, which has **three** because the
+shift moves two vertices. -/
+def touchedMove (i : Fin 7) : Finset (Fin 7) := {i, i - 1}
+
+theorem mem_touchedMove_iff (i k : Fin 7) :
+    k ∈ touchedMove i ↔ (k = i ∨ k = i - 1) := by
+  simp [touchedMove]
+
+theorem moveV_pP_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    {k : Fin 7} (h : k ≠ i) : moveV V i E e (pP k) = V (pP k) := by
+  simp only [moveV]
+  exact if_neg (fun hc => h (Pair9Shift.pP_inj hc))
+
+#print axioms moveCoefQ_apex
+#print axioms moveV_pP_untouched
+
 end E9Directions
 end Heptagon
