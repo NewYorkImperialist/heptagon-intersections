@@ -1,0 +1,150 @@
+NOTE (added by the session that committed this file).  This log was produced by
+running the committed script with its DEFAULT arguments:
+
+    python3 joint_step_free_check.py          # seed 20260923, 250/250/250
+
+giving 750 instances and 5250 (instance, edge) checks.  An earlier log, since
+replaced, reported 800 instances / 5600 checks; that run used a non-default
+loaded-edge count (300) which was not recorded, so the script and the log did
+not match.  Every substantive finding is identical between the two runs --
+zero counterexamples, the same single near-miss (instance 684, edge 4, needing
+delta = 1/8192), and controls that fail on thousands of checks.
+
+==============================================================================
+exists_joint_step_free -- exact-rational numerical validation
+==============================================================================
+seed = 20260923
+
+self-tests on the exact primitives:
+  [ok ] orientR ccw > 0
+  [ok ] orientR cw  < 0
+  [ok ] orientR collinear = 0
+  [ok ] on_segment midpoint
+  [ok ] on_segment endpoint
+  [ok ] on_segment outside
+  [ok ] on_segment off-line
+  [ok ] seg_inter proper
+  [ok ] seg_inter disjoint
+  [ok ] seg_inter overlap
+  [ok ] seg_inter touch
+  [ok ] convex heptagon simple
+  [ok ] collinear-vertex heptagon simple
+  [ok ] self-crossing heptagon rejected
+  [ok ] degenerate side rejected
+  [ok ] Pb simple
+  [ok ] Qb simple
+  [ok ] segDeg detects Q[0] on P-side 0
+  [ok ] Qc simple
+  [ok ] shared vertex detected by no_shared_vertex
+  [ok ] Pd simple
+  [ok ] Qd simple
+  [ok ] finiteness rejects collinear overlap
+  [ok ] shiftP moves P[2]
+  [ok ] shiftP moves P[3]
+  [ok ] shiftP fixes the rest
+  [ok ] tilt(u,0) = (-u.y, u.x)
+
+t-grid (main)     : ['0', '1', '-1', '1/2', '-1/2', '3', '-3']
+small deltas      : ['1/2', '-1/2', '1/8', '-1/8', '1/32', '-1/32', '1/128', '-1/128', '1/1024', '-1/1024']
+large deltas (ctl): ['4', '-4', '8', '-8', '16', '-16']
+t-grid (extended) : 25 values, deltas (extended): 32 values
+
+generating 250 generic (non-degenerate) instances ...
+  got 250
+generating 250 constructed degenerate instances ...
+  got 250 (from 250 attempts)
+generating 250 ADVERSARIAL loaded-edge instances ...
+  got 250 (from 250 attempts)
+  degeneracies carried by the targeted edge: {1: 50, 2: 97, 3: 71, 4: 32}
+
+  ... 25/750 instances done (pass 175, fail 0)
+  ... 50/750 instances done (pass 350, fail 0)
+  ... 75/750 instances done (pass 525, fail 0)
+  ... 100/750 instances done (pass 700, fail 0)
+  ... 125/750 instances done (pass 875, fail 0)
+  ... 150/750 instances done (pass 1050, fail 0)
+  ... 175/750 instances done (pass 1225, fail 0)
+  ... 200/750 instances done (pass 1400, fail 0)
+  ... 225/750 instances done (pass 1575, fail 0)
+  ... 250/750 instances done (pass 1750, fail 0)
+  ... 275/750 instances done (pass 1925, fail 0)
+  ... 300/750 instances done (pass 2100, fail 0)
+  ... 325/750 instances done (pass 2275, fail 0)
+  ... 350/750 instances done (pass 2450, fail 0)
+  ... 375/750 instances done (pass 2625, fail 0)
+  ... 400/750 instances done (pass 2800, fail 0)
+  ... 425/750 instances done (pass 2975, fail 0)
+  ... 450/750 instances done (pass 3150, fail 0)
+  ... 475/750 instances done (pass 3325, fail 0)
+  ... 500/750 instances done (pass 3500, fail 0)
+  ... 525/750 instances done (pass 3675, fail 0)
+  ... 550/750 instances done (pass 3850, fail 0)
+  ... 575/750 instances done (pass 4025, fail 0)
+  ... 600/750 instances done (pass 4200, fail 0)
+  ... 625/750 instances done (pass 4375, fail 0)
+  ... 650/750 instances done (pass 4550, fail 0)
+  ... 675/750 instances done (pass 4725, fail 0)
+  [extended grid needed] instance 684 (loaded) edge i=4: main grid best gain < 0; extended witness t=0, delta=1/8192, gain=+2
+  ... 700/750 instances done (pass 4900, fail 0)
+  ... 725/750 instances done (pass 5075, fail 0)
+  ... 750/750 instances done (pass 5250, fail 0)
+
+==============================================================================
+RESULTS
+==============================================================================
+instances total                        : 750
+  (i)  segDeg + segDegP == 0  (generic): 250
+  (ii) segDeg + segDegP >  0           : 500
+         constructed by random snapping  : 250
+         adversarial loaded-edge family  : 250
+degeneracy-count histogram (segDeg+segDegP over all instances):
+     0 degeneracies : 250 instances
+     1 degeneracies : 84 instances
+     2 degeneracies : 187 instances
+     3 degeneracies : 169 instances
+     4 degeneracies : 54 instances
+     5 degeneracies : 6 instances
+
+(instance, edge) checks total          : 5250
+  generic : 1750   passed 1750
+  degen   : 1750   passed 1750
+  loaded  : 1750   passed 1750
+  the TARGETED edge of a loaded instance (worst case):
+      checks 250   passed 250   (strict increase 194, equality 56)
+  of which the shifted edge i actually carries a degeneracy:
+      checks 1080   passed 1080   (strict increase 777, equality 303)
+PASS  : 5250
+FAIL  : 0
+(edge,instance) with NO simple shift on the main grid: 0
+(edge,instance) where the MAIN grid (7 tilts x 10 deltas) had no
+  non-decreasing witness                              : 1
+  ... rescued by the extended grid (25 tilts x 32 deltas): 1
+      instance 684 (loaded) edge 4: t=0, delta=1/8192, gain=+2
+
+statistic 5 -- best achievable measure change over the grid:
+  strictly increases : 2971
+  equal only         : 2279
+  gain histogram (best gain over grid):
+    gain +0 : 2279
+    gain +1 : 868
+    gain +2 : 1703
+    gain +3 : 180
+    gain +4 : 198
+    gain +5 : 11
+    gain +6 : 10
+    gain +7 : 1
+
+==============================================================================
+NON-VACUITY CONTROLS  (the checker must be able to report FAIL)
+==============================================================================
+control 1: demand MEASURE strictly INCREASE (deliberately false variant)
+  failures : 2280 / 5250
+control 2: demand the conclusion with |delta| in {4,8,16} only (large)
+  failures : 822 / 5250
+control 3: demand MEASURE increase by at least 2 (deliberately false)
+  failures : 3148 / 5250
+  => checker demonstrably CAN fail: True
+
+NO candidate counterexamples.
+
+DONE
