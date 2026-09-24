@@ -1131,6 +1131,71 @@ theorem exists_eps0_finite_move (R : Pair9) (hfin : (points9 R).Finite)
     exact ⟨Set.mem_iUnion.mpr ⟨k, by simpa only [sideP9, e1, e2] using hxP⟩,
            Set.mem_iUnion.mpr ⟨j, by simpa only [sideQ9, eQ1, eQ2] using hxQ⟩⟩
 
+/-! ### Clearing the apex, uniformly in the sign of `e`
+
+`exists_eps_clearing_apex` produces one **positive** `e`.  The joint-measure
+argument chooses the *sign* of `e` by averaging, so it needs a `e₀` that works
+for every small nonzero `e` of either sign.  That is available: the bad `e` for
+a given `Q`-vertex is unique, and it is `0` exactly at the coincidence being
+cleared. -/
+
+open scoped Classical in
+theorem exists_eps0_clearing_apex (V : Fin 14 → ℝ × ℝ) (i : Fin 7) {E : ℝ × ℝ}
+    (hE : E ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      ∀ m : Fin 7, moveV V i E e (pP i) ≠ V (pQ m) := by
+  classical
+  obtain ⟨e₀, he₀, hsm⟩ :=
+    Pair9Shift.exists_uniform_smallness
+      ((Finset.univ : Finset (Fin 7)).filter (fun m => V (pP i) ≠ V (pQ m)))
+      (fun m => ‖V (pP i) - V (pQ m)‖) (fun _ => ‖E‖)
+      (fun m hm =>
+        norm_ne_zero_iff.mpr (sub_ne_zero.mpr (Finset.mem_filter.mp hm).2))
+  refine ⟨e₀, he₀, fun e he hlt m hEq => ?_⟩
+  rw [moveV_apex] at hEq
+  by_cases hm : V (pP i) = V (pQ m)
+  · have h := hEq
+    rw [hm] at h
+    have h0 : e • E = 0 := by simpa using sub_eq_zero.mpr h
+    exact smul_ne_zero he hE h0
+  · have hs := hsm e hlt m (Finset.mem_filter.mpr ⟨Finset.mem_univ _, hm⟩)
+    have hkey : V (pP i) - V (pQ m) = -(e • E) := by rw [← hEq]; abel
+    have h1 : ‖V (pP i) - V (pQ m)‖ = |e| * ‖E‖ := by
+      rw [hkey, norm_neg, norm_smul, Real.norm_eq_abs]
+    have h3 : |e * ‖E‖| = |e| * ‖E‖ := by
+      rw [abs_mul, abs_of_nonneg (norm_nonneg E)]
+    have h4 : |‖V (pP i) - V (pQ m)‖| = ‖V (pP i) - V (pQ m)‖ :=
+      abs_of_nonneg (norm_nonneg _)
+    rw [h3, h4, h1] at hs
+    exact lt_irrefl _ hs
+
+open scoped Classical in
+/-- **The coincidence count strictly drops, for every small nonzero `e` of
+either sign.** -/
+theorem exists_eps0_coincSet_lt (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
+    (hij : (i, j) ∈ coincSet V) {E : ℝ × ℝ} (hE : E ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      (coincSet (moveV V i E e)).card < (coincSet V).card := by
+  classical
+  obtain ⟨e₀, he₀, hclear⟩ := exists_eps0_clearing_apex V i hE
+  refine ⟨e₀, he₀, fun e he hlt => ?_⟩
+  have hsub : coincSet (moveV V i E e) ⊆ coincSet V := by
+    intro p hp
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and] at hp ⊢
+    by_cases h : p.1 = i
+    · subst h
+      exact absurd (by rw [moveV_Q] at hp; exact hp) (hclear e he hlt p.2)
+    · rw [moveV_Q] at hp
+      rwa [moveV_pP_untouched V i E e h] at hp
+  refine Finset.card_lt_card ((Finset.ssubset_iff_of_subset hsub).mpr ⟨(i, j), hij, ?_⟩)
+  intro hc
+  simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and] at hc
+  rw [moveV_Q] at hc
+  exact hclear e he hlt j hc
+
+#print axioms exists_eps0_clearing_apex
+#print axioms exists_eps0_coincSet_lt
+
 #print axioms orientR_move_ne_zero
 #print axioms exists_eps0_finite_move
 
