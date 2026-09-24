@@ -3000,5 +3000,127 @@ theorem survE_of_untouched (R R' : Pair9) (i : Fin 7) (t δ : ℝ)
 #print axioms survD_of_untouched
 #print axioms survE_of_untouched
 
+theorem predP_ne_self (v m : Fin 7) : ((v - 1, m) : Fin 7 × Fin 7) ≠ (v, m) := by
+  intro h
+  have hv : v - 1 = v := congrArg Prod.fst h
+  exact absurd (sub_eq_self.mp hv) (by decide)
+
+/-! ## 49. The mirror bridge
+
+For a `segDegP` entry the roles of the two `ProperCrossR` conjuncts swap: the
+one carrying the degenerate vertex is now the conjunct against the **`Q`-side**,
+and the conjunct against the `P`-side is the one that persists. -/
+
+theorem orientR_shift_Qside (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t δ : ℝ) (m : Fin 7)
+    (a : Fin 14) :
+    orientR (shiftV V i t δ (pQ m)) (shiftV V i t δ (pQ (m + 1))) (shiftV V i t δ a)
+      = orientR (V (pQ m)) (V (pQ (m + 1))) (V a) + δ * coefQ V i t m a :=
+  orientR_shiftV_affine V i t δ _ _ _
+
+/-- The `P`-side conjunct persists, for any `P`-side. -/
+theorem first_conjunct_persists_any (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ v m : Fin 7,
+      orientR (V (pP v)) (V (pP (v + 1))) (V (pQ m)) *
+          orientR (V (pP v)) (V (pP (v + 1))) (V (pQ (m + 1))) < 0 →
+      orientR (shiftV V i t δ (pP v)) (shiftV V i t δ (pP (v + 1)))
+            (shiftV V i t δ (pQ m)) *
+          orientR (shiftV V i t δ (pP v)) (shiftV V i t δ (pP (v + 1)))
+            (shiftV V i t δ (pQ (m + 1))) < 0 := by
+  obtain ⟨δ₀, hδ₀, h⟩ := exists_delta0_order_type V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ v m h0 => ?_⟩
+  have n1 : orientR (V (pP v)) (V (pP (v + 1))) (V (pQ m)) ≠ 0 := fun hz => by
+    rw [hz, zero_mul] at h0; exact lt_irrefl 0 h0
+  have n2 : orientR (V (pP v)) (V (pP (v + 1))) (V (pQ (m + 1))) ≠ 0 := fun hz => by
+    rw [hz, mul_zero] at h0; exact lt_irrefl 0 h0
+  exact prod_neg_of_signs (h δ hδ _ _ _ n1) (h δ hδ _ _ _ n2) h0
+
+open scoped Classical in
+/-- **The mirror membership bridge.**  At a degenerate `P`-vertex of `Q`-side
+`m`, the pair `(v, m)` crosses after the shift exactly when the affine straddle
+of the `Q`-side determinants holds. -/
+theorem mem_crossPairs_iff_affP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ m v : Fin 7,
+      orientR (V (pQ m)) (V (pQ (m + 1))) (V (pP v)) = 0 →
+      orientR (V (pP v)) (V (pP (v + 1))) (V (pQ m)) *
+          orientR (V (pP v)) (V (pP (v + 1))) (V (pQ (m + 1))) < 0 →
+      ((v, m) ∈ crossPairsOf (shiftV V i t δ) ↔
+        (δ * coefQ V i t m (pP v))
+          * (orientR (V (pQ m)) (V (pQ (m + 1))) (V (pP (v + 1)))
+              + δ * coefQ V i t m (pP (v + 1))) < 0) := by
+  obtain ⟨δ₀, hδ₀, hfst⟩ := first_conjunct_persists_any V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ m v hdeg hsep => ⟨fun hin => ?_, fun hstr => ?_⟩⟩
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+    have h2 := hin.2
+    rw [orientR_shift_Qside, orientR_shift_Qside, hdeg, zero_add] at h2
+    exact h2
+  · simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    refine ⟨hfst δ hδ v m hsep, ?_⟩
+    rw [orientR_shift_Qside, orientR_shift_Qside, hdeg, zero_add]
+    exact hstr
+
+#print axioms first_conjunct_persists_any
+#print axioms mem_crossPairs_iff_affP
+
+set_option maxHeartbeats 1600000 in
+open scoped Classical in
+/-- The mirrored pair `(v−1, m)`, whose `P`-side has the degenerate vertex as
+its **second** endpoint. -/
+theorem mem_crossPairs_iff_affP_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ m v : Fin 7,
+      orientR (V (pQ m)) (V (pQ (m + 1))) (V (pP v)) = 0 →
+      orientR (V (pP (v - 1))) (V (pP v)) (V (pQ m)) *
+          orientR (V (pP (v - 1))) (V (pP v)) (V (pQ (m + 1))) < 0 →
+      ((v - 1, m) ∈ crossPairsOf (shiftV V i t δ) ↔
+        (δ * coefQ V i t m (pP v))
+          * (orientR (V (pQ m)) (V (pQ (m + 1))) (V (pP (v - 1)))
+              + δ * coefQ V i t m (pP (v - 1))) < 0) := by
+  obtain ⟨δ₀, hδ₀, hfst⟩ := first_conjunct_persists_any V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ m v hdeg hsep => ?_⟩
+  have hv : v - 1 + 1 = v := by simp
+  constructor
+  · intro hin
+    simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and] at hin
+    rw [hv] at hin
+    have h2 := hin.2
+    rw [orientR_shift_Qside, orientR_shift_Qside, hdeg, zero_add, mul_comm] at h2
+    exact h2
+  · intro hstr
+    simp only [crossPairsOf, Finset.mem_filter, Finset.mem_univ, true_and]
+    have hsep' : orientR (V (pP (v - 1))) (V (pP (v - 1 + 1))) (V (pQ m)) *
+        orientR (V (pP (v - 1))) (V (pP (v - 1 + 1))) (V (pQ (m + 1))) < 0 := by
+      rw [hv]; exact hsep
+    refine ⟨hfst δ hδ (v - 1) m hsep', ?_⟩
+    rw [hv, orientR_shift_Qside, orientR_shift_Qside, hdeg, zero_add, mul_comm]
+    exact hstr
+
+set_option maxHeartbeats 1600000 in
+open scoped Classical in
+/-- **The mirror incident-pair count.** -/
+theorem card_incidentP_eq_lcAtP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ → ∀ m v : Fin 7,
+      δ * coefQ V i t m (pP v) ≠ 0 →
+      orientR (V (pQ m)) (V (pQ (m + 1))) (V (pP v)) = 0 →
+      orientR (V (pP (v - 1))) (V (pP v)) (V (pQ m)) *
+          orientR (V (pP (v - 1))) (V (pP v)) (V (pQ (m + 1))) < 0 →
+      orientR (V (pP v)) (V (pP (v + 1))) (V (pQ m)) *
+          orientR (V (pP v)) (V (pP (v + 1))) (V (pQ (m + 1))) < 0 →
+      ((incidentPairsP (m, v)).filter
+          (fun q => q ∈ crossPairsOf (shiftV V i t δ))).card
+        = lcAtP V i t δ (m, v) := by
+  classical
+  obtain ⟨δ₁, h₁, hprev⟩ := mem_crossPairs_iff_affP_prev V i t
+  obtain ⟨δ₂, h₂, hnext⟩ := mem_crossPairs_iff_affP V i t
+  refine ⟨min δ₁ δ₂, lt_min h₁ h₂, fun δ hδ m v hrate hdeg hP hN => ?_⟩
+  have hd1 : |δ| < δ₁ := lt_of_lt_of_le hδ (min_le_left _ _)
+  have hd2 : |δ| < δ₂ := lt_of_lt_of_le hδ (min_le_right _ _)
+  have hne : ((v - 1, m) : Fin 7 × Fin 7) ≠ (v, m) := predP_ne_self v m
+  rw [show incidentPairsP (m, v) = {(v - 1, m), (v, m)} from rfl,
+    card_filter_pair _ _ hne]
+  simp only [lcAtP, TiltedShift.localContribAff, if_neg hrate,
+    hprev δ hd1 m v hdeg hP, hnext δ hd2 m v hdeg hN]
+
+#print axioms mem_crossPairs_iff_affP_prev
+#print axioms card_incidentP_eq_lcAtP
+
 end Pair9Shift
 end Heptagon
