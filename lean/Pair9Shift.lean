@@ -3284,5 +3284,129 @@ theorem exists_delta0_havg (R : Pair9) (i : Fin 7) (t : ℝ)
 #print axioms exists_uniform_smallness
 #print axioms exists_delta0_havg
 
+/-! ## 52. The four nonvanishing conditions, derived
+
+§51 assumed the neighbouring determinants are nonzero.  They are **not** free,
+and finiteness alone does not give them: `independent/akr_9_2/smallness_needs_
+coincidence_free.py` exhibits two simple heptagons, meeting in finitely many
+points, with a `Q`-vertex on a `P`-side whose predecessor is *on that side's
+line* — so the smallness condition fails.  In that witness the two polygons
+share a vertex.
+
+That is the whole story: with a coincidence excluded, a neighbour on the line
+forces a whole sub-segment of the neighbouring edge into the side, and `(Fin)`
+forbids it.  `neighbour_off_ne_zero` is that argument on the `Q`-vertex side;
+`neighbour_off_ne_zeroP` is its mirror. -/
+
+/-- A point of a segment that is neither endpoint has a parameter strictly
+inside `(0,1)`. -/
+theorem exists_param_strict {A B x : ℝ × ℝ} (hx : x ∈ segment ℝ A B)
+    (hA : x ≠ A) (hB : x ≠ B) :
+    ∃ s : ℝ, 0 < s ∧ s < 1 ∧ x = lin A (B - A) s := by
+  rw [← insert_endpoints_openSegment] at hx
+  simp only [Set.mem_insert_iff] at hx
+  rcases hx with h | h | h
+  · exact absurd h hA
+  · exact absurd h hB
+  · obtain ⟨a, b, ha, hb, hab, rfl⟩ := h
+    refine ⟨b, hb, by linarith, ?_⟩
+    have ha' : a = 1 - b := by linarith
+    subst ha'
+    simp only [lin, Prod.ext_iff, Prod.fst_add, Prod.snd_add, Prod.fst_sub,
+      Prod.snd_sub, Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+    constructor <;> ring
+
+/-- **The mirror of `neighbour_off_ne_zero`.**  If a `P`-vertex sits strictly
+inside a `Q`-side and one of its `P`-neighbours lies on that side's line, a
+whole sub-segment of the `P`-edge lies in the `Q`-side, contradicting `(Fin)`. -/
+theorem neighbour_off_ne_zeroP (R : Pair9) (hfin : (points9 R).Finite)
+    (m v k i : Fin 7)
+    (hv : R.V (pP v) ∈ sideP9 R i) (hk : R.V (pP k) ∈ sideP9 R i)
+    (hvk : R.V (pP v) ≠ R.V (pP k))
+    (hu : R.V (pQ (m + 1)) - R.V (pQ m) ≠ 0) {s : ℝ} (hs0 : 0 < s) (hs1 : s < 1)
+    (hsv : R.V (pP v) = lin (R.V (pQ m)) (R.V (pQ (m + 1)) - R.V (pQ m)) s) :
+    off (R.V (pQ (m + 1)) - R.V (pQ m)) (R.V (pQ m)) (R.V (pP k)) ≠ 0 := by
+  intro hzero
+  obtain ⟨r, hr⟩ := exists_param_of_off_zero hu hzero
+  have hrs : r ≠ s := fun h => hvk (by rw [hsv, hr, h])
+  obtain ⟨τ, hτ1, hτ2, hτ3, hτ4⟩ :
+      ∃ τ : ℝ, τ ≠ s ∧ 0 ≤ τ ∧ τ ≤ 1 ∧
+        (min s r ≤ τ ∧ τ ≤ max s r) := by
+    rcases lt_or_gt_of_ne hrs with hlt | hgt
+    · refine ⟨max r (s / 2), ?_, by positivity,
+        max_le (by linarith) (by linarith), ?_, ?_⟩
+      · rcases max_cases r (s / 2) with ⟨he, -⟩ | ⟨he, -⟩ <;> rw [he] <;> linarith
+      · rw [min_eq_right (le_of_lt hlt)]; exact le_max_left _ _
+      · rw [max_eq_left (le_of_lt hlt)]
+        exact max_le (le_of_lt hlt) (by linarith)
+    · refine ⟨min r ((s + 1) / 2), ?_, ?_, ?_, ?_, ?_⟩
+      · rcases min_cases r ((s + 1) / 2) with ⟨he, -⟩ | ⟨he, -⟩ <;> rw [he] <;> linarith
+      · exact le_trans (by linarith) (le_min (le_of_lt hgt) (by linarith))
+      · exact le_trans (min_le_right _ _) (by linarith)
+      · rw [min_eq_left (le_of_lt hgt)]
+        exact le_min (le_of_lt hgt) (by linarith)
+      · rw [max_eq_right (le_of_lt hgt)]; exact min_le_left _ _
+  set A := R.V (pQ m)
+  set u := R.V (pQ (m + 1)) - R.V (pQ m)
+  have hQs : lin A u s ∈ sideQ9 R m := by
+    have := lin_mem_segment (A := A) (u := u) (le_of_lt hs0) (le_of_lt hs1)
+    rwa [lin_zero, lin_one_sub] at this
+  have hQτ : lin A u τ ∈ sideQ9 R m := by
+    have := lin_mem_segment (A := A) (u := u) hτ2 hτ3
+    rwa [lin_zero, lin_one_sub] at this
+  have hPs : lin A u s ∈ sideP9 R i := by rw [← hsv]; exact hv
+  have hPτ : lin A u τ ∈ sideP9 R i := by
+    have hmem : lin A u τ ∈ segment ℝ (R.V (pP v)) (R.V (pP k)) := by
+      rw [hsv, hr]
+      rcases le_total s r with hle | hle
+      · exact lin_mem_segment (min_eq_left hle ▸ hτ4.1) (max_eq_right hle ▸ hτ4.2)
+      · rw [segment_symm]
+        exact lin_mem_segment (min_eq_right hle ▸ hτ4.1) (max_eq_left hle ▸ hτ4.2)
+    exact (convex_segment _ _).segment_subset hv hk hmem
+  have hne : lin A u s ≠ lin A u τ := fun h => hτ1 (lin_inj hu h).symm
+  have hinf : (segment ℝ (lin A u s) (lin A u τ)).Infinite := segment_infinite hne
+  refine hinf (hfin.subset ?_)
+  intro x hx
+  exact ⟨Set.mem_iUnion.mpr ⟨i, (convex_segment _ _).segment_subset hPs hPτ hx⟩,
+    Set.mem_iUnion.mpr ⟨m, (convex_segment _ _).segment_subset hQs hQτ hx⟩⟩
+
+open scoped Classical in
+/-- A `segDeg` entry's neighbouring `Q`-vertex is off the `P`-side's line. -/
+theorem segDeg_neighbour_ne_zero (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {d : Fin 7 × Fin 7} (hd : d ∈ segDeg R) (k m : Fin 7)
+    (hjm : R.V (pQ d.2) ∈ sideQ9 R m) (hkm : R.V (pQ k) ∈ sideQ9 R m)
+    (hjk : R.V (pQ d.2) ≠ R.V (pQ k)) :
+    orientR (R.V (pP d.1)) (R.V (pP (d.1 + 1))) (R.V (pQ k)) ≠ 0 := by
+  classical
+  simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at hd
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict hd
+    (fun hc => hcoinc d.1 d.2 hc.symm) (fun hc => hcoinc (d.1 + 1) d.2 hc.symm)
+  rw [← off_eq_orientR]
+  exact neighbour_off_ne_zero R hfin d.1 d.2 k m hjm hkm hjk
+    (sub_ne_zero.mpr (R.simpleP.1 d.1).symm) hs0 hs1 hseq
+
+open scoped Classical in
+/-- The mirror: a `segDegP` entry's neighbouring `P`-vertex is off the
+`Q`-side's line. -/
+theorem segDegP_neighbour_ne_zero (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {e : Fin 7 × Fin 7} (he : e ∈ segDegP R) (k i : Fin 7)
+    (hvi : R.V (pP e.2) ∈ sideP9 R i) (hki : R.V (pP k) ∈ sideP9 R i)
+    (hvk : R.V (pP e.2) ≠ R.V (pP k)) :
+    orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP k)) ≠ 0 := by
+  classical
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at he
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict he
+    (hcoinc e.2 e.1) (hcoinc e.2 (e.1 + 1))
+  rw [← off_eq_orientR]
+  exact neighbour_off_ne_zeroP R hfin e.1 e.2 k i hvi hki hvk
+    (sub_ne_zero.mpr (R.simpleQ.1 e.1).symm) hs0 hs1 hseq
+
+#print axioms exists_param_strict
+#print axioms neighbour_off_ne_zeroP
+#print axioms segDeg_neighbour_ne_zero
+#print axioms segDegP_neighbour_ne_zero
+
 end Pair9Shift
 end Heptagon
