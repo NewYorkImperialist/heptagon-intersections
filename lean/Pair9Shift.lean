@@ -3473,5 +3473,101 @@ theorem exists_delta0_havg_free (R : Pair9) (hfin : (points9 R).Finite)
 
 #print axioms exists_delta0_havg_free
 
+/-! ## 54. The joint step, assembled
+
+Everything §38 needed at a single step, with `hmono`, both bridges, both
+survival clauses and `havg` supplied.  What is left in the hypotheses is
+exactly what rows 104 of the status table names and no more: a **tilt** that
+avoids finitely many bad directions, and the **transversality** of each
+degeneracy — the condition that the degenerate vertex's side genuinely
+separates the other side's endpoints.  A vertex that *touches* a side and
+turns back is a real case and is **not** covered here. -/
+
+open scoped Classical in
+theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) (t : ℝ)
+    (htrN : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+         (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0)
+    (htrP : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+         (R.V (pP i)).2 - (R.V (pP (i - 1))).2) ≠ 0)
+    (ht : ∀ m : Fin 7, cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0)
+    (hsepPD : ∀ x ∈ segDeg R,
+      orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP x.1)) *
+        orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP (x.1 + 1))) < 0)
+    (hsepND : ∀ x ∈ segDeg R,
+      orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP x.1)) *
+        orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP (x.1 + 1))) < 0)
+    (hsepPE : ∀ y ∈ segDegP R,
+      orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ y.1)) *
+        orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ (y.1 + 1))) < 0)
+    (hsepNE : ∀ y ∈ segDegP R,
+      orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
+        orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
+    ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+        ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
+  classical
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨r1, hr1, hA⟩ := crossPairsOf_mono_shift R.V i t
+  obtain ⟨r2, hr2, hB⟩ :=
+    exists_delta0_bridgeD R i t hu htrN htrP hcoinc hsepPD hsepND
+  obtain ⟨r3, hr3, hC⟩ := exists_delta0_bridgeE R i t ht hsepPE hsepNE
+  obtain ⟨r4, hr4, hD⟩ := exists_delta0_havg_free R hfin hcoinc i t
+  obtain ⟨r5, hr5, hE⟩ :=
+    exists_delta0_simpleClosed (fun m => R.V (pP m)) R.simpleP i t
+  obtain ⟨δ₀, hδ₀, hl1, hl2, hl3, hl4, hl5⟩ :
+      ∃ x : ℝ, 0 < x ∧ x ≤ r1 ∧ x ≤ r2 ∧ x ≤ r3 ∧ x ≤ r4 ∧ x ≤ r5 :=
+    ⟨min (min r1 r2) (min (min r3 r4) r5),
+      lt_min (lt_min hr1 hr2) (lt_min (lt_min hr3 hr4) hr5),
+      le_trans (min_le_left _ _) (min_le_left _ _),
+      le_trans (min_le_left _ _) (min_le_right _ _),
+      le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_left _ _)),
+      le_trans (min_le_right _ _) (le_trans (min_le_left _ _) (min_le_right _ _)),
+      le_trans (min_le_right _ _) (min_le_right _ _)⟩
+  -- one magnitude serves every bound; only the SIGN is still to be chosen
+  have key : ∀ σ : ℝ, σ ≠ 0 → |σ| < δ₀ →
+      ((segDeg R).card + (segDegP R).card
+          ≤ (∑ x ∈ segDeg R, lcAt R.V i t σ x)
+            + (∑ y ∈ segDegP R, lcAtP R.V i t σ y)) →
+      ∃ R' : Pair9, R'.V = shiftV R.V i t σ ∧
+        (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+          ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
+    intro σ hσ0 hσ havg
+    have hs1 : |σ| < r1 := lt_of_lt_of_le hσ hl1
+    have hs2 : |σ| < r2 := lt_of_lt_of_le hσ hl2
+    have hs3 : |σ| < r3 := lt_of_lt_of_le hσ hl3
+    have hs5 : |σ| ≤ r5 := le_of_lt (lt_of_lt_of_le hσ hl5)
+    have hP : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t σ (pP k)) := by
+      simpa only [shiftV_pP] using hE σ hs5
+    have hQ : AKR9.SimpleClosed (fun k : Fin 7 => shiftV R.V i t σ (pQ k)) := by
+      have hEq : (fun k : Fin 7 => shiftV R.V i t σ (pQ k))
+          = fun k => R.V (pQ k) := by
+        funext k; exact shiftV_Q R.V i t σ k
+      rw [hEq]; exact R.simpleQ
+    refine ⟨⟨shiftV R.V i t σ, hP, hQ⟩, rfl, ?_⟩
+    exact step_invariant_joint R ⟨shiftV R.V i t σ, hP, hQ⟩ hfin hcoinc i t σ
+      (hA σ hs1)
+      (fun x hx hxt => hB σ hσ0 hs2 x hx hxt)
+      (fun y hy hyt => hC σ hσ0 hs3 y hy hyt)
+      (survD_of_untouched R _ i t σ rfl)
+      (survE_of_untouched R _ i t σ rfl)
+      havg
+  have hhalf : |δ₀ / 2| < δ₀ := by
+    rw [abs_of_pos (by linarith)]; linarith
+  have hhalfne : δ₀ / 2 ≠ 0 := ne_of_gt (by linarith)
+  rcases hD (δ₀ / 2) (lt_of_lt_of_le hhalf hl4) with hpos | hneg
+  · obtain ⟨R', hR'V, hbound⟩ := key (δ₀ / 2) hhalfne hhalf hpos
+    exact ⟨δ₀ / 2, R', hhalfne, hR'V, hbound⟩
+  · have habs : |(-(δ₀ / 2))| < δ₀ := by rw [abs_neg]; exact hhalf
+    obtain ⟨R', hR'V, hbound⟩ :=
+      key (-(δ₀ / 2)) (neg_ne_zero.mpr hhalfne) habs hneg
+    exact ⟨-(δ₀ / 2), R', neg_ne_zero.mpr hhalfne, hR'V, hbound⟩
+
+#print axioms exists_joint_step
+
 end Pair9Shift
 end Heptagon
