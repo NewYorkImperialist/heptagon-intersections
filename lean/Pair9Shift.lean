@@ -4490,6 +4490,165 @@ theorem segDegP_side_unique_of_coincFree (R : Pair9)
   obtain ⟨j, hj⟩ := mem_two_sidesQ_imp_vertex R hne s1 s2
   exact hcoinc v j hj
 
+/-- **The seven `P`-vertices are distinct.**  Not general position — just
+`SimpleClosed`: two equal vertices would put a point on two sides that are
+either disjoint (non-adjacent) or share only their common endpoint. -/
+theorem vertexP_inj (R : Pair9) {v v' : Fin 7}
+    (h : R.V (pP v) = R.V (pP v')) : v = v' := by
+  by_contra hne
+  by_cases hadj : LowerBound.Adjacent v v'
+  · rcases hadj with hc | hc | hc
+    · exact hne hc
+    · have he : R.V (pP v) = R.V (pP (v + 1)) := by rw [h, hc]
+      exact R.simpleP.1 v he
+    · have he : R.V (pP v') = R.V (pP (v' + 1)) := by rw [← hc, ← h]
+      exact R.simpleP.1 v' he
+  · have hmem : R.V (pP v) ∈ segment ℝ (R.V (pP v')) (R.V (pP (v' + 1))) := by
+      rw [h]; exact left_mem_segment ℝ _ _
+    exact Set.disjoint_left.mp (R.simpleP.2.1 v v' hadj)
+      (left_mem_segment ℝ _ _) hmem
+
+theorem vertexQ_inj (R : Pair9) {j j' : Fin 7}
+    (h : R.V (pQ j) = R.V (pQ j')) : j = j' := by
+  by_contra hne
+  by_cases hadj : LowerBound.Adjacent j j'
+  · rcases hadj with hc | hc | hc
+    · exact hne hc
+    · have he : R.V (pQ j) = R.V (pQ (j + 1)) := by rw [h, hc]
+      exact R.simpleQ.1 j he
+    · have he : R.V (pQ j') = R.V (pQ (j' + 1)) := by rw [← hc, ← h]
+      exact R.simpleQ.1 j' he
+  · have hmem : R.V (pQ j) ∈ segment ℝ (R.V (pQ j')) (R.V (pQ (j' + 1))) := by
+      rw [h]; exact left_mem_segment ℝ _ _
+    exact Set.disjoint_left.mp (R.simpleQ.2.1 j j' hadj)
+      (left_mem_segment ℝ _ _) hmem
+
+/-! ### `M_seg = M_pt` when there is no coincidence
+
+With the two halves in place — a coincidence occupies four slots, a
+non-coincidence exactly one — the identity of row 124 collapses, in the
+coincidence-free case, to `|segDeg| + |segDegP| = |degPts|`.  That is the case
+§9.2 runs in, and it is what lets the two halves of §9 be stated in the *same*
+measure. -/
+
+open scoped Classical in
+/-- `degPts` as a `Finset`: the fourteen vertices, filtered by lying on both
+boundaries. -/
+noncomputable def degPtsF (R : Pair9) : Finset (ℝ × ℝ) :=
+  (((Finset.univ : Finset (Fin 7)).image (fun i => R.V (pP i))) ∪
+   ((Finset.univ : Finset (Fin 7)).image (fun j => R.V (pQ j)))).filter
+     (fun x => x ∈ points9 R)
+
+open scoped Classical in
+theorem degPtsF_coe (R : Pair9) : (degPtsF R : Set (ℝ × ℝ)) = degPts R := by
+  classical
+  ext x
+  simp only [degPtsF, Finset.coe_filter, Finset.mem_union, Finset.mem_image,
+    Finset.mem_univ, true_and, Set.mem_setOf_eq, degPts, verts,
+    Set.mem_inter_iff, Set.mem_union, Set.mem_range]
+  constructor
+  · rintro ⟨hv, hp⟩
+    exact ⟨hp, by rcases hv with ⟨i, hi⟩ | ⟨j, hj⟩
+                  · exact Or.inl ⟨i, hi⟩
+                  · exact Or.inr ⟨j, hj⟩⟩
+  · rintro ⟨hp, hv⟩
+    refine ⟨?_, hp⟩
+    rcases hv with ⟨i, hi⟩ | ⟨j, hj⟩
+    · exact Or.inl ⟨i, hi⟩
+    · exact Or.inr ⟨j, hj⟩
+
+open scoped Classical in
+theorem degPts_ncard_eq (R : Pair9) : (degPts R).ncard = (degPtsF R).card := by
+  classical
+  rw [← degPtsF_coe]
+  simp [Set.ncard, Set.encard_eq_coe_toFinset_card]
+
+open scoped Classical in
+/-- **`|segDeg| + |segDegP| ≤ |degPts|` when no vertex meets a vertex.**
+The two families inject into the degenerate points: a `segDeg` entry by its
+`Q`-vertex, a `segDegP` entry by its `P`-vertex.  Injectivity is
+`vertexQ_inj` / `vertexP_inj` together with §65's side-uniqueness, and the two
+images are disjoint precisely because there is no coincidence. -/
+theorem seg_card_le_degPts (R : Pair9)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) :
+    (segDeg R).card + (segDegP R).card ≤ (degPts R).ncard := by
+  classical
+  rw [degPts_ncard_eq]
+  have hDmem : ∀ p ∈ segDeg R, R.V (pQ p.2) ∈ degPtsF R := by
+    intro p hp
+    have hm : R.V (pQ p.2) ∈ sideP9 R p.1 := by
+      simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+    simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+      Finset.mem_univ, true_and]
+    exact ⟨Or.inr ⟨p.2, rfl⟩,
+      ⟨Set.mem_iUnion.mpr ⟨p.1, hm⟩, Set.mem_iUnion.mpr ⟨p.2, left_mem_segment ℝ _ _⟩⟩⟩
+  have hEmem : ∀ p ∈ segDegP R, R.V (pP p.2) ∈ degPtsF R := by
+    intro p hp
+    have hm : R.V (pP p.2) ∈ sideQ9 R p.1 := by
+      simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+    simp only [degPtsF, Finset.mem_filter, Finset.mem_union, Finset.mem_image,
+      Finset.mem_univ, true_and]
+    exact ⟨Or.inl ⟨p.2, rfl⟩,
+      ⟨Set.mem_iUnion.mpr ⟨p.2, left_mem_segment ℝ _ _⟩,
+       Set.mem_iUnion.mpr ⟨p.1, hm⟩⟩⟩
+  have hDinj : Set.InjOn (fun p : Fin 7 × Fin 7 => R.V (pQ p.2))
+      ↑(segDeg R) := by
+    intro a ha b hb hab
+    simp only [Finset.mem_coe] at ha hb
+    have hj : a.2 = b.2 := vertexQ_inj R hab
+    have hk : a.1 = b.1 := by
+      refine segDeg_side_unique_of_coincFree R hcoinc (j := a.2) ?_ ?_
+      · simpa using ha
+      · rw [hj]; simpa using hb
+    exact Prod.ext hk hj
+  have hEinj : Set.InjOn (fun p : Fin 7 × Fin 7 => R.V (pP p.2))
+      ↑(segDegP R) := by
+    intro a ha b hb hab
+    simp only [Finset.mem_coe] at ha hb
+    have hv : a.2 = b.2 := vertexP_inj R hab
+    have hm : a.1 = b.1 := by
+      refine segDegP_side_unique_of_coincFree R hcoinc (v := a.2) ?_ ?_
+      · simpa using ha
+      · rw [hv]; simpa using hb
+    exact Prod.ext hm hv
+  have hdisj : Disjoint ((segDeg R).image (fun p => R.V (pQ p.2)))
+      ((segDegP R).image (fun p => R.V (pP p.2))) := by
+    rw [Finset.disjoint_left]
+    rintro x hx hy
+    obtain ⟨a, -, rfl⟩ := Finset.mem_image.mp hx
+    obtain ⟨b, -, hb⟩ := Finset.mem_image.mp hy
+    exact hcoinc b.2 a.2 hb
+  calc (segDeg R).card + (segDegP R).card
+      = ((segDeg R).image (fun p => R.V (pQ p.2))).card
+        + ((segDegP R).image (fun p => R.V (pP p.2))).card := by
+        rw [Finset.card_image_of_injOn hDinj, Finset.card_image_of_injOn hEinj]
+    _ = (((segDeg R).image (fun p => R.V (pQ p.2)))
+          ∪ ((segDegP R).image (fun p => R.V (pP p.2)))).card :=
+        (Finset.card_union_of_disjoint hdisj).symm
+    _ ≤ (degPtsF R).card := by
+        refine Finset.card_le_card (Finset.union_subset ?_ ?_)
+        · intro x hx
+          obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
+          exact hDmem a ha
+        · intro x hx
+          obtain ⟨a, ha, rfl⟩ := Finset.mem_image.mp hx
+          exact hEmem a ha
+
+open scoped Classical in
+/-- **`M_seg = M_pt` with no coincidence.**  Row 124's identity, in the case
+§9.2 runs in. -/
+theorem seg_card_eq_degPts (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) :
+    (segDeg R).card + (segDegP R).card = (degPts R).ncard :=
+  le_antisymm (seg_card_le_degPts R hcoinc) (degPts_ncard_le_seg R hfin)
+
+#print axioms degPtsF_coe
+#print axioms seg_card_le_degPts
+#print axioms seg_card_eq_degPts
+
+#print axioms vertexP_inj
+#print axioms vertexQ_inj
+
 #print axioms mem_two_sidesP_imp_vertex
 #print axioms mem_two_sidesQ_imp_vertex
 #print axioms segDeg_side_unique_of_coincFree
