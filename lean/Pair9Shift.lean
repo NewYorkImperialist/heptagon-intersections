@@ -3906,7 +3906,50 @@ theorem exists_delta0_deg_exact (R : Pair9) (i : Fin 7) (t : ℝ)
 #print axioms segDegP_untouched_iff
 #print axioms exists_delta0_deg_exact
 
-/-! ## 58. The strictly decreasing step
+/-! ## 58. Coincidence-freeness propagates
+
+Row 111's obligation (a).  A moved `P`-vertex could land exactly on a
+`Q`-vertex, but only for one `δ` per pair: the displacement `δ • w` has norm
+`|δ|·‖w‖`, and the two vertices start a positive distance apart. -/
+
+open scoped Classical in
+theorem exists_delta0_coincFree (R : Pair9) (i : Fin 7) (t : ℝ)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      ∀ v j : Fin 7, shiftV R.V i t δ (pP v) ≠ R.V (pQ j) := by
+  classical
+  obtain ⟨δ₀, hδ₀, hsm⟩ :=
+    exists_uniform_smallness (Finset.univ : Finset (Fin 7 × Fin 7))
+      (fun p => ‖R.V (pP p.1) - R.V (pQ p.2)‖)
+      (fun _ => ‖tilt (R.V (pP (i + 1)) - R.V (pP i)) t‖)
+      (fun p _ => norm_ne_zero_iff.mpr (sub_ne_zero.mpr (hcoinc p.1 p.2)))
+  refine ⟨δ₀, hδ₀, fun δ hδ v j hEq => ?_⟩
+  have hs := hsm δ hδ (v, j) (Finset.mem_univ _)
+  rw [shiftV_eq_add_smul] at hEq
+  set w := tilt (R.V (pP (i + 1)) - R.V (pP i)) t with hwdef
+  set c : ℝ := δ * (if pP v = pP i ∨ pP v = pP (i + 1) then 1 else 0) with hcdef
+  have hkey : R.V (pP v) - R.V (pQ j) = -(c • w) := by
+    rw [← hEq]; abel
+  have h1 : ‖R.V (pP v) - R.V (pQ j)‖ = |c| * ‖w‖ := by
+    rw [hkey, norm_neg, norm_smul, Real.norm_eq_abs]
+  have h2 : |c| ≤ |δ| := by
+    rw [hcdef]
+    split_ifs
+    · rw [mul_one]
+    · rw [mul_zero, abs_zero]; exact abs_nonneg δ
+  have h3 : |δ * ‖w‖| = |δ| * ‖w‖ := by
+    rw [abs_mul, abs_of_nonneg (norm_nonneg w)]
+  have h4 : |‖R.V (pP v) - R.V (pQ j)‖| = ‖R.V (pP v) - R.V (pQ j)‖ :=
+    abs_of_nonneg (norm_nonneg _)
+  rw [h3, h4] at hs
+  have h5 : |c| * ‖w‖ ≤ |δ| * ‖w‖ :=
+    mul_le_mul_of_nonneg_right h2 (norm_nonneg w)
+  rw [h1] at hs
+  exact absurd hs (not_lt.mpr h5)
+
+#print axioms exists_delta0_coincFree
+
+/-! ## 59. The strictly decreasing step
 
 §56 gives a step that does not lose ground; §57 gives one that gains.  They
 use the same tilt and the same `δ`, so they compose: choosing the edge to
@@ -3922,20 +3965,28 @@ theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
       (segDeg R').card + (segDegP R').card
-        < (segDeg R).card + (segDegP R).card := by
+        < (segDeg R).card + (segDegP R).card ∧
+      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) := by
   classical
   have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
     sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
   obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
   obtain ⟨δ₀, hδ₀, hexact⟩ := exists_delta0_deg_exact R i t hu h1 h2 h3 hcoinc
+  obtain ⟨δ₁, hδ₁, hcf⟩ := exists_delta0_coincFree R i t hcoinc
   obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
-    exists_joint_step R hfin hcoinc i t hδ₀ h1 h2 h3
+    exists_joint_step R hfin hcoinc i t (lt_min hδ₀ hδ₁) h1 h2 h3
       (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
       (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
       (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
       (fun _ hy => segDegP_transversal_next R hfin hcoinc hy)
-  obtain ⟨hD, hE⟩ := hexact δ hδ hδt R' hR'
-  refine ⟨t, δ, R', hδ, hR', hb, ?_⟩
+  have hδd : |δ| < δ₀ := lt_of_lt_of_le hδt (min_le_left _ _)
+  have hδc : |δ| < δ₁ := lt_of_lt_of_le hδt (min_le_right _ _)
+  obtain ⟨hD, hE⟩ := hexact δ hδ hδd R' hR'
+  have hcf' : ∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j) := by
+    intro v j
+    rw [hR', shiftV_Q]
+    exact hcf δ hδc v j
+  refine ⟨t, δ, R', hδ, hR', hb, ?_, hcf'⟩
   rw [hD, hE]
   have hle1 : ((segDeg R).filter (fun x => x.1 ∉ touched i)).card
       ≤ (segDeg R).card := Finset.card_le_card (Finset.filter_subset _ _)
@@ -3966,7 +4017,8 @@ theorem exists_joint_step_decreasing_of_deg (R : Pair9) (hfin : (points9 R).Fini
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
       (segDeg R').card + (segDegP R').card
-        < (segDeg R).card + (segDegP R).card := by
+        < (segDeg R).card + (segDegP R).card ∧
+      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) := by
   classical
   rcases hne with ⟨x, hx⟩ | ⟨y, hy⟩
   · obtain ⟨t, δ, R', h⟩ := exists_joint_step_decreasing R hfin hcoinc x.1
