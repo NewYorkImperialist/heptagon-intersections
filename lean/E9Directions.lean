@@ -1193,6 +1193,102 @@ theorem exists_eps0_coincSet_lt (V : Fin 14 → ℝ × ℝ) (i j : Fin 7)
   rw [moveV_Q] at hc
   exact hclear e he hlt j hc
 
+/-! ### The coincidence chain, now preserving `(Fin)`
+
+`exists_coincidence_free` already reaches a coincidence-free pair, but it
+tracks only the crossing count — it says nothing about `(Fin)`, so its output
+cannot be fed to `Pair9Shift.points9_le_38_of_coincFree`, which needs it.
+`exists_eps0_finite_move` closes that gap. -/
+
+open scoped Classical in
+theorem pair9_coincSet_step_finite (R : Pair9) (hfin : (points9 R).Finite)
+    (i j : Fin 7) (hij : (i, j) ∈ coincSet R.V) :
+    ∃ R' : Pair9, (coincSet R'.V).card < (coincSet R.V).card ∧
+      (points9 R').Finite ∧
+      RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V := by
+  classical
+  obtain ⟨E, hE, hgQ, hgN, hgP⟩ := exists_good_dir_pair9 R i
+  obtain ⟨e₁, h₁, hpair⟩ := exists_moved_pair9 R i E
+  obtain ⟨e₂, h₂, hmono⟩ := crossPairsOf_mono_move R.V i E
+  obtain ⟨e₃, h₃, hco⟩ := exists_eps0_coincSet_lt R.V i j hij hE
+  obtain ⟨e₄, h₄, hfn⟩ := exists_eps0_finite_move R hfin i E hgN hgP
+  obtain ⟨e₀, he₀, hl1, hl2, hl3, hl4⟩ :
+      ∃ x : ℝ, 0 < x ∧ x ≤ e₁ ∧ x ≤ e₂ ∧ x ≤ e₃ ∧ x ≤ e₄ :=
+    ⟨min (min e₁ e₂) (min e₃ e₄), lt_min (lt_min h₁ h₂) (lt_min h₃ h₄),
+      le_trans (min_le_left _ _) (min_le_left _ _),
+      le_trans (min_le_left _ _) (min_le_right _ _),
+      le_trans (min_le_right _ _) (min_le_left _ _),
+      le_trans (min_le_right _ _) (min_le_right _ _)⟩
+  have hhalf : |e₀ / 2| < e₀ := by rw [abs_of_pos (by linarith)]; linarith
+  have hne : e₀ / 2 ≠ 0 := ne_of_gt (by linarith)
+  obtain ⟨R', hR'⟩ := hpair (e₀ / 2) (le_of_lt (lt_of_lt_of_le hhalf hl1))
+  refine ⟨R', ?_, hfn _ hne (lt_of_lt_of_le hhalf hl4) R' hR', ?_⟩
+  · rw [hR']; exact hco _ hne (lt_of_lt_of_le hhalf hl3)
+  · rw [hR']; exact hmono _ (lt_of_lt_of_le hhalf hl2)
+
+open scoped Classical in
+/-- **§9.1's chain, with `(Fin)` carried along.** -/
+theorem exists_coincFree_finite :
+    ∀ (n : ℕ) (R : Pair9), (points9 R).Finite → (coincSet R.V).card = n →
+      ∃ R' : Pair9, coincSet R'.V = ∅ ∧ (points9 R').Finite ∧
+        RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro R hfin hn
+    by_cases h : coincSet R.V = ∅
+    · exact ⟨R, h, hfin, Finset.Subset.refl _⟩
+    · obtain ⟨p, hp⟩ := Finset.nonempty_iff_ne_empty.mpr h
+      obtain ⟨R', hlt, hfin', hmono⟩ := pair9_coincSet_step_finite R hfin p.1 p.2 hp
+      obtain ⟨R'', hclear, hfin'', hmono'⟩ := ih _ (hn ▸ hlt) R' hfin' rfl
+      exact ⟨R'', hclear, hfin'', hmono.trans hmono'⟩
+
+open scoped Classical in
+/-- Coincidence-freeness in the pointwise form §9.2 consumes. -/
+theorem coincFree_of_coincSet_empty {R : Pair9} (h : coincSet R.V = ∅) :
+    ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j) := by
+  classical
+  intro v j hc
+  rw [Finset.eq_empty_iff_forall_notMem] at h
+  exact h (v, j) (by
+    simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
+
+open scoped Classical in
+/-- **§9.1 and §9.2 composed, as far as they currently go.**
+
+From **any** `Pair9` whose boundaries meet in finitely many points, §9.1's
+moves reach a pair that shares no vertex, still meets in finitely many points,
+has at least the original's crossings — and, by
+`Pair9Shift.points9_le_38_of_coincFree`, meets in at most `38` points.
+
+**The gap to `(A9)`, stated exactly.**  This bounds `points9 R'`, *not*
+`points9 R`.  Closing it needs `(points9 R).ncard ≤ (points9 R').ncard`, i.e. a
+measure that does not fall along the move chain — and the obvious candidate is
+**refuted**: `independent/e9_directions/verify_measure_refutation.py` exhibits
+a pair where all 4,159 admissible apex displacements drop
+`crossPairs + segDeg + segDegP` by exactly `3`, because a coincidence is an
+endpoint of four sides and is counted four times.  The point-counting measure
+`crossPairs + degPts.ncard` scores `0` on that same witness and is the
+indicated replacement (`Pair9Shift.points9_le_38_of_pt_measure` is its endpoint
+lemma), but its monotonicity is **not proved**.
+
+So `(A9)` is **not** established here, and `f(7,7) = 38` remains conditional on
+the AKR §9 import. -/
+theorem exists_coincFree_le_38 (R : Pair9) (hfin : (points9 R).Finite) :
+    ∃ R' : Pair9, coincSet R'.V = ∅ ∧ (points9 R').Finite ∧
+      RealPerturb.crossPairsOf R.V ⊆ RealPerturb.crossPairsOf R'.V ∧
+      (points9 R').ncard ≤ 38 := by
+  obtain ⟨R', hclear, hfin', hmono⟩ := exists_coincFree_finite _ R hfin rfl
+  exact ⟨R', hclear, hfin', hmono,
+    Pair9Shift.points9_le_38_of_coincFree R' hfin'
+      (coincFree_of_coincSet_empty hclear)⟩
+
+#print axioms exists_coincFree_le_38
+
+#print axioms pair9_coincSet_step_finite
+#print axioms exists_coincFree_finite
+#print axioms coincFree_of_coincSet_empty
+
 #print axioms exists_eps0_clearing_apex
 #print axioms exists_eps0_coincSet_lt
 
