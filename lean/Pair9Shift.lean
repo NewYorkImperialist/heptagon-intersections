@@ -4410,6 +4410,91 @@ theorem coincidence_four_slots (R : Pair9) {v j : Fin 7}
               exact coincidence_segDegP_ne v j), Finset.card_singleton]
       _ ≤ (segDegP R).card := Finset.card_le_card hsub
 
+/-! ### The converse half: a non-coincident degenerate point occupies one slot
+
+`AKR9.sideP9_unique` already says a point lies on at most one `P`-side, but it
+assumes **(E9)** — it derives a contradiction from the point being a vertex.
+Here the point *is* allowed to be a vertex; what is needed is the weaker
+conclusion that two distinct sides can only share a **vertex**.  That is
+`SimpleClosed`'s content and nothing more. -/
+
+theorem mem_two_sidesP_imp_vertex (R : Pair9) {i k : Fin 7} (hne : i ≠ k)
+    {x : ℝ × ℝ} (hi : x ∈ sideP9 R i) (hk : x ∈ sideP9 R k) :
+    ∃ v : Fin 7, x = R.V (pP v) := by
+  by_cases hadj : LowerBound.Adjacent i k
+  · rcases hadj with h | h | h
+    · exact absurd h hne
+    · subst h
+      have hx := R.simpleP.2.2 i
+      rw [← fin7_succ_succ i] at hx
+      have hm : x ∈ ({R.V (pP (i + 1))} : Set (ℝ × ℝ)) := by
+        rw [← hx]; exact ⟨hi, hk⟩
+      exact ⟨i + 1, Set.mem_singleton_iff.mp hm⟩
+    · subst h
+      have hx := R.simpleP.2.2 k
+      rw [← fin7_succ_succ k] at hx
+      have hm : x ∈ ({R.V (pP (k + 1))} : Set (ℝ × ℝ)) := by
+        rw [← hx]; exact ⟨hk, hi⟩
+      exact ⟨k + 1, Set.mem_singleton_iff.mp hm⟩
+  · exact absurd hk (Set.disjoint_left.mp (R.simpleP.2.1 i k hadj) hi)
+
+theorem mem_two_sidesQ_imp_vertex (R : Pair9) {i k : Fin 7} (hne : i ≠ k)
+    {x : ℝ × ℝ} (hi : x ∈ sideQ9 R i) (hk : x ∈ sideQ9 R k) :
+    ∃ m : Fin 7, x = R.V (pQ m) := by
+  by_cases hadj : LowerBound.Adjacent i k
+  · rcases hadj with h | h | h
+    · exact absurd h hne
+    · subst h
+      have hx := R.simpleQ.2.2 i
+      rw [← fin7_succ_succ i] at hx
+      have hm : x ∈ ({R.V (pQ (i + 1))} : Set (ℝ × ℝ)) := by
+        rw [← hx]; exact ⟨hi, hk⟩
+      exact ⟨i + 1, Set.mem_singleton_iff.mp hm⟩
+    · subst h
+      have hx := R.simpleQ.2.2 k
+      rw [← fin7_succ_succ k] at hx
+      have hm : x ∈ ({R.V (pQ (k + 1))} : Set (ℝ × ℝ)) := by
+        rw [← hx]; exact ⟨hk, hi⟩
+      exact ⟨k + 1, Set.mem_singleton_iff.mp hm⟩
+  · exact absurd hk (Set.disjoint_left.mp (R.simpleQ.2.1 i k hadj) hi)
+
+open scoped Classical in
+/-- **A `Q`-vertex that is not a `P`-vertex lies on at most one `P`-side.**
+So away from coincidences a degenerate point occupies exactly **one**
+`segDeg` slot — against the **four** of `coincidence_four_slots`. -/
+theorem segDeg_side_unique_of_coincFree (R : Pair9)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {k k' j : Fin 7} (h1 : (k, j) ∈ segDeg R) (h2 : (k', j) ∈ segDeg R) :
+    k = k' := by
+  classical
+  by_contra hne
+  have m1 : R.V (pQ j) ∈ sideP9 R k := by
+    simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using h1
+  have m2 : R.V (pQ j) ∈ sideP9 R k' := by
+    simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using h2
+  obtain ⟨v, hv⟩ := mem_two_sidesP_imp_vertex R hne m1 m2
+  exact hcoinc v j hv.symm
+
+open scoped Classical in
+/-- The mirror. -/
+theorem segDegP_side_unique_of_coincFree (R : Pair9)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {m m' v : Fin 7} (h1 : (m, v) ∈ segDegP R) (h2 : (m', v) ∈ segDegP R) :
+    m = m' := by
+  classical
+  by_contra hne
+  have s1 : R.V (pP v) ∈ sideQ9 R m := by
+    simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using h1
+  have s2 : R.V (pP v) ∈ sideQ9 R m' := by
+    simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using h2
+  obtain ⟨j, hj⟩ := mem_two_sidesQ_imp_vertex R hne s1 s2
+  exact hcoinc v j hj
+
+#print axioms mem_two_sidesP_imp_vertex
+#print axioms mem_two_sidesQ_imp_vertex
+#print axioms segDeg_side_unique_of_coincFree
+#print axioms segDegP_side_unique_of_coincFree
+
 #print axioms coincidence_mem_segDeg
 #print axioms coincidence_mem_segDegP
 #print axioms coincidence_four_slots
