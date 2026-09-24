@@ -4247,6 +4247,48 @@ theorem points9_le_38_of_pt_measure (R Rend : Pair9) (hfin : (points9 R).Finite)
         points9_ncard_le_crossPairs_add_deg R hfin
     _ ≤ 38 := by omega
 
+/-! ## 63. The bound is tight, and its hypotheses are satisfiable
+
+A faithfulness check in the spirit of row 52.  The kernel proves theorems; it
+does not check that a theorem is about anything.  `points9_le_38_of_coincFree`
+would be worthless if its hypotheses were unsatisfiable, and wrong if its
+bound were off by one — and the 38-crossing certificate tests both at once.
+
+`certRConfig` is in **general position**, which forces *both* hypotheses:
+no three of the fourteen vertices are collinear, so in particular no `P`-vertex
+equals a `Q`-vertex, and the intersection is finite.  The certificate meets in
+**exactly** 38 points, so a bound of `≤ 37` here would be inconsistent. -/
+
+theorem certPair9_coincFree :
+    ∀ v j : Fin 7, AKR9.certPair9.V (pP v) ≠ AKR9.certPair9.V (pQ j) := by
+  intro v j hc
+  refine RealUpperBound.certRConfig.gp (pP v) (pQ j) (pP (v + 1))
+    (pP_ne_pQ v j) ((pP_ne_pQ (v + 1) j).symm)
+    (fun hk => RealUpperBound.fin7_ne_succ v (pP_inj hk)) ?_
+  rw [AKR9.certPair9_V] at hc
+  rw [← hc]
+  simp only [orientR]
+  ring
+
+theorem certPair9_finite : (points9 AKR9.certPair9).Finite := by
+  rcases Set.finite_or_infinite (points9 AKR9.certPair9) with hf | hi
+  · exact hf
+  · have h := hi.ncard
+    rw [AKR9.certPair9_ncard] at h
+    norm_num at h
+
+/-- **The check.**  The general theorem gives `≤ 38` on a configuration whose
+count is *exactly* `38`: the hypotheses are satisfiable and the bound is
+attained, so it is neither vacuous nor slack. -/
+theorem certPair9_tight :
+    (points9 AKR9.certPair9).ncard = 38 ∧ (points9 AKR9.certPair9).ncard ≤ 38 :=
+  ⟨AKR9.certPair9_ncard,
+   points9_le_38_of_coincFree AKR9.certPair9 certPair9_finite certPair9_coincFree⟩
+
+#print axioms certPair9_coincFree
+#print axioms certPair9_finite
+#print axioms certPair9_tight
+
 #print axioms points9_le_38_of_pt_measure
 
 #print axioms exists_chain_deg_free
