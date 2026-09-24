@@ -906,5 +906,42 @@ theorem exists_sign_contrib_aff {ι : Type*} (S : Finset ι) (δ : ℝ)
 #print axioms averaging_local_contrib_aff
 #print axioms exists_sign_contrib_aff
 
+/-! ### Two families, one sign
+
+The averaging identity gives a bound for *one of two signs*. When two
+independent families of degeneracies must be paid for by the **same** shift,
+they need not prefer the same sign — so the per-family statement is not enough.
+Adding the two `±δ` identities gives a **combined** bound for one sign, which
+is what a joint accounting can actually use. -/
+
+theorem averaging_contrib_aff_sum {ι : Type*} (S : Finset ι) (δ : ℝ)
+    (m₀ m₁ m₂ y z : ι → ℝ)
+    (hy : ∀ i ∈ S, |δ * m₁ i| < |y i|) (hz : ∀ i ∈ S, |δ * m₂ i| < |z i|) :
+    2 * S.card ≤ (∑ i ∈ S, localContribAff δ (m₀ i) (m₁ i) (m₂ i) (y i) (z i))
+      + (∑ i ∈ S, localContribAff (-δ) (m₀ i) (m₁ i) (m₂ i) (y i) (z i)) := by
+  rw [← Finset.sum_add_distrib]
+  calc 2 * S.card = ∑ _i ∈ S, 2 := by simp [Nat.mul_comm]
+    _ ≤ _ := Finset.sum_le_sum fun i hi =>
+        averaging_local_contrib_aff (hy i hi) (hz i hi)
+
+/-- **One sign serves both families.**  Neither family's own bound need hold at
+that sign; the *sum* does, and that is what the joint counting consumes. -/
+theorem exists_sign_contrib_aff_two {ι κ : Type*} (S : Finset ι) (T : Finset κ) (δ : ℝ)
+    (m₀ m₁ m₂ y z : ι → ℝ) (n₀ n₁ n₂ v w : κ → ℝ)
+    (hyS : ∀ i ∈ S, |δ * m₁ i| < |y i|) (hzS : ∀ i ∈ S, |δ * m₂ i| < |z i|)
+    (hvT : ∀ k ∈ T, |δ * n₁ k| < |v k|) (hwT : ∀ k ∈ T, |δ * n₂ k| < |w k|) :
+    (S.card + T.card
+        ≤ (∑ i ∈ S, localContribAff δ (m₀ i) (m₁ i) (m₂ i) (y i) (z i))
+          + (∑ k ∈ T, localContribAff δ (n₀ k) (n₁ k) (n₂ k) (v k) (w k))) ∨
+      (S.card + T.card
+        ≤ (∑ i ∈ S, localContribAff (-δ) (m₀ i) (m₁ i) (m₂ i) (y i) (z i))
+          + (∑ k ∈ T, localContribAff (-δ) (n₀ k) (n₁ k) (n₂ k) (v k) (w k))) := by
+  have h1 := averaging_contrib_aff_sum S δ m₀ m₁ m₂ y z hyS hzS
+  have h2 := averaging_contrib_aff_sum T δ n₀ n₁ n₂ v w hvT hwT
+  omega
+
+#print axioms averaging_contrib_aff_sum
+#print axioms exists_sign_contrib_aff_two
+
 end TiltedShift
 end Heptagon

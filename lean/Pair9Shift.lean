@@ -2552,7 +2552,13 @@ theorem card_add_sum2_le {P ι κ : Type*} [DecidableEq P] [DecidableEq ι] [Dec
     _ ≤ A'.card := Finset.card_le_card hsub
 
 /-- **The joint step invariant, abstractly.**  Both degeneracy families are
-carried at once; the two averaging bounds and the one growth bound combine. -/
+carried at once.
+
+The averaging hypothesis is **combined**, not one bound per family, and that is
+forced rather than convenient: the averaging identity supplies a bound for *one
+of two signs*, and the two families need not prefer the **same** sign. Adding
+the two ±δ identities gives a combined bound for one sign, which is what is
+available and — as the proof shows — all that is needed. -/
 theorem step_invariant_abstract2 {ι κ P : Type*}
     [DecidableEq ι] [DecidableEq κ] [DecidableEq P]
     (A A' : Finset P) (D Z D' : Finset ι) (E W E' : Finset κ)
@@ -2563,7 +2569,7 @@ theorem step_invariant_abstract2 {ι κ P : Type*}
     (hNE : ∀ e ∈ E, e ∉ W → (newE e).card = lcE e)
     (hZ1 : ∀ d ∈ Z, lcD d = 1) (hW1 : ∀ e ∈ W, lcE e = 1)
     (hD' : Z.card ≤ D'.card) (hE' : W.card ≤ E'.card)
-    (havgD : D.card ≤ ∑ d ∈ D, lcD d) (havgE : E.card ≤ ∑ e ∈ E, lcE e) :
+    (havg : D.card + E.card ≤ (∑ d ∈ D, lcD d) + (∑ e ∈ E, lcE e)) :
     A.card + D.card + E.card ≤ A'.card + D'.card + E'.card := by
   classical
   have hsplitD : ∑ d ∈ D \ Z, lcD d + ∑ d ∈ Z, lcD d = ∑ d ∈ D, lcD d :=
@@ -2799,8 +2805,8 @@ theorem step_invariant_joint (R R' : Pair9) (hfin : (points9 R).Finite)
         = lcAtP R.V i t δ e)
     (hsurvD : ∀ d ∈ segDeg R, d.1 ∉ touched i → d ∈ segDeg R')
     (hsurvE : ∀ e ∈ segDegP R, e.2 ∉ touchedP i → e ∈ segDegP R')
-    (havgD : (segDeg R).card ≤ ∑ d ∈ segDeg R, lcAt R.V i t δ d)
-    (havgE : (segDegP R).card ≤ ∑ e ∈ segDegP R, lcAtP R.V i t δ e) :
+    (havg : (segDeg R).card + (segDegP R).card
+      ≤ (∑ d ∈ segDeg R, lcAt R.V i t δ d) + (∑ e ∈ segDegP R, lcAtP R.V i t δ e)) :
     (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
       ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
   classical
@@ -2810,7 +2816,7 @@ theorem step_invariant_joint (R R' : Pair9) (hfin : (points9 R).Finite)
     (fun d => (incidentPairs d).filter (fun q => q ∈ crossPairsOf R'.V))
     (fun e => (incidentPairsP e).filter (fun q => q ∈ crossPairsOf R'.V))
     (lcAt R.V i t δ) (lcAtP R.V i t δ)
-    (Finset.filter_subset _ _) (Finset.filter_subset _ _) ?_ ?_ ?_ ?_ ?_ ?_ ?_ havgD havgE
+    (Finset.filter_subset _ _) (Finset.filter_subset _ _) ?_ ?_ ?_ ?_ ?_ ?_ ?_ havg
   · -- the crossings grow by both families' converted pairs
     refine card_add_sum2_le _ _ _ _ _ _ hmono
       (fun d _ q hq => (Finset.mem_filter.mp hq).2)
@@ -2947,6 +2953,52 @@ theorem exists_delta0_bridgeD (R : Pair9) (i : Fin 7) (t : ℝ)
   exact h δ hδ d.1 d.2 hrate hdeg (hsepP d hd) (hsepN d hd)
 
 #print axioms exists_delta0_bridgeD
+
+/-! ## 48. Discharging the survival hypotheses
+
+Both are immediate from the index conditions: an untouched `P`-side has neither
+endpoint moved, and an untouched `P`-vertex does not move. -/
+
+theorem survD_of_untouched (R R' : Pair9) (i : Fin 7) (t δ : ℝ)
+    (hR' : R'.V = shiftV R.V i t δ) :
+    ∀ d ∈ segDeg R, d.1 ∉ touched i → d ∈ segDeg R' := by
+  intro d hd hnt
+  have h1 : d.1 ≠ i := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inl hc)
+  have h2 : d.1 ≠ i + 1 := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inr (Or.inl hc))
+  have h3 : d.1 ≠ i - 1 := fun hc => hnt (by rw [mem_touched_iff]; exact Or.inr (Or.inr hc))
+  have hA : ¬(pP d.1 = pP i ∨ pP d.1 = pP (i + 1)) := by
+    rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  have hB : ¬(pP (d.1 + 1) = pP i ∨ pP (d.1 + 1) = pP (i + 1)) := by
+    rintro (h | h)
+    · exact h3 (by have := pP_inj h; rw [← this]; simp)
+    · exact h1 (add_right_cancel (pP_inj h))
+  have := segDeg_mem_of_untouched R.V i t δ R R' rfl hR' (k := d.1) (j := d.2)
+    (by simpa using hd) hA hB
+  simpa using this
+
+theorem survE_of_untouched (R R' : Pair9) (i : Fin 7) (t δ : ℝ)
+    (hR' : R'.V = shiftV R.V i t δ) :
+    ∀ e ∈ segDegP R, e.2 ∉ touchedP i → e ∈ segDegP R' := by
+  classical
+  intro e he hnt
+  have h1 : e.2 ≠ i := fun hc => hnt (by rw [mem_touchedP_iff]; exact Or.inl hc)
+  have h2 : e.2 ≠ i + 1 := fun hc => hnt (by rw [mem_touchedP_iff]; exact Or.inr hc)
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at he ⊢
+  have eQ1 : R'.V (pQ e.1) = R.V (pQ e.1) := by rw [hR']; exact shiftV_Q R.V i t δ e.1
+  have eQ2 : R'.V (pQ (e.1 + 1)) = R.V (pQ (e.1 + 1)) := by
+    rw [hR']; exact shiftV_Q R.V i t δ (e.1 + 1)
+  have eP : R'.V (pP e.2) = R.V (pP e.2) := by
+    rw [hR', shiftV]
+    refine if_neg ?_
+    rintro (h | h)
+    · exact h1 (pP_inj h)
+    · exact h2 (pP_inj h)
+  simpa only [sideQ9, eQ1, eQ2, eP] using he
+
+#print axioms survD_of_untouched
+#print axioms survE_of_untouched
 
 end Pair9Shift
 end Heptagon
