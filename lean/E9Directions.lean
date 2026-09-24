@@ -705,7 +705,6 @@ theorem exists_delta_preserving_coincFree (V : Fin 14 → ℝ × ℝ) (i : Fin 7
       exact hfree (k, m) (by
         simp only [coincSet, Finset.mem_filter, Finset.mem_univ, true_and]; exact hc)
 
-#print axioms tilt_ne_zero
 #print axioms exists_delta_preserving_coincFree
 
 /-! ## 14. Composing: one shift that clears a degeneracy **and** keeps the
@@ -979,6 +978,56 @@ theorem segDegP_move_untouched_iff (R R' : Pair9) (i : Fin 7) (E : ℝ × ℝ) (
   constructor <;> intro h <;>
     simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢ <;>
     simpa only [sideQ9, e1, e2, e3] using h
+
+/-! ### A direction avoiding finitely many bad ones
+
+The move needs an `E` not parallel to any of a finite list of vectors.  The
+tilt family `t ↦ tilt u t` is a one-parameter family of directions, never zero,
+and each bad vector rules out at most one `t` — so `RotationLaw.exists_good_tilt`
+supplies `E` here just as it supplied the tilt in §9.2. -/
+
+/-- **A nonzero direction transverse to every nonzero vector of a finite
+family.** -/
+theorem exists_good_dir {ι : Type*} [DecidableEq ι] (S : Finset ι) (x : ι → ℝ × ℝ)
+    {u : ℝ × ℝ} (hu : u ≠ 0) :
+    ∃ E : ℝ × ℝ, E ≠ 0 ∧ ∀ k ∈ S, x k ≠ 0 → cross E (x k) ≠ 0 := by
+  classical
+  obtain ⟨t, -, h⟩ :=
+    RotationLaw.exists_good_tilt (S.filter (fun k => x k ≠ 0)) hu x
+      (fun k hk => (Finset.mem_filter.mp hk).2)
+      ((Finset.range (S.card + 1)).image (fun n : ℕ => (n : ℝ)))
+      (by
+        rw [Finset.card_image_of_injective _ Nat.cast_injective, Finset.card_range]
+        exact Nat.lt_succ_of_le (Finset.card_le_card (Finset.filter_subset _ _)))
+  exact ⟨RotationLaw.tilt u t, tilt_ne_zero hu t,
+    fun k hk hne => h k (Finset.mem_filter.mpr ⟨hk, hne⟩)⟩
+
+/-- **A direction good for every rate the move at `P_i` can involve.**  The
+twenty-one vectors are the seven `Q`-side directions and, for each `Q`-vertex,
+the two segment directions along the incoming and outgoing `P`-sides. -/
+theorem exists_good_dir_pair9 (R : Pair9) (i : Fin 7) :
+    ∃ E : ℝ × ℝ, E ≠ 0 ∧
+      (∀ m : Fin 7, R.V (pQ (m + 1)) - R.V (pQ m) ≠ 0 →
+        cross E (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0) ∧
+      (∀ j : Fin 7, R.V (pP (i + 1)) - R.V (pQ j) ≠ 0 →
+        cross E (R.V (pP (i + 1)) - R.V (pQ j)) ≠ 0) ∧
+      (∀ j : Fin 7, R.V (pQ j) - R.V (pP (i - 1)) ≠ 0 →
+        cross E (R.V (pQ j) - R.V (pP (i - 1))) ≠ 0) := by
+  classical
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨E, hE, h⟩ :=
+    exists_good_dir (Finset.univ : Finset (Fin 7 ⊕ (Fin 7 ⊕ Fin 7)))
+      (Sum.elim (fun m : Fin 7 => R.V (pQ (m + 1)) - R.V (pQ m))
+        (Sum.elim (fun j : Fin 7 => R.V (pP (i + 1)) - R.V (pQ j))
+          (fun j : Fin 7 => R.V (pQ j) - R.V (pP (i - 1))))) hu
+  exact ⟨E, hE,
+    fun m hm => h (Sum.inl m) (Finset.mem_univ _) hm,
+    fun j hj => h (Sum.inr (Sum.inl j)) (Finset.mem_univ _) hj,
+    fun j hj => h (Sum.inr (Sum.inr j)) (Finset.mem_univ _) hj⟩
+
+#print axioms exists_good_dir
+#print axioms exists_good_dir_pair9
 
 #print axioms moveCoefQ_apex
 #print axioms moveCoef_self
