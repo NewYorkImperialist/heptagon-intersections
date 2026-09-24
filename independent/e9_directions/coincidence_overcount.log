@@ -1,0 +1,36 @@
+==========================================================================
+A single vertex-vertex coincidence, and how each measure counts it
+==========================================================================
+coincidences (v,j)      : [(0, 0)]
+crossPairs              : 0 []
+segDeg  entries         : 2 [(0, 0), (6, 0)]
+segDegP entries         : 2 [(0, 0), (6, 0)]
+degPts (POINTS, ncard)  : 1 [(0, 0)]
+
+the ONE coincidence point is counted
+   segDeg + segDegP : 4 times
+   degPts           : 1 time(s)
+
+M_seg = |crossPairs| + |segDeg| + |segDegP| = 4
+M_pt  = |crossPairs| + |degPts|             = 1
+
+VERDICT: M_seg overcounts this coincidence by 3 units.
+         Clearing it must be paid for 4 crossings under M_seg, but only 1 under M_pt.
+
+==========================================================================
+CONTROL -- on a 9.2-style degeneracy (vertex strictly INSIDE a side)
+the two measures agree, which is why M_seg works there
+==========================================================================
+coincidences            : []  (empty)
+Q[0] strictly inside P-side 0 : True
+segDeg + segDegP        : 1
+degPts                  : 1
+overcount               : 0  <- ZERO, the two measures agree
+
+==========================================================================
+SANITY -- the primitives are not permissive
+==========================================================================
+on_segment rejects an off-line point  : True
+on_segment accepts an endpoint        : True
+proper_cross on a clean crossing      : True
+proper_cross rejects a touch          : True
