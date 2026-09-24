@@ -5175,5 +5175,161 @@ theorem M_pt_le_of_coinc_step (R R' : Pair9)
 #print axioms pt_measure_step_of_counts
 #print axioms M_pt_le_of_coinc_step
 
+/-! ## NON-VACUITY OF THE HEADLINE THEOREM — everything in one place
+
+The kernel proves theorems; it does not check that a theorem is *about*
+anything.  Three failure modes survive a clean `lake build`, and a reviewer
+who reads Lean would catch all three by eye.  There is no such reviewer here,
+so each is closed mechanically instead.  Every claim below is a theorem, and
+every theorem is followed by `#print axioms`.
+
+| failure mode | its checkable opposite | closed by |
+|---|---|---|
+| a definition is empty | exhibit a member | `certPair9_points9_nonempty`, `certPair9_sides_meet`, `vertexP_mem_sideP9` |
+| a hypothesis is unsatisfiable, so the theorem is vacuous | exhibit one configuration meeting **all** of them at once | `nonVacuity` clauses 1–5 |
+| the bound is trivially true | show it is **attained**, and that one less is false | `AKR9.certPair9_ncard`, `certPair9_not_le_37` |
+
+The single witness for all of it is `AKR9.certPair9`, which is
+`AKR9.ofRConfig9 RealUpperBound.certRConfig` — the 38-crossing lower-bound
+certificate, whose fourteen vertices are the integer coordinates of
+`LowerBound.Pv` / `LowerBound.Qv`, read verbatim from
+`data/lower_bound/lower_bound_38.json`.  It is a *concrete* configuration: no
+`Classical.choose` stands between the statement and the points.
+
+**What this does not do.**  It does not make `f(7,7) = 38` unconditional.
+`isGreatest_38_of_coincFree` still assumes coincidence-freeness, which is
+AKR §9.1's conclusion.  Non-vacuity says the theorem has content; it does not
+say the hypothesis is discharged. -/
+
+/-- **(NV1) `Pair9` is inhabited.**  The structure carries `SimpleClosed` for
+both heptagons, so this is the statement that the ambient hypotheses of every
+theorem in this file are jointly satisfiable at all. -/
+theorem pair9_nonempty : Nonempty AKR9.Pair9 := ⟨AKR9.certPair9⟩
+
+/-- **(NV2) `sideP9` is not empty**, and one can name a member: a side contains
+its own first vertex. -/
+theorem vertexP_mem_sideP9 (R : AKR9.Pair9) (v : Fin 7) :
+    R.V (pP v) ∈ AKR9.sideP9 R v := left_mem_segment ℝ _ _
+
+/-- The mirror of `vertexP_mem_sideP9`. -/
+theorem vertexQ_mem_sideQ9 (R : AKR9.Pair9) (j : Fin 7) :
+    R.V (pQ j) ∈ AKR9.sideQ9 R j := left_mem_segment ℝ _ _
+
+/-- **`points9` really is an intersection of sides.**  Unfolding, but stated
+so that the next lemma can hand a reader an actual point on an actual side of
+each polygon. -/
+theorem points9_mem_sides (R : AKR9.Pair9) {x : ℝ × ℝ} (hx : x ∈ points9 R) :
+    (∃ i : Fin 7, x ∈ AKR9.sideP9 R i) ∧ (∃ j : Fin 7, x ∈ AKR9.sideQ9 R j) :=
+  ⟨Set.mem_iUnion.mp hx.1, Set.mem_iUnion.mp hx.2⟩
+
+/-- **(NV3) `points9` is not empty at the witness.**  `Set.ncard` is `0` both on
+the empty set and on an infinite one, so a bound `ncard ≤ 38` is worthless
+unless something is known to be *in* the set.  Here the count is `38 ≠ 0`. -/
+theorem certPair9_points9_nonempty : (points9 AKR9.certPair9).Nonempty :=
+  Set.nonempty_of_ncard_ne_zero (by rw [AKR9.certPair9_ncard]; norm_num)
+
+/-- **(NV4) The definitions interlock.**  There is a point of the plane lying
+on a `P`-side *and* on a `Q`-side of the certificate — so `sideP9`, `sideQ9`
+and `points9` are not three unrelated empty gadgets. -/
+theorem certPair9_sides_meet :
+    ∃ (x : ℝ × ℝ) (i j : Fin 7),
+      x ∈ AKR9.sideP9 AKR9.certPair9 i ∧ x ∈ AKR9.sideQ9 AKR9.certPair9 j := by
+  obtain ⟨x, hx⟩ := certPair9_points9_nonempty
+  obtain ⟨⟨i, hi⟩, ⟨j, hj⟩⟩ := points9_mem_sides _ hx
+  exact ⟨x, i, j, hi, hj⟩
+
+/-- **(NV5) (E9) is satisfiable**, at the *same* witness.  `AKR9.certPair9`
+comes from an `RConfig`, and general position forbids any vertex of one polygon
+from lying anywhere on the other's boundary.  So the stronger hypothesis of
+`AKR9.isGreatest_38_of_E9` is non-vacuous too, and by
+`coincFree_of_noVertexOnOther` it implies the weaker one used here. -/
+theorem certPair9_noVertexOnOther : AKR9.NoVertexOnOther AKR9.certPair9 :=
+  AKR9.noVertexOnOther_ofRConfig _
+
+/-- **(NV6) The bound is not slack.**  `≤ 38` is attained; `≤ 37` is false on
+the very configuration the theorem applies to.  So the constant `38` is forced
+and cannot be improved by a reader's inspection. -/
+theorem certPair9_not_le_37 : ¬ (points9 AKR9.certPair9).ncard ≤ 37 := by
+  intro h
+  rw [AKR9.certPair9_ncard] at h
+  omega
+
+/-- **(NV7) `attainedCoincFree` is not empty** — `IsGreatest` would be a much
+weaker statement about an empty set. -/
+theorem mem_attainedCoincFree_38 : (38 : ℕ) ∈ attainedCoincFree :=
+  isGreatest_38_of_coincFree.1
+
+/-- **(NV8) …and it is not everything.**  `39` is *not* attained, so the upper
+bound half of `IsGreatest` has bite. -/
+theorem not_mem_attainedCoincFree_39 : (39 : ℕ) ∉ attainedCoincFree := by
+  intro h
+  have := isGreatest_38_of_coincFree.2 h
+  omega
+
+/-- **(NV9) `IsGreatest` pins the value.**  Any greatest element of
+`attainedCoincFree` equals `38`: the theorem does not merely assert an upper
+bound, it identifies the maximum. -/
+theorem isGreatest_attainedCoincFree_unique {n : ℕ}
+    (h : IsGreatest attainedCoincFree n) : n = 38 :=
+  h.unique isGreatest_38_of_coincFree
+
+/-- **THE NON-VACUITY BUNDLE.**  One theorem a reader can check in one
+screenful.  Reading the clauses in order:
+
+1. `Pair9` is inhabited — the ambient `SimpleClosed` hypotheses are satisfiable;
+2. `points9` of the witness is a non-empty set of actual points of `ℝ × ℝ`;
+3. it is finite — so `Set.ncard` is the honest count and not the `0` that
+   `ncard` returns on infinite sets;
+4. the witness is coincidence-free — the hypothesis of
+   `points9_le_38_of_coincFree` holds;
+5. the witness satisfies the *stronger* hypothesis (E9) of
+   `AKR9.isGreatest_38_of_E9` as well;
+6. its count is **exactly** `38` — the bound is attained;
+7. `≤ 37` is false there — the bound is not slack;
+8. `38` is attained, and
+9. `39` is not — so the upper-bound half is not vacuous;
+10. and `38` is the greatest attained count.
+
+Clauses 2–7 all hold of the **same** configuration, which is the point: a
+hypothesis-by-hypothesis check would not rule out a theorem whose hypotheses
+are individually satisfiable but jointly contradictory. -/
+theorem nonVacuity :
+    Nonempty AKR9.Pair9
+    ∧ (points9 AKR9.certPair9).Nonempty
+    ∧ (points9 AKR9.certPair9).Finite
+    ∧ (∀ v j : Fin 7, AKR9.certPair9.V (pP v) ≠ AKR9.certPair9.V (pQ j))
+    ∧ AKR9.NoVertexOnOther AKR9.certPair9
+    ∧ (points9 AKR9.certPair9).ncard = 38
+    ∧ ¬ (points9 AKR9.certPair9).ncard ≤ 37
+    ∧ (38 : ℕ) ∈ attainedCoincFree
+    ∧ (39 : ℕ) ∉ attainedCoincFree
+    ∧ IsGreatest attainedCoincFree 38 :=
+  ⟨pair9_nonempty, certPair9_points9_nonempty, certPair9_finite,
+   certPair9_coincFree, certPair9_noVertexOnOther, AKR9.certPair9_ncard,
+   certPair9_not_le_37, mem_attainedCoincFree_38, not_mem_attainedCoincFree_39,
+   isGreatest_38_of_coincFree⟩
+
+#print axioms pair9_nonempty
+#print axioms vertexP_mem_sideP9
+#print axioms vertexQ_mem_sideQ9
+#print axioms points9_mem_sides
+#print axioms certPair9_points9_nonempty
+#print axioms certPair9_sides_meet
+#print axioms certPair9_noVertexOnOther
+#print axioms certPair9_not_le_37
+#print axioms mem_attainedCoincFree_38
+#print axioms not_mem_attainedCoincFree_39
+#print axioms isGreatest_attainedCoincFree_unique
+#print axioms nonVacuity
+
+-- and the results the bundle rests on, restated here so the whole
+-- non-vacuity argument is auditable from this one screen:
+#print axioms certPair9_finite
+#print axioms certPair9_coincFree
+#print axioms certPair9_tight
+#print axioms isGreatest_38_of_coincFree
+#print axioms points9_le_38_of_coincFree
+#print axioms coincFree_of_noVertexOnOther
+
 end Pair9Shift
 end Heptagon

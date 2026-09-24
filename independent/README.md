@@ -1,14 +1,84 @@
 # Independent re-derivations and experiments
 
-Fifteen separate investigations, each in its own subdirectory, each written to
-check something the main pipeline in `../python/` asserts, or to probe a claim
-the paper makes. They differ sharply in how independent they actually are, and
-the difference is the whole point of keeping them apart — read each
-subdirectory's own README before quoting it.
+## NONE OF THIS IS PART OF THE PROOF
+
+**Read this before anything else in this directory.**
+
+`independent/` is **not in the trust chain.** The Lean development does not
+depend on a single file here: no `.lean` module reads, imports, embeds or
+executes anything in this directory (every mention of `independent/` in
+`lean/*.lean` is a prose comment), and the development uses no
+`native_decide`, no `include_str` and no `IO`. **Delete this entire directory
+and every Lean theorem in the repository remains exactly as true as it was.**
+What would be lost is *evidence about* the theorems and about the published
+papers — corroboration, ablations, adversarial searches and counterexamples —
+not any step of any proof. Verify the claim rather than taking it:
+
+```bash
+# every mention of this directory from Lean is inside a comment or docstring:
+grep -rn 'independent/' lean/*.lean
+# and the development reads nothing from disk at elaboration time -- the only
+# `native_decide` / `include_str` hits are the scope notes saying there are none:
+grep -rn 'native_decide\|include_str' lean/*.lean
+```
+
+`scripts/verify-all.sh` re-runs the comment-stripped version of that scan on
+every build and fails if a real occurrence appears, which is the check to trust
+rather than the greps above.
+
+Two consequences a reviewer should draw:
+
+* **A defect found here cannot invalidate a Lean theorem.** It can invalidate a
+  *claim made about* a Lean theorem, or remove corroboration for an imported
+  lemma, which is why the findings are worth reading. But the kernel-checked
+  statements stand or fall on `lean/` alone.
+* **A success here does not make anything a theorem.** "47,346 exact tests, 0
+  violations" is a search, not a proof, and several directories below say so of
+  themselves.
+
+**Most of this will not run on your machine.** Of the 280 committed
+Python/shell/C files here (**38,530 lines**), **36 Python files and 22 C files
+hardcode absolute paths under `/Users/jaydenlin/…`** and will fail immediately
+from a fresh clone. They are concentrated in `eps_uniform/` (26),
+`pi8_human/` (15), `pi14_split/` (7) and `akr_9_assembly/` (6), with one each in
+`pi8_tightness/`, `order_type_pi8/`, `akr_l7_reproduction/` and `akr_9_2/`.
+Re-run the count:
+
+```bash
+cd independent
+grep -rl '/Users/jaydenlin' --include='*.py' --include='*.sh' . | wc -l   # -> 36
+grep -rl '/Users/jaydenlin' --include='*.c'  --include='*.h'  . | wc -l   # -> 22
+```
+
+The parts `scripts/verify-all.sh` actually exercises — `akr_l7_reproduction/`
+steps 5b–5d and `implementation_b/` step 6 — do run from a clean checkout; see
+"Running them" at the foot of this file. Everything else should be read as a
+**recorded result with a committed log**, not as a reproducible artifact.
+
+*(This section added 2026-09-24. The file previously opened straight into the
+table, so a reader could not tell from here whether these ~38,000 lines were
+load-bearing. They are not, and saying so plainly is more useful than leaving
+it to be inferred.)*
+
+---
+
+## The investigations
+
+**Seventeen** separate investigations, each in its own subdirectory, each
+written to check something the main pipeline in `../python/` asserts, or to
+probe a claim the paper makes. They differ sharply in how independent they
+actually are, and the difference is the whole point of keeping them apart —
+read each subdirectory's own README before quoting it.
 
 > This index said "Four separate investigations" and tabled four until
 > 2026-09-20, while nine further directories sat here uncited (a tenth, `e9_directions/`, and an eleventh, `akr_9_2/`, were added on 2026-09-20). If you have
 > quoted this file before that date, you were reading a partial list.
+>
+> *(**Corrected again 2026-09-24.** The heading then read "Fifteen" while the
+> table listed fifteen and **seventeen** directories existed:
+> `eps_uniform/` and `akr_9_assembly/` were present and uncited. Rows for both
+> are now at the foot of the table. Same failure as the one above it, one level
+> down; `ls -d independent/*/ | wc -l` should match the row count.)*
 
 **None of this is human verification.** Every directory here was produced
 inside the same AI-assisted development process as the rest of the repository.
@@ -31,6 +101,8 @@ See `../docs/ai-disclosure.md`.
 | [`pi14_split/`](pi14_split/) | `Pi_14`, the one pattern with **no** independent check — eleven points puts the order-type route permanently out of reach | **Encoding-independent of the SAT/chirotope proof** (semialgebraic feasibility, no Boolean variables, no Grassmann-Plücker clauses), with ground truth transcribed from the Lean source and diffed against it | **Does not close, but most of it is gone.** Successive censuses of the 256-branch disjunct split reached 11, 57, 76, and now **192 refuted / 0 realizable / 64 undecided**. The jump came from a *theorem*, not more solving: the 13 crossings plus two of the eight non-crossings force `or(8,9,10)`, `or(8,9,11)`, `or(8,9,12)` to alternate, so both `Q1 ⊁ Q3` and `Q1 ⊁ Q4` must take their second disjunct. Underneath sits **Lemma 1**, an 8-point statement proved by hand and verified exhaustively (3,400 hypothesis cases, 0 violations; control: 76,016/76,016 fail without it). It also explains the asymmetry — the line `V8V9` has 33–35 of 36 pair-products forced, against **1** for `V10V11` — and **corrects the earlier 74-vs-2 figure to 128-vs-64**; the "secondary clustering" was noise. The 64 survivors resisted a 24-member portfolio each. **`Pi_14` is not independently refuted** |
 | [`e9_directions/`](e9_directions/) | the existence of the directions `E_i` in AKR §9.1 — asserted by the authors with no argument, and rated *"hard, and unproved in the paper"* by this project's own audit | **Independent of this repository.** The statement comes from the AKR journal text; only `orient`/`ProperCross` are taken from `lean/GeometryDefs.lean`. Exact rational arithmetic throughout | **Proved, with a sharp criterion.** A direction exists **iff** the four edge directions at the apex are not all mutually parallel — and that failure case would force `∂P ∩ ∂Q` to be infinite, which AKR's own standing assumption excludes. The direction can also be chosen degeneracy-free. Verified on 19,765 + 8,628 + 3,980 configurations with zero failures, 66 genuine "no" cases present so the criterion is not vacuous, and controls that reproduce the K-10 failure exactly. **Does not close §9** — the uniform-ε₀ step is untouched |
 | [`akr_9_2/`](akr_9_2/) | AKR §9.2, the **vertex-side** half of §9 — four sentences, essentially unstudied here before this, rated "moderate–hard" in one table row of `../docs/akr-9-1-obligation.md` §5.1 | **Independent of this repository.** The statement is read off the AKR journal PDF (page 25 rendered as a 4× raster via a Swift/PDFKit utility, cross-checked against a from-scratch zlib content-stream extractor); the geometry is written from scratch in exact rationals and imports no project code | **The averaging claim is true and is proved** (`../docs/akr-9-2-obligation.md` §4, on paper, unreviewed, not in Lean); **47 346** exact tests, **0** violations. Three findings AKR do not state: their own description covers only one of the four cases (the **moving endpoints** of the shifted side behave differently and are the commonest case, 12 776 of 47 346); the shift is **undefined** when the shifted side has a collinear neighbour, which §9.2 may not assume away and which `lean/AKR9.lean`'s `SimpleClosed` deliberately admits — **17.7 %** of random hexagon pairs; and **dropping §9.2's opening clause makes its conclusion false**, with an explicit exact counterexample where **both** shift directions lose a point. A repair (translate the side, let the neighbours rotate) is always defined and tests clean on 16 716 instances but is **not** AKR's operation and is **not proved**. **Does not close §9** — §9.1's uniform-ε₀ step is upstream and untouched |
+| [`eps_uniform/`](eps_uniform/) | the **"One final point:" uniform-ε₀ paragraph** of AKR §9.1 (PDF p. 24) — the step `../../docs/akr-9-1-obligation.md` §5.2 calls the hardest in the section | **Independent of this repository.** The statement is read off the AKR journal text; exact `fractions.Fraction` throughout, with a from-scratch polynomial/power-series layer (`epslib.py`) because `sympy` is not installed | **AKR's local claim is TRUE, but not by the mechanism they cite** — not the sine law, but insensitivity of an `ε`-valuation-≥1 numerator to an `O(ε)` perturbation. The uniform `ε₀` then comes almost free: Theorem 17 makes every vertex affine in `ε`, so all 1,638 predicates are signs of degree-≤2 polynomials and one root-free radius serves them all. **On this evidence the audit ranked the wrong half as hard.** Two unexpected findings, both kept: AKR's "there will be no degenerate situations" is **literally false** for directions their own criterion admits (Finding 2, exact certificate), and **one of the directory's own controls was wrong and silently passed** — documented in Finding 4 rather than deleted. Now largely superseded as evidence by `lean/UniformEps.lean` (`../docs/uniform-eps-lean.md`), which kernel-checks the machinery. **Does not close §9.** *(Added to this table 2026-09-24; the directory existed and was uncited.)* |
+| [`akr_9_assembly/`](akr_9_assembly/) | the **explicit injection** `Φ` of `../../docs/akr-9-assembly.md` §2.3, and whether §9.2's shift operator can be **permanently blocked** | an experiment on this project's own assembly of §9, in exact rationals; each of the three scripts carries a control that must fire | **Two negatives, and they are the useful part.** (i) `injection.py`: `Φ` is total and injective **285/285** in the arm satisfying AKR's (R2) — and the paper's own count-preservation framing **over-reports by about a factor of two**, since in the `E ∥ edge` control arm the count failed to drop 129/285 while `Φ` failed **285/285**. (ii) `nc_stuck.py` + `certificate.py`: the (NC) precondition can block **every** usable side at once, ~1 % of degenerate random pairs, certified from integer coordinates with the blockage shown **permanent**. `CI_HARDENED.md` adds a third: the `ncard` inequality `\|∂P(α) ∩ ∂Q(α)\| ≥ \|X\|` is **false under the hypotheses §2.3 lists** — it silently needs (Fin-out) — while the injection itself survives 1,668/1,668. **What is refuted is §9's *printed procedure* on an explicit input, never §9's conclusion.** **Does not close §9**; repairs are discussed in `docs/akr-9-assembly.md` §2.5 and are not proved. *(Added to this table 2026-09-24; the directory existed and was uncited.)* |
 
 ## How to read the "independent" in the directory name
 

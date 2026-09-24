@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="760" viewBox="0 0 760 760">
+  <rect width="760" height="760" fill="#ffffff" />
+  <text x="35" y="30" font-family="Helvetica,Arial,sans-serif" font-size="19" font-weight="bold" fill="#111111">certificate_38</text>
+  <text x="35" y="52" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">The lower-bound certificate of data/lower_bound/lower_bound_38.json: two simple heptagons whose</text>
+  <text x="35" y="69" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">boundaries meet in 38 points.</text>
+  <text x="35" y="91" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="bold" fill="#111111">38 intersection points</text>
+  <text x="35" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c">P (solid)</text>
+  <text x="115" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828">Q (dashed)</text>
+  <text x="215" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111111">circles: points of &#8706;P &#8745; &#8706;Q</text>
+  <polygon points="633.31,443.97 243.23,690 626.84,403.5 172.01,443.97 558.86,241.64 126.69,257.83 631.7,215.74" fill="#1b5e9c" fill-opacity="0.07" stroke="#1b5e9c" stroke-width="3" stroke-linejoin="round" />
+  <polygon points="586.37,659.25 173.63,207.65 587.99,667.34 633.31,351.71 466.6,151 555.62,547.56 340.34,238.41" fill="#c62828" fill-opacity="0.07" stroke="#c62828" stroke-width="3" stroke-linejoin="round" stroke-dasharray="10 6" />
+  <circle cx="633.31" cy="443.97" r="4.5" fill="#1b5e9c" />
+  <text x="640.31" y="436.97" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P0</text>
+  <circle cx="243.23" cy="690" r="4.5" fill="#1b5e9c" />
+  <text x="250.23" y="683" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P1</text>
+  <circle cx="626.84" cy="403.5" r="4.5" fill="#1b5e9c" />
+  <text x="633.84" y="396.5" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P2</text>
+  <circle cx="172.01" cy="443.97" r="4.5" fill="#1b5e9c" />
+  <text x="179.01" y="436.97" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P3</text>
+  <circle cx="558.86" cy="241.64" r="4.5" fill="#1b5e9c" />
+  <text x="565.86" y="234.64" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P4</text>
+  <circle cx="126.69" cy="257.83" r="4.5" fill="#1b5e9c" />
+  <text x="133.69" y="250.83" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P5</text>
+  <circle cx="631.7" cy="215.74" r="4.5" fill="#1b5e9c" />
+  <text x="638.7" y="208.74" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P6</text>
+  <circle cx="586.37" cy="659.25" r="4.5" fill="#c62828" />
+  <text x="593.37" y="652.25" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q0</text>
+  <circle cx="173.63" cy="207.65" r="4.5" fill="#c62828" />
+  <text x="180.63" y="200.65" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q1</text>
+  <circle cx="587.99" cy="667.34" r="4.5" fill="#c62828" />
+  <text x="594.99" y="660.34" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q2</text>
+  <circle cx="633.31" cy="351.71" r="4.5" fill="#c62828" />
+  <text x="640.31" y="344.71" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q3</text>
+  <circle cx="466.6" cy="151" r="4.5" fill="#c62828" />
+  <text x="473.6" y="144" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q4</text>
+  <circle cx="555.62" cy="547.56" r="4.5" fill="#c62828" />
+  <text x="562.62" y="540.56" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q5</text>
+  <circle cx="340.34" cy="238.41" r="4.5" fill="#c62828" />
+  <text x="347.34" y="231.41" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q6</text>
+  <circle cx="212.42" cy="250.68" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="212.42" y="250.68" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">1</text>
+  <circle cx="212.92" cy="250.64" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="212.92" y="250.64" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">2</text>
+  <circle cx="215.85" cy="254.49" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="215.85" y="254.49" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">3</text>
+  <circle cx="216.42" cy="254.47" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="216.42" y="254.47" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">4</text>
+  <circle cx="317.88" cy="367.68" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="317.88" y="367.68" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">5</text>
+  <circle cx="319.24" cy="366.97" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="319.24" y="366.97" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">6</text>
+  <circle cx="341.25" cy="239.95" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="341.25" y="239.95" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">7</text>
+  <circle cx="341.41" cy="239.94" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="341.41" y="239.94" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">8</text>
+  <circle cx="346.88" cy="249.58" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="346.88" y="249.58" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">9</text>
+  <circle cx="348.09" cy="249.54" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="348.09" y="249.54" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">10</text>
+  <circle cx="370.71" cy="426.29" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="370.71" y="426.29" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">11</text>
+  <circle cx="373.25" cy="426.07" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="373.25" y="426.07" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">12</text>
+  <circle cx="392.96" cy="328.41" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="392.96" y="328.41" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">13</text>
+  <circle cx="400.33" cy="324.55" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="400.33" y="324.55" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">14</text>
+  <circle cx="446.26" cy="419.57" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="446.26" y="419.57" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">15</text>
+  <circle cx="461.49" cy="527" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="461.49" y="527" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">16</text>
+  <circle cx="463.87" cy="525.21" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="463.87" y="525.21" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">17</text>
+  <circle cx="465.31" cy="417.88" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="465.31" y="417.88" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">18</text>
+  <circle cx="476.05" cy="543.16" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="476.05" y="543.16" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">19</text>
+  <circle cx="478.73" cy="541.47" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="478.73" y="541.47" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">20</text>
+  <circle cx="483.9" cy="228.06" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="483.9" y="228.06" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">21</text>
+  <circle cx="487.54" cy="244.31" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="487.54" y="244.31" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">22</text>
+  <circle cx="494.5" cy="275.3" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="494.5" y="275.3" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">23</text>
+  <circle cx="494.6" cy="502.27" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="494.6" y="502.27" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">24</text>
+  <circle cx="507.07" cy="523.59" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="507.07" y="523.59" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">25</text>
+  <circle cx="513.99" cy="487.78" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="513.99" y="487.78" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">26</text>
+  <circle cx="525.31" cy="412.54" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="525.31" y="412.54" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">27</text>
+  <circle cx="527.58" cy="224.42" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="527.58" y="224.42" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">28</text>
+  <circle cx="529.21" cy="509.63" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="529.21" y="509.63" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">29</text>
+  <circle cx="538.15" cy="469.74" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="538.15" y="469.74" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">30</text>
+  <circle cx="542.4" cy="242.26" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="542.4" y="242.26" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">31</text>
+  <circle cx="544.89" cy="499.74" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="544.89" y="499.74" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">32</text>
+  <circle cx="547.03" cy="247.83" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="547.03" y="247.83" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">33</text>
+  <circle cx="618.75" cy="453.16" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="618.75" y="453.16" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">34</text>
+  <circle cx="625.76" cy="404.31" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="625.76" y="404.31" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">35</text>
+  <circle cx="625.86" cy="403.59" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="625.86" y="403.59" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">36</text>
+  <circle cx="632.65" cy="350.91" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="632.65" y="350.91" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">37</text>
+  <circle cx="632.69" cy="356.05" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="632.69" y="356.05" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">38</text>
+</svg>

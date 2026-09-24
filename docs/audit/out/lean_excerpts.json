@@ -1,0 +1,135 @@
+{
+  "generator": "docs/audit/extract_lean.py",
+  "declarations": [
+    {
+      "name": "pP",
+      "file": "lean/ResidualSymBase.lean",
+      "line": 23,
+      "end_line": 23,
+      "kind": "def",
+      "doc": "/-- Vertex `i` of `P`, as an index into the fourteen. -/",
+      "text": "def pP (i : Fin 7) : Fin 14 := ⟨i.val, by omega⟩",
+      "sha256": "1a631ecfd616974a88558a20642ed191ca105d762a52e73c2fe3a96981fee710"
+    },
+    {
+      "name": "pQ",
+      "file": "lean/ResidualSymBase.lean",
+      "line": 26,
+      "end_line": 26,
+      "kind": "def",
+      "doc": "/-- Vertex `i` of `Q`, as an index into the fourteen. -/",
+      "text": "def pQ (i : Fin 7) : Fin 14 := ⟨7 + i.val, by omega⟩",
+      "sha256": "45ca49367b075294c4f9dea6c5b9b8665935ae2d6f32aa2d4860b417a6853007"
+    },
+    {
+      "name": "SimpleClosed",
+      "file": "lean/AKR9.lean",
+      "line": 71,
+      "end_line": 77,
+      "kind": "def",
+      "doc": "/-- Simplicity of a closed heptagon **as a curve**, and nothing else: no\ndegenerate side, non-adjacent sides disjoint, and cyclically adjacent sides\nmeeting exactly in their shared endpoint.\n\nThree collinear vertices are **allowed** — that is the entire point.  Contrast\n`DisjointnessGraph.Simple7`, whose second conjunct is already a general-position\ncondition, and `Config`, whose `no_*_vertex_on_*_side_line` fields already\nassume away half of what §9 exists to remove.  Neither can be the source of a\nreduction whose job is to create those conditions. -/",
+      "text": "def SimpleClosed (W : Fin 7 → ℝ × ℝ) : Prop :=\n  (∀ i : Fin 7, W i ≠ W (i + 1)) ∧\n  (∀ i j : Fin 7, ¬ LowerBound.Adjacent i j →\n      Disjoint (segment ℝ (W i) (W (i + 1))) (segment ℝ (W j) (W (j + 1)))) ∧\n  (∀ i : Fin 7,\n      segment ℝ (W i) (W (i + 1)) ∩ segment ℝ (W (i + 1)) (W (i + 2))\n        = {W (i + 1)})",
+      "sha256": "18b80bc78f229aed4a36ea90a2d20bb22d45bc5dcfef16a5498e1ee1870106c2"
+    },
+    {
+      "name": "Pair9",
+      "file": "lean/AKR9.lean",
+      "line": 81,
+      "end_line": 85,
+      "kind": "structure",
+      "doc": "/-- Two heptagons in the real plane, each simple as a point set.  **No general\nposition of any kind.** -/",
+      "text": "structure Pair9 where\n  /-- The fourteen vertices: `P` is `0..6`, `Q` is `7..13`. -/\n  V : Fin 14 → ℝ × ℝ\n  simpleP : SimpleClosed (fun i : Fin 7 => V (pP i))\n  simpleQ : SimpleClosed (fun i : Fin 7 => V (pQ i))",
+      "sha256": "3109bb44dcedaefd7d7c4ca3f15052794df97d580c1ea4f8614807fe92d6301f"
+    },
+    {
+      "name": "NoVertexOnOther",
+      "file": "lean/AKR9.lean",
+      "line": 103,
+      "end_line": 105,
+      "kind": "def",
+      "doc": "/-- **(E9).** No vertex of either polygon lies anywhere on the other polygon's\nboundary.  This is what AKR §9 delivers — §9.1 removes vertex–vertex\ncoincidences, §9.2 vertex–side ones — and it is imported, not proved.\n\nBoth directions are used: the `P`-vertices to place an intersection point\nstrictly inside a `Q`-side, and the `Q`-vertices to rule out a collinear\noverlap. -/",
+      "text": "def NoVertexOnOther (R : Pair9) : Prop :=\n  (∀ i j : Fin 7, R.V (pP i) ∉ segment ℝ (R.V (pQ j)) (R.V (pQ (j + 1)))) ∧\n  (∀ i j : Fin 7, R.V (pQ j) ∉ segment ℝ (R.V (pP i)) (R.V (pP (i + 1))))",
+      "sha256": "29401a027686c66d9bf082468ddedd405f892d8f7d66bee95ba3a76ea8e5330d"
+    },
+    {
+      "name": "sideP9",
+      "file": "lean/AKR9.lean",
+      "line": 109,
+      "end_line": 110,
+      "kind": "def",
+      "doc": null,
+      "text": "def sideP9 (R : Pair9) (i : Fin 7) : Set (ℝ × ℝ) :=\n  segment ℝ (R.V (pP i)) (R.V (pP (i + 1)))",
+      "sha256": "d4fe0c17b127a83d939d5178d05d3c40eb948f008b5fd4e8619dc179e56672f9"
+    },
+    {
+      "name": "sideQ9",
+      "file": "lean/AKR9.lean",
+      "line": 112,
+      "end_line": 113,
+      "kind": "def",
+      "doc": null,
+      "text": "def sideQ9 (R : Pair9) (j : Fin 7) : Set (ℝ × ℝ) :=\n  segment ℝ (R.V (pQ j)) (R.V (pQ (j + 1)))",
+      "sha256": "11eeae20593ea2a1bbac940d0ced691b9e5fa2edaa8429b002085af2a9274d29"
+    },
+    {
+      "name": "bdryP9",
+      "file": "lean/AKR9.lean",
+      "line": 115,
+      "end_line": 115,
+      "kind": "def",
+      "doc": null,
+      "text": "def bdryP9 (R : Pair9) : Set (ℝ × ℝ) := ⋃ i : Fin 7, sideP9 R i",
+      "sha256": "3b30bbdc3868f5cdd27da808c359d76e8cb4d9354b96930548dad016d9238e05"
+    },
+    {
+      "name": "bdryQ9",
+      "file": "lean/AKR9.lean",
+      "line": 116,
+      "end_line": 116,
+      "kind": "def",
+      "doc": null,
+      "text": "def bdryQ9 (R : Pair9) : Set (ℝ × ℝ) := ⋃ j : Fin 7, sideQ9 R j",
+      "sha256": "c2fc0ce92dbba5b9f69fa945cec6cd6fe9ba0a0a1da8cc2e0369bcaca908431b"
+    },
+    {
+      "name": "points9",
+      "file": "lean/AKR9.lean",
+      "line": 119,
+      "end_line": 119,
+      "kind": "def",
+      "doc": "/-- `∂P ∩ ∂Q`, a genuine set of points of the real plane. -/",
+      "text": "def points9 (R : Pair9) : Set (ℝ × ℝ) := bdryP9 R ∩ bdryQ9 R",
+      "sha256": "c74efbc2cb04a2033da4e357fd2c1d59774335c3d51676f1b12fcf02b04581cc"
+    },
+    {
+      "name": "attainedCoincFree",
+      "file": "lean/Pair9Shift.lean",
+      "line": 4314,
+      "end_line": 4316,
+      "kind": "def",
+      "doc": "/-- The attainable counts, under finiteness and coincidence-freeness only. -/",
+      "text": "def attainedCoincFree : Set ℕ :=\n  { n | ∃ R : Pair9, (points9 R).Finite ∧\n      (∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) ∧ (points9 R).ncard = n }",
+      "sha256": "b6a2f36fb4b7a73a0bb47dd4ab3bf2be7e57985e098677a65529ec064cb178a4"
+    },
+    {
+      "name": "points9_le_38_of_coincFree",
+      "file": "lean/Pair9Shift.lean",
+      "line": 4223,
+      "end_line": 4227,
+      "kind": "theorem",
+      "doc": "/-- **§9.2's half of `(A9)`, unconditionally.**\n\nIf the two boundaries meet in finitely many points and the two heptagons\n**share no vertex**, then they meet in at most `38` points.\n\nThe vertex-on-**side** degeneracies — the ones AKR §9.2 removes by shifting —\nare handled here in full: the chain of tilted shifts terminates, the joint\nmeasure `crossPairs + segDeg + segDegP` never falls, and the endpoint has no\ndegeneracies, where the measure is just the crossing count and `≤ 38` is the\nproject's own bound for two simple heptagons.\n\n**This is not `f(7,7) = 38`, and it is not all of AKR §9.** The hypothesis\n`hcoinc` — no shared vertex — is §9.**1**'s conclusion, and it is assumed here,\nnot proved. `AKR9.NoVertexOnOther` remains a hypothesis of the main\ndevelopment, and `f(7,7) = 38` remains conditional on the §9 import. Nothing\nhere has been reviewed by a mathematician. -/",
+      "text": "theorem points9_le_38_of_coincFree (R : Pair9) (hfin : (points9 R).Finite)\n    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) :\n    (points9 R).ncard ≤ 38 := by\n  obtain ⟨Rend, hD, hE, hb⟩ := exists_chain_deg_free _ R hfin hcoinc rfl\n  exact points9_le_38_of_joint R Rend hfin hb hD hE",
+      "sha256": "a4ddd86b44750a3612a89bf568d4b04ef0944619c83c3e6d09ea27d4c4b11276"
+    },
+    {
+      "name": "isGreatest_38_of_coincFree",
+      "file": "lean/Pair9Shift.lean",
+      "line": 4324,
+      "end_line": 4328,
+      "kind": "theorem",
+      "doc": "/-- **38 is the greatest attainable count, assuming only `(Fin)` and that the\ntwo heptagons share no vertex.**\n\nStrictly weaker than `AKR9.isGreatest_38_of_E9`, whose hypothesis (E9) forbids\na vertex anywhere on the other boundary.  **This is still not `f(7,7) = 38`:**\ncoincidence-freeness is §9.1's conclusion and is assumed, not proved. -/",
+      "text": "theorem isGreatest_38_of_coincFree : IsGreatest attainedCoincFree 38 := by\n  refine ⟨⟨AKR9.certPair9, certPair9_finite, certPair9_coincFree,\n    AKR9.certPair9_ncard⟩, ?_⟩\n  rintro n ⟨R, hfin, hco, rfl⟩\n  exact points9_le_38_of_coincFree R hfin hco",
+      "sha256": "65abe2c7433fde808b2490e1a5bc2d90aaa5d75ac25897298174cdb681a7c072"
+    }
+  ]
+}

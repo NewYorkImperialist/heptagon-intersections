@@ -5,6 +5,12 @@
 # Runs, from a clean clone, in this order:
 #
 #   1. Lean build                  cd lean && lake build
+#                                  and  lake build Headline  -- defaultTargets
+#                                  omits the AKR section-9 modules, so a bare
+#                                  `lake build` never compiles the headline
+#                                  theorems at all
+#   1b. axiom check                the kernel's own answer: every
+#                                  `depends on axioms:` line the build emitted
 #   2. lower-bound certificate     python3 python/validation/check_lower_bound.py
 #   3. endgame certificate         python3 python/validation/check_final_certificate.py \
 #                                      data/certificates/final_elimination_225.json
@@ -23,6 +29,9 @@
 #     scripts/verify-all.sh --steps 2,3,4   # named steps only (always PARTIAL)
 #     scripts/verify-all.sh --steps 5c      # a single sub-step (5a-5d are addressable)
 #     scripts/verify-all.sh --out DIR       # where to write this run's logs
+#     scripts/verify-all.sh --axiom-log FILE # ONLY the axiom check (step 1b),
+#                                           # against an EXISTING build log --
+#                                           # needs no Lean and no rebuild
 #     scripts/verify-all.sh --help
 #
 # OUTCOME CATEGORIES  (four distinct things, four distinct exit codes)
@@ -97,6 +106,17 @@
 #       => step 1 forbids "declaration uses 'sorry'" in the build output and
 #          scans the sources for sorry / admit / native_decide / axiom.
 #
+#   #print axioms
+#       prints ONLY when the module is recompiled, so a warm rebuild emits
+#       almost none of them while still exiting 0.  The newest log in
+#       results/validation/ carries 60 `depends on axioms` lines against 576
+#       `#print axioms` directives in the sources, and NOT ONE of the four
+#       headline theorems among them: a warm run proves nearly nothing about
+#       axioms.  => step 1b parses those lines, rejects any axiom outside
+#       {propext, Classical.choice, Quot.sound}, rejects sorryAx anywhere, and
+#       REQUIRES the headline theorems' own lines to be present.  Absent
+#       evidence is a failure, exactly as a missing input file is.
+#
 #   shasum -c
 #       correctly exits 1 on a mismatched or unreadable file, but a truncated
 #       or empty manifest verifies nothing.  => step 4 requires the number of
@@ -132,12 +152,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$ROOT" || { echo "FATAL: cannot cd to repository root $ROOT"; exit 7; }
 
-usage() { sed -n '2,120p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//;s/^#$//'; }
+# Print the whole leading comment block, however long it grows.  (This used to
+# be a hard-coded line range, which silently truncated whenever the header was
+# extended.)
+usage() { awk 'NR==1{next} /^#/{sub(/^# ?/,""); print; next} {exit}' "${BASH_SOURCE[0]}"; }
 
 QUICK=0
 STEPS="1,2,3,4,5,6"
 STEPS_EXPLICIT=0
 OUTDIR=""
+AXIOM_LOG=""
 while [ $# -gt 0 ]; do
   case "$1" in
     --quick) QUICK=1; STEPS="1,2,3,4"; shift ;;
@@ -147,8 +171,11 @@ while [ $# -gt 0 ]; do
     --out)   [ $# -ge 2 ] || { echo "verify-all.sh: --out needs an argument"; exit 7; }
              OUTDIR="$2"; shift 2 ;;
     --out=*) OUTDIR="${1#--out=}"; shift ;;
+    --axiom-log) [ $# -ge 2 ] || { echo "verify-all.sh: --axiom-log needs an argument"; exit 7; }
+             AXIOM_LOG="$2"; shift 2 ;;
+    --axiom-log=*) AXIOM_LOG="${1#--axiom-log=}"; shift ;;
     -h|--help) usage; exit 0 ;;
-    *) echo "verify-all.sh: unknown argument '$1' (expected --quick, --steps, --out or --help)"; exit 7 ;;
+    *) echo "verify-all.sh: unknown argument '$1' (expected --quick, --steps, --out, --axiom-log or --help)"; exit 7 ;;
   esac
 done
 case "$STEPS" in
@@ -240,6 +267,278 @@ forbid_line() {   # forbid_line <logfile> <extended-regex> <what it means>
   fi
 }
 
+# --------------------------------------------------------------------------
+# THE AXIOM CHECK  (step 1b, and the --axiom-log entry point)
+# --------------------------------------------------------------------------
+# `grep axiom lean/*.lean` -- which step 1 also does -- is a SOURCE check: it
+# sees the word `axiom` written in this repository.  It cannot see a `sorry`
+# three lemmas down; it cannot see `native_decide` reaching the kernel through
+# `Lean.ofReduceBool`; it cannot see anything imported.  What follows is a
+# KERNEL check.  `#print axioms T` makes Lean walk the entire transitive
+# dependency graph of T's proof term and report every axiom it really rests on.
+# That output, and only that output, licenses the sentence "this theorem
+# depends on nothing beyond propext, Classical.choice and Quot.sound".
+#
+# Two properties of that output shape everything below.
+#
+#   * It is TRANSITIVE.  A single `sorry` anywhere beneath a headline theorem
+#     surfaces as `sorryAx` in that theorem's OWN line, however deep it is
+#     buried.  So the headline lines are the ones worth demanding.
+#
+#   * It is printed ONLY ON RECOMPILATION.  `#print axioms` is a command in a
+#     source file; a warm `lake build` replays almost nothing, so almost none
+#     of them run.  Measured on the committed evidence: the newest log in
+#     results/validation/ has 60 `depends on axioms` lines against 576
+#     `#print axioms` directives in lean/*.lean, and only ONE of the five
+#     headline theorems among them.  A warm run therefore proves next to
+#     nothing about axioms while still reporting success.  => the absence of
+#     the headline lines is a FAILURE here, on the same principle as a missing
+#     input file.  When they are absent this step first tries to obtain them
+#     WITHOUT a rebuild, by running `#print axioms` against the .oleans that
+#     are already built (`lake env lean` on a scratch file in the run dir).
+#     That is best-effort: if it does not work the step still fails, it never
+#     passes blind.
+#
+# The parser joins continuation lines before matching.  Lean wraps a long
+# `depends on axioms: [...]` list across lines, and a line-oriented grep would
+# silently drop the wrapped tail -- that is, would miss exactly the axiom that
+# made the line too long in the first place.  It also understands the other
+# spelling, `'T' does not depend on any axioms`, which a grep for the string
+# "depends on axioms" does not match at all.
+# --------------------------------------------------------------------------
+
+AXIOM_ALLOWED='propext, Classical.choice, Quot.sound'
+
+# The theorems whose axiom lines this script REQUIRES.  These are the
+# statements the write-up's claims rest on; see the closing note of this script
+# and docs/verification-status.md rows 4, 18, 46, 47, 50, 51.
+AXIOM_HEADLINES='Heptagon.MainTheorem.isGreatest_38
+Heptagon.RealUpperBound.isGreatest_38_real
+Heptagon.AKR9.points_le_38_of_no_vertex_on_boundary
+Heptagon.AKR9.isGreatest_38_of_E9
+Heptagon.Pair9Shift.points9_le_38_of_coincFree
+Heptagon.Pair9Shift.isGreatest_38_of_coincFree'
+AXIOM_HEADLINE_N=$(printf '%s\n' "$AXIOM_HEADLINES" | grep -c .)
+# The modules those live in, for the no-rebuild re-emission below.  These are
+# exactly the roots that lean/Headline.lean imports.
+AXIOM_HEADLINE_MODULES='MainTheorem RealUpperBound AKR9 Pair9Shift'
+
+# axiom_parse <evidence-log> <report-file>
+#   Writes the human-readable report; exit status 0 only when it says CLEAN.
+#   Depends on nothing else in this script, so scripts/negative-tests.sh can
+#   drive it against a synthetic log through --axiom-log, with no Lean present.
+axiom_parse() {
+  "$PY" - "$1" $AXIOM_HEADLINES > "$2" 2>&1 <<'PYAXIOMEOF'
+import re, sys
+
+log = sys.argv[1]
+required = [a for a in sys.argv[2:] if a.strip()]
+ALLOWED = ("propext", "Classical.choice", "Quot.sound")
+MARK = "depends on axioms:"
+NONE_MARK = "does not depend on any axioms"
+
+def row(label, value):
+    print("axiom-check: %-42s : %s" % (label, value))
+
+try:
+    text = open(log, encoding="utf-8", errors="replace").read()
+except OSError as e:
+    print("axiom-check: the evidence log cannot be read: %s" % e)
+    print("AXIOM CHECK: FAILED -- no evidence log.  A missing log is a failure, "
+          "not a skip: the axiom claim is simply unverified.")
+    sys.exit(1)
+
+lines = text.split("\n")
+n = len(lines)
+
+# Lines this script itself prints, which must not be mistaken for Lean output
+# when --axiom-log is pointed at a whole verify-all run log.
+def ours(s):
+    s = s.strip()
+    return (s.startswith("axiom-check:") or s.startswith("AXIOM CHECK:")
+            or s.startswith("***") or s.startswith("assert OK")
+            or s.startswith("expected:") or s.startswith("#"))
+
+REC   = re.compile(r"'([^']+)'\s*depends on axioms:\s*\[([^\]]*)\]")
+NOAX  = re.compile(r"'([^']+)'\s*" + NONE_MARK)
+FILEP = re.compile(r"([A-Za-z0-9_./-]+\.lean):\d+:\d+")
+NEWMSG = re.compile(r"^(info:|warning:|error:|information:|trace:|ℹ|⚠|✔|✗|✗)")
+
+records = []          # (declaration, [axioms], source file or "")
+raw_marks = 0
+i = 0
+while i < n:
+    cur = lines[i]
+    if MARK in cur:
+        raw_marks += 1
+    # (a) the marker itself split across a newline
+    elif (cur.rstrip().endswith("depends on") and i + 1 < n
+          and lines[i + 1].lstrip().startswith("axioms:")):
+        i += 1
+        cur = cur.rstrip() + " " + lines[i].lstrip()
+        raw_marks += 1
+    k = cur.find(MARK)
+    # (b) the axiom LIST itself wrapped: pull continuation lines in until the
+    #     bracket closes.  Stop at anything that looks like a new message, so a
+    #     truncated list can never swallow the rest of the log.
+    if k != -1 and "]" not in cur[k:]:
+        j = i
+        while "]" not in cur[k:] and j + 1 < n and (j - i) < 40:
+            nxt = lines[j + 1]
+            if MARK in nxt or NONE_MARK in nxt or NEWMSG.match(nxt.lstrip()):
+                break
+            j += 1
+            cur = cur.rstrip() + " " + nxt.strip()
+        i = j
+    src = ""
+    mf = FILEP.search(cur)
+    if mf:
+        src = mf.group(1).split("/")[-1]
+    for m in REC.finditer(cur):
+        axs = [a.strip() for a in m.group(2).split(",") if a.strip()]
+        records.append((m.group(1), axs, src))
+    for m in NOAX.finditer(cur):
+        records.append((m.group(1), [], src))
+    i += 1
+
+# sorryAx / sorry, anywhere in the evidence
+sorry_ax = [(k + 1, l.strip()) for k, l in enumerate(lines)
+            if "sorryAx" in l and not ours(l)]
+sorry_warn = [(k + 1, l.strip()) for k, l in enumerate(lines)
+              if "declaration uses 'sorry'" in l and "warning:" in l]
+
+counts = {}
+for _, axs, _ in records:
+    for a in axs:
+        counts[a] = counts.get(a, 0) + 1
+bad = [(d, axs, s) for (d, axs, s) in records if [a for a in axs if a not in ALLOWED]]
+
+names = set(d for d, _, _ in records)
+axof = {}
+for d, axs, _ in records:
+    axof[d] = axs
+def find(req):
+    if req in names:
+        return req
+    for nm in names:
+        if nm.endswith("." + req):
+            return nm
+    return None
+confirmed = [(r, find(r)) for r in required]
+nconf = len([1 for _, f in confirmed if f])
+
+srcs = {}
+for _, _, s in records:
+    if s:
+        srcs[s] = srcs.get(s, 0) + 1
+
+row("evidence log", log)
+row("lines scanned", n)
+row("'depends on axioms' lines found", raw_marks)
+row("declarations parsed", len(records))
+row("declarations using a disallowed axiom", len(bad))
+row("occurrences of sorryAx", len(sorry_ax))
+row("occurrences of \"declaration uses 'sorry'\"", len(sorry_warn))
+row("distinct axioms", len(counts))
+for a in sorted(counts, key=lambda a: (a not in ALLOWED, a)):
+    mark = "OK      " if a in ALLOWED else "DISALLOWED"
+    print("axiom-check:     %-10s %-24s in %d declaration(s)" % (mark, a, counts[a]))
+row("source files that reported", len(srcs))
+shown = sorted(srcs, key=lambda s: (-srcs[s], s))
+for s in shown[:12]:
+    print("axiom-check:     %-34s %d declaration(s)" % (s, srcs[s]))
+if len(shown) > 12:
+    print("axiom-check:     ... and %d more source file(s)" % (len(shown) - 12))
+row("headline theorems confirmed", "%d of %d" % (nconf, len(required)))
+for req, got in confirmed:
+    if got:
+        print("axiom-check:     CONFIRMED  %s" % got)
+        print("axiom-check:                depends on axioms: [%s]" % ", ".join(axof[got]))
+    else:
+        print("axiom-check:     ABSENT     %s" % req)
+
+reasons = []
+if len(records) == 0:
+    reasons.append("the log contains NO axiom output at all, so it establishes nothing")
+if raw_marks > len(records):
+    reasons.append("%d 'depends on axioms' line(s) could not be parsed -- a wrapped "
+                   "or truncated axiom list would hide exactly the axiom that made "
+                   "the line long" % (raw_marks - len(records)))
+if bad:
+    reasons.append("%d declaration(s) depend on an axiom outside {%s}"
+                   % (len(bad), ", ".join(ALLOWED)))
+    for d, axs, s in bad[:10]:
+        print("axiom-check:   *** DISALLOWED  %s" % d)
+        print("axiom-check:   ***             [%s]%s" % (", ".join(axs), (" in " + s) if s else ""))
+if sorry_ax:
+    reasons.append("sorryAx is present: a proof is closed by sorry somewhere beneath "
+                   "a declaration that reported its axioms")
+    for ln, l in sorry_ax[:5]:
+        print("axiom-check:   *** sorryAx at line %d: %s" % (ln, l[:160]))
+if sorry_warn:
+    reasons.append("Lean warned %d time(s) that a declaration uses sorry" % len(sorry_warn))
+    for ln, l in sorry_warn[:5]:
+        print("axiom-check:   *** sorry at line %d: %s" % (ln, l[:160]))
+missing = [r for r, got in confirmed if not got]
+if missing:
+    reasons.append("%d headline theorem(s) printed NO axiom line, so this run says "
+                   "nothing about them (a warm rebuild replays almost nothing, and "
+                   "#print axioms only runs on recompilation)" % len(missing))
+
+if reasons:
+    print("AXIOM CHECK: FAILED -- " + "; ".join(reasons) + ".")
+    if missing:
+        print("axiom-check: to obtain the missing evidence, force those modules to be")
+        print("axiom-check: recompiled -- e.g.  rm lean/.lake/build/lib/lean/AKR9.olean")
+        print("axiom-check: (and the other modules named ABSENT above), then rebuild --")
+        print("axiom-check: or run  lake env lean <file with the #print axioms lines>,")
+        print("axiom-check: which needs no rebuild at all.")
+    sys.exit(1)
+
+print("AXIOM CHECK: CLEAN -- %d declaration(s) reported their axioms; every one of "
+      "the %d distinct axioms used is among %s; sorryAx appears nowhere; all %d "
+      "headline theorems confirmed."
+      % (len(records), len(counts), ", ".join(ALLOWED), len(required)))
+sys.exit(0)
+PYAXIOMEOF
+}
+
+# axiom_reemit <output-file>
+#   Best effort: re-print the headline axiom lines from the .oleans that are
+#   ALREADY built, recompiling nothing.  Returns 0 only if it really produced
+#   axiom lines.  A failure here is a NOTE, never a pass: the verdict still
+#   comes from whatever evidence was actually obtained.
+axiom_reemit() {
+  local out="$1" src="$RUNDIR/01b_reprint_axioms.lean" m nm
+  command -v lake >/dev/null 2>&1 || return 1
+  : > "$src"
+  for m in $AXIOM_HEADLINE_MODULES; do printf 'import %s\n' "$m" >> "$src"; done
+  for nm in $AXIOM_HEADLINES; do printf '#print axioms %s\n' "$nm" >> "$src"; done
+  ( cd "$ROOT/lean" && lake env lean "$src" ) > "$out" 2>&1
+  grep -q 'depends on axioms\|does not depend on any axioms' "$out"
+}
+
+# axiom_assert <evidence-log> <report-file> <label>
+#   Runs the parser and then asserts on its OUTPUT, in this script's usual
+#   style: an exit status on its own is never the verdict.  Adds to ASSERT_BAD.
+axiom_assert() {
+  local ev="$1" rep="$2" label="$3"
+  axiom_parse "$ev" "$rep"
+  sed 's/^/   /' "$rep"
+  require_line "$rep" '^AXIOM CHECK: CLEAN' \
+               "the axiom report's own verdict line says CLEAN"
+  forbid_line  "$rep" '^AXIOM CHECK: FAILED' \
+               "the axiom report names no problem"
+  require_line "$rep" '^axiom-check: declarations parsed +: [1-9][0-9]*$' \
+               "at least one declaration actually reported its axioms (0 lines is no evidence)"
+  require_line "$rep" '^axiom-check: declarations using a disallowed axiom +: 0$' \
+               "every axiom listed is one of $AXIOM_ALLOWED"
+  require_line "$rep" '^axiom-check: occurrences of sorryAx +: 0$' \
+               "sorryAx appears nowhere in the evidence"
+  require_line "$rep" "^axiom-check: headline theorems confirmed +: $AXIOM_HEADLINE_N of $AXIOM_HEADLINE_N\$" \
+               "all $AXIOM_HEADLINE_N headline theorems printed an axiom line of their own ($label)"
+}
+
 banner "heptagon-intersections :: verify-all"
 say "repository root : $ROOT"
 if [ "$QUICK" = 1 ]; then
@@ -285,14 +584,60 @@ fi
 say "run log dir     : $RUNDIR   (kept; nothing is written to evidence/logs/ by this script)"
 
 # ==========================================================================
+# --axiom-log MODE -- the axiom check alone, against an existing log
+# ==========================================================================
+# Exists for two reasons.  (1) The axiom evidence is the one part of this
+# script that can be re-checked by a reader who has no Lean toolchain: point it
+# at any committed log in results/validation/ and it will say exactly what that
+# log does and does not establish.  (2) It makes the check itself TESTABLE --
+# scripts/negative-tests.sh feeds it synthetic logs (one carrying sorryAx, one
+# warm log with the headline lines missing) and requires it to reject them.
+if [ -n "$AXIOM_LOG" ]; then
+  banner "AXIOM CHECK ONLY -- $AXIOM_LOG"
+  if [ -z "$PY" ]; then
+    missing_prereq 4 "python3 not found on PATH" "--axiom-log" "install CPython 3.9 or newer"
+    say ""
+    say "MISSING PREREQUISITE (exit 4).  The axiom check needs python3 to parse the log."
+    exit 4
+  fi
+  if [ ! -f "$AXIOM_LOG" ]; then
+    printf '\n*** FAIL: the log to check does not exist: %s\n' "$AXIOM_LOG"
+    printf '***   A missing log is a verification FAILURE, not a skip.\n'
+    say ""
+    say "VERIFICATION FAILED (exit 1)."
+    exit 1
+  fi
+  ASSERT_BAD=0
+  say "expected: every 'depends on axioms:' line lists only $AXIOM_ALLOWED;"
+  say "          sorryAx nowhere; and all $AXIOM_HEADLINE_N headline theorems present."
+  say ""
+  axiom_assert "$AXIOM_LOG" "$RUNDIR/axiom_check.txt" "$AXIOM_LOG"
+  say ""
+  if [ "$ASSERT_BAD" -eq 0 ]; then
+    pass "1b. axiom check ($AXIOM_LOG)"
+    say ""
+    say "AXIOM EVIDENCE ACCEPTED (exit 0) for this log.  Note the scope: this says"
+    say "what the LOG contains.  It is evidence about the build that produced the"
+    say "log, not about the working tree as it stands now."
+    exit 0
+  fi
+  say "VERIFICATION FAILED (exit 1).  $ASSERT_BAD assertion(s) above.  This log does"
+  say "not establish the axiom claim; see the report in $RUNDIR/axiom_check.txt."
+  exit 1
+fi
+
+# ==========================================================================
 # STEP 1 -- Lean build
 # ==========================================================================
 banner "STEP 1/6 -- Lean build"
-S1_CMD='cd lean && lake build'
+S1_CMD='cd lean && lake build && lake build Headline'
 say "command : $S1_CMD"
 say "expected: exit 0; no 'error:' line; no 'declaration uses sorry' warning;"
 say "          every declared lean_lib produces a .olean; no sorry/admit/"
 say "          native_decide/axiom in the sources"
+say "ALSO    : 'lake build Headline' -- because defaultTargets omits the AKR"
+say "          section-9 modules, a bare 'lake build' does not compile the"
+say "          headline theorems at all.  Both invocations are asserted on."
 say "NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,"
 say "          which kernel-check the (E7a) exhaustiveness enumeration one"
 say "          order-type representative at a time -- about 17 CPU-hours, so a"
@@ -328,6 +673,33 @@ else
   t0=$(date +%s)
   ( cd "$ROOT/lean" && lake build ) 2>&1 | tee "$RUNDIR/01_lake_build.txt"
   rc=${PIPESTATUS[0]}
+
+  # `lake build` builds defaultTargets, and defaultTargets DELIBERATELY omits
+  # the AKR section-9 modules -- AKR9, Pair9Shift and their line of work -- to
+  # keep them out of a default build dominated by the 1,080 enumeration shards.
+  # The consequence is easy to miss and was: the documented command does not
+  # compile the headline theorems at all, so it can neither fail on them nor
+  # print their axioms.  lean/Headline.lean exists to close that gap: it is a
+  # leaf importing exactly the four roots, and its closure is ~331 modules with
+  # no shard in it.  Built here, by name, so that step 1 really does cover the
+  # punchline and step 1b has evidence to read.
+  if [ -f "$ROOT/lean/Headline.lean" ] \
+  && grep -q '^name = "Headline"' "$ROOT/lean/lakefile.toml"; then
+    say ""
+    say "   (defaultTargets omits the AKR section-9 modules, so building the"
+    say "    headline closure by name as well:  lake build Headline)"
+    ( cd "$ROOT/lean" && lake build Headline ) 2>&1 | tee "$RUNDIR/01_lake_build_headline.txt"
+    rc_h=${PIPESTATUS[0]}
+    # One evidence file, so every assertion below covers both invocations.
+    cat "$RUNDIR/01_lake_build_headline.txt" >> "$RUNDIR/01_lake_build.txt"
+    [ "$rc" -eq 0 ] && rc="$rc_h"
+  else
+    say ""
+    say "   *** NOTE: lean/Headline.lean is not present / not declared, so the"
+    say "   *** headline theorems (AKR9, Pair9Shift) are NOT built by this step:"
+    say "   *** lakefile.toml keeps them out of defaultTargets.  Step 1b will say"
+    say "   *** so explicitly rather than passing over it."
+  fi
   t1=$(date +%s)
   say "(lean build wall time: $((t1-t0)) s)"
   if [ "$rc" -ne 0 ]; then
@@ -365,6 +737,15 @@ EOF
     # lean/*.lean is not part of the build and is reported separately below,
     # so work-in-progress files cannot silently pass OR spuriously fail.
     BADSRC=""
+    if [ -z "$PY" ]; then
+      # Without python3 the scan below cannot run at all.  It used to run
+      # anyway, as `"" - <file>`, which fails for every file and reported a
+      # forbidden construct in all of them -- a false FAILURE, and a confusing
+      # one.  A missing TOOL is exit 3-6, not exit 1.
+      missing_prereq 4 "python3 not found on PATH" \
+                       "step 1's forbidden-construct source scan and step 1b's axiom check, and steps 2, 3, 5 and 6" \
+                       "install CPython 3.9 or newer"
+    else
     for lib in $LIBNAMES; do
       f="$ROOT/lean/$lib.lean"
       [ -e "$f" ] || continue
@@ -389,6 +770,7 @@ PYEOF
       printf '   *** ASSERT FAILED: forbidden construct in:%s\n' "$BADSRC"
       ASSERT_BAD=$((ASSERT_BAD+1))
     fi
+    fi   # end of the python3 guard around the source scan
 
     # Undeclared sources: not built, not scanned, not verified.
     #
@@ -440,6 +822,71 @@ PYEOF
       pass "1. Lean build ($LIBS libraries${JOBS:+, $JOBS jobs})"
     else
       fail "1. Lean build" "$S1_CMD" "$ASSERT_BAD assertion(s) above"
+    fi
+
+    # ------------------------------------------------------------------
+    # 1b. THE AXIOM CLAIM -- what the kernel says the theorems rest on.
+    # ------------------------------------------------------------------
+    say ""
+    say "-- 1b. the axiom claim (#print axioms output, not a source grep)"
+    say "   expected: every 'depends on axioms:' line in the build output lists"
+    say "             only $AXIOM_ALLOWED;"
+    say "             sorryAx nowhere; and each of the $AXIOM_HEADLINE_N headline theorems"
+    say "             reporting a line of its OWN.  The last of those is the point:"
+    say "             #print axioms runs only when its module is recompiled, so a"
+    say "             warm rebuild emits almost nothing and would otherwise 'pass'"
+    say "             while proving nothing."
+    say "   NOTE    : lakefile.toml keeps the AKR section-9 modules (AKR9,"
+    say "             Pair9Shift, ...) out of defaultTargets, so a bare 'lake build'"
+    say "             never compiles them and never prints their axioms.  The"
+    say "             target that does is:  cd lean && lake build Headline ."
+    if [ -z "$PY" ]; then
+      say "   (python3 absent -- already reported above; the axiom check cannot run)"
+    else
+      ASSERT_BAD=0
+      AXEV="$RUNDIR/01b_axiom_evidence.txt"
+      cat "$RUNDIR/01_lake_build.txt" > "$AXEV"
+      # Were the headline lines actually emitted by this build?
+      need_reemit=0
+      for nm in $AXIOM_HEADLINES; do
+        grep -qF -- "'$nm' depends on axioms" "$AXEV" && continue
+        grep -qF -- "'$nm' does not depend on any axioms" "$AXEV" && continue
+        need_reemit=1
+      done
+      if [ "$need_reemit" = 1 ]; then
+        say "   NOTE: this build did not recompile every headline module, so its log"
+        say "         is missing some #print axioms output.  Re-printing it from the"
+        say "         .oleans that are already built (no rebuild):"
+        say "           cd lean && lake env lean $RUNDIR/01b_reprint_axioms.lean"
+        say "         (this imports the headline modules, so it costs the memory of"
+        say "          a Mathlib import -- seconds on a machine with room, and it is"
+        say "          skipped entirely when the build log already has the lines.)"
+        if axiom_reemit "$RUNDIR/01b_reprint.txt"; then
+          say "         re-print succeeded; its output is folded into the evidence."
+          cat "$RUNDIR/01b_reprint.txt" >> "$AXEV"
+        else
+          say "   *** the re-print did NOT produce axiom output.  Its log:"
+          sed 's/^/   ***   /' "$RUNDIR/01b_reprint.txt" 2>/dev/null | head -20
+          say "   *** The usual cause is that the headline modules have never been"
+          say "   *** built HERE.  lakefile.toml keeps AKR9, Pair9Shift and the rest"
+          say "   *** of the AKR section-9 line OUT of defaultTargets, so a bare"
+          say "   *** 'lake build' -- the command step 1 runs -- does not build them"
+          say "   *** and cannot print their axioms.  Build them by name first:"
+          say "   ***     cd lean && lake build Headline"
+          say "   *** (lean/Headline.lean is a leaf importing exactly those roots;"
+          say "   ***  its closure is ~331 modules and no enumeration shard.)"
+          say "   *** Continuing with the build log alone -- which means the headline"
+          say "   *** assertion below will fail.  That is the correct outcome: the"
+          say "   *** evidence was not obtained, so the claim is not established."
+        fi
+      fi
+      axiom_assert "$AXEV" "$RUNDIR/01b_axiom_check.txt" "from $AXEV"
+      if [ "$ASSERT_BAD" -eq 0 ]; then
+        pass "1b. axiom check (no axiom outside $AXIOM_ALLOWED; $AXIOM_HEADLINE_N/$AXIOM_HEADLINE_N headline theorems)"
+      else
+        fail "1b. axiom check" "#print axioms output of $S1_CMD" \
+             "$ASSERT_BAD assertion(s) above"
+      fi
     fi
   fi
 fi
@@ -995,6 +1442,9 @@ fi
 say ""
 say "COMPLETE SUCCESS (exit 0).  ALL CHECKS PASSED."
 say "  Lean build clean, no sorry, every declared library built;"
+say "  the kernel's own #print axioms output checked, not just a source grep:"
+say "  no axiom outside propext / Classical.choice / Quot.sound anywhere, no"
+say "  sorryAx, and every headline theorem present in the evidence by name;"
 say "  f(7,7) >= 38 certificate re-checked from coordinates, I = 38 asserted;"
 say "  all 225 endgame cases re-refuted by an independent checker;"
 say "  every data/ and tool hash matches its manifest;"

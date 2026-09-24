@@ -1,0 +1,15 @@
+{
+  "lean/AKR9.lean::NoVertexOnOther": "29401a027686c66d9bf082468ddedd405f892d8f7d66bee95ba3a76ea8e5330d",
+  "lean/AKR9.lean::Pair9": "3109bb44dcedaefd7d7c4ca3f15052794df97d580c1ea4f8614807fe92d6301f",
+  "lean/AKR9.lean::SimpleClosed": "18b80bc78f229aed4a36ea90a2d20bb22d45bc5dcfef16a5498e1ee1870106c2",
+  "lean/AKR9.lean::bdryP9": "3b30bbdc3868f5cdd27da808c359d76e8cb4d9354b96930548dad016d9238e05",
+  "lean/AKR9.lean::bdryQ9": "c2fc0ce92dbba5b9f69fa945cec6cd6fe9ba0a0a1da8cc2e0369bcaca908431b",
+  "lean/AKR9.lean::points9": "c74efbc2cb04a2033da4e357fd2c1d59774335c3d51676f1b12fcf02b04581cc",
+  "lean/AKR9.lean::sideP9": "d4fe0c17b127a83d939d5178d05d3c40eb948f008b5fd4e8619dc179e56672f9",
+  "lean/AKR9.lean::sideQ9": "11eeae20593ea2a1bbac940d0ced691b9e5fa2edaa8429b002085af2a9274d29",
+  "lean/Pair9Shift.lean::attainedCoincFree": "b6a2f36fb4b7a73a0bb47dd4ab3bf2be7e57985e098677a65529ec064cb178a4",
+  "lean/Pair9Shift.lean::isGreatest_38_of_coincFree": "65abe2c7433fde808b2490e1a5bc2d90aaa5d75ac25897298174cdb681a7c072",
+  "lean/Pair9Shift.lean::points9_le_38_of_coincFree": "a4ddd86b44750a3612a89bf568d4b04ef0944619c83c3e6d09ea27d4c4b11276",
+  "lean/ResidualSymBase.lean::pP": "1a631ecfd616974a88558a20642ed191ca105d762a52e73c2fe3a96981fee710",
+  "lean/ResidualSymBase.lean::pQ": "45ca49367b075294c4f9dea6c5b9b8665935ae2d6f32aa2d4860b417a6853007"
+}

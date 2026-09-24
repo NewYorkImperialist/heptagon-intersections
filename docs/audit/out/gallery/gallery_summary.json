@@ -1,0 +1,921 @@
+{
+  "generator": "docs/audit/gallery.py",
+  "certificate_source": "data/lower_bound/lower_bound_38.json",
+  "configurations": [
+    {
+      "name": "certificate_38",
+      "description": "The lower-bound certificate of data/lower_bound/lower_bound_38.json: two simple heptagons whose boundaries meet in 38 points.",
+      "awkward": false,
+      "P": [
+        [
+          "373",
+          "157"
+        ],
+        [
+          "132",
+          "5"
+        ],
+        [
+          "369",
+          "182"
+        ],
+        [
+          "88",
+          "157"
+        ],
+        [
+          "327",
+          "282"
+        ],
+        [
+          "60",
+          "272"
+        ],
+        [
+          "372",
+          "298"
+        ]
+      ],
+      "Q": [
+        [
+          "344",
+          "24"
+        ],
+        [
+          "89",
+          "303"
+        ],
+        [
+          "345",
+          "19"
+        ],
+        [
+          "373",
+          "214"
+        ],
+        [
+          "270",
+          "338"
+        ],
+        [
+          "325",
+          "93"
+        ],
+        [
+          "192",
+          "284"
+        ]
+      ],
+      "count": 38,
+      "expected": 38,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": true,
+      "intersection_points": [
+        "(25869/229, 253195/916)",
+        "(136044/1201, 332004/1201)",
+        "(2255301/19597, 5370814/19597)",
+        "(2964504/25681, 7038552/25681)",
+        "(635351/3567, 728144/3567)",
+        "(5879193/32852, 6720639/32852)",
+        "(78756/409, 115766/409)",
+        "(467196/2425, 686408/2425)",
+        "(3476712/17735, 982856/3547)",
+        "(10297356/52327, 14501024/52327)",
+        "(4542103/21551, 3618882/21551)",
+        "(6000047/28258, 4749081/28258)",
+        "(4554134/20285, 926599/4057)",
+        "(14264557/62274, 14371393/62274)",
+        "(1648862/6405, 220427/1281)",
+        "(2504321/9385, 992046/9385)",
+        "(3316933/12362, 1320339/12362)",
+        "(15343803/56996, 9867247/56996)",
+        "(7403327/26839, 2569083/26839)",
+        "(9804727/35333, 3418977/35333)",
+        "(168132/599, 173944/599)",
+        "(3732852/13193, 3698656/13193)",
+        "(3758819/13086, 3418127/13086)",
+        "(706474/2459, 297501/2459)",
+        "(2108398/7147, 770503/7147)",
+        "(6864345/22936, 2980133/22936)",
+        "(4301301/14044, 2477633/14044)",
+        "(489516/1591, 465590/1591)",
+        "(20449251/66247, 7713419/66247)",
+        "(284043/904, 127535/904)",
+        "(416001/1313, 369766/1313)",
+        "(4291917/13481, 1652005/13481)",
+        "(13590397/42511, 11825602/42511)",
+        "(15557011/42739, 6467431/42739)",
+        "(5065693/13753, 2496202/13753)",
+        "(19928459/54095, 1968478/10819)",
+        "(5364956/14399, 3088454/14399)",
+        "(514581/1381, 291829/1381)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/certificate_38.svg"
+    },
+    {
+      "name": "easy_lens_2",
+      "description": "Two convex heptagons overlapping in a lens.",
+      "awkward": false,
+      "P": [
+        [
+          "100",
+          "0"
+        ],
+        [
+          "62",
+          "78"
+        ],
+        [
+          "-22",
+          "97"
+        ],
+        [
+          "-90",
+          "43"
+        ],
+        [
+          "-90",
+          "-43"
+        ],
+        [
+          "-22",
+          "-97"
+        ],
+        [
+          "62",
+          "-78"
+        ]
+      ],
+      "Q": [
+        [
+          "250",
+          "0"
+        ],
+        [
+          "212",
+          "78"
+        ],
+        [
+          "128",
+          "97"
+        ],
+        [
+          "60",
+          "43"
+        ],
+        [
+          "60",
+          "-43"
+        ],
+        [
+          "128",
+          "-97"
+        ],
+        [
+          "212",
+          "-78"
+        ]
+      ],
+      "count": 2,
+      "expected": 2,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": true,
+      "intersection_points": [
+        "(135602/1839, -33046/613)",
+        "(135602/1839, 33046/613)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/easy_lens_2.svg"
+    },
+    {
+      "name": "easy_bars_cross_4",
+      "description": "A horizontal bar and a vertical bar, each a simple heptagon, crossing once.",
+      "awkward": false,
+      "P": [
+        [
+          "-300",
+          "-40"
+        ],
+        [
+          "0",
+          "-46"
+        ],
+        [
+          "300",
+          "-40"
+        ],
+        [
+          "300",
+          "40"
+        ],
+        [
+          "100",
+          "47"
+        ],
+        [
+          "-100",
+          "44"
+        ],
+        [
+          "-300",
+          "40"
+        ]
+      ],
+      "Q": [
+        [
+          "-40",
+          "-300"
+        ],
+        [
+          "-46",
+          "0"
+        ],
+        [
+          "-40",
+          "300"
+        ],
+        [
+          "40",
+          "300"
+        ],
+        [
+          "47",
+          "100"
+        ],
+        [
+          "44",
+          "-100"
+        ],
+        [
+          "40",
+          "-300"
+        ]
+      ],
+      "count": 4,
+      "expected": 4,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": true,
+      "intersection_points": [
+        "(-450900/9997, 448100/9997)",
+        "(-2300/51, -2300/51)",
+        "(448100/9997, -450900/9997)",
+        "(9100/197, 9100/197)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/easy_bars_cross_4.svg"
+    },
+    {
+      "name": "easy_slotted_and_bar_8",
+      "description": "A slotted heptagon (a pocket cut into its base) crossed by a bar: four sides of P pass through the bar, twice each.",
+      "awkward": false,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "60",
+          "2"
+        ],
+        [
+          "60",
+          "160"
+        ],
+        [
+          "100",
+          "160"
+        ],
+        [
+          "100",
+          "4"
+        ],
+        [
+          "160",
+          "0"
+        ],
+        [
+          "80",
+          "220"
+        ]
+      ],
+      "Q": [
+        [
+          "-50",
+          "90"
+        ],
+        [
+          "110",
+          "85"
+        ],
+        [
+          "250",
+          "90"
+        ],
+        [
+          "250",
+          "110"
+        ],
+        [
+          "150",
+          "118"
+        ],
+        [
+          "50",
+          "112"
+        ],
+        [
+          "-50",
+          "110"
+        ]
+      ],
+      "count": 8,
+      "expected": 8,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": true,
+      "intersection_points": [
+        "(2830/89, 15565/178)",
+        "(3700/91, 10175/91)",
+        "(60, 1385/16)",
+        "(60, 563/5)",
+        "(100, 1365/16)",
+        "(100, 115)",
+        "(33100/281, 32615/281)",
+        "(1675/13, 4455/52)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/easy_slotted_and_bar_8.svg"
+    },
+    {
+      "name": "easy_turned_pair_14",
+      "description": "A convex heptagon and a turned copy of it, concentric: the boundaries cross the maximum 14 times for two convex heptagons (2 per side of P).",
+      "awkward": false,
+      "P": [
+        [
+          "100",
+          "0"
+        ],
+        [
+          "62",
+          "78"
+        ],
+        [
+          "-22",
+          "97"
+        ],
+        [
+          "-90",
+          "43"
+        ],
+        [
+          "-90",
+          "-43"
+        ],
+        [
+          "-22",
+          "-97"
+        ],
+        [
+          "62",
+          "-78"
+        ]
+      ],
+      "Q": [
+        [
+          "97",
+          "22"
+        ],
+        [
+          "43",
+          "90"
+        ],
+        [
+          "-43",
+          "90"
+        ],
+        [
+          "-97",
+          "22"
+        ],
+        [
+          "-78",
+          "-62"
+        ],
+        [
+          "0",
+          "-100"
+        ],
+        [
+          "78",
+          "-62"
+        ]
+      ],
+      "count": 14,
+      "expected": 14,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": true,
+      "intersection_points": [
+        "(-90, -170/19)",
+        "(-90, 832/27)",
+        "(-188872/2343, -39406/781)",
+        "(-3892/61, 3892/61)",
+        "(-19188/407, -31352/407)",
+        "(-832/27, 90)",
+        "(-8710/779, -11630/123)",
+        "(170/19, 90)",
+        "(1742/57, -766/9)",
+        "(39406/781, 188872/2343)",
+        "(1950/29, -1950/29)",
+        "(31352/407, 19188/407)",
+        "(766/9, -1742/57)",
+        "(11630/123, 8710/779)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/easy_turned_pair_14.svg"
+    },
+    {
+      "name": "awkward_vertex_in_edge_interior",
+      "description": "Q5 lies exactly in the INTERIOR of P-side 0. (E9)/NoVertexOnOther fails: this is the vertex-on-side degeneracy AKR section 9.2 removes.",
+      "awkward": true,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "300",
+          "0"
+        ],
+        [
+          "360",
+          "120"
+        ],
+        [
+          "300",
+          "240"
+        ],
+        [
+          "150",
+          "300"
+        ],
+        [
+          "0",
+          "240"
+        ],
+        [
+          "-60",
+          "120"
+        ]
+      ],
+      "Q": [
+        [
+          "120",
+          "-80"
+        ],
+        [
+          "200",
+          "-60"
+        ],
+        [
+          "225",
+          "-20"
+        ],
+        [
+          "260",
+          "60"
+        ],
+        [
+          "205",
+          "45"
+        ],
+        [
+          "150",
+          "0"
+        ],
+        [
+          "100",
+          "-40"
+        ]
+      ],
+      "count": 2,
+      "expected": 2,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": false,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [
+        "Q5 on P-side 0 (edge interior)"
+      ],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": false,
+      "intersection_points": [
+        "(150, 0)",
+        "(935/4, 0)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/awkward_vertex_in_edge_interior.svg"
+    },
+    {
+      "name": "awkward_three_collinear_in_P",
+      "description": "P0, P1, P2 are collinear (P1 sits inside the segment P0-P2), so P's base is one straight line split into two sides. SimpleClosed accepts this; general position does not. Q zig-zags across the base, twice on each side.",
+      "awkward": true,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "150",
+          "0"
+        ],
+        [
+          "300",
+          "0"
+        ],
+        [
+          "360",
+          "120"
+        ],
+        [
+          "180",
+          "300"
+        ],
+        [
+          "0",
+          "240"
+        ],
+        [
+          "-60",
+          "120"
+        ]
+      ],
+      "Q": [
+        [
+          "20",
+          "60"
+        ],
+        [
+          "80",
+          "-60"
+        ],
+        [
+          "140",
+          "55"
+        ],
+        [
+          "200",
+          "-60"
+        ],
+        [
+          "260",
+          "62"
+        ],
+        [
+          "280",
+          "140"
+        ],
+        [
+          "30",
+          "145"
+        ]
+      ],
+      "count": 4,
+      "expected": 4,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": true,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [],
+      "collinear_triples_P": [
+        "P0,P1,P2"
+      ],
+      "collinear_triples_Q": [],
+      "general_position_all_14": false,
+      "intersection_points": [
+        "(50, 0)",
+        "(2560/23, 0)",
+        "(3880/23, 0)",
+        "(14000/61, 0)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/awkward_three_collinear_in_P.svg"
+    },
+    {
+      "name": "awkward_shared_vertex",
+      "description": "P and Q share a vertex exactly (P0 = Q0). This is the vertex-vertex coincidence AKR section 9.1 removes; points9_le_38_of_coincFree assumes it away.",
+      "awkward": true,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "300",
+          "0"
+        ],
+        [
+          "360",
+          "120"
+        ],
+        [
+          "300",
+          "240"
+        ],
+        [
+          "150",
+          "300"
+        ],
+        [
+          "0",
+          "240"
+        ],
+        [
+          "-60",
+          "120"
+        ]
+      ],
+      "Q": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "-160",
+          "-90"
+        ],
+        [
+          "-40",
+          "-180"
+        ],
+        [
+          "140",
+          "-150"
+        ],
+        [
+          "220",
+          "-40"
+        ],
+        [
+          "120",
+          "60"
+        ],
+        [
+          "40",
+          "90"
+        ]
+      ],
+      "count": 2,
+      "expected": 2,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": false,
+      "shared_vertices": [
+        "P0 = Q0"
+      ],
+      "vertex_on_other_boundary": [
+        "P0 on Q-side 0 (vertex)",
+        "P0 on Q-side 6 (vertex)",
+        "Q0 on P-side 0 (vertex)",
+        "Q0 on P-side 6 (vertex)"
+      ],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": false,
+      "intersection_points": [
+        "(0, 0)",
+        "(180, 0)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/awkward_shared_vertex.svg"
+    },
+    {
+      "name": "awkward_tangential_touch",
+      "description": "The two boundaries touch at one point without crossing: Q sits on the outside of P-side 0 and meets it only at Q0.",
+      "awkward": true,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "300",
+          "0"
+        ],
+        [
+          "360",
+          "120"
+        ],
+        [
+          "300",
+          "240"
+        ],
+        [
+          "150",
+          "300"
+        ],
+        [
+          "0",
+          "240"
+        ],
+        [
+          "-60",
+          "120"
+        ]
+      ],
+      "Q": [
+        [
+          "150",
+          "0"
+        ],
+        [
+          "60",
+          "-60"
+        ],
+        [
+          "100",
+          "-140"
+        ],
+        [
+          "200",
+          "-170"
+        ],
+        [
+          "280",
+          "-120"
+        ],
+        [
+          "300",
+          "-50"
+        ],
+        [
+          "230",
+          "-20"
+        ]
+      ],
+      "count": 1,
+      "expected": 1,
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": false,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [
+        "Q0 on P-side 0 (edge interior)"
+      ],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": false,
+      "intersection_points": [
+        "(150, 0)"
+      ],
+      "overlapping_side_pairs": [],
+      "svg": "out/gallery/awkward_tangential_touch.svg"
+    },
+    {
+      "name": "awkward_overlapping_sides_infinite",
+      "description": "A P-side and a Q-side are collinear and overlap in a whole sub-segment, so the boundaries meet in infinitely many points. Must be FLAGGED, not counted.",
+      "awkward": true,
+      "P": [
+        [
+          "0",
+          "0"
+        ],
+        [
+          "300",
+          "0"
+        ],
+        [
+          "360",
+          "120"
+        ],
+        [
+          "300",
+          "240"
+        ],
+        [
+          "150",
+          "300"
+        ],
+        [
+          "0",
+          "240"
+        ],
+        [
+          "-60",
+          "120"
+        ]
+      ],
+      "Q": [
+        [
+          "150",
+          "0"
+        ],
+        [
+          "450",
+          "0"
+        ],
+        [
+          "480",
+          "-100"
+        ],
+        [
+          "300",
+          "-200"
+        ],
+        [
+          "100",
+          "-180"
+        ],
+        [
+          "20",
+          "-100"
+        ],
+        [
+          "60",
+          "-40"
+        ]
+      ],
+      "count": "infinite",
+      "expected": "infinite",
+      "matches_expectation": true,
+      "simple_P": true,
+      "simple_P_failures": [],
+      "simple_Q": true,
+      "simple_Q_failures": [],
+      "no_vertex_on_other": false,
+      "shared_vertices": [],
+      "vertex_on_other_boundary": [
+        "P1 on Q-side 0 (edge interior)",
+        "Q0 on P-side 0 (edge interior)"
+      ],
+      "collinear_triples_P": [],
+      "collinear_triples_Q": [],
+      "general_position_all_14": false,
+      "intersection_points": [
+        "(150, 0)",
+        "(300, 0)"
+      ],
+      "overlapping_side_pairs": [
+        "P-side 0 with Q-side 0, from (150, 0) to (300, 0)"
+      ],
+      "svg": "out/gallery/awkward_overlapping_sides_infinite.svg"
+    }
+  ]
+}

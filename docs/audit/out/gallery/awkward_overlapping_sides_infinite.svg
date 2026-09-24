@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="760" viewBox="0 0 760 760">
+  <rect width="760" height="760" fill="#ffffff" />
+  <text x="35" y="30" font-family="Helvetica,Arial,sans-serif" font-size="19" font-weight="bold" fill="#111111">awkward_overlapping_sides_infinite</text>
+  <text x="35" y="52" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">A P-side and a Q-side are collinear and overlap in a whole sub-segment, so the boundaries meet</text>
+  <text x="35" y="69" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">in infinitely many points. Must be FLAGGED, not counted.</text>
+  <text x="35" y="91" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="bold" fill="#111111">boundaries overlap in a segment: INFINITELY MANY points</text>
+  <text x="35" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c">P (solid)</text>
+  <text x="115" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828">Q (dashed)</text>
+  <text x="215" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111111">circles: points of &#8706;P &#8745; &#8706;Q</text>
+  <polygon points="153.62,474.4 477.02,474.4 541.7,345.04 477.02,215.68 315.32,151 153.62,215.68 88.94,345.04" fill="#1b5e9c" fill-opacity="0.07" stroke="#1b5e9c" stroke-width="3" stroke-linejoin="round" />
+  <polygon points="315.32,474.4 638.72,474.4 671.06,582.2 477.02,690 261.42,668.44 175.18,582.2 218.3,517.52" fill="#c62828" fill-opacity="0.07" stroke="#c62828" stroke-width="3" stroke-linejoin="round" stroke-dasharray="10 6" />
+  <circle cx="153.62" cy="474.4" r="4.5" fill="#1b5e9c" />
+  <text x="160.62" y="467.4" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P0</text>
+  <circle cx="477.02" cy="474.4" r="4.5" fill="#1b5e9c" />
+  <text x="484.02" y="467.4" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P1</text>
+  <circle cx="541.7" cy="345.04" r="4.5" fill="#1b5e9c" />
+  <text x="548.7" y="338.04" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P2</text>
+  <circle cx="477.02" cy="215.68" r="4.5" fill="#1b5e9c" />
+  <text x="484.02" y="208.68" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P3</text>
+  <circle cx="315.32" cy="151" r="4.5" fill="#1b5e9c" />
+  <text x="322.32" y="144" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P4</text>
+  <circle cx="153.62" cy="215.68" r="4.5" fill="#1b5e9c" />
+  <text x="160.62" y="208.68" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P5</text>
+  <circle cx="88.94" cy="345.04" r="4.5" fill="#1b5e9c" />
+  <text x="95.94" y="338.04" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P6</text>
+  <circle cx="315.32" cy="474.4" r="4.5" fill="#c62828" />
+  <text x="322.32" y="467.4" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q0</text>
+  <circle cx="638.72" cy="474.4" r="4.5" fill="#c62828" />
+  <text x="645.72" y="467.4" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q1</text>
+  <circle cx="671.06" cy="582.2" r="4.5" fill="#c62828" />
+  <text x="678.06" y="575.2" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q2</text>
+  <circle cx="477.02" cy="690" r="4.5" fill="#c62828" />
+  <text x="484.02" y="683" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q3</text>
+  <circle cx="261.42" cy="668.44" r="4.5" fill="#c62828" />
+  <text x="268.42" y="661.44" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q4</text>
+  <circle cx="175.18" cy="582.2" r="4.5" fill="#c62828" />
+  <text x="182.18" y="575.2" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q5</text>
+  <circle cx="218.3" cy="517.52" r="4.5" fill="#c62828" />
+  <text x="225.3" y="510.52" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q6</text>
+  <line x1="315.32" y1="474.4" x2="477.02" y2="474.4" stroke="#111111" stroke-width="9" stroke-opacity="0.45" />
+  <circle cx="315.32" cy="474.4" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <circle cx="477.02" cy="474.4" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="35" y="720" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#8a4b00">degenerate: P1 lies on Q-side 0 (edge interior); Q0 lies on P-side 0 (edge interior)</text>
+</svg>

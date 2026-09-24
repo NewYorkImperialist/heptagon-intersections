@@ -22,10 +22,18 @@ project's status conservatively and are maintained going forward:
 | [`computational-method.md`](computational-method.md) | Method summary and the reproduction guide, with what does and does not run. |
 | [`literature-notes.md`](literature-notes.md) | Sources, published bounds, and the imported lemmas. |
 | [`ai-disclosure.md`](ai-disclosure.md) | How this work was produced and how LLM output is treated. |
-| [`reviewer-guide.md`](reviewer-guide.md) | **Start here if you are reviewing.** Self-contained walkthrough for a combinatorialist who has never seen the problem, with what to check and where the argument is weakest. |
+| [`reviewer-guide.md`](reviewer-guide.md) | **PARTLY SUPERSEDED — read the banner first, and read `verification-status.md` alongside it.** Self-contained walkthrough for a combinatorialist who has never seen the problem. Its §1 and §6 preamble are still the best orientation in the repository, but **its own banner declares §§2, 3, 4, 5 and 6.1–6.8 superseded** (they are written for the enumeration route, which the upper bound no longer uses), §7's "what would falsify this" table targets that same dead route, and **it knows nothing after 2026-09-17** — in particular nothing about the AKR §9 work, which is where all of the remaining risk now sits. *(Relabelled 2026-09-24. This row read "**Start here if you are reviewing.**" with no caveat, which sent a reviewer straight into five superseded sections. If you are reviewing, start with `verification-status.md` and this file's §1/§6 preamble.)* |
 | [`a7-specification.md`](a7-specification.md) | Precise specification of the A7 geometry-to-finite-model bridges. |
 | [`proof-manifest.md`](proof-manifest.md) | Per-claim dependency manifest (mirrors `paper/proof-manifest.tex`). |
 | [`handoff-2026-09-14.md`](handoff-2026-09-14.md) | Chronological session log for 2026-09-14. Sections are append-only and **earlier sections are superseded by later ones** — §10 is the final position. |
+| [`akr-9-2-in-lean.md`](akr-9-2-in-lean.md) | **§9.2's half of the general-position reduction, in Lean — what is proved and what is not.** Written 2026-09-22. Companion to `../independent/akr_9_2/REPAIR.md`, which states the repair on paper. Sixteen modules, 376 declarations, `sorry`-free and `native_decide`-free. This is the document behind `verification-status.md` rows 113 and 121: `Pair9Shift.points9_le_38_of_coincFree`. |
+| [`akr-9-assembly.md`](akr-9-assembly.md) | **How the §9 pieces compose, and where they do not.** Written 2026-09-21. The dependency graph of §9 step by step, the count inequality assembled — "the piece nobody had written down" — and the reduction theorem. Explicitly *"an assembly document. It closes nothing."* Every claim about a Lean theorem was checked against the `.lean` source. |
+| [`akr-9-2-obligation.md`](akr-9-2-obligation.md) | **§9.2 stated as an obligation, with explicit quantifiers.** Written 2026-09-20; the §9.2 companion to `akr-9-1-obligation.md`. Records that §9.2's published argument is **five sentences with no case analysis and no lemma**, that its load-bearing averaging claim is **asserted without proof**, and proves it under hypotheses AKR do not state. Predates `akr-9-2-in-lean.md`; its "nothing here is in Lean" scope note is no longer true. |
+| [`akr-9-attempt.md`](akr-9-attempt.md) | **The first §9 attempt (2026-09-17), and its negative outcome.** `exists_noVertexOnOther_ge` is **not** proved; neither global E9a nor global E9b is proved. Records two useful negative findings, including the cone-containment witness that independently reproduces the project's own K-10 defect. `verification-status.md` row 53. |
+| [`simplicity-preservation.md`](simplicity-preservation.md) | **A Lean theorem: the §9 perturbation preserves simplicity.** Written 2026-09-20; the artifact is `../lean/SimplicityStable.lean`. AKR never state this step at all. Also records **one case in which the informal argument of `akr-9-1-obligation.md` §6.2 is false**. |
+| [`uniform-eps-lean.md`](uniform-eps-lean.md) | **The uniform-ε machinery, formalised** (`../lean/UniformEps.lean`). Lemma U, Theorem U, Corollary U′ and the bootstrapping principle — the quantitative step of §9 that the earlier audit called the hardest to formalize. A **live progress log**, updated as the work happens; read its status line before quoting it. |
+| [`hostile-review-2026-09-21.md`](hostile-review-2026-09-21.md) | **Adversarial pass over the §9 work of 2026-09-20/21**, written to break things rather than extend them. Graded BROKEN / GAP / DOUBTFUL / SURVIVES, with exact arithmetic throughout and no Lean build run. Read this before believing any §9 claim in the other four §9 documents above. |
+| [`literature-check.md`](literature-check.md) | **Prior-art search** for the claims of `covering-step.md` and `verification-status.md` rows 41–44 (2026-09-17). Performed by an AI agent, not a domain expert, over roughly two dozen queries with **no paywalled full text reached**. It is a search log with assessments, and is explicitly **not** an assertion of novelty. |
 
 *(Index completed 2026-09-14: these five files existed but were not listed.)*
 
@@ -35,6 +43,19 @@ project's status conservatively and are maintained going forward:
 the last of which is indexed in the second table below. The first two of those
 are the most important documents written since 2026-09-15 and a reader arriving
 at this index would not have found them.)*
+
+*(Index completed a **third** time, 2026-09-24: **eight** more files existed and
+were not listed — `akr-9-2-in-lean.md`, `akr-9-assembly.md`,
+`akr-9-2-obligation.md`, `akr-9-attempt.md`, `simplicity-preservation.md`,
+`uniform-eps-lean.md`, `hostile-review-2026-09-21.md` and
+`literature-check.md`. Seven of the eight are the **AKR §9 work**, which is the
+whole of the remaining mathematical risk and the newest thing in the
+repository; a reader arriving at this index would have found no trace of it.
+The index now covers **all 31 files in `docs/`** — verify with
+`ls docs/*.md | wc -l` against the links in this file. Twice is a pattern and
+three times is a process failure, so the check is written down here rather than
+left implicit: **when you add a file to `docs/`, add its row to this table in
+the same commit.**)*
 
 **Original research documents.** These were preserved byte-for-byte until
 2026-09-13. **`proof-outline.md` has since been edited**: its Step 0 was found to

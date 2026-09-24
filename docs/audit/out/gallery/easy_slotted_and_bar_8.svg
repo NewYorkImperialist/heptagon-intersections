@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="760" viewBox="0 0 760 760">
+  <rect width="760" height="760" fill="#ffffff" />
+  <text x="35" y="30" font-family="Helvetica,Arial,sans-serif" font-size="19" font-weight="bold" fill="#111111">easy_slotted_and_bar_8</text>
+  <text x="35" y="52" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">A slotted heptagon (a pocket cut into its base) crossed by a bar: four sides of P pass through</text>
+  <text x="35" y="69" font-family="Helvetica,Arial,sans-serif" font-size="13" fill="#444444">the bar, twice each.</text>
+  <text x="35" y="91" font-family="Helvetica,Arial,sans-serif" font-size="14" font-weight="bold" fill="#111111">8 intersection points</text>
+  <text x="35" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c">P (solid)</text>
+  <text x="115" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828">Q (dashed)</text>
+  <text x="215" y="738" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#111111">circles: points of &#8706;P &#8745; &#8706;Q</text>
+  <polygon points="173.33,647.83 297.33,643.7 297.33,317.17 380,317.17 380,639.57 504,647.83 338.67,193.17" fill="#1b5e9c" fill-opacity="0.07" stroke="#1b5e9c" stroke-width="3" stroke-linejoin="round" />
+  <polygon points="70,461.83 400.67,472.17 690,461.83 690,420.5 483.33,403.97 276.67,416.37 70,420.5" fill="#c62828" fill-opacity="0.07" stroke="#c62828" stroke-width="3" stroke-linejoin="round" stroke-dasharray="10 6" />
+  <circle cx="173.33" cy="647.83" r="4.5" fill="#1b5e9c" />
+  <text x="180.33" y="640.83" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P0</text>
+  <circle cx="297.33" cy="643.7" r="4.5" fill="#1b5e9c" />
+  <text x="304.33" y="636.7" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P1</text>
+  <circle cx="297.33" cy="317.17" r="4.5" fill="#1b5e9c" />
+  <text x="304.33" y="310.17" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P2</text>
+  <circle cx="380" cy="317.17" r="4.5" fill="#1b5e9c" />
+  <text x="387" y="310.17" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P3</text>
+  <circle cx="380" cy="639.57" r="4.5" fill="#1b5e9c" />
+  <text x="387" y="632.57" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P4</text>
+  <circle cx="504" cy="647.83" r="4.5" fill="#1b5e9c" />
+  <text x="511" y="640.83" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P5</text>
+  <circle cx="338.67" cy="193.17" r="4.5" fill="#1b5e9c" />
+  <text x="345.67" y="186.17" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#1b5e9c" paint-order="stroke" stroke="#ffffff" stroke-width="3">P6</text>
+  <circle cx="70" cy="461.83" r="4.5" fill="#c62828" />
+  <text x="77" y="454.83" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q0</text>
+  <circle cx="400.67" cy="472.17" r="4.5" fill="#c62828" />
+  <text x="407.67" y="465.17" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q1</text>
+  <circle cx="690" cy="461.83" r="4.5" fill="#c62828" />
+  <text x="697" y="454.83" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q2</text>
+  <circle cx="690" cy="420.5" r="4.5" fill="#c62828" />
+  <text x="697" y="413.5" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q3</text>
+  <circle cx="483.33" cy="403.97" r="4.5" fill="#c62828" />
+  <text x="490.33" y="396.97" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q4</text>
+  <circle cx="276.67" cy="416.37" r="4.5" fill="#c62828" />
+  <text x="283.67" y="409.37" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q5</text>
+  <circle cx="70" cy="420.5" r="4.5" fill="#c62828" />
+  <text x="77" y="413.5" font-family="Helvetica,Arial,sans-serif" font-size="12" fill="#c62828" paint-order="stroke" stroke="#ffffff" stroke-width="3">Q6</text>
+  <circle cx="239.05" cy="467.12" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="239.05" y="467.12" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">1</text>
+  <circle cx="257.36" cy="416.75" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="257.36" y="416.75" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">2</text>
+  <circle cx="297.33" cy="468.94" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="297.33" y="468.94" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">3</text>
+  <circle cx="297.33" cy="415.13" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="297.33" y="415.13" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">4</text>
+  <circle cx="380" cy="471.52" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="380" y="471.52" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">5</text>
+  <circle cx="380" cy="410.17" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="380" y="410.17" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">6</text>
+  <circle cx="416.77" cy="407.96" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="416.77" y="407.96" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">7</text>
+  <circle cx="439.62" cy="470.78" r="8" fill="#ffffff" fill-opacity="0.85" stroke="#111111" stroke-width="2" />
+  <text x="439.62" y="470.78" font-family="Helvetica,Arial,sans-serif" font-size="9" fill="#111111" text-anchor="middle" dominant-baseline="central">8</text>
+</svg>

@@ -5453,3 +5453,16 @@ name = "SwapPQ"
 
 [[lean_lib]]
 name = "Compose"
+
+# ---------------------------------------------------------------------------
+# `Headline` is NOT a source module of the development: it declares nothing and
+# imports the four roots of the live chain -- MainTheorem, RealUpperBound, AKR9
+# and Pair9Shift -- so that ONE command builds the punchline:
+#
+#     lake build Headline
+#
+# It is kept OUT of `defaultTargets` on purpose, like the twenty-two AKR-section-9
+# modules above it.  Its transitive closure is 331 modules and contains no
+# OTEnum*/Strat* enumeration shard, so building it cannot invalidate them.
+[[lean_lib]]
+name = "Headline"

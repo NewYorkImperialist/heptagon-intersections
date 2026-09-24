@@ -1,11 +1,37 @@
 # Lean formalization
 
-> **Current state (2026-09-17): 1,759 `[[lean_lib]]` targets, all compiled
-> clean with `lake build` on Lean 4.33.1. 1,698 of them carry an explicit
-> generator-provenance marker; the other 61 do not, and that 61 is an *upper
-> bound* on the hand-written count — at least fifteen generated modules are
-> missing a header, so the hand-written figure is at most **46**. See
-> "Counting the libraries" below.**
+> **Current state (2026-09-24, commit `5bd737b`): 1,779 `[[lean_lib]]`
+> targets.** 1,698 of them carry an explicit generator-provenance marker; the
+> other 80 do not, and that 80 is an *upper bound* on the hand-written count —
+> at least fifteen generated modules are missing a header, so the hand-written
+> figure is at most **65**. See "Counting the libraries" below.
+>
+> **Two caveats on "all compiled clean", both of which this box used to omit.**
+> (i) `defaultTargets` names only **1,756** of the 1,779, so a bare
+> `lake build` does **not** build the remaining **23** — the AKR §9 group of
+> 22, including `AKR9` and `Pair9Shift`, plus `Headline`. Use
+> `scripts/verify-all.sh`, `lake build Headline`, or name them.
+> (ii) The most recent committed full-build log
+> (`../results/validation/2026-09-17_verify_all_after_e9_attempt.log`) reports
+> **1,762 libraries, 6,523 jobs, exit 0** — so compilation is attested for
+> **1,762 of the 1,779**, and the 17 unattested modules are the newest §9 work
+> plus `Headline` (added 2026-09-24).
+> *(Corrected 2026-09-24: this box read "1,759 `[[lean_lib]]` targets, all
+> compiled clean with `lake build` on Lean 4.33.1 … the other 61 … at most
+> **46**", with no mention of either caveat.)*
+>
+> **One thing this README cannot settle, flagged rather than glossed.**
+> `lean/lean-toolchain` pins `leanprover/lean4:v4.33.1` and `lake-manifest.json`
+> pins Mathlib `v4.33.1` (rev `0df444a3`), while the header of the committed
+> build log reports `Lake version 5.0.0-src+293d5d0 (Lean version 4.34.0)`.
+> These are probably not in conflict: `scripts/verify-all.sh` line 568 prints
+> `lake --version` for the **ambient** `lake` found on `PATH` from the
+> repository root, which is not necessarily the toolchain elan selects inside
+> `lean/`. But the log does not record the version that actually elaborated the
+> modules, so the "Toolchain: `leanprover/lean4:v4.33.1`" line further down
+> should be read as the **pin**, not as a measurement of the committed build.
+> Noted 2026-09-24. Making the log print the effective toolchain would settle
+> it and would be worth doing.
 >
 > **The headline theorem is `RealUpperBound.isGreatest_38_real`:** 38 is exactly
 > the greatest number of points at which the boundaries of two simple heptagons
@@ -38,9 +64,17 @@
 
 1. **Theorem proved from Mathlib / kernel foundations.** Compiles, no `sorry`,
    no project-specific `axiom`. Trust rests on Lean's kernel and Mathlib.
-   → All thirty-three libraries have this status, *for the statements they actually
-   make* — which in several cases is much narrower than the name of the file
-   suggests. Check the scope note at the top of each file before quoting it.
+   → All **1,779** declared libraries have this status, *for the statements they
+   actually make* — which in several cases is much narrower than the name of the
+   file suggests. Check the scope note at the top of each file before quoting
+   it. Two qualifications, both of which a reviewer should hold onto: the
+   **22** libraries outside `defaultTargets` (listed under "What is here") are
+   not built by a bare `lake build`, and the most recent committed full-build
+   log covers **1,762** of the 1,779 — the 17 modules added since are
+   `sorry`-free and axiom-free in the sources, but their compilation is not
+   attested by any committed log. *(Corrected 2026-09-24: this line read "All
+   thirty-three libraries", a figure that was stale by a factor of fifty-four
+   and carried neither qualification.)*
 2. **Theorem proved conditional on explicit axioms.** Compiles and is
    `sorry`-free, but depends on `axiom` declarations standing in for
    unformalized mathematics.
@@ -58,29 +92,96 @@ input as an explicit hypothesis; `CernyL2Interface.lean` certifies a Lean
 
 ## What is here
 
-**Updated 2026-09-17.** 1,756 `[[lean_lib]]` targets build; see "Counting the
-libraries" below for the split and for why the hand-written figure is quoted as
-a bound rather than a count. The build numbers below were read off an actual
-run, not carried over from an earlier edit — but note that the run they came
-from predates the 2026-09-16/17 modules:
+**Re-measured 2026-09-24** against commit `5bd737b`; every figure below was
+re-read from `lakefile.toml` and from the committed build log, not carried over
+from an earlier edit. See "Counting the libraries" below for the
+generated-versus-hand-written split and for why the hand-written figure is
+quoted as a bound rather than a count.
 
-```
-$ export PATH="$HOME/.elan/bin:$PATH"
-$ cd lean && lake build
-Build completed successfully (1444 jobs).
-```
+> *(**Corrected 2026-09-24.** This section previously opened "Updated
+> 2026-09-17. 1,756 `[[lean_lib]]` targets build", quoted a transcript reading
+> `Build completed successfully (1444 jobs).`, asserted that `lakefile.toml`
+> declares **twenty-five** targets "all twenty-five in `defaultTargets`" and
+> listed those twenty-five by name, and gave **1397 jobs** as the steady state.
+> All of those were stale by a factor of about seventy, and the
+> `defaultTargets` claim was wrong in kind rather than in magnitude: **22
+> declared libraries are not in `defaultTargets` at all**, so a plain
+> `lake build` never builds them.)*
 
-* **`lakefile.toml` declares twenty-five `[[lean_lib]]` targets**, all twenty-five in
-  `defaultTargets`: `LowerBound`, `LemmaA`, `EndgameDefs`, `EndgameData`,
-  `Endgame`, `Lemma7Bridge`, `CernyL2Interface`, `GeometryDefs`,
-  `SegmentGeometry`, `DisjointnessGraph`, `EnumerationDomain`, `DomainCount`,
-  `EnumerationComplete`, `CounterexampleCount`, `FilterSoundness`, `Exclude42`,
-  `UpperBoundAssembly`, `ComponentLabelling`, `BipartiteDecision`,
-  `LemmaABridge`, `MainTheorem`, `IntersectionParity`, `AvoidingFlag`,
-  `PointSetSemantics`, `CernyL2Derivation`.
-* **1397 jobs** is the steady state, once Mathlib's `.olean` cache is in
-  place; the warm rebuild then takes about 4 s. The count jumped from 758 to
-  1279 when `EnumerationDomain.lean` was added: it imports
+* **`lakefile.toml` declares 1,779 `[[lean_lib]]` targets.** Re-run the count
+  rather than trusting this number:
+
+  ```bash
+  cd lean
+  grep -c '^\[\[lean_lib\]\]' lakefile.toml      # -> 1779
+  ```
+
+* **Only 1,756 of the 1,779 are in `defaultTargets`.** The remaining **23 are
+  not** — the 22 below plus `Headline`, which exists precisely to make them
+  reachable by name; and this matters for anyone checking the repository: `lake build` with
+  no arguments **does not build them**, and nothing in `defaultTargets` imports
+  them, so they are not reached transitively either. They are the AKR §9 group,
+  and they include the modules carrying the §9 headline theorems:
+
+  ```
+  RealPerturb  SegmentStable  RawConfig     CollinearSegment  AKR9
+  AKR9Reduction  SimplicityStable  SimplicityBridge  UniformEps
+  DependentSystem  DegBound  SignExp  R3Construct  TiltedShift
+  CrossTransport  CIInstance  RotationLaw  Pair9Shift  FactE
+  E9Directions  SwapPQ  Compose
+  ```
+
+  `AKR9` holds `AKR9.isGreatest_38_of_E9` and `Pair9Shift` holds
+  `points9_le_38_of_coincFree`. To build them you must name them:
+
+  ```bash
+  lake build Headline               # AKR9 + Pair9Shift + their whole chain
+  lake build AKR9 Pair9Shift        # or the twenty-two, by name
+  ```
+
+  `Headline` (added 2026-09-24) is a leaf that declares nothing and imports
+  `MainTheorem`, `RealUpperBound`, `AKR9` and `Pair9Shift`.  It is itself a
+  declared `[[lean_lib]]` outside `defaultTargets` — so `lakefile.toml` now
+  declares **1,779** and `defaultTargets` still names **1,756** — but it makes
+  the live chain reachable by a single named command.
+
+  `scripts/verify-all.sh` builds and checks **all declared libraries**, not
+  just `defaultTargets`, which is why its log reports a library count rather
+  than relying on `lake build`'s own default set. Re-run the comparison with:
+
+  ```bash
+  cd lean
+  # every declared library, one per line
+  grep -A1 '^\[\[lean_lib\]\]' lakefile.toml | sed -n 's/^name = "\(.*\)"/\1/p' | sort > /tmp/declared
+  # every defaultTargets entry, one per line
+  sed -n '2p' lakefile.toml | tr ',' '\n' | sed -n 's/.*"\([A-Za-z0-9_]*\)".*/\1/p' | sort > /tmp/default
+  wc -l < /tmp/declared            # -> 1779
+  wc -l < /tmp/default             # -> 1756
+  comm -23 /tmp/declared /tmp/default   # -> the 22 listed above, plus Headline
+  ```
+
+* **The most recent committed full build** is
+  `../results/validation/2026-09-17_verify_all_after_e9_attempt.log` (commit
+  `8e6358a`):
+
+  ```
+  Build completed successfully (6523 jobs).
+     assert OK   : all 1762 declared lean_lib targets produced a .olean
+  --- PASS: 1. Lean build (1762 libraries, 6523 jobs)
+  ```
+
+  **That log is behind the current tree by 16 modules and 14 commits.** The 16
+  added since are `SimplicityStable`, `SimplicityBridge`, `UniformEps`,
+  `DependentSystem`, `DegBound`, `SignExp`, `R3Construct`, `TiltedShift`,
+  `CrossTransport`, `CIInstance`, `RotationLaw`, `Pair9Shift`, `FactE`,
+  `E9Directions`, `SwapPQ`, `Compose` — i.e. exactly the §9 work. So "every
+  declared library compiles" is **attested for 1,762 of the 1,779**, and the 17
+  unattested ones are the newest and least reviewed.
+
+* **Warm-build figures are stale and are not restated here.** The last measured
+  warm steady state (1397 jobs, ~4 s) was taken at 26 libraries and is
+  meaningless at 1,779; it has not been re-measured. The count jumped from 758
+  to 1279 when `EnumerationDomain.lean` was added: it imports
   `Mathlib.Combinatorics.Enumerative.InclusionExclusion` and
   `Mathlib.Algebra.Polynomial.Coeff`, which drag in several hundred further
   Mathlib modules. Rebuilding from `rm -rf .lake/build` (packages retained)
@@ -146,24 +247,35 @@ It is not copied from an earlier version of this document.
 | `StratificationDefs.lean` + **540** `Strat<nnn><A–D>.lean` + `StratificationAll.lean` | `OTEnumShard` | no | `propext` | **the 6,007 / 319 / 16 split** of those 6,342 by largest uncrossable side-subset |
 | `ClassificationSummary.lean` | `OTBridge`, `OTCompleteAll`, `OTEnumAll` | no | `propext`, `Classical.choice`, `Quot.sound` | **assembly only; proves nothing new.** One citable conjunction of the classification results, and one header listing what is assumed — the induction hypothesis and any geometric reading |
 
-**Counting the libraries.** `lakefile.toml` declares **1,756** `[[lean_lib]]`
+**Counting the libraries.** `lakefile.toml` declares **1,779** `[[lean_lib]]`
 targets, and that number would mislead badly if quoted flat. Here is a rule you
 can re-run instead of a figure to take on trust:
 
 ```bash
 cd lean
-grep -c '^\[\[lean_lib\]\]' lakefile.toml                      # -> 1759
+grep -c '^\[\[lean_lib\]\]' lakefile.toml                      # -> 1779
 ls *.lean | while read f; do \
-  grep -qi 'gen_lean|generated by|auto-generated|GENERATED FILE' "$f" \
-  || echo "$f"; done | wc -l                                    # -> 61
+  grep -qiE 'gen_lean|generated by|auto-generated|GENERATED FILE' "$f" \
+  || echo "$f"; done | wc -l                                    # -> 80
 ```
 
-So **1,698** modules carry an explicit generator-provenance marker and **61** do
-not. **61 is an upper bound on the hand-written count, not the count.** At least
-fifteen of the 61 are generator output that simply lacks a provenance header —
+So **1,698** modules carry an explicit generator-provenance marker and **80** do
+not. **80 is an upper bound on the hand-written count, not the count.** At least
+fifteen of the 80 are generator output that simply lacks a provenance header —
 `ResidualCore000`–`003`, `PatternCore000`–`003`,
 `MinPatternCore000`–`001`, `CCase000All`–`CCase003All` and `MCase000All` — so
-the hand-written figure is at most **46**. *Re-measured 2026-09-17 after `RealPerturb`, `SegmentStable` and `RawConfig` landed; the earlier figures 1,756 / 58 / 43 predate those three modules.*
+the hand-written figure is at most **65**.
+
+*(**Corrected 2026-09-24**, and the correction is in two parts. (i) The figures
+read 1,756 declared / 61 unmarked / at most 46 hand-written, against a
+`grep -c` comment claiming 1759; all four were stale. (ii) **The recipe itself
+was broken.** It used `grep -qi` — basic regular expressions — with an
+alternation `a|b|c`, which BRE reads as the literal string `a|b|c`. It therefore
+matched **nothing**, and a reader who ran it as printed got **1778**, i.e. every
+module reported as unmarked, not 61. The `-E` above is the fix, and the
+figures beside it were produced by running the corrected recipe. A rule offered
+"instead of a figure to take on trust" has to actually run, which is exactly the
+kind of defect this section exists to avoid.)*
 
 Adding the missing headers is a recorded follow-up, and it was **attempted and
 reverted on 2026-09-17** — the measurement is worth having. The fix itself
@@ -260,19 +372,35 @@ Part B's `Finset`/`Polynomial` reasoning is why the import is there.
 > Mathlib-free" and counted thirteen of the then-twenty-six. Where this file and
 > the manifest disagreed, the manifest was correct.
 
-Reading the `autoImplicit` column: **twenty** files set
+Reading the `autoImplicit` column, **measured 2026-09-24** over the committed
+tree: **40** of the 1,779 declared libraries set `set_option autoImplicit
+false`. The other 1,738 do **not** — almost all of them generated shards, which
+are machine-emitted and fully explicit anyway. Of the **40 files named in the
+table above**, **25 set it and 15 do not**: `LowerBound`, `EndgameDefs`,
+`EndgameData`, `Endgame`, `AvoidingFlag`, `ClassInvariant`,
+`ClassDataFromChirotope`, `OrderTypeClassification`, `ClassDataFields`,
+`OTEnumShard`, `OTCompleteDefs`, `OTBridge`, `SimpleCountDefs`,
+`StratificationDefs` and `ClassificationSummary`. They rely on all binders
+being explicitly bound, which is easy to satisfy because they are written
+entirely in terms of `Nat` literals and concrete structures, but the guard that
+caught the earlier `Odd` defect in `LemmaA.lean` is not switched on in them.
+`Endgame.lean` additionally sets `maxRecDepth 100000` and
+`linter.unusedVariables false`.
+
+*(Corrected 2026-09-24: this paragraph read "**twenty** files set
 `set_option autoImplicit false` — every declared library except the five listed
-next. The other **five** (`LowerBound`, `EndgameDefs`, `EndgameData`, `Endgame`,
-`AvoidingFlag`) do **not**;
-they rely on all binders being explicitly bound, which is easy to satisfy
-because they are written entirely in terms of `Nat` literals and concrete
-structures, but the guard that caught the earlier `Odd` defect in `LemmaA.lean`
-is not switched on in them. `Endgame.lean` additionally sets
-`maxRecDepth 100000` and `linter.unusedVariables false`; no other declared
-library sets any option.
+next", naming five. Both halves were wrong: 40 files set it, not 20, and 15 of
+the tabled files do not set it, not 5. The closing clause "no other declared
+library sets any option" was also dropped — it has not been re-verified across
+1,779 modules and should not be restated on trust.)*
+
+  ```bash
+  cd lean
+  grep -l 'set_option autoImplicit false' *.lean | wc -l    # -> 40
+  ```
 
 No `sorry`, `admit`, project `axiom`, `unsafe`, `native_decide` or `partial` in
-any of the twenty-five declared libraries (verified by scanning with comments stripped;
+any of the **1,779** declared libraries (verified by scanning with comments stripped;
 `scripts/verify-all.sh` re-runs that scan on every build, because `lake build`
 exits 0 on a `sorry` — it is only a warning).
 `f(7,7) = 38` is **not** a Lean theorem.
@@ -424,18 +552,62 @@ orientation-predicate level of `LowerBound.lean`.
 ```
 export PATH="$HOME/.elan/bin:$PATH"
 cd lean
-lake build        # all twenty-six libraries; eight of them reach Mathlib
+lake build                        # the 1,756 defaultTargets ONLY
+lake build Headline               # the live chain: 331 modules, ~11 s warm
+lake build AKR9 Pair9Shift \
+           AKR9Reduction CollinearSegment RealPerturb SegmentStable \
+           RawConfig SimplicityStable SimplicityBridge UniformEps \
+           DependentSystem DegBound SignExp R3Construct TiltedShift \
+           CrossTransport CIInstance RotationLaw FactE E9Directions \
+           SwapPQ Compose        # the 22 that are NOT in defaultTargets
 ```
+
+**`lake build Headline` is the one command that covers the punchline.**
+`Headline.lean` declares nothing; it imports the four roots of the live chain —
+`MainTheorem`, `RealUpperBound`, `AKR9`, `Pair9Shift` — so building it builds
+exactly their transitive closure, **331 modules**, and prints `#print axioms`
+for the four headline theorems.  Measured 2026-09-24 on a warm tree: **11 s**,
+3,344 jobs, exit 0, **0** `sorryAx`, **408** `depends on axioms` lines.  The
+closure contains **no** `OTEnum*` / `Strat*` enumeration shard, so the target
+cannot invalidate them — checked by comparing shard `.olean` mtimes before and
+after.  `Headline` is deliberately **not** in `defaultTargets`, for the same
+reason the 22 are not.
+
+**Non-vacuity.**  The last section of `Pair9Shift.lean` bundles the mechanical
+checks that the headline theorem is about something:
+`Heptagon.Pair9Shift.nonVacuity` is a single theorem whose ten clauses say that
+`Pair9` is inhabited, that `points9` of the witness is a non-empty *finite* set
+of points of `ℝ × ℝ`, that the witness satisfies **both** the weak hypothesis
+(coincidence-freeness) and the strong one ((E9)) *simultaneously*, that its
+count is exactly `38` so the bound is attained, that `≤ 37` is false there, and
+that `39` is not attained.  Each supporting lemma carries its own
+`#print axioms`.  The witness is `AKR9.certPair9`, i.e. the 38-crossing
+lower-bound certificate with the integer coordinates of `LowerBound.Pv`/`Qv` —
+concrete, not obtained from an existence proof.
+
+**`lake build` alone does not build the whole development.** `lakefile.toml`
+declares **1,779** libraries and `defaultTargets` names **1,756** of them; the
+22 in the third command are unreachable from the first, including `AKR9` and
+`Pair9Shift`, which carry the §9 headline theorems. `scripts/verify-all.sh`
+builds all 1,779 and asserts that each produced a `.olean`.  (The 1,779th is
+`Headline`, added 2026-09-24; the count was 1,778 before it.) *(Corrected
+2026-09-24: this block read `lake build  # all twenty-six libraries; eight of
+them reach Mathlib` — stale by a factor of sixty-eight, and silent about the
+22-library shortfall.)*
 
 Mathlib is pinned by `lake-manifest.json` to the tag `v4.33.1`
 (rev `0df444a360eaa60ab8c11dca51a86af692955474`) and comes with prebuilt
 `.olean` files, so no Mathlib source compilation is needed.
 
 **From a clean clone, measured — but STALE.** The figures in the table below
-were taken before `EnumerationDomain.lean` and the fourteen libraries after it
-were wired in, when the build reported 758 warm jobs rather than the current
-**1395**. They have not been re-measured; treat them as a lower bound on the
-cold cost, not as current numbers. The shape of the finding still holds: a first
+were taken before `EnumerationDomain.lean` and the ~1,750 libraries after it
+were wired in, when the build reported 758 warm jobs. The most recent committed
+full build reports **6,523 jobs over 1,762 libraries**
+(`../results/validation/2026-09-17_verify_all_after_e9_attempt.log`); no warm or
+cold *clean-clone* run has been re-measured since, so the table below is
+**stale by roughly an order of magnitude** and is a lower bound on the cold
+cost, not a current number. *(Corrected 2026-09-24: "the fourteen libraries
+after it" and "the current **1395**" both dated from a 26-library development.)* The shape of the finding still holds: a first
 `lake build` on a machine that has never seen this Mathlib revision needs no
 extra command — plain `lake build` clones the dependency packages and fetches
 their caches — but it is not cheap:
@@ -451,7 +623,10 @@ over a home connection, by cloning this repository into an empty directory and
 running `lake build` there. The cold run reports 8 jobs more than the warm one:
 those are the dependency packages being materialised, not extra project work.
 Almost all of the 5 minutes is download and unpack, not elaboration; the
-twenty-five project libraries themselves account for well under a minute of it.
+project libraries themselves accounted for well under a minute of it — a
+figure from the 25-library era that no longer holds: the OTEnum/Strat/CCase
+shards now dominate a cold build (about 17 CPU-hours; see the note in
+`scripts/verify-all.sh`).
 
 The job count is not a stable identifier — re-read it rather than trusting this
 table if the two disagree.
@@ -473,8 +648,15 @@ Toolchain: `leanprover/lean4:v4.33.1`.
 
 `#print axioms` output, verbatim, for every principal theorem
 (Lean 4.33.1, Mathlib `v4.33.1`). Re-read for this revision with
-`lake env lean` over a file that imports all twenty-six libraries; nothing below is
-transcribed from an earlier edit.
+`lake env lean` over a file that imports the hand-written libraries; nothing
+below is transcribed from an earlier edit. **Scope, stated plainly:** this
+table covers the hand-written development, not all 1,779 declared libraries,
+and it has not been regenerated since 2026-09-14 — the §9 modules listed under
+"What is here" are absent from it. `lean/Pair9Shift.lean` and the other §9
+files carry their own `#print axioms` lines in-source.
+*(Corrected 2026-09-24: this read "over a file that imports all twenty-six
+libraries", which both understated the library count and implied a coverage the
+table does not have.)*
 
 Per-library summary first — the *union* of the axioms of every theorem the file
 itself declares, and how many of those theorems need none.
