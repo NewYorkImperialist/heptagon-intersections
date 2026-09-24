@@ -1029,6 +1029,45 @@ theorem exists_good_dir_pair9 (R : Pair9) (i : Fin 7) :
 #print axioms exists_good_dir
 #print axioms exists_good_dir_pair9
 
+/-! ### The rates are nonzero where they must be
+
+Note the asymmetry with §9.2, and it is real rather than an artefact: on the
+outgoing side the rate is `E × (P_{i+1} − Q_j)`, which **vanishes** when the
+degenerate `Q`-vertex *is* the fixed far endpoint `P_{i+1}`.  That is correct —
+moving `P_i` cannot dislodge a `Q`-vertex sitting on the endpoint it does not
+move — and it is why the move's bookkeeping cannot simply copy the shift's. -/
+
+theorem moveCoef_ne_zero_self (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) (j : Fin 7)
+    (hgood : ∀ j : Fin 7, R.V (pP (i + 1)) - R.V (pQ j) ≠ 0 →
+      cross E (R.V (pP (i + 1)) - R.V (pQ j)) ≠ 0)
+    (hne : R.V (pQ j) ≠ R.V (pP (i + 1))) :
+    moveCoef R.V i E i (pQ j) ≠ 0 := by
+  rw [moveCoef_self R.V i E (pQ j) (fun h => pP_ne_pQ i j h.symm)]
+  exact hgood j (sub_ne_zero.mpr (Ne.symm hne))
+
+theorem moveCoef_ne_zero_prev (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) (j : Fin 7)
+    (hgood : ∀ j : Fin 7, R.V (pQ j) - R.V (pP (i - 1)) ≠ 0 →
+      cross E (R.V (pQ j) - R.V (pP (i - 1))) ≠ 0)
+    (hne : R.V (pQ j) ≠ R.V (pP (i - 1))) :
+    moveCoef R.V i E (i - 1) (pQ j) ≠ 0 := by
+  rw [moveCoef_prev R.V i E (pQ j) (fun h => pP_ne_pQ i j h.symm)]
+  exact hgood j (sub_ne_zero.mpr hne)
+
+/-- On the `Q`-side the rate needs **no** exception: both endpoints are fixed,
+the side is nondegenerate by `simpleQ`, and a good `E` is transverse to it. -/
+theorem moveCoefQ_ne_zero_apex (R : Pair9) (i : Fin 7) (E : ℝ × ℝ) (m : Fin 7)
+    (hgood : ∀ m : Fin 7, R.V (pQ (m + 1)) - R.V (pQ m) ≠ 0 →
+      cross E (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0) :
+    moveCoefQ R.V i E m (pP i) ≠ 0 := by
+  rw [moveCoefQ_apex]
+  intro hz
+  exact hgood m (sub_ne_zero.mpr (Ne.symm (R.simpleQ.1 m)))
+    (by rw [RotationLaw.cross_swap, hz, neg_zero])
+
+#print axioms moveCoef_ne_zero_self
+#print axioms moveCoef_ne_zero_prev
+#print axioms moveCoefQ_ne_zero_apex
+
 #print axioms moveCoefQ_apex
 #print axioms moveCoef_self
 #print axioms moveCoef_prev
