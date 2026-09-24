@@ -918,7 +918,73 @@ theorem moveV_pP_untouched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × �
   simp only [moveV]
   exact if_neg (fun hc => h (Pair9Shift.pP_inj hc))
 
+/-- **The rate on the outgoing side `i`.**  `P_i` is the side's *first*
+endpoint, so the coefficient is `E × (P_{i+1} − a)`. -/
+theorem moveCoef_self (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (a : Fin 14)
+    (ha : ¬ (a = pP i)) :
+    moveCoef V i E i a = cross E (V (pP (i + 1)) - V a) := by
+  have h1 : ¬ ((pP (i + 1) : Fin 14) = pP i) :=
+    fun h => succ_ne_self i (Pair9Shift.pP_inj h)
+  unfold moveCoef Pair9Shift.dcoef
+  rw [if_pos rfl, if_neg h1, if_neg ha]
+  simp only [cross, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+/-- **The rate on the incoming side `i−1`.**  `P_i` is the side's *second*
+endpoint, so the coefficient is `E × (a − P_{i−1})`. -/
+theorem moveCoef_prev (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (E : ℝ × ℝ) (a : Fin 14)
+    (ha : ¬ (a = pP i)) :
+    moveCoef V i E (i - 1) a = cross E (V a - V (pP (i - 1))) := by
+  have hi : i - 1 + 1 = i := by simp
+  have h0 : ¬ ((pP (i - 1) : Fin 14) = pP i) := by
+    intro h
+    have he : i - 1 = i := Pair9Shift.pP_inj h
+    have hi2 : i - 1 + 1 = i := by simp
+    rw [he] at hi2
+    exact succ_ne_self i hi2
+  unfold moveCoef Pair9Shift.dcoef
+  rw [hi, if_neg h0, if_pos rfl, if_neg ha]
+  simp only [cross, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+open scoped Classical in
+/-- A `segDeg` entry on a `P`-side the move does not disturb is unchanged. -/
+theorem segDeg_move_untouched_iff (R R' : Pair9) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V i E e) {k j : Fin 7} (hnt : k ∉ touchedMove i) :
+    ((k, j) ∈ segDeg R' ↔ (k, j) ∈ segDeg R) := by
+  classical
+  have h1 : k ≠ i := fun hc => hnt (by rw [mem_touchedMove_iff]; exact Or.inl hc)
+  have h2 : k ≠ i - 1 := fun hc => hnt (by rw [mem_touchedMove_iff]; exact Or.inr hc)
+  have e1 : R'.V (pP k) = R.V (pP k) := by
+    rw [hR']; exact moveV_pP_untouched R.V i E e h1
+  have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+    rw [hR']
+    exact moveV_pP_untouched R.V i E e (fun hc => h2 (eq_sub_of_add_eq hc))
+  have e3 : R'.V (pQ j) = R.V (pQ j) := by rw [hR']; exact moveV_Q R.V i E e j
+  constructor <;> intro h <;>
+    simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢ <;>
+    simpa only [sideP9, e1, e2, e3] using h
+
+open scoped Classical in
+/-- A `segDegP` entry at a `P`-vertex other than the apex is unchanged. -/
+theorem segDegP_move_untouched_iff (R R' : Pair9) (i : Fin 7) (E : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V i E e) {m v : Fin 7} (hnt : v ≠ i) :
+    ((m, v) ∈ segDegP R' ↔ (m, v) ∈ segDegP R) := by
+  classical
+  have e1 : R'.V (pQ m) = R.V (pQ m) := by rw [hR']; exact moveV_Q R.V i E e m
+  have e2 : R'.V (pQ (m + 1)) = R.V (pQ (m + 1)) := by
+    rw [hR']; exact moveV_Q R.V i E e (m + 1)
+  have e3 : R'.V (pP v) = R.V (pP v) := by
+    rw [hR']; exact moveV_pP_untouched R.V i E e hnt
+  constructor <;> intro h <;>
+    simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at h ⊢ <;>
+    simpa only [sideQ9, e1, e2, e3] using h
+
 #print axioms moveCoefQ_apex
+#print axioms moveCoef_self
+#print axioms moveCoef_prev
+#print axioms segDeg_move_untouched_iff
+#print axioms segDegP_move_untouched_iff
 #print axioms moveV_pP_untouched
 
 end E9Directions
