@@ -1,0 +1,18 @@
+P simple: True  Q simple: True  finite: True
+base: cross=1 segDeg=3 segDegP=3 MEASURE=7 coinc=1
+agent claimed: cross=1 segDeg=3 segDegP=3 MEASURE=7 coinc=1
+
+admissible displacements in the |d|<=2 box at step 1/16 : 4159
+delta-MEASURE histogram : {-3: 4159}
+best : (-3, Fraction(-2, 1), Fraction(-2, 1), 2, 1, 1)
+
+VERDICT: CONFIRMED - no admissible move preserves MEASURE
+
+==========================================================================
+SAME WITNESS, but scored with M_pt = |crossPairs| + |degPts|
+==========================================================================
+base: cross=1 degPts=3 M_pt=4
+delta-M_pt histogram : {0: 4159}
+best : (0, Fraction(-2, 1), Fraction(-2, 1), 2, 2)
+
+VERDICT for M_pt: SURVIVES - some admissible move has delta >= 0

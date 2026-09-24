@@ -4220,6 +4220,35 @@ theorem points9_le_38_of_coincFree (R : Pair9) (hfin : (points9 R).Finite)
   obtain ⟨Rend, hD, hE, hb⟩ := exists_chain_deg_free _ R hfin hcoinc rfl
   exact points9_le_38_of_joint R Rend hfin hb hD hE
 
+/-! ## 62. The point-counting measure
+
+§9.2's chain is driven by `crossPairs + segDeg + segDegP`, which counts a
+degeneracy once per **incidence**.  That is fine there, because every §9.2
+degeneracy is a vertex lying *strictly inside* a side, contributing exactly
+one incidence.  It is **not** fine at a vertex–vertex coincidence, which is an
+endpoint of four sides and is counted four times —
+`independent/e9_directions/coincidence_overcount.py` measures `4` against
+`degPts = 1`, and measures `0` overcount on a §9.2-style degeneracy as control.
+
+`degPts = points9 ∩ verts` counts each degenerate **point** once, and this is
+the endpoint lemma for the measure built on it. -/
+
+theorem points9_le_38_of_pt_measure (R Rend : Pair9) (hfin : (points9 R).Finite)
+    (hsum : (crossPairsOf R.V).card + (degPts R).ncard
+      ≤ (crossPairsOf Rend.V).card + (degPts Rend).ncard)
+    (hclear : degPts Rend = ∅) :
+    (points9 R).ncard ≤ 38 := by
+  have hend : (crossPairsOf Rend.V).card ≤ 38 :=
+    RawConfig.raw_crossPairs_card_le_38 (AKR9.toRawPair Rend)
+  rw [hclear] at hsum
+  simp only [Set.ncard_empty, Nat.add_zero] at hsum
+  calc (points9 R).ncard
+      ≤ (crossPairsOf R.V).card + (degPts R).ncard :=
+        points9_ncard_le_crossPairs_add_deg R hfin
+    _ ≤ 38 := by omega
+
+#print axioms points9_le_38_of_pt_measure
+
 #print axioms exists_chain_deg_free
 #print axioms points9_le_38_of_coincFree
 
