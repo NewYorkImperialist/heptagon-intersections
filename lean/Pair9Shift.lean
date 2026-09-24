@@ -3949,6 +3949,137 @@ theorem exists_delta0_coincFree (R : Pair9) (i : Fin 7) (t : ℝ)
 
 #print axioms exists_delta0_coincFree
 
+/-! ## 60pre. `(Fin)` propagates — the segment/line primitive
+
+Row 112's obligation (b).  The missing ingredient is elementary: `off` is
+**affine** along a segment, and a nonzero affine function of one real variable
+has at most one root.  So a segment not contained in a line meets that line in
+at most one point, and the whole boundary intersection is a finite union of
+such meetings. -/
+
+theorem off_lin_affine (a A C D : ℝ × ℝ) (s : ℝ) :
+    off a A (lin C (D - C) s) = off a A C + s * (off a A D - off a A C) := by
+  simp only [off, lin, Prod.fst_sub, Prod.snd_sub]; ring
+
+theorem exists_param_mem {C D x : ℝ × ℝ} (hx : x ∈ segment ℝ C D) :
+    ∃ s : ℝ, x = lin C (D - C) s := by
+  obtain ⟨p, q, hp, hq, hpq, rfl⟩ := hx
+  refine ⟨q, ?_⟩
+  have hp' : p = 1 - q := by linarith
+  subst hp'
+  simp only [lin, Prod.ext_iff, Prod.fst_sub, Prod.snd_sub, Prod.fst_add,
+    Prod.snd_add, Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+  constructor <;> ring
+
+/-- **A segment not contained in a line meets it at most once.** -/
+theorem subsingleton_segment_off_zero {a A C D : ℝ × ℝ}
+    (hnot : off a A C ≠ 0 ∨ off a A D ≠ 0) :
+    {x | x ∈ segment ℝ C D ∧ off a A x = 0}.Subsingleton := by
+  intro x hx y hy
+  obtain ⟨s, hs⟩ := exists_param_mem hx.1
+  obtain ⟨r, hr⟩ := exists_param_mem hy.1
+  have hxs : off a A C + s * (off a A D - off a A C) = 0 := by
+    rw [← off_lin_affine, ← hs]; exact hx.2
+  have hyr : off a A C + r * (off a A D - off a A C) = 0 := by
+    rw [← off_lin_affine, ← hr]; exact hy.2
+  by_cases hd : off a A D - off a A C = 0
+  · exfalso
+    rw [hd, mul_zero, add_zero] at hxs
+    rcases hnot with h | h
+    · exact h hxs
+    · exact h (by linarith)
+  · have hsr : (s - r) * (off a A D - off a A C) = 0 := by
+      linear_combination hxs - hyr
+    have hse : s = r := by
+      rcases mul_eq_zero.mp hsr with h | h
+      · linarith
+      · exact absurd h hd
+    rw [hs, hr, hse]
+
+open scoped Classical in
+theorem sideP9_inter_sideQ9_finite (R : Pair9) (k j : Fin 7)
+    (hnot : orientR (R.V (pP k)) (R.V (pP (k + 1))) (R.V (pQ j)) ≠ 0 ∨
+            orientR (R.V (pP k)) (R.V (pP (k + 1))) (R.V (pQ (j + 1))) ≠ 0) :
+    (sideP9 R k ∩ sideQ9 R j).Finite := by
+  refine Set.Finite.subset
+    (Set.Subsingleton.finite
+      (subsingleton_segment_off_zero
+        (a := R.V (pP (k + 1)) - R.V (pP k)) (A := R.V (pP k))
+        (C := R.V (pQ j)) (D := R.V (pQ (j + 1))) ?_)) ?_
+  · simpa only [off_eq_orientR] using hnot
+  · rintro x ⟨hxP, hxQ⟩
+    exact ⟨hxQ, off_eq_zero_of_mem_segment hxP⟩
+
+theorem points9_finite_of_pairwise (R : Pair9)
+    (h : ∀ k j : Fin 7, (sideP9 R k ∩ sideQ9 R j).Finite) :
+    (points9 R).Finite := by
+  have heq : points9 R = ⋃ k : Fin 7, ⋃ j : Fin 7, (sideP9 R k ∩ sideQ9 R j) := by
+    ext x
+    simp only [points9, bdryP9, bdryQ9, Set.mem_inter_iff, Set.mem_iUnion]
+    tauto
+  rw [heq]
+  exact Set.finite_iUnion (fun k => Set.finite_iUnion (fun j => h k j))
+
+#print axioms off_lin_affine
+#print axioms subsingleton_segment_off_zero
+#print axioms sideP9_inter_sideQ9_finite
+#print axioms points9_finite_of_pairwise
+
+open scoped Classical in
+/-- **`(Fin)` propagates.**  On a touched side every determinant against every
+`Q`-vertex is nonzero after the shift — if it was nonzero it stays so, if it
+was zero it becomes `δ` times a nonzero rate — so that side meets each `Q`-side
+at most once.  An untouched side has not moved, and neither has `Q`, so its
+meetings are exactly the original ones. -/
+theorem exists_delta0_finite (R : Pair9) (hfin : (points9 R).Finite)
+    (i : Fin 7) (t : ℝ)
+    (hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0)
+    (htrN : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+         (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0)
+    (htrP : cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+         (R.V (pP i)).2 - (R.V (pP (i - 1))).2) ≠ 0)
+    (hnc : ∀ v m : Fin 7, R.V (pP v) ≠ R.V (pQ m)) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, δ ≠ 0 → |δ| < δ₀ →
+      ∀ R' : Pair9, R'.V = shiftV R.V i t δ → (points9 R').Finite := by
+  classical
+  obtain ⟨δ₀, hδ₀, hord⟩ := exists_delta0_order_type R.V i t
+  refine ⟨δ₀, hδ₀, fun δ hδ0 hδ R' hR' => ?_⟩
+  refine points9_finite_of_pairwise R' (fun k j => ?_)
+  by_cases hkt : k ∈ touched i
+  · have hne : orientR (R'.V (pP k)) (R'.V (pP (k + 1))) (R'.V (pQ j)) ≠ 0 := by
+      rw [hR']
+      by_cases horig : orientR (R.V (pP k)) (R.V (pP (k + 1))) (R.V (pQ j)) = 0
+      · rw [orientR_shift_side, horig, zero_add]
+        exact mul_ne_zero hδ0
+          (rate_ne_zero_of_touched R.V i t hkt hu horig htrN htrP hnc)
+      · intro hz
+        have hs := hord δ hδ (pP k) (pP (k + 1)) (pQ j) horig
+        rw [hz, mul_zero] at hs
+        exact lt_irrefl 0 hs
+    exact sideP9_inter_sideQ9_finite R' k j (Or.inl hne)
+  · have h1 : k ≠ i := fun hc => hkt (by rw [mem_touched_iff]; exact Or.inl hc)
+    have h2 : k ≠ i + 1 := fun hc =>
+      hkt (by rw [mem_touched_iff]; exact Or.inr (Or.inl hc))
+    have h3 : k ≠ i - 1 := fun hc =>
+      hkt (by rw [mem_touched_iff]; exact Or.inr (Or.inr hc))
+    have e1 : R'.V (pP k) = R.V (pP k) := by
+      rw [hR']; exact shiftV_pP_untouched R.V i t δ h1 h2
+    have e2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+      rw [hR']
+      exact shiftV_pP_untouched R.V i t δ (fun hc => h3 (eq_sub_of_add_eq hc))
+        (fun hc => h1 (add_right_cancel hc))
+    have eQ1 : R'.V (pQ j) = R.V (pQ j) := by rw [hR']; exact shiftV_Q R.V i t δ j
+    have eQ2 : R'.V (pQ (j + 1)) = R.V (pQ (j + 1)) := by
+      rw [hR']; exact shiftV_Q R.V i t δ (j + 1)
+    refine hfin.subset ?_
+    rintro x ⟨hxP, hxQ⟩
+    exact ⟨Set.mem_iUnion.mpr ⟨k, by simpa only [sideP9, e1, e2] using hxP⟩,
+           Set.mem_iUnion.mpr ⟨j, by simpa only [sideQ9, eQ1, eQ2] using hxQ⟩⟩
+
+#print axioms exists_delta0_finite
+
 /-! ## 59. The strictly decreasing step
 
 §56 gives a step that does not lose ground; §57 gives one that gains.  They
@@ -3966,27 +4097,32 @@ theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
       (segDeg R').card + (segDegP R').card
         < (segDeg R).card + (segDegP R).card ∧
-      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) := by
+      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) ∧
+      (points9 R').Finite := by
   classical
   have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
     sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
   obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
   obtain ⟨δ₀, hδ₀, hexact⟩ := exists_delta0_deg_exact R i t hu h1 h2 h3 hcoinc
   obtain ⟨δ₁, hδ₁, hcf⟩ := exists_delta0_coincFree R i t hcoinc
+  obtain ⟨δ₂, hδ₂, hfn⟩ := exists_delta0_finite R hfin i t hu h1 h2 hcoinc
   obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
-    exists_joint_step R hfin hcoinc i t (lt_min hδ₀ hδ₁) h1 h2 h3
+    exists_joint_step R hfin hcoinc i t (lt_min (lt_min hδ₀ hδ₁) hδ₂) h1 h2 h3
       (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
       (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
       (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
       (fun _ hy => segDegP_transversal_next R hfin hcoinc hy)
-  have hδd : |δ| < δ₀ := lt_of_lt_of_le hδt (min_le_left _ _)
-  have hδc : |δ| < δ₁ := lt_of_lt_of_le hδt (min_le_right _ _)
+  have hδd : |δ| < δ₀ :=
+    lt_of_lt_of_le hδt ((min_le_left _ _).trans (min_le_left _ _))
+  have hδc : |δ| < δ₁ :=
+    lt_of_lt_of_le hδt ((min_le_left _ _).trans (min_le_right _ _))
+  have hδf : |δ| < δ₂ := lt_of_lt_of_le hδt (min_le_right _ _)
   obtain ⟨hD, hE⟩ := hexact δ hδ hδd R' hR'
   have hcf' : ∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j) := by
     intro v j
     rw [hR', shiftV_Q]
     exact hcf δ hδc v j
-  refine ⟨t, δ, R', hδ, hR', hb, ?_, hcf'⟩
+  refine ⟨t, δ, R', hδ, hR', hb, ?_, hcf', hfn δ hδ hδf R' hR'⟩
   rw [hD, hE]
   have hle1 : ((segDeg R).filter (fun x => x.1 ∉ touched i)).card
       ≤ (segDeg R).card := Finset.card_le_card (Finset.filter_subset _ _)
@@ -4018,7 +4154,8 @@ theorem exists_joint_step_decreasing_of_deg (R : Pair9) (hfin : (points9 R).Fini
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card ∧
       (segDeg R').card + (segDegP R').card
         < (segDeg R).card + (segDegP R).card ∧
-      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) := by
+      (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) ∧
+      (points9 R').Finite := by
   classical
   rcases hne with ⟨x, hx⟩ | ⟨y, hy⟩
   · obtain ⟨t, δ, R', h⟩ := exists_joint_step_decreasing R hfin hcoinc x.1
@@ -4030,6 +4167,61 @@ theorem exists_joint_step_decreasing_of_deg (R : Pair9) (hfin : (points9 R).Fini
 
 #print axioms exists_joint_step_decreasing
 #print axioms exists_joint_step_decreasing_of_deg
+
+/-! ## 61. The chain, and §9.2's half of `(A9)`
+
+Every step strictly drops `segDeg + segDegP` and reproduces **both** standing
+hypotheses, so a strong induction on that count runs to a pair with no
+degeneracies at all — and the joint measure never fell along the way. -/
+
+open scoped Classical in
+theorem exists_chain_deg_free :
+    ∀ (n : ℕ) (R : Pair9), (points9 R).Finite →
+      (∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) →
+      (segDeg R).card + (segDegP R).card = n →
+      ∃ R' : Pair9, segDeg R' = ∅ ∧ segDegP R' = ∅ ∧
+        (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+          ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro R hfin hcoinc hn
+    by_cases hd : (segDeg R).Nonempty ∨ (segDegP R).Nonempty
+    · obtain ⟨i, t, δ, R', hδ, hR', hb, hlt, hcf, hfn⟩ :=
+        exists_joint_step_decreasing_of_deg R hfin hcoinc hd
+      obtain ⟨R'', hD, hE, hb2⟩ := ih _ (hn ▸ hlt) R' hfn hcf rfl
+      exact ⟨R'', hD, hE, le_trans hb hb2⟩
+    · refine ⟨R, ?_, ?_, le_refl _⟩
+      · rw [← Finset.not_nonempty_iff_eq_empty]
+        exact fun h => hd (Or.inl h)
+      · rw [← Finset.not_nonempty_iff_eq_empty]
+        exact fun h => hd (Or.inr h)
+
+open scoped Classical in
+/-- **§9.2's half of `(A9)`, unconditionally.**
+
+If the two boundaries meet in finitely many points and the two heptagons
+**share no vertex**, then they meet in at most `38` points.
+
+The vertex-on-**side** degeneracies — the ones AKR §9.2 removes by shifting —
+are handled here in full: the chain of tilted shifts terminates, the joint
+measure `crossPairs + segDeg + segDegP` never falls, and the endpoint has no
+degeneracies, where the measure is just the crossing count and `≤ 38` is the
+project's own bound for two simple heptagons.
+
+**This is not `f(7,7) = 38`, and it is not all of AKR §9.** The hypothesis
+`hcoinc` — no shared vertex — is §9.**1**'s conclusion, and it is assumed here,
+not proved. `AKR9.NoVertexOnOther` remains a hypothesis of the main
+development, and `f(7,7) = 38` remains conditional on the §9 import. Nothing
+here has been reviewed by a mathematician. -/
+theorem points9_le_38_of_coincFree (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) :
+    (points9 R).ncard ≤ 38 := by
+  obtain ⟨Rend, hD, hE, hb⟩ := exists_chain_deg_free _ R hfin hcoinc rfl
+  exact points9_le_38_of_joint R Rend hfin hb hD hE
+
+#print axioms exists_chain_deg_free
+#print axioms points9_le_38_of_coincFree
 
 #print axioms sep_of_strict_between
 #print axioms segDeg_transversal_next
