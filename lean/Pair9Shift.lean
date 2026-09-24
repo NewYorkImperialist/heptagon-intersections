@@ -3508,6 +3508,7 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
       orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
         orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
     ∃ (δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
   classical
@@ -3536,6 +3537,7 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
           ≤ (∑ x ∈ segDeg R, lcAt R.V i t σ x)
             + (∑ y ∈ segDegP R, lcAtP R.V i t σ y)) →
       ∃ R' : Pair9, R'.V = shiftV R.V i t σ ∧
+        crossPairsOf R.V ⊆ crossPairsOf R'.V ∧
         (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
           ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
     intro σ hσ0 hσ havg
@@ -3550,7 +3552,7 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
           = fun k => R.V (pQ k) := by
         funext k; exact shiftV_Q R.V i t σ k
       rw [hEq]; exact R.simpleQ
-    refine ⟨⟨shiftV R.V i t σ, hP, hQ⟩, rfl, ?_⟩
+    refine ⟨⟨shiftV R.V i t σ, hP, hQ⟩, rfl, hA σ hs1, ?_⟩
     exact step_invariant_joint R ⟨shiftV R.V i t σ, hP, hQ⟩ hfin hcoinc i t σ
       (hA σ hs1)
       (fun x hx hxt => hB σ hσ0 hs2 x hx hxt)
@@ -3562,13 +3564,13 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
     rw [abs_of_pos (by linarith)]; linarith
   have hhalfne : δ₀ / 2 ≠ 0 := ne_of_gt (by linarith)
   rcases hD (δ₀ / 2) (lt_of_lt_of_le hhalf hl4) with hpos | hneg
-  · obtain ⟨R', hR'V, hbound⟩ := key (δ₀ / 2) hhalfne hhalf hpos
-    exact ⟨δ₀ / 2, R', hhalfne, lt_of_lt_of_le hhalf hl6, hR'V, hbound⟩
+  · obtain ⟨R', hR'V, hsub, hbound⟩ := key (δ₀ / 2) hhalfne hhalf hpos
+    exact ⟨δ₀ / 2, R', hhalfne, lt_of_lt_of_le hhalf hl6, hR'V, hsub, hbound⟩
   · have habs : |(-(δ₀ / 2))| < δ₀ := by rw [abs_neg]; exact hhalf
-    obtain ⟨R', hR'V, hbound⟩ :=
+    obtain ⟨R', hR'V, hsub, hbound⟩ :=
       key (-(δ₀ / 2)) (neg_ne_zero.mpr hhalfne) habs hneg
     exact ⟨-(δ₀ / 2), R', neg_ne_zero.mpr hhalfne, lt_of_lt_of_le habs hl6,
-      hR'V, hbound⟩
+      hR'V, hsub, hbound⟩
 
 #print axioms exists_joint_step
 
@@ -3644,12 +3646,13 @@ theorem exists_joint_step_tilted (R : Pair9) (hfin : (points9 R).Finite)
       orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
         orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
     ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
   obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
-  obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
+  obtain ⟨δ, R', hδ, hδt, hR', hsub, hb⟩ :=
     exists_joint_step R hfin hcoinc i t hδtop h1 h2 h3 hsepPD hsepND hsepPE hsepNE
-  exact ⟨t, δ, R', hδ, hδt, hR', hb⟩
+  exact ⟨t, δ, R', hδ, hδt, hR', hsub, hb⟩
 
 #print axioms coordSub_ne_zero
 #print axioms exists_good_tilt_pair9
@@ -3773,6 +3776,7 @@ theorem exists_joint_step_free (R : Pair9) (hfin : (points9 R).Finite)
     (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7)
     {δtop : ℝ} (hδtop : 0 < δtop) :
     ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ |δ| < δtop ∧ R'.V = shiftV R.V i t δ ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V ∧
       (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
         ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card :=
   exists_joint_step_tilted R hfin hcoinc i hδtop
@@ -4098,7 +4102,8 @@ theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
       (segDeg R').card + (segDegP R').card
         < (segDeg R).card + (segDegP R).card ∧
       (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) ∧
-      (points9 R').Finite := by
+      (points9 R').Finite ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V := by
   classical
   have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
     sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
@@ -4106,7 +4111,7 @@ theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
   obtain ⟨δ₀, hδ₀, hexact⟩ := exists_delta0_deg_exact R i t hu h1 h2 h3 hcoinc
   obtain ⟨δ₁, hδ₁, hcf⟩ := exists_delta0_coincFree R i t hcoinc
   obtain ⟨δ₂, hδ₂, hfn⟩ := exists_delta0_finite R hfin i t hu h1 h2 hcoinc
-  obtain ⟨δ, R', hδ, hδt, hR', hb⟩ :=
+  obtain ⟨δ, R', hδ, hδt, hR', hsub, hb⟩ :=
     exists_joint_step R hfin hcoinc i t (lt_min (lt_min hδ₀ hδ₁) hδ₂) h1 h2 h3
       (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
       (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
@@ -4122,7 +4127,7 @@ theorem exists_joint_step_decreasing (R : Pair9) (hfin : (points9 R).Finite)
     intro v j
     rw [hR', shiftV_Q]
     exact hcf δ hδc v j
-  refine ⟨t, δ, R', hδ, hR', hb, ?_, hcf', hfn δ hδ hδf R' hR'⟩
+  refine ⟨t, δ, R', hδ, hR', hb, ?_, hcf', hfn δ hδ hδf R' hR', hsub⟩
   rw [hD, hE]
   have hle1 : ((segDeg R).filter (fun x => x.1 ∉ touched i)).card
       ≤ (segDeg R).card := Finset.card_le_card (Finset.filter_subset _ _)
@@ -4155,7 +4160,8 @@ theorem exists_joint_step_decreasing_of_deg (R : Pair9) (hfin : (points9 R).Fini
       (segDeg R').card + (segDegP R').card
         < (segDeg R).card + (segDegP R).card ∧
       (∀ v j : Fin 7, R'.V (pP v) ≠ R'.V (pQ j)) ∧
-      (points9 R').Finite := by
+      (points9 R').Finite ∧
+      crossPairsOf R.V ⊆ crossPairsOf R'.V := by
   classical
   rcases hne with ⟨x, hx⟩ | ⟨y, hy⟩
   · obtain ⟨t, δ, R', h⟩ := exists_joint_step_decreasing R hfin hcoinc x.1
@@ -4187,7 +4193,7 @@ theorem exists_chain_deg_free :
   | _ n ih =>
     intro R hfin hcoinc hn
     by_cases hd : (segDeg R).Nonempty ∨ (segDegP R).Nonempty
-    · obtain ⟨i, t, δ, R', hδ, hR', hb, hlt, hcf, hfn⟩ :=
+    · obtain ⟨i, t, δ, R', hδ, hR', hb, hlt, hcf, hfn, -⟩ :=
         exists_joint_step_decreasing_of_deg R hfin hcoinc hd
       obtain ⟨R'', hD, hE, hb2⟩ := ih _ (hn ▸ hlt) R' hfn hcf rfl
       exact ⟨R'', hD, hE, le_trans hb hb2⟩
