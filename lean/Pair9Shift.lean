@@ -3408,5 +3408,70 @@ theorem segDegP_neighbour_ne_zero (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms segDeg_neighbour_ne_zero
 #print axioms segDegP_neighbour_ne_zero
 
+/-! ## 53. `havg` from `(Fin)` and coincidence-freeness alone
+
+Feeding §52 into §51.  The four smallness hypotheses disappear: what remains
+are the two standing assumptions of the whole development, finiteness of the
+intersection and no shared vertex. -/
+
+theorem sideQ9_left_mem (R : Pair9) (j : Fin 7) : R.V (pQ j) ∈ sideQ9 R j :=
+  left_mem_segment ℝ _ _
+
+theorem sideQ9_right_mem (R : Pair9) (j : Fin 7) :
+    R.V (pQ (j + 1)) ∈ sideQ9 R j := right_mem_segment ℝ _ _
+
+theorem sideP9_left_mem (R : Pair9) (v : Fin 7) : R.V (pP v) ∈ sideP9 R v :=
+  left_mem_segment ℝ _ _
+
+theorem sideP9_right_mem (R : Pair9) (v : Fin 7) :
+    R.V (pP (v + 1)) ∈ sideP9 R v := right_mem_segment ℝ _ _
+
+theorem sideQ9_pred_mem (R : Pair9) (j : Fin 7) : R.V (pQ j) ∈ sideQ9 R (j - 1) := by
+  have h : j - 1 + 1 = j := by simp
+  simp only [sideQ9, h]
+  exact right_mem_segment ℝ _ _
+
+theorem sideP9_pred_mem (R : Pair9) (v : Fin 7) : R.V (pP v) ∈ sideP9 R (v - 1) := by
+  have h : v - 1 + 1 = v := by simp
+  simp only [sideP9, h]
+  exact right_mem_segment ℝ _ _
+
+theorem vertexQ_ne_pred (R : Pair9) (j : Fin 7) :
+    R.V (pQ j) ≠ R.V (pQ (j - 1)) := by
+  have h : j - 1 + 1 = j := by simp
+  have hs := R.simpleQ.1 (j - 1)
+  rw [h] at hs
+  exact hs.symm
+
+theorem vertexP_ne_pred (R : Pair9) (v : Fin 7) :
+    R.V (pP v) ≠ R.V (pP (v - 1)) := by
+  have h : v - 1 + 1 = v := by simp
+  have hs := R.simpleP.1 (v - 1)
+  rw [h] at hs
+  exact hs.symm
+
+open scoped Classical in
+/-- **`havg`, with nothing assumed but `(Fin)` and coincidence-freeness.** -/
+theorem exists_delta0_havg_free (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) (t : ℝ) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, |δ| < δ₀ →
+      ((segDeg R).card + (segDegP R).card
+          ≤ (∑ d ∈ segDeg R, lcAt R.V i t δ d)
+            + (∑ e ∈ segDegP R, lcAtP R.V i t δ e)) ∨
+      ((segDeg R).card + (segDegP R).card
+          ≤ (∑ d ∈ segDeg R, lcAt R.V i t (-δ) d)
+            + (∑ e ∈ segDegP R, lcAtP R.V i t (-δ) e)) :=
+  exists_delta0_havg R i t
+    (fun d hd => segDeg_neighbour_ne_zero R hfin hcoinc hd (d.2 - 1) (d.2 - 1)
+      (sideQ9_pred_mem R d.2) (sideQ9_left_mem R (d.2 - 1)) (vertexQ_ne_pred R d.2))
+    (fun d hd => segDeg_neighbour_ne_zero R hfin hcoinc hd (d.2 + 1) d.2
+      (sideQ9_left_mem R d.2) (sideQ9_right_mem R d.2) (R.simpleQ.1 d.2))
+    (fun e he => segDegP_neighbour_ne_zero R hfin hcoinc he (e.2 - 1) (e.2 - 1)
+      (sideP9_pred_mem R e.2) (sideP9_left_mem R (e.2 - 1)) (vertexP_ne_pred R e.2))
+    (fun e he => segDegP_neighbour_ne_zero R hfin hcoinc he (e.2 + 1) e.2
+      (sideP9_left_mem R e.2) (sideP9_right_mem R e.2) (R.simpleP.1 e.2))
+
+#print axioms exists_delta0_havg_free
+
 end Pair9Shift
 end Heptagon
