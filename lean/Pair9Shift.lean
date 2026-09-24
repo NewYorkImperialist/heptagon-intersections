@@ -3651,5 +3651,137 @@ theorem exists_joint_step_tilted (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms exists_good_tilt_pair9
 #print axioms exists_joint_step_tilted
 
+/-! ## 56. Transversality is not an extra assumption
+
+§54 carried four transversality hypotheses, and this section removes them.
+The reason is elementary and worth stating: the degenerate vertex `C` lies
+**strictly between** the side's endpoints `A` and `B` — which is exactly what
+excluding a shared vertex buys — so `A` and `B` lie on opposite sides of
+*every* line through `C` except the line `AB` itself.  And the line `AB` is
+already excluded, by §52.
+
+The identity behind it is
+
+    orientR C D A * orientR C D B = −s(1−s) · (orientR A B D)²,
+
+with `C = A + s(B−A)`: the `s`-dependence of `D − C` cancels entirely, and the
+sign is forced by `0 < s < 1` together with `orientR A B D ≠ 0`. -/
+
+theorem sep_of_strict_between (A B C D : ℝ × ℝ) (s : ℝ) (hs0 : 0 < s) (hs1 : s < 1)
+    (hC : C = lin A (B - A) s) (hD : orientR A B D ≠ 0) :
+    orientR C D A * orientR C D B < 0 := by
+  subst hC
+  have key : orientR (lin A (B - A) s) D A * orientR (lin A (B - A) s) D B
+      = -(s * (1 - s)) * (orientR A B D * orientR A B D) := by
+    simp only [orientR, lin, Prod.fst_sub, Prod.snd_sub, Prod.fst_add,
+      Prod.snd_add, Prod.smul_fst, Prod.smul_snd, smul_eq_mul]
+    ring
+  rw [key]
+  have h1 : 0 < s * (1 - s) := mul_pos hs0 (by linarith)
+  have h2 : 0 < orientR A B D * orientR A B D := mul_self_pos.mpr hD
+  nlinarith
+
+open scoped Classical in
+theorem segDeg_transversal_next (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {x : Fin 7 × Fin 7} (hx : x ∈ segDeg R) :
+    orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP x.1)) *
+      orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP (x.1 + 1))) < 0 := by
+  classical
+  have hmem : R.V (pQ x.2) ∈ sideP9 R x.1 := by
+    simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hx
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict hmem
+    (fun hc => hcoinc x.1 x.2 hc.symm) (fun hc => hcoinc (x.1 + 1) x.2 hc.symm)
+  exact sep_of_strict_between _ _ _ _ s hs0 hs1 hseq
+    (segDeg_neighbour_ne_zero R hfin hcoinc hx (x.2 + 1) x.2
+      (sideQ9_left_mem R x.2) (sideQ9_right_mem R x.2) (R.simpleQ.1 x.2))
+
+open scoped Classical in
+theorem segDeg_transversal_prev (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {x : Fin 7 × Fin 7} (hx : x ∈ segDeg R) :
+    orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP x.1)) *
+      orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP (x.1 + 1))) < 0 := by
+  classical
+  have hmem : R.V (pQ x.2) ∈ sideP9 R x.1 := by
+    simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hx
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict hmem
+    (fun hc => hcoinc x.1 x.2 hc.symm) (fun hc => hcoinc (x.1 + 1) x.2 hc.symm)
+  have hbase := sep_of_strict_between (R.V (pP x.1)) (R.V (pP (x.1 + 1)))
+    (R.V (pQ x.2)) (R.V (pQ (x.2 - 1))) s hs0 hs1 hseq
+    (segDeg_neighbour_ne_zero R hfin hcoinc hx (x.2 - 1) (x.2 - 1)
+      (sideQ9_pred_mem R x.2) (sideQ9_left_mem R (x.2 - 1)) (vertexQ_ne_pred R x.2))
+  rw [orientR_swap (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP x.1)),
+    orientR_swap (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP (x.1 + 1))),
+    neg_mul_neg]
+  exact hbase
+
+open scoped Classical in
+theorem segDegP_transversal_next (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {y : Fin 7 × Fin 7} (hy : y ∈ segDegP R) :
+    orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
+      orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0 := by
+  classical
+  have hmem : R.V (pP y.2) ∈ sideQ9 R y.1 := by
+    simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hy
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict hmem
+    (hcoinc y.2 y.1) (hcoinc y.2 (y.1 + 1))
+  exact sep_of_strict_between _ _ _ _ s hs0 hs1 hseq
+    (segDegP_neighbour_ne_zero R hfin hcoinc hy (y.2 + 1) y.2
+      (sideP9_left_mem R y.2) (sideP9_right_mem R y.2) (R.simpleP.1 y.2))
+
+open scoped Classical in
+theorem segDegP_transversal_prev (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j))
+    {y : Fin 7 × Fin 7} (hy : y ∈ segDegP R) :
+    orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ y.1)) *
+      orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ (y.1 + 1))) < 0 := by
+  classical
+  have hmem : R.V (pP y.2) ∈ sideQ9 R y.1 := by
+    simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hy
+  obtain ⟨s, hs0, hs1, hseq⟩ := exists_param_strict hmem
+    (hcoinc y.2 y.1) (hcoinc y.2 (y.1 + 1))
+  have hbase := sep_of_strict_between (R.V (pQ y.1)) (R.V (pQ (y.1 + 1)))
+    (R.V (pP y.2)) (R.V (pP (y.2 - 1))) s hs0 hs1 hseq
+    (segDegP_neighbour_ne_zero R hfin hcoinc hy (y.2 - 1) (y.2 - 1)
+      (sideP9_pred_mem R y.2) (sideP9_left_mem R (y.2 - 1)) (vertexP_ne_pred R y.2))
+  rw [orientR_swap (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ y.1)),
+    orientR_swap (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ (y.1 + 1))),
+    neg_mul_neg]
+  exact hbase
+
+open scoped Classical in
+/-- **The joint step, with nothing assumed but `(Fin)` and coincidence-freeness.**
+
+From any `Pair9` whose two boundaries meet in finitely many points and which
+share no vertex, and at **any** edge `i`, there is a tilt and a nonzero shift
+producing another `Pair9` — both heptagons still simple — on which
+
+    crossPairs + segDeg + segDegP
+
+has not decreased.  This is §38's per-step obligation, discharged.
+
+It is a statement about **one step**. It does not by itself give `(A9)`: that
+needs the chain to terminate, and `f(7,7) = 38` remains conditional on AKR §9,
+which this does not close. -/
+theorem exists_joint_step_free (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7) :
+    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+        ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card :=
+  exists_joint_step_tilted R hfin hcoinc i
+    (fun _ hx => segDeg_transversal_prev R hfin hcoinc hx)
+    (fun _ hx => segDeg_transversal_next R hfin hcoinc hx)
+    (fun _ hy => segDegP_transversal_prev R hfin hcoinc hy)
+    (fun _ hy => segDegP_transversal_next R hfin hcoinc hy)
+
+#print axioms sep_of_strict_between
+#print axioms segDeg_transversal_next
+#print axioms segDeg_transversal_prev
+#print axioms segDegP_transversal_next
+#print axioms segDegP_transversal_prev
+#print axioms exists_joint_step_free
+
 end Pair9Shift
 end Heptagon
