@@ -1,0 +1,581 @@
+==============================================================================
+move_joint_measure.py -- joint test of AKR 9.1's apex-only move
+exact Fraction arithmetic throughout; no floats
+==============================================================================
+
+SELF-TESTS ON THE PRIMITIVES
+  [PASS] orientR ccw > 0
+  [PASS] orientR cw  < 0
+  [PASS] orientR collinear = 0
+  [PASS] orientR matches the Lean formula on a sample
+  [PASS] on_closed at start endpoint
+  [PASS] on_closed at end endpoint
+  [PASS] on_closed at interior point
+  [PASS] on_closed rejects the collinear extension
+  [PASS] on_closed rejects an off-line point
+  [PASS] proper_cross on a genuine X
+  [PASS] proper_cross FALSE at a shared endpoint (touching, not crossing)
+  [PASS] proper_cross FALSE for a T-touch
+  [PASS] SimpleClosed accepts a convex heptagon
+  [PASS] SimpleClosed ACCEPTS three collinear vertices (deliberate)
+  [PASS] SimpleClosed REJECTS a self-crossing heptagon
+  [PASS] SimpleClosed REJECTS an adjacent-side backtrack (conjunct 3)
+  [PASS] SimpleClosed REJECTS a repeated vertex (conjunct 1)
+  [PASS] moveV changes exactly one vertex
+  [PASS] moveV moves it by exactly e*E
+  [PASS] moveV with e=0 is the identity
+  [PASS] test square-ish P is simple
+  [PASS] coincSet finds the translate's shared vertices
+  [PASS] designed X-pair: both simple
+  [PASS] designed X-pair: exactly one coincidence
+  [PASS] a coincidence puts 2 entries in segDeg and 2 in segDegP
+  [PASS] finite_intersection says NO on an overlapping collinear pair
+  [PASS] finite_intersection says YES on a transversal pair
+  all self-tests passed
+
+direction grid : 80 primitive integer directions, |dx|,|dy| <= 5
+e grid         : ['1/1000', '-1/1000', '1/100', '-1/100', '1/10', '-1/10', '1/4', '-1/4', '1/2', '-1/2', '1', '-1', '2', '-2', '4', '-4']
+scan size      : 1280 (E,e) pairs per instance
+
+designed D1 transversal-X: simpleP=True simpleQ=True finite=True coincSet=[(0, 0)]
+designed D2 non-crossing-wedges: simpleP=True simpleQ=True finite=True coincSet=[(0, 0)]
+designed D3 collinear-apex-X: simpleP=True simpleQ=True finite=True coincSet=[(1, 1)]
+
+INSTANCE GENERATION
+  random polygon pairs drawn                     : 84
+  (i,j) coincidence candidates examined          : 2471
+    discarded: infinite intersection after gluing: 252
+  instances kept, by kind:
+    plain  (coincidence only)                    : 60
+    hardP  (Q-vertex on a P-side at the apex,
+            i.e. a segDeg entry the move destroys): 55
+    hardN  (a FROZEN neighbour incidence P[i+-1]
+            on a Q-side)                         : 40
+    hardM  (two or more coincidences)            : 20
+    designed adversarial                         : 3
+  TOTAL instances                                : 178
+
+  STRUCTURAL CHECK: 'apex also on a further Q-side' occurrences  : 0
+    That kind was requested but is impossible: P[i] = Q[j], so such
+    an incidence would be Q touching its own boundary, which
+    SimpleClosed forbids.  Every coincidence therefore carries
+    exactly 2 segDeg + 2 segDegP entries -- a fixed debt of 4.
+
+  LOCAL BUDGET AT THE APEX (max local crossings creatable, by the
+  cone criterion -- must be >= 4 to pay the debt of 4):
+    max local crossings = 1 : 22 instances
+    max local crossings = 2 : 97 instances
+    max local crossings = 3 : 33 instances
+    max local crossings = 4 : 26 instances
+
+==============================================================================
+MAIN SCAN
+==============================================================================
+  ... 25/178 instances scanned
+  ... 50/178 instances scanned
+  ... 75/178 instances scanned
+  ... 100/178 instances scanned
+  ... 125/178 instances scanned
+  ... 150/178 instances scanned
+  ... 175/178 instances scanned
+
+RESULT BY INSTANCE KIND  (best over the FULL (E,e) grid)
+  kind             n   dM>0   dM=0   dM<0  no move
+  designed         3      0      1      2        0
+  hardM           20      2      4     14        0
+  hardN           40     15      5     20        0
+  hardP           55     11     22     22        0
+  plain           60     21     13     26        0
+  TOTAL          178     49     45     84        0
+
+  reading: dM>0 = some admissible move strictly INCREASES the measure,
+           dM=0 = the best admissible move leaves it EQUAL,
+           dM<0 = EVERY admissible move strictly DECREASES it  <-- clause (3) fails
+
+RESULT BY e-TIER  (max dMEASURE over admissible moves, per instance)
+  tier                       dM>0   dM=0   dM<0  no move
+  tiny  (1/1000,1/100)          0     30    148        0
+  small (1/10,1/4)             11     28    139        0
+  mod   (1/2,1)                41     38     99        0
+  large (2,4)                  44     34     99        1
+
+THE PERTURBATION REGIME  (|e| <= 1/4 only -- what section 9's
+uniform-epsilon step actually gets to use)
+  instances with an admissible small-e move of dMEASURE >= 0 : 40
+  instances where every admissible small-e move DROPS it     : 138
+
+==============================================================================
+CANDIDATE COUNTEREXAMPLES TO THE CONJECTURE AS STATED
+   (no admissible (E,e) anywhere on the grid with dMEASURE >= 0)
+==============================================================================
+  --- MEASURE FORCED TO DROP   [plain]  apex i=2, coincident Q-vertex j=3
+      P = [('-2', '1'), ('-2', '3'), ('2', '-2'), ('0', '-2'), ('-1', '0'), ('-5', '3'), ('-5', '5')]
+      Q = [('-6', '0'), ('-5', '-1'), ('3', '1'), ('2', '-2'), ('0', '-7'), ('-2', '-4'), ('-5', '-6')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=3 MEASURE=6 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=6, coincident Q-vertex j=3
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-4', '-10'), ('-4', '-5'), ('-3', '-7'), ('-2', '-4'), ('-2', '-6'), ('-3', '-8'), ('-3', '-10')]
+      base |crossPairs|=0 |segDeg|=2 |segDegP|=2 MEASURE=4 |coincSet|=1
+      best admissible: dM=-1 (dCross=1, dSegDeg=-1, dSegDegP=-1) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1
+  --- MEASURE FORCED TO DROP   [hardN]  apex i=0, coincident Q-vertex j=3
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-2', '-6'), ('-2', '-1'), ('-1', '-3'), ('0', '0'), ('0', '-2'), ('-1', '-4'), ('-1', '-6')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=3 MEASURE=6 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/2
+  --- MEASURE FORCED TO DROP   [hardM]  apex i=5, coincident Q-vertex j=1
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-4', '-4'), ('-4', '1'), ('-3', '-1'), ('-2', '2'), ('-2', '0'), ('-3', '-2'), ('-3', '-4')]
+      base |crossPairs|=1 |segDeg|=4 |segDegP|=4 MEASURE=9 |coincSet|=2
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=3, coincident Q-vertex j=2
+      P = [('-1', '3'), ('1', '5'), ('-1', '4'), ('-2', '-1'), ('5', '-5'), ('1', '4'), ('2', '-3')]
+      Q = [('3', '0'), ('3', '-2'), ('-2', '-1'), ('4', '3'), ('-3', '-1'), ('3', '-3'), ('4', '1')]
+      base |crossPairs|=14 |segDeg|=2 |segDegP|=2 MEASURE=18 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(3, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [hardM]  apex i=0, coincident Q-vertex j=5
+      P = [('-1', '3'), ('1', '5'), ('-1', '4'), ('-2', '-1'), ('5', '-5'), ('1', '4'), ('2', '-3')]
+      Q = [('-1', '6'), ('-1', '4'), ('-6', '5'), ('0', '9'), ('-7', '5'), ('-1', '3'), ('0', '7')]
+      base |crossPairs|=2 |segDeg|=4 |segDegP|=4 MEASURE=10 |coincSet|=2
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=1, coincident Q-vertex j=6
+      P = [('-4', '2'), ('1', '1'), ('-2', '0'), ('1', '0'), ('4', '0'), ('3', '1'), ('4', '4')]
+      Q = [('-3', '-3'), ('-6', '-2'), ('-5', '0'), ('-5', '5'), ('-4', '5'), ('-1', '5'), ('1', '1')]
+      base |crossPairs|=2 |segDeg|=2 |segDegP|=2 MEASURE=6 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=5, coincident Q-vertex j=3
+      P = [('-4', '2'), ('1', '1'), ('-2', '0'), ('1', '0'), ('4', '0'), ('3', '1'), ('4', '4')]
+      Q = [('5', '-7'), ('2', '-6'), ('3', '-4'), ('3', '1'), ('4', '1'), ('7', '1'), ('9', '-3')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=2 MEASURE=5 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [hardP]  apex i=6, coincident Q-vertex j=2
+      P = [('1', '-2'), ('4', '1'), ('3', '2'), ('0', '5'), ('-2', '1'), ('-3', '1'), ('1', '-4')]
+      Q = [('1', '-3'), ('4', '-6'), ('1', '-4'), ('-1', '-11'), ('-1', '-6'), ('-5', '-9'), ('-4', '-8')]
+      base |crossPairs|=1 |segDeg|=3 |segDegP|=2 MEASURE=6 |coincSet|=1
+      best admissible: dM=-2 (dCross=3, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=0, coincident Q-vertex j=5
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('7', '8'), ('7', '4'), ('9', '6'), ('9', '1'), ('7', '1'), ('1', '2'), ('4', '6')]
+      base |crossPairs|=2 |segDeg|=2 |segDegP|=2 MEASURE=6 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-3, 1), Fraction(5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=6, coincident Q-vertex j=2
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('1', '1'), ('1', '-3'), ('3', '-1'), ('3', '-6'), ('1', '-6'), ('-5', '-5'), ('-2', '-1')]
+      base |crossPairs|=1 |segDeg|=3 |segDegP|=3 MEASURE=7 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=2, coincident Q-vertex j=5
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('6', '3'), ('6', '-1'), ('8', '1'), ('8', '-4'), ('6', '-4'), ('0', '-3'), ('3', '1')]
+      base |crossPairs|=2 |segDeg|=3 |segDegP|=2 MEASURE=7 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-1, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=3, coincident Q-vertex j=1
+      P = [('5', '3'), ('4', '-4'), ('1', '0'), ('1', '-5'), ('-5', '1'), ('-1', '5'), ('-3', '1')]
+      Q = [('0', '1'), ('1', '-5'), ('2', '-6'), ('6', '-1'), ('8', '-9'), ('8', '-8'), ('6', '0')]
+      base |crossPairs|=3 |segDeg|=2 |segDegP|=2 MEASURE=7 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-4, 1)) e=1/4
+  --- MEASURE FORCED TO DROP   [plain]  apex i=3, coincident Q-vertex j=4
+      P = [('1', '1'), ('1', '3'), ('3', '2'), ('4', '1'), ('-1', '-2'), ('-4', '-1'), ('-3', '1')]
+      Q = [('0', '7'), ('-3', '3'), ('4', '4'), ('-3', '2'), ('4', '1'), ('5', '9'), ('4', '8')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=2 MEASURE=5 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(1, 1), Fraction(1, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=1, coincident Q-vertex j=6
+      P = [('1', '1'), ('1', '3'), ('3', '2'), ('4', '1'), ('-1', '-2'), ('-4', '-1'), ('-3', '1')]
+      Q = [('-3', '2'), ('-6', '-2'), ('1', '-1'), ('-6', '-3'), ('1', '-4'), ('2', '4'), ('1', '3')]
+      base |crossPairs|=6 |segDeg|=2 |segDegP|=2 MEASURE=10 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-1, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=3, coincident Q-vertex j=0
+      P = [('3', '-4'), ('3', '0'), ('1', '4'), ('0', '-2'), ('-2', '4'), ('-5', '-1'), ('-4', '-3')]
+      Q = [('0', '-2'), ('0', '-5'), ('6', '-3'), ('4', '-1'), ('2', '-3'), ('0', '-1'), ('-2', '-2')]
+      base |crossPairs|=4 |segDeg|=2 |segDegP|=3 MEASURE=9 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=1, coincident Q-vertex j=3
+      P = [('3', '-4'), ('3', '0'), ('1', '4'), ('0', '-2'), ('-2', '4'), ('-5', '-1'), ('-4', '-3')]
+      Q = [('-1', '-1'), ('-1', '-4'), ('5', '-2'), ('3', '0'), ('1', '-2'), ('-1', '0'), ('-3', '-1')]
+      base |crossPairs|=5 |segDeg|=2 |segDegP|=2 MEASURE=9 |coincSet|=1
+      best admissible: dM=-3 (dCross=1, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [hardM]  apex i=2, coincident Q-vertex j=4
+      P = [('2', '1'), ('4', '0'), ('3', '-1'), ('4', '-1'), ('4', '-3'), ('-1', '-2'), ('-2', '1')]
+      Q = [('9', '-5'), ('6', '1'), ('4', '-1'), ('3', '0'), ('3', '-1'), ('3', '-2'), ('-1', '-4')]
+      base |crossPairs|=2 |segDeg|=4 |segDegP|=4 MEASURE=10 |coincSet|=2
+      best admissible: dM=-1 (dCross=2, dSegDeg=-2, dSegDegP=-1) at E=(Fraction(-2, 1), Fraction(-5, 1)) e=1/4
+  --- MEASURE FORCED TO DROP   [hardM]  apex i=0, coincident Q-vertex j=3
+      P = [('0', '0'), ('0', '-1'), ('-4', '-2'), ('0', '1'), ('-1', '3'), ('2', '4'), ('2', '3')]
+      Q = [('-2', '6'), ('-2', '1'), ('-1', '3'), ('0', '0'), ('-1', '7'), ('-2', '7'), ('-8', '-1')]
+      base |crossPairs|=4 |segDeg|=4 |segDegP|=4 MEASURE=12 |coincSet|=2
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [hardP]  apex i=0, coincident Q-vertex j=3
+      P = [('5', '5'), ('5', '-4'), ('3', '-1'), ('0', '-5'), ('-3', '1'), ('0', '0'), ('3', '5')]
+      Q = [('-2', '1'), ('-1', '3'), ('6', '7'), ('5', '5'), ('7', '5'), ('3', '4'), ('5', '3')]
+      base |crossPairs|=2 |segDeg|=3 |segDegP|=2 MEASURE=7 |coincSet|=1
+      best admissible: dM=-1 (dCross=4, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(3, 1)) e=1/4
+  --- MEASURE FORCED TO DROP   [hardM]  apex i=0, coincident Q-vertex j=1
+      P = [('-1', '0'), ('-1', '-3'), ('0', '-4'), ('4', '-3'), ('1', '-2'), ('-2', '3'), ('-3', '2')]
+      Q = [('2', '1'), ('-1', '0'), ('-4', '0'), ('-2', '-5'), ('-1', '-3'), ('0', '-3'), ('2', '-4')]
+      base |crossPairs|=4 |segDeg|=4 |segDegP|=4 MEASURE=12 |coincSet|=2
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/2
+  --- MEASURE FORCED TO DROP   [plain]  apex i=0, coincident Q-vertex j=3
+      P = [('0', '2'), ('5', '0'), ('-3', '-4'), ('-5', '-3'), ('-4', '1'), ('-3', '-3'), ('-3', '4')]
+      Q = [('-4', '8'), ('-2', '5'), ('-1', '1'), ('0', '2'), ('3', '8'), ('0', '5'), ('-1', '4')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=2 MEASURE=5 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-3, 1), Fraction(5, 1)) e=1/2
+  --- MEASURE FORCED TO DROP   [plain]  apex i=4, coincident Q-vertex j=2
+      P = [('0', '-2'), ('-3', '2'), ('-1', '-2'), ('-3', '0'), ('-4', '-4'), ('-4', '3'), ('4', '4')]
+      Q = [('-6', '0'), ('-2', '2'), ('-4', '-4'), ('-5', '-1'), ('-7', '-1'), ('-8', '0'), ('-3', '3')]
+      base |crossPairs|=8 |segDeg|=2 |segDegP|=2 MEASURE=12 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=2, coincident Q-vertex j=5
+      P = [('-1', '2'), ('-5', '-2'), ('-1', '-1'), ('-4', '-2'), ('1', '-4'), ('2', '-4'), ('0', '1')]
+      Q = [('-9', '-1'), ('-8', '3'), ('-4', '-1'), ('-8', '4'), ('-3', '0'), ('-1', '-1'), ('-2', '-3')]
+      base |crossPairs|=1 |segDeg|=4 |segDegP|=2 MEASURE=7 |coincSet|=1
+      best admissible: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(3, 1)) e=1/1000
+  --- MEASURE FORCED TO DROP   [plain]  apex i=4, coincident Q-vertex j=0
+      P = [('-1', '2'), ('-5', '-2'), ('-1', '-1'), ('-4', '-2'), ('1', '-4'), ('2', '-4'), ('0', '1')]
+      Q = [('1', '-4'), ('2', '0'), ('6', '-4'), ('2', '1'), ('7', '-3'), ('9', '-4'), ('8', '-6')]
+      base |crossPairs|=1 |segDeg|=2 |segDegP|=2 MEASURE=5 |coincSet|=1
+      best admissible: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(3, 1), Fraction(-1, 1)) e=1/1000
+  total candidate counterexamples: 84
+
+==============================================================================
+SMALL-e FAILURES  (clause (3) unreachable with |e| <= 1/4)
+==============================================================================
+  --- [plain] apex i=2, j=3
+      P = [('-2', '1'), ('-2', '3'), ('2', '-2'), ('0', '-2'), ('-1', '0'), ('-5', '3'), ('-5', '5')]
+      Q = [('-6', '0'), ('-5', '-1'), ('3', '1'), ('2', '-2'), ('0', '-7'), ('-2', '-4'), ('-5', '-6')]
+      base MEASURE=6 (cross=1, segDeg=2, segDegP=3), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- [plain] apex i=6, j=3
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-4', '-10'), ('-4', '-5'), ('-3', '-7'), ('-2', '-4'), ('-2', '-6'), ('-3', '-8'), ('-3', '-10')]
+      base MEASURE=4 (cross=0, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-2, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=1, dSegDeg=-1, dSegDegP=-1) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1
+  --- [hardN] apex i=0, j=3
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-2', '-6'), ('-2', '-1'), ('-1', '-3'), ('0', '0'), ('0', '-2'), ('-1', '-4'), ('-1', '-6')]
+      base MEASURE=6 (cross=1, segDeg=2, segDegP=3), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/2
+  --- [hardM] apex i=5, j=1
+      P = [('0', '0'), ('2', '-1'), ('4', '2'), ('1', '2'), ('-2', '2'), ('-4', '1'), ('-2', '-4')]
+      Q = [('-4', '-4'), ('-4', '1'), ('-3', '-1'), ('-2', '2'), ('-2', '0'), ('-3', '-2'), ('-3', '-4')]
+      base MEASURE=9 (cross=1, segDeg=4, segDegP=4), |coincSet|=2
+      best small-e: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- [plain] apex i=3, j=2
+      P = [('-1', '3'), ('1', '5'), ('-1', '4'), ('-2', '-1'), ('5', '-5'), ('1', '4'), ('2', '-3')]
+      Q = [('3', '0'), ('3', '-2'), ('-2', '-1'), ('4', '3'), ('-3', '-1'), ('3', '-3'), ('4', '1')]
+      base MEASURE=18 (cross=14, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(3, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(3, 1)) e=1/1000
+  --- [hardM] apex i=0, j=5
+      P = [('-1', '3'), ('1', '5'), ('-1', '4'), ('-2', '-1'), ('5', '-5'), ('1', '4'), ('2', '-3')]
+      Q = [('-1', '6'), ('-1', '4'), ('-6', '5'), ('0', '9'), ('-7', '5'), ('-1', '3'), ('0', '7')]
+      base MEASURE=10 (cross=2, segDeg=4, segDegP=4), |coincSet|=2
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  --- [plain] apex i=1, j=6
+      P = [('-4', '2'), ('1', '1'), ('-2', '0'), ('1', '0'), ('4', '0'), ('3', '1'), ('4', '4')]
+      Q = [('-3', '-3'), ('-6', '-2'), ('-5', '0'), ('-5', '5'), ('-4', '5'), ('-1', '5'), ('1', '1')]
+      base MEASURE=6 (cross=2, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+  --- [plain] apex i=5, j=3
+      P = [('-4', '2'), ('1', '1'), ('-2', '0'), ('1', '0'), ('4', '0'), ('3', '1'), ('4', '4')]
+      Q = [('5', '-7'), ('2', '-6'), ('3', '-4'), ('3', '1'), ('4', '1'), ('7', '1'), ('9', '-3')]
+      base MEASURE=5 (cross=1, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- [plain] apex i=5, j=5
+      P = [('-4', '2'), ('1', '1'), ('-2', '0'), ('1', '0'), ('4', '0'), ('3', '1'), ('4', '4')]
+      Q = [('1', '-7'), ('-2', '-6'), ('-1', '-4'), ('-1', '1'), ('0', '1'), ('3', '1'), ('5', '-3')]
+      base MEASURE=8 (cross=3, segDeg=2, segDegP=3), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=0 (dCross=4, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(2, 1), Fraction(-5, 1)) e=1
+  --- [hardP] apex i=6, j=2
+      P = [('1', '-2'), ('4', '1'), ('3', '2'), ('0', '5'), ('-2', '1'), ('-3', '1'), ('1', '-4')]
+      Q = [('1', '-3'), ('4', '-6'), ('1', '-4'), ('-1', '-11'), ('-1', '-6'), ('-5', '-9'), ('-4', '-8')]
+      base MEASURE=6 (cross=1, segDeg=3, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=3, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=3, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(-5, 1)) e=1/1000
+  --- [plain] apex i=2, j=5
+      P = [('1', '-2'), ('4', '1'), ('3', '2'), ('0', '5'), ('-2', '1'), ('-3', '1'), ('1', '-4')]
+      Q = [('9', '8'), ('12', '5'), ('9', '7'), ('7', '0'), ('7', '5'), ('3', '2'), ('4', '3')]
+      base MEASURE=4 (cross=0, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(5, 1)) e=1/1000
+      best over the whole grid: dM=4 (dCross=8, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(2, 1)) e=2
+  --- [hardP] apex i=0, j=0
+      P = [('1', '-2'), ('4', '1'), ('3', '2'), ('0', '5'), ('-2', '1'), ('-3', '1'), ('1', '-4')]
+      Q = [('1', '-2'), ('4', '-5'), ('1', '-3'), ('-1', '-10'), ('-1', '-5'), ('-5', '-8'), ('-4', '-7')]
+      base MEASURE=7 (cross=2, segDeg=3, segDegP=2), |coincSet|=1
+      best small-e: dM=-3 (dCross=2, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=1 (dCross=6, dSegDeg=-3, dSegDegP=-2) at E=(Fraction(-2, 1), Fraction(-5, 1)) e=2
+  --- [plain] apex i=0, j=5
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('7', '8'), ('7', '4'), ('9', '6'), ('9', '1'), ('7', '1'), ('1', '2'), ('4', '6')]
+      base MEASURE=6 (cross=2, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-3, 1), Fraction(5, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-3, 1), Fraction(5, 1)) e=1/1000
+  --- [plain] apex i=6, j=2
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('1', '1'), ('1', '-3'), ('3', '-1'), ('3', '-6'), ('1', '-6'), ('-5', '-5'), ('-2', '-1')]
+      base MEASURE=7 (cross=1, segDeg=3, segDegP=3), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-4, 1), Fraction(-5, 1)) e=1/1000
+  --- [plain] apex i=2, j=5
+      P = [('1', '2'), ('-4', '-2'), ('0', '-3'), ('3', '-3'), ('4', '2'), ('3', '2'), ('3', '-1')]
+      Q = [('6', '3'), ('6', '-1'), ('8', '1'), ('8', '-4'), ('6', '-4'), ('0', '-3'), ('3', '1')]
+      base MEASURE=7 (cross=2, segDeg=3, segDegP=2), |coincSet|=1
+      best small-e: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-1, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-1, 1)) e=1/1000
+  --- [plain] apex i=3, j=1
+      P = [('5', '3'), ('4', '-4'), ('1', '0'), ('1', '-5'), ('-5', '1'), ('-1', '5'), ('-3', '1')]
+      Q = [('0', '1'), ('1', '-5'), ('2', '-6'), ('6', '-1'), ('8', '-9'), ('8', '-8'), ('6', '0')]
+      base MEASURE=7 (cross=3, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-4, 1)) e=1/4
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(5, 1), Fraction(-4, 1)) e=1/4
+  --- [plain] apex i=3, j=4
+      P = [('1', '1'), ('1', '3'), ('3', '2'), ('4', '1'), ('-1', '-2'), ('-4', '-1'), ('-3', '1')]
+      Q = [('0', '7'), ('-3', '3'), ('4', '4'), ('-3', '2'), ('4', '1'), ('5', '9'), ('4', '8')]
+      base MEASURE=5 (cross=1, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(1, 1), Fraction(1, 1)) e=1/1000
+      best over the whole grid: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(1, 1), Fraction(1, 1)) e=1/1000
+  --- [plain] apex i=1, j=6
+      P = [('1', '1'), ('1', '3'), ('3', '2'), ('4', '1'), ('-1', '-2'), ('-4', '-1'), ('-3', '1')]
+      Q = [('-3', '2'), ('-6', '-2'), ('1', '-1'), ('-6', '-3'), ('1', '-4'), ('2', '4'), ('1', '3')]
+      base MEASURE=10 (cross=6, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-1, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-1, 1)) e=1/1000
+  --- [plain] apex i=6, j=2
+      P = [('1', '1'), ('1', '3'), ('3', '2'), ('4', '1'), ('-1', '-2'), ('-4', '-1'), ('-3', '1')]
+      Q = [('-7', '4'), ('-10', '0'), ('-3', '1'), ('-10', '-1'), ('-3', '-2'), ('-2', '6'), ('-3', '5')]
+      base MEASURE=6 (cross=2, segDeg=2, segDegP=2), |coincSet|=1
+      best small-e: dM=-1 (dCross=2, dSegDeg=-1, dSegDegP=-2) at E=(Fraction(-1, 1), Fraction(0, 1)) e=1/1000
+      best over the whole grid: dM=0 (dCross=4, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(2, 1)) e=1
+  --- [plain] apex i=3, j=0
+      P = [('3', '-4'), ('3', '0'), ('1', '4'), ('0', '-2'), ('-2', '4'), ('-5', '-1'), ('-4', '-3')]
+      Q = [('0', '-2'), ('0', '-5'), ('6', '-3'), ('4', '-1'), ('2', '-3'), ('0', '-1'), ('-2', '-2')]
+      base MEASURE=9 (cross=4, segDeg=2, segDegP=3), |coincSet|=1
+      best small-e: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      best over the whole grid: dM=-2 (dCross=2, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+  total small-e failures: 138
+
+==============================================================================
+COMPONENT ANALYSIS AT THE BEST WITNESS
+  (is a lost degeneracy always paid for by a gained crossing?)
+==============================================================================
+  (dM, dCross, dSegDeg, dSegDegP)         count
+  (-2, 2, -2, -2)                            34
+  (0, 4, -2, -2)                             25
+  (-1, 3, -2, -2)                            24
+  (0, 5, -3, -2)                             19
+  (2, 6, -2, -2)                             13
+  (-1, 4, -3, -2)                            12
+  (1, 5, -2, -2)                             12
+  (1, 6, -3, -2)                              9
+  (-2, 3, -3, -2)                             8
+  (4, 8, -2, -2)                              6
+  (1, 4, -1, -2)                              3
+  (3, 7, -2, -2)                              3
+  (-1, 1, -1, -1)                             1
+  (-1, 2, -2, -1)                             1
+  (-1, 5, -4, -2)                             1
+  (-2, 1, -1, -2)                             1
+  (-2, 1, -2, -1)                             1
+  (-3, 1, -2, -2)                             1
+  (0, 4, -3, -1)                              1
+  (2, 5, -1, -2)                              1
+  (3, 5, 0, -2)                               1
+  (6, 10, -2, -2)                             1
+
+  same, restricted to |e| <= 1/4:
+  (dM, dCross, dSegDeg, dSegDegP)         count
+  (-2, 2, -2, -2)                            59
+  (0, 4, -2, -2)                             21
+  (-1, 3, -2, -2)                            20
+  (-2, 3, -3, -2)                            18
+  (-1, 4, -3, -2)                            17
+  (-3, 1, -2, -2)                            10
+  (0, 5, -3, -2)                              8
+  (-3, 2, -3, -2)                             7
+  (1, 5, -2, -2)                              4
+  (-1, 2, -2, -1)                             3
+  (2, 6, -2, -2)                              3
+  (1, 4, -2, -1)                              2
+  (-1, 2, -1, -2)                             1
+  (-1, 5, -4, -2)                             1
+  (-2, 1, -1, -2)                             1
+  (-2, 1, -2, -1)                             1
+  (1, 3, 0, -2)                               1
+  (3, 6, -2, -1)                              1
+
+==============================================================================
+THE MECHANISM: the debt is 4, the local budget is the cone count
+==============================================================================
+  A coincidence P[i]=Q[j] contributes exactly 4 entries to MEASURE
+  (segDeg (i-1,j),(i,j) and segDegP (j-1,i),(j,i)); the move destroys
+  all four.  The only local repayment is new crossings between the two
+  moved P-sides and the two Q-sides at the apex, which the cone
+  criterion caps at `max local crossings`.
+
+   max local crossings |    n  small-e dM>0   dM=0   dM<0   none
+                     1 |   22             1      1     20      0
+                     2 |   97             1      4     92      0
+                     3 |   33             3      4     26      0
+                     4 |   26             6     20      0      0
+
+==============================================================================
+CONTROLS -- the checker MUST be able to report failure
+==============================================================================
+  A. demand dMEASURE > 0 (strict increase) ... instances FAILING: 129/178
+     independent re-search of the first 20    : 17 failing (re-scored: 17) -- must agree
+     (if this were 0 the test would be vacuous; it is not)
+  B. only LARGE e in {1,2,4} (+/-) ......... instances FAILING: 95/178
+  C. FIXED direction E=1,0 .............. instances FAILING: 163/178
+  C. FIXED direction E=0,1 .............. instances FAILING: 163/178
+  C. FIXED direction E=1,1 .............. instances FAILING: 162/178
+     (AKR quantify E existentially; a fixed rule must and does fail)
+  D. e = 0 admissible anywhere (must be 0) .. 0
+
+  E. how tight is the conjunction?
+     instances with >=1 move satisfying (1),(2),(4) : 178/178
+     of those, ones where (3) additionally holds    : 94
+
+==============================================================================
+DESIGNED ADVERSARIAL INSTANCES IN DETAIL
+==============================================================================
+  designed:D1 transversal-X  apex i=0 j=0
+    P = [('0', '0'), ('6', '1'), ('10', '5'), ('3', '8'), ('-3', '8'), ('-10', '5'), ('-6', '1')]
+    Q = [('0', '0'), ('1', '-6'), ('5', '-10'), ('8', '-3'), ('8', '3'), ('5', '10'), ('1', '6')]
+    base: cross=1 segDeg=3 segDegP=3 MEASURE=7 coinc=1
+    admissible moves: 1164 of 1280
+    best: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(3, 1), Fraction(-5, 1)) e=2
+      tier tiny  (1/1000,1/100)  : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      tier small (1/10,1/4)      : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/10
+      tier mod   (1/2,1)         : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/2
+      tier large (2,4)           : dM=-1 (dC=3, dD=-2, dDP=-2) E=(Fraction(3, 1), Fraction(-5, 1)) e=2
+  designed:D2 non-crossing-wedges  apex i=0 j=0
+    P = [('0', '0'), ('12', '1'), ('20', '4'), ('22', '10'), ('16', '14'), ('8', '12'), ('4', '6')]
+    Q = [('0', '0'), ('-1', '12'), ('-4', '20'), ('-10', '22'), ('-14', '16'), ('-12', '8'), ('-6', '4')]
+    base: cross=0 segDeg=2 segDegP=2 MEASURE=4 coinc=1
+    admissible moves: 1224 of 1280
+    best: dM=0 (dCross=4, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(1, 1)) e=1/1000
+      tier tiny  (1/1000,1/100)  : dM=0 (dC=4, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(1, 1)) e=1/1000
+      tier small (1/10,1/4)      : dM=0 (dC=4, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(1, 1)) e=1/10
+      tier mod   (1/2,1)         : dM=0 (dC=4, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(1, 1)) e=1/2
+      tier large (2,4)           : dM=0 (dC=4, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(1, 1)) e=2
+  designed:D3 collinear-apex-X  apex i=1 j=1
+    P = [('-8', '0'), ('0', '0'), ('8', '0'), ('10', '6'), ('4', '11'), ('-4', '11'), ('-10', '6')]
+    Q = [('0', '-8'), ('0', '0'), ('0', '8'), ('-6', '10'), ('-11', '4'), ('-11', '-4'), ('-6', '-10')]
+    base: cross=3 segDeg=2 segDegP=2 MEASURE=7 coinc=1
+    admissible moves: 1190 of 1280
+    best: dM=-1 (dCross=3, dSegDeg=-2, dSegDegP=-2) at E=(Fraction(-5, 1), Fraction(-4, 1)) e=2
+      tier tiny  (1/1000,1/100)  : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/1000
+      tier small (1/10,1/4)      : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/10
+      tier mod   (1/2,1)         : dM=-3 (dC=1, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=1/2
+      tier large (2,4)           : dM=-1 (dC=3, dD=-2, dDP=-2) E=(Fraction(-5, 1), Fraction(-4, 1)) e=2
+
+done.
+
+==============================================================================
+INDEPENDENT WIDE RE-CHECK OF THE REPORTED COUNTEREXAMPLES
+  direction grid: 368 primitive directions, |dx|,|dy| <= 12
+  e magnitudes  : ['1/1000000', '1/10000', '1/1000', '1/100', '1/20', '1/10', '1/4', '1/3', '1/2', '1', '3/2', '2', '3', '4', '6', '8', '12', '20', '50']  (both signs)
+  scan size     : 13984 (E,e) pairs per instance
+==============================================================================
+  [plain ] i=2 j=3 MEASURE=6 coinc=1 cone-budget=2 admissible=10126 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=6 j=3 MEASURE=4 coinc=1 cone-budget=2 admissible=10400 best dM=1 (RESCUED by the wider grid)
+  [hardN ] i=0 j=3 MEASURE=6 coinc=1 cone-budget=2 admissible=9176 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [hardM ] i=5 j=1 MEASURE=9 coinc=2 cone-budget=3 admissible=10398 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=3 j=2 MEASURE=18 coinc=1 cone-budget=2 admissible=8908 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [hardM ] i=0 j=5 MEASURE=10 coinc=2 cone-budget=2 admissible=4298 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=1 j=6 MEASURE=6 coinc=1 cone-budget=2 admissible=8586 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=5 j=3 MEASURE=5 coinc=1 cone-budget=3 admissible=9396 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [hardP ] i=6 j=2 MEASURE=6 coinc=1 cone-budget=2 admissible=9938 best dM=0 (RESCUED by the wider grid)
+  [plain ] i=0 j=5 MEASURE=6 coinc=1 cone-budget=2 admissible=8200 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=6 j=2 MEASURE=7 coinc=1 cone-budget=2 admissible=8360 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=2 j=5 MEASURE=7 coinc=1 cone-budget=3 admissible=10598 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=3 j=1 MEASURE=7 coinc=1 cone-budget=1 admissible=9458 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=3 j=4 MEASURE=5 coinc=1 cone-budget=3 admissible=9888 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=1 j=6 MEASURE=10 coinc=1 cone-budget=2 admissible=9508 best dM=0 (RESCUED by the wider grid)
+  [plain ] i=3 j=0 MEASURE=9 coinc=1 cone-budget=2 admissible=8762 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=1 j=3 MEASURE=9 coinc=1 cone-budget=1 admissible=10008 best dM=-3 (STILL A COUNTEREXAMPLE)
+  [hardM ] i=2 j=4 MEASURE=10 coinc=2 cone-budget=2 admissible=9262 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [hardM ] i=0 j=3 MEASURE=12 coinc=2 cone-budget=2 admissible=9104 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [hardP ] i=0 j=3 MEASURE=7 coinc=1 cone-budget=2 admissible=10278 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [hardM ] i=0 j=1 MEASURE=12 coinc=2 cone-budget=1 admissible=8984 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=0 j=3 MEASURE=5 coinc=1 cone-budget=1 admissible=10674 best dM=-1 (STILL A COUNTEREXAMPLE)
+  [plain ] i=4 j=2 MEASURE=12 coinc=1 cone-budget=2 admissible=10056 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=2 j=5 MEASURE=7 coinc=1 cone-budget=2 admissible=8426 best dM=-2 (STILL A COUNTEREXAMPLE)
+  [plain ] i=4 j=0 MEASURE=5 coinc=1 cone-budget=3 admissible=9290 best dM=-1 (STILL A COUNTEREXAMPLE)
+  counterexamples surviving the wider grid: 22/25
+
+==============================================================================
+EXHAUSTIVE-STYLE DISPLACEMENT SWEEP
+  The moved configuration depends only on the DISPLACEMENT d = e*E, so the
+  real search space is the plane of rational displacements.  Two lattice
+  sweeps of d are run per instance: a coarse one covering the whole
+  configuration and a fine one around the apex.
+==============================================================================
+  D1 designed transversal-X: apex i=0 j=0  MEASURE=7 (cross=1, segDeg=3, segDegP=3) coinc=1
+    coarse: d in (1/8)Z^2, |dx|,|dy| <= 12
+      displacements tried 37248, admissible 26596, max dMEASURE = -1  at d=41/8,-10 (dCross=3, dSegDeg=-2, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-3: 21962, -2: 41, -1: 4593}
+    fine  : d in (1/32)Z^2, |dx|,|dy| <= 2
+      displacements tried 16640, admissible 16640, max dMEASURE = -3  at d=-2,-2 (dCross=1, dSegDeg=-2, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-3: 16640}
+  random case 21 (MEASURE=5): apex i=0 j=3  MEASURE=5 (cross=1, segDeg=2, segDegP=2) coinc=1
+    coarse: d in (1/8)Z^2, |dx|,|dy| <= 12
+      displacements tried 37248, admissible 20707, max dMEASURE = -1  at d=-12,75/8 (dCross=3, dSegDeg=-2, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-5: 1714, -4: 9, -3: 9056, -2: 187, -1: 9741}
+    fine  : d in (1/32)Z^2, |dx|,|dy| <= 2
+      displacements tried 16640, admissible 16638, max dMEASURE = -2  at d=-31/32,2 (dCross=1, dSegDeg=-1, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-5: 1489, -4: 15, -3: 15038, -2: 96}
+  random case 16 (MEASURE=9): apex i=1 j=3  MEASURE=9 (cross=5, segDeg=2, segDegP=2) coinc=1
+    coarse: d in (1/8)Z^2, |dx|,|dy| <= 12
+      displacements tried 37248, admissible 20939, max dMEASURE = -3  at d=-31/8,93/8 (dCross=1, dSegDeg=-2, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-5: 7507, -4: 106, -3: 13326}
+    fine  : d in (1/32)Z^2, |dx|,|dy| <= 2
+      displacements tried 16640, admissible 16638, max dMEASURE = -3  at d=-2,-63/32 (dCross=1, dSegDeg=-2, dSegDegP=-2)
+      dMEASURE histogram over admissible displacements: {-3: 16638}
+
+==============================================================================
+SUMMARY -- THE CONJECTURE IS FALSE
+==============================================================================
+Clause (3) FAILS.  84 of 178 instances admit NO (E,e) on the 1,280-point grid
+with dMEASURE >= 0; 22 of the 25 printed above still fail on a 13,984-point
+grid (directions |dx|,|dy| <= 12, |e| from 1e-6 to 50, both signs); and three
+of them fail on a 37,248-point sweep of the DISPLACEMENT plane d = e*E at
+resolution 1/8 over a radius-12 box, plus 16,640 more at resolution 1/32 near
+the apex.  In the perturbation regime the conjecture fails on 138 of 178.
+
+WHY, exactly.  A vertex-vertex coincidence P[i] = Q[j] contributes exactly
+FOUR entries to MEASURE and no crossing:
+
+    segDeg  (i-1, j), (i, j)     Q[j] is an endpoint of both P-sides at P[i]
+    segDegP (j-1, i), (j, i)     P[i] is an endpoint of both Q-sides at Q[j]
+
+and no more than four, because a fifth would be Q touching its own boundary.
+The move destroys all four.  The only local repayment is new proper crossings
+between the two moved P-sides and the two Q-sides at the apex.  By the cone
+criterion, the moved P-side through a_k crosses the Q-side through b_l iff
+
+    sign cross(a_k, E) = sign cross(b_l, E) = sign cross(a_k, b_l) != 0,
+
+so four crossings require cross(a_k,b_l) to have the SAME sign for all four
+(k,l) -- i.e. the two local V's do NOT interleave.  Whenever the two
+boundaries genuinely CROSS at the coincidence, the signs are mixed, the budget
+is 1 or 2, and MEASURE must fall by 2 or 3.  Measured budget over the 178
+instances: 1 (22x), 2 (97x), 3 (33x), 4 (26x); every small-e success had
+budget 4.
+
+MEASURE is a lossy over-count exactly at a coincidence -- one intersection
+POINT is charged four times -- so nondegenerating cannot preserve it.  What is
+consistent with all 178 instances is the weaker, slack-carrying statement
+
+    MEASURE + 3 * |coincSet|   is non-increasing,
+
+since the best admissible move never cost more than 3 (min over instances of
+max over admissible moves of dMEASURE = -3, in BOTH the small-e and the full
+grid).  That is a data-supported conjecture from 178 instances, not a theorem.
+==============================================================================

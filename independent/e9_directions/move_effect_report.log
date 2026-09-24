@@ -1,0 +1,435 @@
+move_effect_main.py -- apex-only move, exact rational characterisation
+repo: heptagon-intersections, dir independent/e9_directions
+
+==============================================================================
+SELF-TESTS on the primitives
+==============================================================================
+All self-tests PASSED.
+
+==============================================================================
+SWEEP
+==============================================================================
+  [plain random pairs] configurations built: 120 (attempts 120)
+  [deliberate incident segDeg] configurations built: 240 (attempts 460)
+  [deliberate segDegP at P[i]] configurations built: 200 (attempts 362)
+  [coincidence Q[j] = P[i]] configurations built: 90 (attempts 165)
+  [coincidence Q[j] = P[i+1]] configurations built: 90 (attempts 141)
+  [coincidence Q[j] = P[i-1]] configurations built: 90 (attempts 162)
+  [Q-side collinear with P-side i, touching at P[i]] configurations built: 90 (attempts 306)
+
+==============================================================================
+NON-VACUITY
+==============================================================================
+configurations                       : 920
+instances (config x E x e)           : 259460
+configurations carrying an INCIDENT degeneracy (segDeg k in {i-1,i}, or segDegP v=i): 805
+instances carrying an INCIDENT degeneracy : 227650
+incident degeneracy ENTRIES examined      : 384910
+far (non-incident) entries examined       : 181260
+instances with (Fin) true before the move : 256930
+
+configurations by generator:
+    coinc@apex                       90   (with an incident degeneracy: 90)
+    coinc@next                       90   (with an incident degeneracy: 90)
+    coinc@prev                       90   (with an incident degeneracy: 90)
+    collinear-touch                  90   (with an incident degeneracy: 90)
+    plain                           120   (with an incident degeneracy: 5)
+    segDeg@sidei                    139   (with an incident degeneracy: 139)
+    segDeg@sidei-1                  101   (with an incident degeneracy: 101)
+    segDegP@P[i]                    200   (with an incident degeneracy: 200)
+
+generator rejections (simplicity / finiteness re-checks that failed):
+    coinc_broke_simplicity               198
+    collinear_already_infinite             3
+    collinear_broke_simplicity           213
+    snapP_broke_simplicity               162
+    snapQ_broke_simplicity               220
+
+==============================================================================
+VERDICTS
+==============================================================================
+A/segDeg (all e)           TRUE                   true=259460   false=0       
+A/segDegP (all e)          TRUE                   true=259460   false=0       
+B (all e)                  FALSE                  true=256978   false=2482    
+B (|e| <= 1e-6)            TRUE                   true=103784   false=0       
+C (all e, all E)           FALSE                  true=187854   false=71606   
+C (|e| <= 1e-6, all E)     FALSE                  true=74216    false=29568   
+C (small e, E generic)     TRUE                   true=58456    false=0       
+C (small e, generic, no Q=F) TRUE                   true=58456    false=0       
+D (all e)                  FALSE                  true=255176   false=1754    
+D (|e| <= 1e-6)            FALSE                  true=102114   false=658     
+D (small e, E generic)     TRUE                   true=102114   false=0       
+X/crossPairs monotone      TRUE                   true=103784   false=0       
+X/coincSet away from i     TRUE                   true=259460   false=0       
+X/lineDeg away             TRUE                   true=259460   false=0       
+CTRL far-entries-destroyed FALSE                  true=0        false=60220      [control: expected FALSE -> OK]
+CTRL C-at-e=0              FALSE                  true=0        false=227650     [control: expected FALSE -> OK]
+CTRL only-side-i-touched   FALSE                  true=32033    false=75821      [control: expected FALSE -> OK]
+CTRL e=0 is identity       TRUE                   true=259460   false=0          [control: expected TRUE -> OK]
+CTRL Q untouched           TRUE                   true=259460   false=0          [control: expected TRUE -> OK]
+
+==============================================================================
+CLAIM C -- per-entry characterisation
+==============================================================================
+incident segDeg  entries examined : 226460
+incident segDegP entries examined : 158450
+  destroyed by the move           : 311049
+  SURVIVED the move               : 73861
+
+case split used for the characterisation:
+  (a) Q[j] equals the FIXED endpoint of the side  : 51800   mismatches 0
+  (b) E NOT parallel to the relevant line         : 299130   mismatches 0
+  (c) E parallel to the relevant line             : 33980   mismatches 0 (small e only)
+
+reasons an incident degeneracy survived:
+    segDeg: E parallel to the P-side line                        14206
+    segDeg: Q[j] EQUALS the fixed endpoint of the side           51800
+    segDegP: E parallel to the Q-side line                        7855
+
+==============================================================================
+CLAIM B -- where a NEW degeneracy came from
+==============================================================================
+new segDeg entries created (total)  : 3124
+new segDegP entries created (total) : 2426
+SMALLEST |e| at which a NEW degeneracy was ever seen: 1/100
+  witness: kind=segDeg@sidei i=5 E=(10,3/2) e=1/100
+    P=[(11,-1), (7,4), (4,11/2), (-13/2,2), (-6,-6), (-12,-21/2), (-2,-9)]
+    Q=[(11,-4), (23/2,-3/2), (6,-2), (-119/10,-2097/200), (-4,-15), (8,-16), (12,-12)]
+    new segDeg=[(4, 3)] new segDegP=[(2, 5), (3, 5)]
+mechanism taxonomy:
+    ('segDeg', 'k in {i-1,i}', 'was OFF the line')                              2776
+    ('segDeg', 'k in {i-1,i}', 'was already on the side LINE')                   348
+    ('segDegP', 'v = i', 'was OFF the line')                                    2388
+    ('segDegP', 'v = i', 'was already on the Q-side LINE')                        38
+
+==============================================================================
+CLAIM D -- how (Fin) was destroyed
+==============================================================================
+mechanism taxonomy:
+    ('k in {i-1,i}', 'E not || Qside', '-')                                      110
+    ('k in {i-1,i}', 'E || Qside', '-')                                          815
+    ('k in {i-1,i}', 'E || Qside', 'E positive multiple of Qside dir')           830
+  counterexample: kind=plain i=6 E=(7,-2) e=-1 new overlaps [(6, 1)]
+    P=[(6,5), (13,10), (-2,7), (-5,6), (-11,3), (5,-5), (8,-7)]
+    Q=[(10,1), (8,9), (5,3), (-7/2,-15), (0,-15), (1,-15), (13,-13)]
+    P moved=[(6,5), (13,10), (-2,7), (-5,6), (-11,3), (5,-5), (1,-5)]
+  counterexample: kind=plain i=5 E=(7,-2) e=-1 new overlaps [(4, 5)]
+    P=[(25/2,25/2), (4,13), (-4,6), (-4,1), (-9,-5), (-2,-8), (-1,-17/2)]
+    Q=[(7,3), (9,12), (1,11), (-23/2,3/2), (-10,1), (-9,-7/2), (-9,-12)]
+    P moved=[(25/2,25/2), (4,13), (-4,6), (-4,1), (-9,-5), (-9,-6), (-1,-17/2)]
+  counterexample: kind=plain i=1 E=(0,-6) e=-1/2 new overlaps [(1, 2)]
+    P=[(2,-1), (-1,0), (-11,13), (-10,-1), (-12,-2), (-14,-13), (4,-7)]
+    Q=[(-2,10), (-2,11), (-7,9), (-8,10), (-8,4), (-5,5), (5,-8)]
+    P moved=[(2,-1), (-1,3), (-11,13), (-10,-1), (-12,-2), (-14,-13), (4,-7)]
+  counterexample: kind=plain i=1 E=(0,6) e=1/2 new overlaps [(1, 2)]
+    P=[(2,-1), (-1,0), (-11,13), (-10,-1), (-12,-2), (-14,-13), (4,-7)]
+    Q=[(-2,10), (-2,11), (-7,9), (-8,10), (-8,4), (-5,5), (5,-8)]
+    P moved=[(2,-1), (-1,3), (-11,13), (-10,-1), (-12,-2), (-14,-13), (4,-7)]
+
+==============================================================================
+COUNTEREXAMPLES (first few per failing claim)
+==============================================================================
+
+--- B (all e): no NEW segDeg or segDegP entry   (2482 failures)
+  kind=plain i=1 E=(0,1) e=1/2
+    P=[(12,4), (-7/2,10), (-14,6), (-10,-12), (-5,-12), (3,-11), (3,-7/2)]
+    Q=[(-4,1/2), (-21/2,15/2), (-9,-1), (-9,-2), (-6,-4), (15,-10), (14,-8)]
+    detail=(frozenset({(1, 1)}), frozenset())
+  kind=plain i=1 E=(0,-1) e=-1/2
+    P=[(12,4), (-7/2,10), (-14,6), (-10,-12), (-5,-12), (3,-11), (3,-7/2)]
+    Q=[(-4,1/2), (-21/2,15/2), (-9,-1), (-9,-2), (-6,-4), (15,-10), (14,-8)]
+    detail=(frozenset({(1, 1)}), frozenset())
+
+--- C (all e, all E): every incident segDeg/segDegP entry destroyed   (71606 failures)
+  kind=plain i=3 E=(1,0) e=1
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+  kind=plain i=3 E=(1,0) e=-1
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+
+--- C (|e| <= 1e-6, all E): same, small e   (29568 failures)
+  kind=plain i=3 E=(1,0) e=1/100000000
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+  kind=plain i=3 E=(1,0) e=-1/100000000
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+
+--- D (all e): (Fin) before => (Fin) after   (1754 failures)
+  kind=plain i=6 E=(7,-2) e=-1
+    P=[(6,5), (13,10), (-2,7), (-5,6), (-11,3), (5,-5), (8,-7)]
+    Q=[(10,1), (8,9), (5,3), (-7/2,-15), (0,-15), (1,-15), (13,-13)]
+    detail=[(6, 1)]
+  kind=plain i=5 E=(7,-2) e=-1
+    P=[(25/2,25/2), (4,13), (-4,6), (-4,1), (-9,-5), (-2,-8), (-1,-17/2)]
+    Q=[(7,3), (9,12), (1,11), (-23/2,3/2), (-10,1), (-9,-7/2), (-9,-12)]
+    detail=[(4, 5)]
+
+--- D (|e| <= 1e-6): (Fin) before => (Fin) after, small e   (658 failures)
+  kind=coinc@apex i=3 E=(0,1) e=-1/100000000
+    P=[(9,7), (4,-1), (-2,5), (-2,-3), (8,-13), (11,-9), (13,-11)]
+    Q=[(6,1), (4,3), (-5,7), (-10,2), (-2,-4), (-2,-3), (5,-15)]
+    detail=[(2, 4)]
+  kind=coinc@apex i=3 E=(0,1) e=-1/1000000000000000
+    P=[(9,7), (4,-1), (-2,5), (-2,-3), (8,-13), (11,-9), (13,-11)]
+    Q=[(6,1), (4,3), (-5,7), (-10,2), (-2,-4), (-2,-3), (5,-15)]
+    detail=[(2, 4)]
+
+--- CTRL far-entries-destroyed: segDeg entries with k NOT in {i-1,i} are DESTROYED   (60220 failures)
+  kind=plain i=4 E=(1,0) e=1
+    P=[(3,14), (-7,17/2), (-13,7), (-13,-11), (-7,-7), (-5,-3), (5,-10)]
+    Q=[(3,-1), (-6,5), (-13,-1/2), (-17,-4), (-11,-15), (-10,-10), (-10,-12)]
+    detail=frozenset({(2, 2)})
+  kind=plain i=4 E=(1,0) e=-1
+    P=[(3,14), (-7,17/2), (-13,7), (-13,-11), (-7,-7), (-5,-3), (5,-10)]
+    Q=[(3,-1), (-6,5), (-13,-1/2), (-17,-4), (-11,-15), (-10,-10), (-10,-12)]
+    detail=frozenset({(2, 2)})
+
+--- CTRL C-at-e=0: claim C holds at e = 0   (227650 failures)
+  kind=plain i=3 E=(1,0) e=1
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+  kind=plain i=3 E=(1,0) e=-1
+    P=[(0,4), (-9,-2), (-6,-3), (-3,-10), (6,-12), (2,-5), (5,-5)]
+    Q=[(25/2,13/2), (-8,3), (-6,-3), (2,-10), (5,-18), (6,-10), (16,-8)]
+    detail=[(2, 2)]
+
+--- CTRL only-side-i-touched: segDeg entries with k = i-1 are never changed   (75821 failures)
+  kind=plain i=4 E=(6,-11) e=-1
+    P=[(3,14), (-7,17/2), (-13,7), (-13,-11), (-7,-7), (-5,-3), (5,-10)]
+    Q=[(3,-1), (-6,5), (-13,-1/2), (-17,-4), (-11,-15), (-10,-10), (-10,-12)]
+    detail=(frozenset(), frozenset({(3, 2)}))
+  kind=plain i=4 E=(-6,11) e=1
+    P=[(3,14), (-7,17/2), (-13,7), (-13,-11), (-7,-7), (-5,-3), (5,-10)]
+    Q=[(3,-1), (-6,5), (-13,-1/2), (-17,-4), (-11,-15), (-10,-10), (-10,-12)]
+    detail=(frozenset(), frozenset({(3, 2)}))
+
+##############################################################################
+# TARGETED PROBES -- hand-built minimal configurations
+##############################################################################
+
+==============================================================================
+PROBE 0 -- the three affine identities (exact, 60000 random cases each)
+==============================================================================
+    orientR (A + e*E) B C = orientR A B C + e * cross E (B - C)
+    orientR A (B + e*E) C = orientR A B C + e * cross E (C - A)
+    orientR A B (C + e*E) = orientR A B C + e * cross (B - A) E
+    mismatches: [0, 0, 0]   (all three must be 0)
+    CONSEQUENCES used below:
+      * P-side k = i   : moving endpoint is P[i] (the FIRST argument),
+        coefficient = cross(E, P[i+1] - X)
+      * P-side k = i-1 : moving endpoint is P[i] (the SECOND argument),
+        coefficient = cross(E, X - P[i-1])
+      * Q-side j       : the moving point is the THIRD argument,
+        coefficient = cross(Q[j+1] - Q[j], E)
+
+==============================================================================
+PROBE 1 -- CLAIM B: creating a NEW segDeg entry, and the exact threshold
+==============================================================================
+P = [(0,0), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]   i = 0,  E = (-1,0) (parallel to P-side 0)
+    [ok ] P is SimpleClosed
+
+  Q[0] = (-1, 0)   Q = [(-1,0), (-1,-6), (5,-8), (11,-6), (11,-2), (6,-1), (2,-2)]
+    Q SimpleClosed = True   (Fin) before = True   segDeg before = []
+    threshold in e (bisected to 2^-80): in [1.0, 1.0]   -- predicted exactly 1
+      e = 1/2   new segDeg = []
+      e = 0.999999999999   new segDeg = []
+      e = 1   new segDeg = [(0, 0), (6, 0)]
+      e = 2   new segDeg = [(0, 0)]
+    over the 80-direction grid x 14 e-values: 56 (E,e) pairs create a new degeneracy, of which 0 have |e| <= 1e-6
+
+  Q[0] = (-1/10, 0)   Q = [(-1/10,0), (-1/10,-6), (5,-8), (11,-6), (11,-2), (6,-1), (2,-2)]
+    Q SimpleClosed = True   (Fin) before = True   segDeg before = []
+    threshold in e (bisected to 2^-80): in [0.1, 0.1]   -- predicted exactly 1/10
+      e = 1/20   new segDeg = []
+      e = 0.099999999999   new segDeg = []
+      e = 1/10   new segDeg = [(0, 0), (6, 0)]
+      e = 1/5   new segDeg = [(0, 0)]
+    over the 80-direction grid x 14 e-values: 38 (E,e) pairs create a new degeneracy, of which 0 have |e| <= 1e-6
+
+  Q[0] = (-1/1000, 0)   Q = [(-1/1000,0), (-1/1000,-6), (5,-8), (11,-6), (11,-2), (6,-1), (2,-2)]
+    Q SimpleClosed = True   (Fin) before = True   segDeg before = []
+    threshold in e (bisected to 2^-80): in [0.001, 0.001]   -- predicted exactly 1/1000
+      e = 1/2000   new segDeg = []
+      e = 0.000999999999   new segDeg = []
+      e = 1/1000   new segDeg = [(0, 0), (6, 0)]
+      e = 1/500   new segDeg = [(0, 0)]
+    over the 80-direction grid x 14 e-values: 46 (E,e) pairs create a new degeneracy, of which 0 have |e| <= 1e-6
+
+  Q[0] = (-1/1000000000, 0)   Q = [(-1/1000000000,0), (-1/1000000000,-6), (5,-8), (11,-6), (11,-2), (6,-1), (2,-2)]
+    Q SimpleClosed = True   (Fin) before = True   segDeg before = []
+    threshold in e (bisected to 2^-80): in [9.99999999999999e-10, 1.0000000000000023e-09]   -- predicted exactly 1/1000000000
+      e = 5e-10   new segDeg = []
+      e = 9.99e-10   new segDeg = []
+      e = 1e-09   new segDeg = [(0, 0), (6, 0)]
+      e = 1/500000000   new segDeg = [(0, 0)]
+    over the 80-direction grid x 14 e-values: 46 (E,e) pairs create a new degeneracy, of which 8 have |e| <= 1e-6
+      e.g. [('(-4,0)', '1/1000000'), ('(-3,0)', '1/1000000'), ('(-2,0)', '1/1000000'), ('(-1,0)', '1/1000000'), ('(1,0)', '-1/1000000')]
+
+==============================================================================
+PROBE 2 -- CLAIM C fails for EVERY direction when Q[j] is the fixed
+            endpoint of the incident side  (Q[j] = P[i+1])
+==============================================================================
+P = [(0,0), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]
+Q = [(10,0), (16,-4), (22,0), (22,-10), (10,-14), (2,-10), (2,-4)]      i = 0,  so P-side 0 = [P0,P1] and Q[0] = P[1]
+    [ok ] P SimpleClosed
+    [ok ] Q SimpleClosed
+    coincSet   = [(1, 0)]
+    segDeg     = [(0, 0), (1, 0)]     (0,0) present: True
+    (Fin) = True
+    entry (k,j) = (0,0) over 80 directions x 14 e-values = 1120 instances:
+      SURVIVED in 1120 of 1120;  destroyed in 0
+    ==> no choice of E and no size of e can destroy it: the moving
+        endpoint is P[0] and the degenerate point IS the other,
+        FIXED, endpoint P[1], which stays on the closed side forever.
+
+==============================================================================
+PROBE 3 -- CLAIM C: the bad directions are exactly E parallel to the
+            incident P-side (resp. to the Q-side, for segDegP)
+==============================================================================
+    [ok ] P SimpleClosed
+    [ok ] Q SimpleClosed
+P = [(0,0), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]
+Q = [(4,0), (16,-4), (22,0), (22,-10), (10,-14), (2,-10), (2,-4)]      Q[0] = (4,0) is INTERIOR to P-side 0
+    segDeg before = [(0, 0)]
+    E NOT parallel to the side (1008 instances): survived 0, destroyed 1008
+    E parallel to the side     (112 instances): survived 112, destroyed 0
+      of the parallel ones with |e| <= 1e-6: survived 48 of 48
+
+  Same configuration but with the degeneracy AT THE APEX, Q[0] = P[0]:
+    [ok ] Q2 SimpleClosed
+    segDeg before = [(0, 0), (6, 0)]   coincSet = [(0, 0)]
+    E=(1,0) e=1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(1,0) e=-1/1000000  (side 0, Q0) alive=True   (side 6, Q0) alive=False
+    E=(-1,0) e=1/1000000  (side 0, Q0) alive=True   (side 6, Q0) alive=False
+    E=(-1,0) e=-1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(2,0) e=1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(2,0) e=-1/1000000  (side 0, Q0) alive=True   (side 6, Q0) alive=False
+    E=(-3,0) e=1/1000000  (side 0, Q0) alive=True   (side 6, Q0) alive=False
+    E=(-3,0) e=-1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(1,1) e=1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(1,1) e=-1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(0,1) e=1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    E=(0,1) e=-1/1000000  (side 0, Q0) alive=False   (side 6, Q0) alive=False
+    ==> with E along the side, the apex degeneracy dies for exactly
+        one SIGN of e (the one sliding P[0] towards P[1]) and
+        survives for the other: the bad set is a RAY, not a line.
+
+  segDegP mirror: P[0] placed at an interior point of a Q-side.
+    [ok ] P3 SimpleClosed
+    [ok ] Q3 SimpleClosed
+P3 = [(7,-2), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]
+Q3 = [(4,-4), (16,4), (22,0), (22,-10), (10,-14), (2,-10), (2,-4)]   segDegP before = [(0, 0), (0, 1)]
+    E NOT parallel to Q-side 0 (1092): survived 0, destroyed 1092
+    E parallel to Q-side 0     (28): survived 28, destroyed 0
+
+==============================================================================
+PROBE 4 -- CLAIM D: (Fin) destroyed by an ARBITRARILY SMALL e
+==============================================================================
+
+P = [(0,0), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]
+Q = [(0,0), (4,-4), (10,-6), (14,-12), (2,-16), (-10,-8), (-6,0)]
+    P SimpleClosed = True   Q SimpleClosed = True
+    Q-side 6 = [(-6,0),(0,0)] is collinear with P-side 0 = [(0,0),(10,0)]
+    they meet in ('pt', (Fraction(0, 1), Fraction(0, 1)))  -- a single point
+    (Fin) before the move = True   witnesses []
+
+    moving P[0] along E = (-1,0) (into Q-side 6):
+      e = 1e-1    (Fin) after = False   overlaps [(0, 6)]   P-side0 ^ Q-side6 = seg of length 1/10
+      e = 1e-6    (Fin) after = False   overlaps [(0, 6)]   P-side0 ^ Q-side6 = seg of length 1/1000000
+      e = 1e-12   (Fin) after = False   overlaps [(0, 6)]   P-side0 ^ Q-side6 = seg of length 1/1000000000000
+      e = 1e-30   (Fin) after = False   overlaps [(0, 6)]   P-side0 ^ Q-side6 = seg of length 1/1000000000000000000000000000000
+    ==> for EVERY e > 0, however small, (Fin) is destroyed.
+        There is no e0 that rescues this direction.
+
+    the opposite direction E = (1,0), and directions off the line:
+      E=(1,0)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(0,1)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(0,-1)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(1,1)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(-1,1)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(-1,-1)  (Fin) at e=1e-1,1e-6,1e-12: [True, True, True]
+      E=(-2,0)  (Fin) at e=1e-1,1e-6,1e-12: [False, False, False]
+
+    full grid, e > 0 small (1e-12): which directions destroy (Fin)?
+      4 of 80: ['(-4,0)', '(-3,0)', '(-2,0)', '(-1,0)']
+      Q-side 6 direction (Q[0]-Q[6]) = (6,0)
+      predicted bad set = {E : E parallel to that side and pointing
+        INTO it, i.e. cross(E,u)=0 and dot(E,u)<0} = ['(-4,0)', '(-3,0)', '(-2,0)', '(-1,0)']
+      match: True
+
+==============================================================================
+PROBE 5 -- CLAIM A: the touched set, and a demonstration that it is
+            not smaller than {i-1, i} (both incident sides really do move)
+==============================================================================
+P = [(0,0), (10,0), (12,8), (6,14), (0,10), (-4,7), (-4,3)]
+Q = [(4,0), (-2,3/2), (22,0), (22,-10), (10,-14), (2,-10), (2,-4)]
+    P SimpleClosed=True  Q SimpleClosed=True
+    Q[1]=(-2,3/2) on P-side 6 = [(-4,3),(0,0)] ? True
+    segDeg before = [(0, 0), (6, 1)]
+    move i=0, E=(1,3), e=1e-6:  segDeg after = []
+      entry on side 0 (k=i)   destroyed: True
+      entry on side 6 (k=i-1) destroyed: True
+    ==> BOTH incident sides are genuinely affected, so the touched
+        set {i-1, i} is exactly right and cannot be shrunk.
+
+##############################################################################
+# DEDICATED LARGE STUDIES
+##############################################################################
+
+==============================================================================
+E1 -- is the CLAIM B mechanism even reachable?  (Q-vertex on an INCIDENT
+      P-side LINE but strictly OFF the segment -- the only way a new
+      degeneracy can ever be created)
+==============================================================================
+    random simple pairs sampled                           : 400
+    with a Q-vertex on an INCIDENT P-side LINE            : 35
+    with one on the line but OFF the segment (mechanism)  : 28
+
+==============================================================================
+E2 -- CLAIM C, the three-case characterisation, at scale (small e only)
+==============================================================================
+    (a) Q[j] = the FIXED endpoint of the incident side -> survives always
+    (b) cross(E, Fixed - Q[j]) != 0, i.e. E NOT parallel to the side
+           -> dies for every e != 0
+    (c) E parallel to the side -> dies only if Q[j] = P[i] and e*E points
+           strictly from P[i] towards the fixed endpoint
+    segDegP mirror: (b') cross(Q[j+1]-Q[j], E) != 0 -> dies;
+           (c') E parallel to the Q-side -> dies only if P[i] is an
+           endpoint of that Q-side and e*E points outward
+    configurations with an incident degeneracy : 400 (attempts 722)
+    incident degeneracy ENTRIES tested         : 169752
+      destroyed 117744   survived 52008
+      case (a)   48312   mismatches 0
+      case (b)  115816   mismatches 0
+      case (c)    5624   mismatches 0
+
+==============================================================================
+E3 -- CLAIM D on the family where (Fin) is genuinely at risk
+==============================================================================
+    collinear-touch configurations built : 300 (attempts 1040); with a collinear incident pair: 300
+    instances at small e                 : 74400
+    (Fin) DESTROYED at small e           : 1876
+      of those, with E NOT parallel to any collinear Q-side : 0
+    mismatches vs 'E parallel to that Q-side and sliding INTO it': 0
+
+==============================================================================
+E4 -- the corrected recipe, all four claims at once
+==============================================================================
+    choose E with cross(E,u) != 0 for u = P[i+1]-P[i], u = P[i]-P[i-1],
+    and u = Q[j+1]-Q[j] for every j; then test A, B, C(corrected), D
+    at |e| in {1e-6, 1e-15, 1e-30}, both signs.
+    configurations with an incident degeneracy        : 300 (attempts 617)
+      carrying the unconditional claim-C obstruction  : 104
+      with no good direction in the 120-point grid    : 0
+    instances tested                                  : 45000
+      claim A violations                              : 0
+      claim B violations                              : 0
+      claim C (corrected, exempting Q[j]=P[i+-1])     : 0
+      claim D violations                              : 0
