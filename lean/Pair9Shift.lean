@@ -4327,6 +4327,93 @@ theorem isGreatest_38_of_coincFree : IsGreatest attainedCoincFree 38 := by
   rintro n ⟨R, hfin, hco, rfl⟩
   exact points9_le_38_of_coincFree R hfin hco
 
+/-! ## 65. A coincidence occupies four incidence slots
+
+The counting core of the identity
+
+    `|segDeg| + |segDegP| = |degPts| + 3·|coincSet|`
+
+which `independent/e9_directions/pt_measure_check.py` reports over 463,433
+configurations with no violation, and which was re-verified independently on
+1,840 angle-generated simple pairs.  This section proves the half that does the
+work: a coincidence `P_v = Q_j` is an **endpoint** of four sides, so it
+contributes **four** incidences while being **one** point — exactly the
+`3`-per-coincidence gap that refutes `crossPairs + segDeg + segDegP` as a
+measure for §9.1 (row 117). -/
+
+open scoped Classical in
+theorem coincidence_mem_segDeg (R : Pair9) {v j : Fin 7}
+    (h : R.V (pP v) = R.V (pQ j)) :
+    (v, j) ∈ segDeg R ∧ (v - 1, j) ∈ segDeg R := by
+  classical
+  have hv : v - 1 + 1 = v := by simp
+  have m1 : R.V (pQ j) ∈ sideP9 R v := by
+    rw [sideP9, ← h]; exact left_mem_segment ℝ _ _
+  have m2 : R.V (pQ j) ∈ sideP9 R (v - 1) := by
+    rw [sideP9, hv, ← h]; exact right_mem_segment ℝ _ _
+  exact ⟨by simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and]
+            using m1,
+         by simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and]
+            using m2⟩
+
+open scoped Classical in
+theorem coincidence_mem_segDegP (R : Pair9) {v j : Fin 7}
+    (h : R.V (pP v) = R.V (pQ j)) :
+    (j, v) ∈ segDegP R ∧ (j - 1, v) ∈ segDegP R := by
+  classical
+  have hj : j - 1 + 1 = j := by simp
+  have m1 : R.V (pP v) ∈ sideQ9 R j := by
+    rw [sideQ9, h]; exact left_mem_segment ℝ _ _
+  have m2 : R.V (pP v) ∈ sideQ9 R (j - 1) := by
+    rw [sideQ9, hj, h]; exact right_mem_segment ℝ _ _
+  exact ⟨by simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and]
+            using m1,
+         by simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and]
+            using m2⟩
+
+/-- The two `segDeg` slots of a coincidence are **distinct**, so it really does
+occupy two and not one. -/
+theorem coincidence_segDeg_ne (v j : Fin 7) :
+    ((v, j) : Fin 7 × Fin 7) ≠ (v - 1, j) := (predP_ne_self v j).symm
+
+theorem coincidence_segDegP_ne (v j : Fin 7) :
+    ((j, v) : Fin 7 × Fin 7) ≠ (j - 1, v) := coincidence_segDeg_ne j v
+
+open scoped Classical in
+/-- **Four incidences, one point.**  A coincidence contributes at least `4` to
+`|segDeg| + |segDegP|`, and `1` to `degPts`. -/
+theorem coincidence_four_slots (R : Pair9) {v j : Fin 7}
+    (h : R.V (pP v) = R.V (pQ j)) :
+    2 ≤ (segDeg R).card ∧ 2 ≤ (segDegP R).card := by
+  classical
+  obtain ⟨hA, hB⟩ := coincidence_mem_segDeg R h
+  obtain ⟨hC, hD⟩ := coincidence_mem_segDegP R h
+  constructor
+  · have hsub : ({(v, j), (v - 1, j)} : Finset (Fin 7 × Fin 7)) ⊆ segDeg R := by
+      intro x hx
+      rcases Finset.mem_insert.mp hx with rfl | hx
+      · exact hA
+      · rw [Finset.mem_singleton] at hx; subst hx; exact hB
+    calc 2 = ({(v, j), (v - 1, j)} : Finset (Fin 7 × Fin 7)).card := by
+            rw [Finset.card_insert_of_notMem (by
+              simp only [Finset.mem_singleton]
+              exact coincidence_segDeg_ne v j), Finset.card_singleton]
+      _ ≤ (segDeg R).card := Finset.card_le_card hsub
+  · have hsub : ({(j, v), (j - 1, v)} : Finset (Fin 7 × Fin 7)) ⊆ segDegP R := by
+      intro x hx
+      rcases Finset.mem_insert.mp hx with rfl | hx
+      · exact hC
+      · rw [Finset.mem_singleton] at hx; subst hx; exact hD
+    calc 2 = ({(j, v), (j - 1, v)} : Finset (Fin 7 × Fin 7)).card := by
+            rw [Finset.card_insert_of_notMem (by
+              simp only [Finset.mem_singleton]
+              exact coincidence_segDegP_ne v j), Finset.card_singleton]
+      _ ≤ (segDegP R).card := Finset.card_le_card hsub
+
+#print axioms coincidence_mem_segDeg
+#print axioms coincidence_mem_segDegP
+#print axioms coincidence_four_slots
+
 #print axioms coincFree_of_noVertexOnOther
 #print axioms isGreatest_38_of_coincFree
 
