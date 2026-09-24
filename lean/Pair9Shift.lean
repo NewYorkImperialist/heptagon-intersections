@@ -3569,5 +3569,87 @@ theorem exists_joint_step (R : Pair9) (hfin : (points9 R).Finite)
 
 #print axioms exists_joint_step
 
+/-! ## 55. The tilt, discharged
+
+§54's three tilt hypotheses say one thing: the tilted shift direction is not
+parallel to any of nine fixed vectors — the seven `Q`-sides and the two
+`P`-edges adjacent to the moving edge.  `RotationLaw.exists_good_tilt` rules
+out one `t` per vector, so ten candidates suffice. -/
+
+theorem coordSub_ne_zero {a b : ℝ × ℝ} (h : a ≠ b) :
+    (a.1 - b.1, a.2 - b.2) ≠ 0 := by
+  intro hz
+  have h1 : a.1 - b.1 = 0 := congrArg Prod.fst hz
+  have h2 : a.2 - b.2 = 0 := congrArg Prod.snd hz
+  exact h (Prod.ext (by linarith) (by linarith))
+
+/-- **One tilt avoids all nine bad directions at once.** -/
+theorem exists_good_tilt_pair9 (R : Pair9) (i : Fin 7) :
+    ∃ t : ℝ,
+      cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+         (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2) ≠ 0 ∧
+      cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+         (R.V (pP i)).2 - (R.V (pP (i - 1))).2) ≠ 0 ∧
+      ∀ m : Fin 7, cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0 := by
+  classical
+  have hu : R.V (pP (i + 1)) - R.V (pP i) ≠ 0 :=
+    sub_ne_zero.mpr (Ne.symm (R.simpleP.1 i))
+  obtain ⟨t, -, h⟩ :=
+    exists_good_tilt (Finset.univ : Finset (Fin 7 ⊕ (Unit ⊕ Unit))) hu
+      (Sum.elim (fun m : Fin 7 => R.V (pQ (m + 1)) - R.V (pQ m))
+        (Sum.elim
+          (fun _ : Unit =>
+            ((R.V (pP (i + 1))).1 - (R.V (pP (i + 1 + 1))).1,
+             (R.V (pP (i + 1))).2 - (R.V (pP (i + 1 + 1))).2))
+          (fun _ : Unit =>
+            ((R.V (pP i)).1 - (R.V (pP (i - 1))).1,
+             (R.V (pP i)).2 - (R.V (pP (i - 1))).2))))
+      (by
+        rintro (m | (u | u)) -
+        · exact sub_ne_zero.mpr (R.simpleQ.1 m).symm
+        · exact coordSub_ne_zero (R.simpleP.1 (i + 1))
+        · exact coordSub_ne_zero (vertexP_ne_pred R i))
+      ((Finset.range 10).image (fun n : ℕ => (n : ℝ)))
+      (by
+        rw [Finset.card_image_of_injective _ Nat.cast_injective,
+          Finset.card_range, Finset.card_univ]
+        simp)
+  exact ⟨t,
+    h (Sum.inr (Sum.inl ())) (Finset.mem_univ _),
+    h (Sum.inr (Sum.inr ())) (Finset.mem_univ _),
+    fun m => h (Sum.inl m) (Finset.mem_univ _)⟩
+
+open scoped Classical in
+/-- **§54 with the tilt chosen.**  The only hypotheses left beyond the two
+standing ones are the four transversality conditions. -/
+theorem exists_joint_step_tilted (R : Pair9) (hfin : (points9 R).Finite)
+    (hcoinc : ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) (i : Fin 7)
+    (hsepPD : ∀ x ∈ segDeg R,
+      orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP x.1)) *
+        orientR (R.V (pQ (x.2 - 1))) (R.V (pQ x.2)) (R.V (pP (x.1 + 1))) < 0)
+    (hsepND : ∀ x ∈ segDeg R,
+      orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP x.1)) *
+        orientR (R.V (pQ x.2)) (R.V (pQ (x.2 + 1))) (R.V (pP (x.1 + 1))) < 0)
+    (hsepPE : ∀ y ∈ segDegP R,
+      orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ y.1)) *
+        orientR (R.V (pP (y.2 - 1))) (R.V (pP y.2)) (R.V (pQ (y.1 + 1))) < 0)
+    (hsepNE : ∀ y ∈ segDegP R,
+      orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ y.1)) *
+        orientR (R.V (pP y.2)) (R.V (pP (y.2 + 1))) (R.V (pQ (y.1 + 1))) < 0) :
+    ∃ (t δ : ℝ) (R' : Pair9), δ ≠ 0 ∧ R'.V = shiftV R.V i t δ ∧
+      (crossPairsOf R.V).card + (segDeg R).card + (segDegP R).card
+        ≤ (crossPairsOf R'.V).card + (segDeg R').card + (segDegP R').card := by
+  obtain ⟨t, h1, h2, h3⟩ := exists_good_tilt_pair9 R i
+  obtain ⟨δ, R', hδ, hR', hb⟩ :=
+    exists_joint_step R hfin hcoinc i t h1 h2 h3 hsepPD hsepND hsepPE hsepNE
+  exact ⟨t, δ, R', hδ, hR', hb⟩
+
+#print axioms coordSub_ne_zero
+#print axioms exists_good_tilt_pair9
+#print axioms exists_joint_step_tilted
+
 end Pair9Shift
 end Heptagon
