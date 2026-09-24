@@ -3122,5 +3122,87 @@ theorem card_incidentP_eq_lcAtP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ
 #print axioms mem_crossPairs_iff_affP_prev
 #print axioms card_incidentP_eq_lcAtP
 
+/-! ## 50. Discharging the mirror bridge hypothesis
+
+`step_invariant_joint` takes `hbridgeE` as a hypothesis as well.  §49 supplies
+the counting lemma; what remains is the **rate**.  Here the rate is far simpler
+than §46's three-way dichotomy: the shift moves only `P`-vertices, so both
+endpoints of the `Q`-side are fixed and the coefficient collapses to
+`cross (Q_{m+1} − Q_m) (tilt u t)` — one quantity per `Q`-side, independent of
+*which* of the two touched `P`-vertices carries the degeneracy.  A single good
+tilt therefore makes all seven nonzero at once, which is exactly what
+`RotationLaw.exists_good_tilt` delivers. -/
+
+open scoped Classical in
+/-- A `P`-vertex on a `Q`-**segment** is in particular on its **line**. -/
+theorem segDegP_orientR_eq_zero (R : Pair9) {e : Fin 7 × Fin 7}
+    (he : e ∈ segDegP R) :
+    orientR (R.V (pQ e.1)) (R.V (pQ (e.1 + 1))) (R.V (pP e.2)) = 0 := by
+  classical
+  simp only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] at he
+  rw [← off_eq_orientR]
+  exact off_eq_zero_of_mem_segment he
+
+/-- **The mirror rate, in closed form.**  Contrast `shiftCoef_dichotomy`, where
+the answer depends on which of the three touched sides is meant. -/
+theorem coefQ_touchedP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) (m v : Fin 7)
+    (hv : v = i ∨ v = i + 1) :
+    coefQ V i t m (pP v)
+      = cross (V (pQ (m + 1)) - V (pQ m))
+          (tilt (V (pP (i + 1)) - V (pP i)) t) := by
+  have h0 : (if pQ m = pP i ∨ pQ m = pP (i + 1) then (1:ℝ) else 0) = 0 := by
+    rw [if_neg]; rintro (h | h) <;> exact pP_ne_pQ _ _ h.symm
+  have h1 : (if pQ (m + 1) = pP i ∨ pQ (m + 1) = pP (i + 1) then (1:ℝ) else 0)
+      = 0 := by
+    rw [if_neg]; rintro (h | h) <;> exact pP_ne_pQ _ _ h.symm
+  have h2 : (if pP v = pP i ∨ pP v = pP (i + 1) then (1:ℝ) else 0) = 1 := by
+    rw [if_pos]
+    rcases hv with h | h
+    · exact Or.inl (by rw [h])
+    · exact Or.inr (by rw [h])
+  simp only [coefQ, dcoef, h0, h1, h2, cross, Prod.fst_sub, Prod.snd_sub]
+  ring
+
+/-- On a touched `P`-vertex the rate is nonzero as soon as the tilted shift
+direction is not parallel to the `Q`-side. -/
+theorem coefQ_ne_zero_of_touchedP (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ)
+    (m v : Fin 7) (hv : v ∈ touchedP i)
+    (ht : cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+        (V (pQ (m + 1)) - V (pQ m)) ≠ 0) :
+    coefQ V i t m (pP v) ≠ 0 := by
+  rw [coefQ_touchedP V i t m v ((mem_touchedP_iff i v).mp hv), cross_swap]
+  exact neg_ne_zero.mpr ht
+
+open scoped Classical in
+/-- **`hbridgeE`, discharged.**  The mirror of `exists_delta0_bridgeD`: for
+every sufficiently small nonzero `δ`, the two pairs incident to a `P`-vertex
+degeneracy are counted by `lcAtP`. -/
+theorem exists_delta0_bridgeE (R : Pair9) (i : Fin 7) (t : ℝ)
+    (ht : ∀ m : Fin 7, cross (tilt (R.V (pP (i + 1)) - R.V (pP i)) t)
+        (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0)
+    (hsepP : ∀ e ∈ segDegP R,
+      orientR (R.V (pP (e.2 - 1))) (R.V (pP e.2)) (R.V (pQ e.1)) *
+        orientR (R.V (pP (e.2 - 1))) (R.V (pP e.2)) (R.V (pQ (e.1 + 1))) < 0)
+    (hsepN : ∀ e ∈ segDegP R,
+      orientR (R.V (pP e.2)) (R.V (pP (e.2 + 1))) (R.V (pQ e.1)) *
+        orientR (R.V (pP e.2)) (R.V (pP (e.2 + 1))) (R.V (pQ (e.1 + 1))) < 0) :
+    ∃ δ₀ : ℝ, 0 < δ₀ ∧ ∀ δ : ℝ, δ ≠ 0 → |δ| < δ₀ →
+      ∀ e ∈ segDegP R, e.2 ∈ touchedP i →
+      ((incidentPairsP e).filter
+          (fun q => q ∈ crossPairsOf (shiftV R.V i t δ))).card
+        = lcAtP R.V i t δ e := by
+  classical
+  obtain ⟨δ₀, hδ₀, h⟩ := card_incidentP_eq_lcAtP R.V i t
+  refine ⟨δ₀, hδ₀, fun δ hδne hδ e he het => ?_⟩
+  have hdeg := segDegP_orientR_eq_zero R he
+  have hrate : δ * coefQ R.V i t e.1 (pP e.2) ≠ 0 :=
+    mul_ne_zero hδne (coefQ_ne_zero_of_touchedP R.V i t e.1 e.2 het (ht e.1))
+  exact h δ hδ e.1 e.2 hrate hdeg (hsepP e he) (hsepN e he)
+
+#print axioms segDegP_orientR_eq_zero
+#print axioms coefQ_touchedP
+#print axioms coefQ_ne_zero_of_touchedP
+#print axioms exists_delta0_bridgeE
+
 end Pair9Shift
 end Heptagon
