@@ -4285,6 +4285,45 @@ theorem certPair9_tight :
   ⟨AKR9.certPair9_ncard,
    points9_le_38_of_coincFree AKR9.certPair9 certPair9_finite certPair9_coincFree⟩
 
+/-! ## 64. The headline, under a strictly weaker hypothesis
+
+`AKR9.isGreatest_38_of_E9` assumes **(E9)**: no vertex of either polygon lies
+on the other's boundary *at all*.  §9.2's work removes the need for most of
+that.  What `points9_le_38_of_coincFree` assumes is only that no vertex equals
+a vertex — a `Q`-vertex sitting in the **interior** of a `P`-side is allowed,
+and is handled by the chain of §49–61 rather than assumed away.
+
+(E9) implies coincidence-freeness, because a shared vertex is in particular a
+vertex lying on a side of the other polygon — an endpoint of it.  So the
+statement below **subsumes** `isGreatest_38_of_E9`. -/
+
+theorem coincFree_of_noVertexOnOther {R : Pair9} (h : AKR9.NoVertexOnOther R) :
+    ∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j) := by
+  intro v j hc
+  refine h.1 v j ?_
+  rw [hc]
+  exact left_mem_segment ℝ _ _
+
+/-- The attainable counts, under finiteness and coincidence-freeness only. -/
+def attainedCoincFree : Set ℕ :=
+  { n | ∃ R : Pair9, (points9 R).Finite ∧
+      (∀ v j : Fin 7, R.V (pP v) ≠ R.V (pQ j)) ∧ (points9 R).ncard = n }
+
+/-- **38 is the greatest attainable count, assuming only `(Fin)` and that the
+two heptagons share no vertex.**
+
+Strictly weaker than `AKR9.isGreatest_38_of_E9`, whose hypothesis (E9) forbids
+a vertex anywhere on the other boundary.  **This is still not `f(7,7) = 38`:**
+coincidence-freeness is §9.1's conclusion and is assumed, not proved. -/
+theorem isGreatest_38_of_coincFree : IsGreatest attainedCoincFree 38 := by
+  refine ⟨⟨AKR9.certPair9, certPair9_finite, certPair9_coincFree,
+    AKR9.certPair9_ncard⟩, ?_⟩
+  rintro n ⟨R, hfin, hco, rfl⟩
+  exact points9_le_38_of_coincFree R hfin hco
+
+#print axioms coincFree_of_noVertexOnOther
+#print axioms isGreatest_38_of_coincFree
+
 #print axioms certPair9_coincFree
 #print axioms certPair9_finite
 #print axioms certPair9_tight
