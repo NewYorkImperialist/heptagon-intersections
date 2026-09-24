@@ -1,0 +1,15 @@
+P simple: True  Q simple: True  (Fin): True
+coincidences: [(4, 6)]
+apex collinear with neighbours? orientR(P[v-1],P[v],P[v+1]) = 18
+crossPairs = 7   degPts = [(-5, 0), (-5, 2), (-2, -1), (0, 2)]   M_pt = 11
+
+slide A (E = P[v]-P[v+1])   E = (-6, 2)
+   e≈1e-06: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-5, 2)]
+   e≈1e-12: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-5, 2)]
+   e≈1e-24: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-5, 2)]
+slide B (E = P[v]-P[v-1])   E = (0, -3)
+   e≈1e-06: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-2, -1)]
+   e≈1e-12: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-2, -1)]
+   e≈1e-24: admissible  cross 7->7  degPts 4->3  M_pt 11->10   lost=[(-2, -1)]
+
+VERDICT: if both slides give M_pt 11 -> 10, the slide-only route is REFUTED.

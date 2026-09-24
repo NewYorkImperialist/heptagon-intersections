@@ -1,0 +1,158 @@
+==============================================================================
+ptbreak_run  mode=sweep family=two_touch start=0 count=8 seed=20250924 smoke
+  generation failures: 0
+  two_touch[0:8]: 8 instances
+    max dM_pt over the COMPLETE small-d cell enumeration, distribution: {1: 4, 2: 3, 3: 1}
+    instances whose best small-d move is EXACTLY 0 (tight): 0
+    COUNTEREXAMPLES (max over every d searched < 0): 0
+    small-d-only failures (max at 1e-12 < 0): 0
+    cells per instance: min 144 max 168 mean 163
+    displacements evaluated: 7824 (7824 admissible)
+    instances with BOTH incident P-sides carrying a non-apex degPt: 8
+    incident non-apex degPts per instance: {2: 8}
+    touch/transversal incident degPts: 3 touch, 13 trans
+    apex character: {'touch': 5, 'trans': 3, 'degen': 0, None: 0}
+    collinear-apex instances: 0
+    base |crossPairs| max 2, base |degPts| max 3, base |coincSet| max 1
+    cells whose dM_pt changed between 1e-9 and 1e-12 (scale instability): 0
+  elapsed 5.2s
+==============================================================================
+ptbreak_hunt mode=hunt start=0 count=120 seed=20250924 collinear=0 extra=0 jag=0.0 smoke
+  instances scored: 108
+  displacements (complete small-d cell enumeration at 1e-12): 16816
+  maxdM distribution: {0: 3, 1: 69, 2: 23, 3: 11, 4: 2}
+  instances with BOTH incident P-sides carrying a non-apex degPt: 105
+  incident non-apex degPts: 120 touch, 156 transversal
+  apex character: {'trans': 39, 'touch': 69}
+  largest base |crossPairs| seen: 9
+  instances with maxdM <= 0: 3
+    ---- maxdM = 0 ----
+      family=collinear_apex apex v=1 coincidence j=4 
+      P = [(-13/4,51/4), (-2,-6), (0,-36), (39939/500,-127033/1000), (1185/8,-27639/500), (6657/50,4927/125), (48843/1000,9201/100)]
+      Q = [(7,9), (-3,9), (-2,2), (-6,3), (-2,-6), (-2,-13), (-4/3,-16)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'touch', '[(-3,9)]'), ('v', 'trans', '[(-4/3,-16)]')]
+      apex character = trans  collinear apex = True
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4328 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=high_cross apex v=1 coincidence j=3 
+      P = [(51,2), (-9/2,-7), (15/4,43/2), (-24569/500,42071/1000), (-15241/500,-1319/125), (-23171/1000,-6777/100), (9927/1000,-28899/1000)]
+      Q = [(1,12), (-1,3), (-15/2,-4), (-9/2,-7), (-7,-11), (9,-11), (14,-4)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'trans', '[(14,-4)]'), ('v', 'touch', '[(1,12)]')]
+      apex character = trans  collinear apex = False
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4544 displacements, best dM_pt = 2
+    (not a counterexample: deep search reaches dM_pt=2 at d=(-2,-5))
+    ---- maxdM = 0 ----
+      family=multi_coinc apex v=1 coincidence j=5 
+      P = [(5,33/2), (8,-12), (-58,18), (-120409/500,-103329/500), (8107/500,-42257/200), (147307/500,-14201/100), (133087/500,82157/500)]
+      Q = [(6,7), (-76/7,-24/7), (-11,14), (-58,18), (-13,-25/2), (8,-12), (12,-14)]
+      base |crossPairs|=0 |degPts|=4 M_pt=4 |coincSet|=2
+      incident non-apex degPts: [('v-1', 'trans', '[(6,7)]'), ('v', 'touch', '[(-76/7,-24/7)]'), ('v', 'trans', '[(-58,18)]')]
+      apex character = trans  collinear apex = False
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4544 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+  elapsed 22.9s
+==============================================================================
+ptbreak_run  mode=controls family=two_touch start=0 count=60 seed=20250924 controls1
+CONTROLS  instances 0..59 over ['two_touch', 'many_touch', 'collinear_apex', 'high_cross', 'multi_coinc', 'random']
+  instances: 54
+  TRUE claim   'some admissible d has dM_pt >= 0'      : failures 0
+  FALSE VAR A  'some admissible d has dM_pt >  0'      : failures 6   (must be > 0 or the harness is broken)
+  FALSE VAR B  'dM_pt >= 0 reachable with |e| in 1,2,4': failures 0   (must be > 0 or the harness is broken)
+  FALSE VAR C  '|degPts| alone never decreases'        : failures 29   (must be > 0 or degPts is not doing any work)
+  elapsed 8.6s
+==============================================================================
+ptbreak_run  mode=controls family=two_touch start=0 count=60 seed=20250924 controls_v2
+CONTROLS  instances 0..59 over ['two_touch', 'many_touch', 'collinear_apex', 'high_cross', 'multi_coinc', 'random']
+  instances: 54
+  TRUE claim   'some admissible d has dM_pt >= 0'        : failures 0
+  FALSE VAR A  'some admissible d has dM_pt >  0'        : failures 6   (must be > 0 or the harness is broken)
+  FALSE VAR B  'dM_pt >= 0 reachable with |e| in 1,2,4'  : failures 0   (NOT discriminating: e=1 on a unit direction is still a small move)
+  FALSE VAR B2 'dM_pt >= 0 reachable with |d| >= diam/4' : failures 11   (must be > 0 or the harness is broken)
+  FALSE VAR C  '|degPts| alone never decreases'          : failures 29   (must be > 0 or degPts is not doing any work)
+  FALSE VAR D  'some admissible d has dM_pt >= +2'       : failures 36   (must be > 0: tight instances cannot gain 2)
+  FALSE VAR E  'M_seg = |cross|+|segDeg|+|segDegP| never decreases' : failures 45   (must be > 0: M_seg is the measure ALREADY REFUTED by the project)
+  elapsed 27.0s
+==============================================================================
+ptbreak_hunt mode=hunt start=1000 count=300 seed=20250924 collinear=0 extra=0 jag=0.0 hunt_A
+  instances scored: 274
+  displacements (complete small-d cell enumeration at 1e-12): 42632
+  maxdM distribution: {0: 7, 1: 165, 2: 65, 3: 27, 4: 10}
+  instances with BOTH incident P-sides carrying a non-apex degPt: 272
+  incident non-apex degPts: 298 touch, 386 transversal
+  apex character: {'trans': 105, 'touch': 167, 'degen': 2}
+  largest base |crossPairs| seen: 8
+  instances with maxdM <= 0: 7
+    ---- maxdM = 0 ----
+      family=collinear_apex apex v=1 coincidence j=3 
+      P = [(-9/4,33/2), (-6,-1), (-39/4,-37/2), (13547/1000,-2107/40), (18391/250,-19649/500), (56429/1000,5251/500), (66643/1000,7107/125)]
+      Q = [(8,7), (-3,13), (-8,14), (-6,-1), (-11,-5), (-1,-25/2), (-36/5,-33/5)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'trans', '[(-3,13)]'), ('v', 'touch', '[(-36/5,-33/5)]')]
+      apex character = trans  collinear apex = True
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4544 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=multi_coinc apex v=1 coincidence j=3 
+      P = [(-9,19), (0,-2), (65/4,-9/2), (71741/1000,5267/500), (67129/1000,13517/250), (5511/100,46089/500), (-1127/500,66357/1000)]
+      Q = [(52/5,-18/5), (-3,5), (-13,-2), (0,-2), (11,-27/2), (13,-4), (-9,19)]
+      base |crossPairs|=0 |degPts|=5 M_pt=5 |coincSet|=2
+      incident non-apex degPts: [('v-1', 'trans', '[(-3,5)]'), ('v-1', 'touch', '[(-9,19)]'), ('v', 'touch', '[(52/5,-18/5)]'), ('v', 'trans', '[(13,-4)]')]
+      apex character = trans  collinear apex = False
+      best d = (1/1000000000000,0)  dM=0 dCross=4 dDegPts=-4 dCoinc=-1
+      deep verify: 4328 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=collinear_apex apex v=1 coincidence j=3 
+      P = [(-7,38), (-7,-1), (-7,-40), (30837/500,-2601/25), (174817/1000,-71333/1000), (150309/1000,30733/1000), (3749/50,116801/1000)]
+      Q = [(2,10), (-7,12), (-11,3), (-7,-1), (-12,-13), (5,-1), (-7,-17/4)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'trans', '[(-7,12)]'), ('v', 'touch', '[(-7,-17/4)]')]
+      apex character = trans  collinear apex = True
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4400 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=collinear_apex apex v=1 coincidence j=0 
+      P = [(35/4,41/4), (0,4), (-21,-11), (-12331/500,-73209/1000), (3621/125,-15363/200), (81823/1000,-1233/25), (103611/1000,1693/250)]
+      Q = [(0,4), (13,11), (7,9), (-10,17/2), (-63/10,-1/2), (-11,-3), (-11,-10)]
+      base |crossPairs|=3 |degPts|=3 M_pt=6 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'trans', '[(7,9)]'), ('v', 'touch', '[(-63/10,-1/2)]')]
+      apex character = trans  collinear apex = True
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4472 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=high_cross apex v=1 coincidence j=4 
+      P = [(19,14), (-9,0), (45,12), (55653/1000,16561/1000), (3857/250,921/125), (80927/1000,13423/500), (13847/1000,11359/1000)]
+      Q = [(9,4), (5,7), (-2,2), (-11,2), (-9,0), (-13,-1), (3,-11)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'touch', '[(5,7)]'), ('v', 'trans', '[(9,4)]')]
+      apex character = trans  collinear apex = False
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4544 displacements, best dM_pt = 2
+    (not a counterexample: deep search reaches dM_pt=2 at d=(-1/2,23/48))
+    ---- maxdM = 0 ----
+      family=collinear_apex apex v=1 coincidence j=5 
+      P = [(12,27), (12,1), (12,-37/2), (6756/125,-65197/1000), (26177/200,-29591/1000), (1123/10,33267/1000), (43347/500,101501/1000)]
+      Q = [(12,14), (10,9), (12,-6/7), (-5,12), (25/2,-11/2), (12,1), (14,-2)]
+      base |crossPairs|=1 |degPts|=3 M_pt=4 |coincSet|=1
+      incident non-apex degPts: [('v-1', 'trans', '[(12,14)]'), ('v', 'touch', '[(12,-6/7)]')]
+      apex character = trans  collinear apex = True
+      best d = (1/1000000000000,0)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1
+      deep verify: 4472 displacements, best dM_pt = 0
+    (not a counterexample: deep search reaches dM_pt=0 at d=(1/4,0))
+    ---- maxdM = 0 ----
+      family=multi_coinc apex v=1 coincidence j=2 
+      P = [(-15,-13), (-3,-1), (13/4,-9/4), (36621/1000,14223/500), (-601/500,13619/250), (-8171/200,5291/125), (-64177/1000,-2693/1000)]
+      Q = [(-15,-13), (-15/2,7), (-3,-1), (-8,3), (-7,-5), (-16/7,-8/7), (13,-6)]
+      base |crossPairs|=0 |degPts|=4 M_pt=4 |coincSet|=2
+      incident non-apex degPts: [('v-1', 'trans', '[(-15,-13)]'), ('v-1', 'trans', '[(-7,-5)]'), ('v', 'touch', '[(-16/7,-8/7)]')]
+      apex character = trans  collinear apex = False
+      best d = (1/1250000000000,1/1000000000000)  dM=0 dCross=3 dDegPts=-3 dCoinc=-1

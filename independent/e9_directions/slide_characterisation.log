@@ -1,0 +1,935 @@
+==============================================================================
+slide_selftest.py -- primitive self-tests and false controls
+==============================================================================
+
+-- imported primitive self-tests (mjm + ptm) --
+  [PASS] orientR ccw > 0
+  [PASS] orientR cw  < 0
+  [PASS] orientR collinear = 0
+  [PASS] orientR matches the Lean formula on a sample
+  [PASS] on_closed at start endpoint
+  [PASS] on_closed at end endpoint
+  [PASS] on_closed at interior point
+  [PASS] on_closed rejects the collinear extension
+  [PASS] on_closed rejects an off-line point
+  [PASS] proper_cross on a genuine X
+  [PASS] proper_cross FALSE at a shared endpoint (touching, not crossing)
+  [PASS] proper_cross FALSE for a T-touch
+  [PASS] SimpleClosed accepts a convex heptagon
+  [PASS] SimpleClosed ACCEPTS three collinear vertices (deliberate)
+  [PASS] SimpleClosed REJECTS a self-crossing heptagon
+  [PASS] SimpleClosed REJECTS an adjacent-side backtrack (conjunct 3)
+  [PASS] SimpleClosed REJECTS a repeated vertex (conjunct 1)
+  [PASS] moveV changes exactly one vertex
+  [PASS] moveV moves it by exactly e*E
+  [PASS] moveV with e=0 is the identity
+  [PASS] test square-ish P is simple
+  [PASS] coincSet finds the translate's shared vertices
+  [PASS] designed X-pair: both simple
+  [PASS] designed X-pair: exactly one coincidence
+  [PASS] a coincidence puts 2 entries in segDeg and 2 in segDegP
+  [PASS] finite_intersection says NO on an overlapping collinear pair
+  [PASS] finite_intersection says YES on a transversal pair
+  -- new degPts tests --
+  [PASS] crescent witness: degPts has exactly 3 points
+  [PASS] crescent witness: degPts is exactly {(0,0),(3,8),(8,3)}
+  [PASS] crescent witness: exactly one coincidence, at (0,0)
+  [PASS] the coincidence occupies 4 slots in segDeg+segDegP but 1 point in degPts
+  [PASS] crescent witness: |segDeg|+|segDegP| = 6 while |degPts| = 3
+  [PASS] crescent witness: M_seg = 7, M_pt = 4
+  [PASS] degPts agrees with the direct definition (crescent)
+  [PASS] disjoint-vertex translate: degPts empty, agrees with direct
+  [PASS] T-touch fixture is simple and has NO coincidence
+  [PASS] T-touch: degPts agrees with the direct definition
+  [PASS] T-touch: Q[0]=(3,0) strictly inside a P-side is exactly one degPt
+  [PASS] degPts is symmetric in (P,Q)
+  [PASS] moveV changes exactly one vertex (re-checked here)
+  [PASS] the moved pair has strictly fewer coincidences
+  [PASS] degPts agrees with the direct definition on 120 random pairs (and their moves)
+
+-- slide-specific self-tests --
+  [PASS] designed pair simple
+  [PASS] designed pair has the coincidence P[0]=Q[0]
+  [PASS] slide A direction is P[v]-P[v+1]
+  [PASS] slide B direction is P[v]-P[v-1]
+  [PASS] slide changes exactly one P vertex
+  [PASS] slide A: old side v is contained in the NEW side v (every e>0)
+  [PASS] slide A: the OLD apex lies on the new side v
+  [PASS] degPts agrees with the direct definition
+  [PASS] degPts counts the coincidence exactly ONCE
+  [PASS] ...while segDeg+segDegP charge it FOUR times
+  [PASS] suppP of a P-vertex is its two incident sides
+  [PASS] suppP of a side midpoint is that one side
+  [PASS] SimpleClosed accepts a straight pass-through at P[1]
+  [PASS] ...and P[1] is strictly between P[0] and P[2]
+  [PASS] SimpleClosed REJECTS the collinear backtrack (apex not in the middle)
+
+-- DELIBERATELY FALSE CONTROLS (these MUST fail) --
+  control corpus: 210 instances, hardM=30 hardN=60 hardP=60 plain=60
+  FALSE CONTROL 1  'slide A admissible at e=0'  : holds 0/210  -> 210 failures
+  FALSE CONTROL 2  'M_pt strictly increases'    : holds 92/203  -> 111 failures
+  FALSE CONTROL 3  'no degPt is ever lost'      : holds 177/203  -> 26 failures
+  (reference, expected TRUE) 'M_pt non-decreasing': holds 187/203
+  [PASS] false control 1 does fail
+  [PASS] false control 2 does fail
+  [PASS] harness is sensitive: at least one degPt loss somewhere
+
+SELFTEST OK
+
+------------------------------------------------------------------------------
+slide_sweep chunk=1 n=100 fam=mix seed=1000020
+  corpus: 100 instances  hardM=25 hardN=25 hardP=25 plain=25   (gen 1.4s)
+    ... 50/100  match=50  admA=50  AorB=50  col=1  [3s]
+    ... 100/100  match=99  admA=99  AorB=100  col=2  [4s]
+  SUMMARY chunk 1 (mix), 100 instances, 3.7s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            99/100
+        non-collinear apex 98/98
+        COLLINEAR apex     1/2
+        outcome stable across e=1e-8,1e-10,1e-12: 99/100
+        labels of points ACTUALLY lost   : {'only_v-1': 10}
+        predicted-lost that SURVIVED     : {'only_v-1': 1}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 1
+    Q2 old apex still a degPt after small-e slide A: 100/100   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 99/100;  dM_pt <0:0 =0:51 >0:48
+        joint (|degPts lost|, dcross) = {(0, 0): 45, (0, 1): 34, (0, 2): 10, (1, 1): 6, (1, 2): 3, (1, 4): 1}
+    Q3' at the FIRST admissible e on the full ladder: 99 cases, dM_pt<0 in 7
+    Q4 A admissible 99/100, B admissible 95/100, A-or-B 100/100
+    BREAK[hardP] v=1 j=2 col=True match=False A=True B=True
+      P=[(-2,-2), (1,-2), (2,-2), (5,4), (-5,-2), (2,2), (-2,-1)]
+      Q=[(0,1), (-2,-3), (1,-2), (1,-1), (5,3), (1,6), (0,-2)]
+      predicted-lost surv={'only_v-1': 1} unpredicted-lost={} lost=[]
+
+------------------------------------------------------------------------------
+slide_sweep chunk=1 n=100 fam=mix seed=1000020
+  corpus: 100 instances  hardM=25 hardN=25 hardP=25 plain=25   (gen 1.4s)
+    ... 50/100  match=50  admA=50  AorB=50  col=1  [3s]
+    ... 100/100  match=99  admA=99  AorB=100  col=2  [4s]
+  SUMMARY chunk 1 (mix), 100 instances, 3.7s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            99/100
+        non-collinear apex 98/98
+        COLLINEAR apex     1/2
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            100/100
+        non-collinear apex 98/98
+        COLLINEAR apex     2/2
+        outcome stable across e=1e-8,1e-10,1e-12: 99/100
+        labels of points ACTUALLY lost   : {'only_v-1': 10}
+        predicted-lost that SURVIVED     : {'only_v-1': 1}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 1
+    Q2 old apex still a degPt after small-e slide A: 100/100   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 99/100;  dM_pt <0:0 =0:51 >0:48
+        joint (|degPts lost|, dcross) = {(0, 0): 45, (0, 1): 34, (0, 2): 10, (1, 1): 6, (1, 2): 3, (1, 4): 1}
+    Q3' at the FIRST admissible e on the full ladder: 99 cases, dM_pt<0 in 7
+    Q4 A admissible 99/100, B admissible 95/100, A-or-B 100/100
+
+------------------------------------------------------------------------------
+slide_sweep chunk=1 n=100 fam=mix seed=1000020
+  corpus: 100 instances  hardM=25 hardN=25 hardP=25 plain=25   (gen 1.4s)
+    ... 50/100  match=50  admA=50  AorB=50  col=1  [2s]
+    ... 100/100  match=99  admA=99  AorB=100  col=2  [4s]
+  SUMMARY chunk 1 (mix), 100 instances, 3.5s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            99/100
+        non-collinear apex 98/98
+        COLLINEAR apex     1/2
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            100/100
+        non-collinear apex 98/98
+        COLLINEAR apex     2/2
+        outcome stable across e=1e-8,1e-10,1e-12: 99/100
+        labels of points ACTUALLY lost   : {'only_v-1': 10}
+        predicted-lost that SURVIVED     : {'only_v-1': 1}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 1
+        instances with an UNSTABLE outcome across the 3 rungs: 1
+      GAIN v=2 j=1 gained=['(1,99999997/100000000)']
+        P=[(-4,2), (-2,2), (1,1), (1,4), (2,-1), (1,0), (-2,-2)]
+        Q=[(1,-1), (1,1), (-1,3), (5,6), (6,5), (4,2), (6,-2)]
+      UNSTABLE v=2 j=1
+        P=[(-4,2), (-2,2), (1,1), (1,4), (2,-1), (1,0), (-2,-2)]
+        Q=[(1,-1), (1,1), (-1,3), (5,6), (6,5), (4,2), (6,-2)]
+    Q2 old apex still a degPt after small-e slide A: 100/100   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 99/100;  dM_pt <0:0 =0:51 >0:48
+        joint (|degPts lost|, dcross) = {(0, 0): 45, (0, 1): 34, (0, 2): 10, (1, 1): 6, (1, 2): 3, (1, 4): 1}
+    Q3' at the FIRST admissible e on the full ladder: 99 cases, dM_pt<0 in 7
+    Q4 A admissible 99/100, B admissible 95/100, A-or-B 100/100
+
+------------------------------------------------------------------------------
+slide_sweep chunk=2 n=400 fam=mix seed=2000023
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 6.0s)
+    ... 50/400  match=50  admA=50  AorB=50  col=0  [7s]
+    ... 100/400  match=100  admA=100  AorB=100  col=3  [8s]
+    ... 150/400  match=150  admA=149  AorB=150  col=4  [9s]
+    ... 200/400  match=200  admA=196  AorB=200  col=7  [10s]
+    ... 250/400  match=250  admA=245  AorB=250  col=8  [11s]
+    ... 300/400  match=300  admA=293  AorB=300  col=9  [12s]
+    ... 350/400  match=348  admA=341  AorB=350  col=12  [14s]
+    ... 400/400  match=398  admA=388  AorB=400  col=12  [15s]
+  SUMMARY chunk 2 (mix), 400 instances, 14.5s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            398/400
+        non-collinear apex 388/388
+        COLLINEAR apex     10/12
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 388/388
+        COLLINEAR apex     12/12
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 45}
+        predicted-lost that SURVIVED     : {'only_v-1': 2}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 12
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=4 j=2 gained=['(299999999/100000000,-1/100000000)']
+        P=[(-3,4), (-4,1), (-1,-4), (-1,-2), (3,0), (4,1), (3,4)]
+        Q=[(0,1), (-3,-6), (3,0), (-1,-7), (2,-6), (5,0), (5,1)]
+      GAIN v=5 j=2 gained=['(1/100000000,-2)']
+        P=[(-3,-3), (0,4), (3,3), (4,0), (1,2), (0,-2), (-1,-2)]
+        Q=[(-2,-4), (4,-2), (0,-2), (4,-1), (3,3), (0,-1), (-1,1)]
+      GAIN v=0 j=1 gained=['(-2,-299999999/100000000)']
+        P=[(-2,-3), (-2,-4), (1,0), (3,2), (1,-4), (4,2), (0,3)]
+        Q=[(2,-2), (-2,-3), (-2,1), (3,4), (3,3), (3,1), (1,0)]
+      GAIN v=5 j=1 gained=['(-2,150000001/50000000)']
+        P=[(2,1), (-2,4), (-4,1), (2,0), (-3,1), (-2,3), (-2,1)]
+        Q=[(-2,4), (-2,3), (-5,6), (-1,4), (1,3), (1,1), (-1,3)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 388/400;  dM_pt <0:2 =0:216 >0:170
+        joint (|degPts lost|, dcross) = {(0, 0): 195, (0, 1): 105, (0, 2): 45, (1, 0): 2, (1, 1): 20, (1, 2): 11, (1, 3): 7, (1, 4): 2, (2, 2): 1}
+    Q3' at the FIRST admissible e on the full ladder: 388 cases, dM_pt<0 in 9
+    Q4 A admissible 388/400, B admissible 383/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_sweep chunk=3 n=400 fam=mix seed=3000026
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 4.9s)
+    ... 50/400  match=50  admA=48  AorB=50  col=0  [6s]
+    ... 100/400  match=100  admA=98  AorB=100  col=1  [7s]
+    ... 150/400  match=150  admA=144  AorB=150  col=1  [8s]
+    ... 200/400  match=200  admA=192  AorB=200  col=1  [9s]
+    ... 250/400  match=250  admA=240  AorB=250  col=2  [10s]
+    ... 300/400  match=300  admA=288  AorB=300  col=2  [11s]
+    ... 350/400  match=350  admA=336  AorB=350  col=3  [12s]
+    ... 400/400  match=400  admA=383  AorB=400  col=4  [13s]
+  SUMMARY chunk 3 (mix), 400 instances, 13.4s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            400/400
+        non-collinear apex 396/396
+        COLLINEAR apex     4/4
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 396/396
+        COLLINEAR apex     4/4
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 52}
+        predicted-lost that SURVIVED     : {}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 17
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=2 j=2 gained=['(-3/100000000,100000001/100000000)']
+        P=[(-2,-3), (4,-2), (0,1), (3,0), (1,3), (-4,-4), (0,-4)]
+        Q=[(1,1), (-2,3), (0,1), (-6,3), (-7,7), (0,7), (-3,4)]
+      GAIN v=6 j=6 gained=['(-400000003/100000000,-100000003/100000000)']
+        P=[(-1,2), (0,-1), (1,-4), (0,-4), (-2,-1), (-2,-3), (-4,-1)]
+        Q=[(-5,-2), (-6,0), (-8,0), (-7,-5), (-1,-2), (-3,1), (-4,-1)]
+      GAIN v=2 j=2 gained=['(49999999/50000000,100000001/50000000)']
+        P=[(-1,0), (3,-1), (1,2), (3,0), (3,4), (-3,4), (-3,-4)]
+        Q=[(-3,1), (-1,4), (1,2), (-1,6), (-3,2), (-6,7), (-5,3)]
+      GAIN v=0 j=6 gained=['(300000001/100000000,200000001/50000000)']
+        P=[(3,4), (2,2), (3,-5), (-4,-2), (1,-1), (0,0), (-1,-1)]
+        Q=[(4,6), (7,4), (7,5), (13,0), (5,-1), (8,0), (3,4)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 383/400;  dM_pt <0:5 =0:208 >0:170
+        joint (|degPts lost|, dcross) = {(0, 0): 195, (0, 1): 108, (0, 2): 32, (1, 0): 5, (1, 1): 13, (1, 2): 18, (1, 3): 6, (1, 4): 5, (2, 4): 1}
+    Q3' at the FIRST admissible e on the full ladder: 383 cases, dM_pt<0 in 15
+    Q4 A admissible 383/400, B admissible 385/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_sweep chunk=4 n=400 fam=mix seed=4000029
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 5.4s)
+    ... 50/400  match=50  admA=47  AorB=50  col=0  [6s]
+    ... 100/400  match=100  admA=96  AorB=100  col=0  [8s]
+    ... 150/400  match=150  admA=143  AorB=150  col=1  [9s]
+    ... 200/400  match=200  admA=190  AorB=199  col=1  [10s]
+    ... 250/400  match=250  admA=236  AorB=249  col=1  [11s]
+    ... 300/400  match=299  admA=285  AorB=299  col=5  [12s]
+    ... 350/400  match=349  admA=332  AorB=349  col=6  [13s]
+    ... 400/400  match=398  admA=378  AorB=399  col=8  [14s]
+  SUMMARY chunk 4 (mix), 400 instances, 14.0s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            398/400
+        non-collinear apex 392/392
+        COLLINEAR apex     6/8
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 392/392
+        COLLINEAR apex     8/8
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 48}
+        predicted-lost that SURVIVED     : {'only_v-1': 2}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 22
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=5 j=5 gained=['(-4,-49999999/50000000)']
+        P=[(-5,-3), (-1,-4), (5,0), (1,-1), (3,1), (-4,-1), (-4,-3)]
+        Q=[(-8,0), (-8,2), (-10,4), (-5,4), (-4,3), (-4,-1), (-2,-6)]
+      GAIN v=2 j=5 gained=['(-5,500000003/100000000)']
+        P=[(2,3), (-1,2), (-5,5), (-5,2), (-4,-2), (1,-1), (5,-1)]
+        Q=[(5,11), (4,13), (1,6), (-3,6), (-5,12), (-5,5), (3,4)]
+      GAIN v=1 j=5 gained=['(-100000001/100000000,-1)']
+        P=[(-2,-3), (-1,-1), (0,-1), (2,-3), (0,0), (-4,4), (-4,3)]
+        Q=[(-5,-8), (-6,-2), (-6,-5), (-8,-8), (-8,-1), (-1,-1), (-3,-8)]
+      GAIN v=0 j=6 gained=['(-25000001/25000000,1)']
+        P=[(-1,1), (3,1), (-1,4), (5,5), (-2,5), (-5,1), (4,-2)]
+        Q=[(-6,1), (-4,-1), (-9,3), (1,3), (-1,-3), (-2,0), (-1,1)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 378/400;  dM_pt <0:6 =0:213 >0:159
+        joint (|degPts lost|, dcross) = {(0, 0): 195, (0, 1): 98, (0, 2): 40, (1, 0): 6, (1, 1): 18, (1, 2): 15, (1, 3): 4, (1, 4): 1, (2, 4): 1}
+    Q3' at the FIRST admissible e on the full ladder: 378 cases, dM_pt<0 in 23
+    Q4 A admissible 378/400, B admissible 388/400, A-or-B 399/400
+    BREAK[NOAB:hardM] v=0 j=0 col=False match=True A=False B=False
+      P=[(1,-1), (0,-3), (0,0), (-1,-3), (2,-5), (5,-1), (2,-4)]
+      Q=[(1,-1), (4,5), (2,0), (0,-3), (5,-3), (4,7), (0,2)]
+      predicted-lost surv={} unpredicted-lost={} lost=[]
+
+------------------------------------------------------------------------------
+slide_sweep chunk=5 n=400 fam=mix seed=5000032
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 5.9s)
+    ... 50/400  match=50  admA=49  AorB=50  col=1  [7s]
+    ... 100/400  match=100  admA=96  AorB=100  col=1  [8s]
+    ... 150/400  match=150  admA=144  AorB=150  col=1  [10s]
+    ... 200/400  match=200  admA=192  AorB=200  col=2  [11s]
+    ... 250/400  match=250  admA=238  AorB=250  col=4  [12s]
+    ... 300/400  match=300  admA=285  AorB=300  col=5  [13s]
+    ... 350/400  match=350  admA=334  AorB=350  col=8  [15s]
+    ... 400/400  match=399  admA=382  AorB=400  col=10  [16s]
+  SUMMARY chunk 5 (mix), 400 instances, 15.8s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            399/400
+        non-collinear apex 390/390
+        COLLINEAR apex     9/10
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 390/390
+        COLLINEAR apex     10/10
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 55}
+        predicted-lost that SURVIVED     : {'only_v-1': 1}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 18
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=6 j=3 gained=['(-100000003/100000000,-300000003/100000000)']
+        P=[(2,0), (-2,1), (-4,1), (-3,-2), (-2,-3), (-3,-4), (-1,-3)]
+        Q=[(2,4), (4,-2), (3,-3), (-1,-3), (-2,-4), (-1,2), (1,3)]
+      GAIN v=3 j=3 gained=['(-49999999/50000000,4)']
+        P=[(-4,-1), (0,-2), (2,2), (-1,4), (-3,4), (-4,0), (-3,0)]
+        Q=[(1,-1), (2,-1), (0,4), (-1,4), (-1,-4), (0,-4), (1,-3)]
+      GAIN v=1 j=3 gained=['(-80000001/20000000,-4)']
+        P=[(-1,0), (-4,-4), (1,-4), (1,-2), (2,-3), (3,4), (-1,2)]
+        Q=[(-8,-7), (-9,-3), (-3,1), (-4,-4), (-7,-4), (-8,-8), (-7,-3)]
+      GAIN v=0 j=6 gained=['(-1,-75000001/25000000)']
+        P=[(-1,-3), (-1,1), (4,2), (1,-2), (4,0), (4,-2), (1,-4)]
+        Q=[(-1,-5), (-2,-6), (-2,-9), (-4,-10), (-7,-6), (-3,-5), (-1,-3)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 382/400;  dM_pt <0:2 =0:206 >0:174
+        joint (|degPts lost|, dcross) = {(0, 0): 186, (0, 1): 106, (0, 2): 38, (1, 0): 2, (1, 1): 20, (1, 2): 18, (1, 3): 7, (1, 4): 4, (2, 5): 1}
+      dM_pt<0 [hardM] v=0 j=6 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-2,1), (3,3), (-1,1), (0,1), (2,-3), (-4,-3), (1,-2)]
+        Q=[(-1,1), (-1,0), (0,2), (4,0), (-4,7), (-3,6), (-2,1)]
+        lost=['(-1,0)']
+      dM_pt<0 [hardP] v=4 j=0 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-2,-3), (-2,5), (-5,-4), (5,-5), (5,4), (1,4), (4,0)]
+        Q=[(5,4), (4,9), (7,4), (6,-1), (3,2), (5,2), (1,7)]
+        lost=['(5,2)']
+    Q3' at the FIRST admissible e on the full ladder: 382 cases, dM_pt<0 in 7
+    Q4 A admissible 382/400, B admissible 377/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_sweep chunk=6 n=400 fam=mix seed=6000035
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 5.7s)
+    ... 50/400  match=50  admA=45  AorB=50  col=0  [7s]
+    ... 100/400  match=100  admA=93  AorB=100  col=1  [8s]
+    ... 150/400  match=150  admA=141  AorB=150  col=1  [9s]
+    ... 200/400  match=200  admA=190  AorB=200  col=4  [10s]
+    ... 250/400  match=250  admA=240  AorB=250  col=6  [11s]
+    ... 300/400  match=300  admA=289  AorB=300  col=8  [13s]
+    ... 350/400  match=350  admA=339  AorB=350  col=8  [14s]
+    ... 400/400  match=400  admA=385  AorB=398  col=8  [15s]
+  SUMMARY chunk 6 (mix), 400 instances, 14.9s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            400/400
+        non-collinear apex 392/392
+        COLLINEAR apex     8/8
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 392/392
+        COLLINEAR apex     8/8
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 47}
+        predicted-lost that SURVIVED     : {}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 15
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=2 j=6 gained=['(-75000001/25000000,-3)']
+        P=[(-5,-2), (-2,-2), (-3,-3), (1,-3), (3,1), (4,5), (-1,3)]
+        Q=[(1,0), (0,2), (-3,5), (-6,7), (-5,0), (-4,-3), (-3,-3)]
+      GAIN v=3 j=2 gained=['(-99999999/50000000,-2)']
+        P=[(4,-2), (-1,0), (-4,0), (-2,-2), (-4,-2), (-1,-3), (4,-4)]
+        Q=[(0,1), (1,-2), (-2,-2), (1,-4), (5,4), (-2,2), (-3,-2)]
+      GAIN v=3 j=2 gained=['(399999999/100000000,1)']
+        P=[(4,-3), (0,-1), (3,5), (4,1), (5,1), (2,0), (1,0)]
+        Q=[(4,-4), (-3,-5), (4,1), (-1,1), (-1,-1), (-4,-4), (-4,-6)]
+      GAIN v=3 j=0 gained=['(-2,-50000001/25000000)']
+        P=[(5,-1), (5,-3), (1,0), (-2,-2), (-2,2), (-3,2), (-2,5)]
+        Q=[(-2,-2), (-2,-7), (-5,-7), (-2,-8), (-10,-9), (-6,-7), (-3,-2)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 385/400;  dM_pt <0:4 =0:236 >0:145
+        joint (|degPts lost|, dcross) = {(0, 0): 215, (0, 1): 97, (0, 2): 28, (1, 0): 4, (1, 1): 21, (1, 2): 11, (1, 3): 8, (1, 4): 1}
+      dM_pt<0 [hardP] v=0 j=5 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-3,1), (-2,0), (2,-4), (2,2), (1,4), (-4,3), (1,3)]
+        Q=[(-1,2), (-4,-2), (-7,-6), (-6,-2), (-8,-2), (-3,1), (-5,-1)]
+        lost=['(-1,2)']
+      dM_pt<0 [hardP] v=0 j=4 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-1,5), (-3,2), (-2,0), (0,0), (-2,-3), (0,-1), (2,5)]
+        Q=[(3,-4), (5,-2), (1,5), (-1,4), (-1,5), (-5,6), (0,-3)]
+        lost=['(1,5)']
+      dM_pt<0 [hardP] v=0 j=1 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(1,-5), (0,2), (-1,4), (-4,5), (0,5), (3,0), (3,-1)]
+        Q=[(-2,-7), (1,-5), (-5,-2), (2,-3), (0,-3), (3,-8), (-1,-8)]
+        lost=['(2,-3)']
+      dM_pt<0 [hardP] v=2 j=6 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(2,-4), (0,-4), (-3,-4), (-3,1), (-2,3), (0,-1), (0,0)]
+        Q=[(-6,-4), (-3,-5), (0,-5), (1,-2), (-2,-4), (-6,3), (-3,-4)]
+        lost=['(-2,-4)']
+      NO-A-NO-B [hardP] v=0 j=2 col=False reasonsA={'simple': 0, 'fin': 11, 'coinc': 0} reasonsB={'simple': 0, 'fin': 11, 'coinc': 0}
+        P=[(4,5), (5,4), (1,2), (4,1), (-3,-5), (-1,-2), (-1,5)]
+        Q=[(5,1), (7,5), (4,5), (0,9), (0,5), (1,-1), (6,-1)]
+      NO-A-NO-B [hardP] v=1 j=5 col=False reasonsA={'simple': 0, 'fin': 11, 'coinc': 0} reasonsB={'simple': 0, 'fin': 11, 'coinc': 1}
+        P=[(0,3), (4,1), (4,-2), (-2,1), (0,-4), (-3,-3), (-2,3)]
+        Q=[(2,2), (7,-2), (8,2), (7,1), (6,0), (4,1), (4,2)]
+    Q3' at the FIRST admissible e on the full ladder: 385 cases, dM_pt<0 in 13
+    Q4 A admissible 385/400, B admissible 377/400, A-or-B 398/400
+
+==============================================================================
+slide_deep.py -- A-or-B counterexamples, verified at e down to 1e-40
+==============================================================================
+
+C1: v=0 j=2
+  P=[(4,5), (5,4), (1,2), (4,1), (-3,-5), (-1,-2), (-1,5)]
+  Q=[(5,1), (7,5), (4,5), (0,9), (0,5), (1,-1), (6,-1)]
+  simple P/Q = True/True, (Fin) = True, P[v]==Q[j] = True, |coincSet| = 1
+  apex collinear = False
+  slide A: E=(-1,1)  admissible on 0/100 of the fine ladder; failures {'simple': 0, 'fin': 100, 'coinc': 0}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(0, 2, '(39999999999999999999999999999999999999999/10000000000000000000000000000000000000000,50000000000000000000000000000000000000001/10000000000000000000000000000000000000000)', '(4,5)')]
+  slide B: E=(5,0)  admissible on 0/100 of the fine ladder; failures {'simple': 0, 'fin': 100, 'coinc': 0}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(6, 1, '(4,5)', '(8000000000000000000000000000000000000001/2000000000000000000000000000000000000000,5)')]
+    slide A: Q-sides COLLINEAR with P-side 0's line: [2]
+    slide B: Q-sides COLLINEAR with P-side 6's line: [1]
+
+C2: v=1 j=5
+  P=[(0,3), (4,1), (4,-2), (-2,1), (0,-4), (-3,-3), (-2,3)]
+  Q=[(2,2), (7,-2), (8,2), (7,1), (6,0), (4,1), (4,2)]
+  simple P/Q = True/True, (Fin) = True, P[v]==Q[j] = True, |coincSet| = 1
+  apex collinear = False
+  slide A: E=(0,3)  admissible on 0/100 of the fine ladder; failures {'simple': 0, 'fin': 100, 'coinc': 0}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(1, 5, '(4,10000000000000000000000000000000000000003/10000000000000000000000000000000000000000)', '(4,1)')]
+  slide B: E=(4,-2)  admissible on 0/100 of the fine ladder; failures {'simple': 0, 'fin': 100, 'coinc': 1}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(0, 4, '(4,1)', '(10000000000000000000000000000000000000001/2500000000000000000000000000000000000000,4999999999999999999999999999999999999999/5000000000000000000000000000000000000000)')]
+    slide A: Q-sides COLLINEAR with P-side 1's line: [5]
+    slide B: Q-sides COLLINEAR with P-side 0's line: [4]
+
+C3: v=0 j=0
+  P=[(1,-1), (0,-3), (0,0), (-1,-3), (2,-5), (5,-1), (2,-4)]
+  Q=[(1,-1), (4,5), (2,0), (0,-3), (5,-3), (4,7), (0,2)]
+  simple P/Q = True/True, (Fin) = True, P[v]==Q[j] = True, |coincSet| = 2
+  apex collinear = False
+  slide A: E=(1,2)  admissible on 0/100 of the fine ladder; failures {'simple': 0, 'fin': 100, 'coinc': 0}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(0, 0, '(10000000000000000000000000000000000000001/10000000000000000000000000000000000000000,-4999999999999999999999999999999999999999/5000000000000000000000000000000000000000)', '(1,-1)')]
+  slide B: E=(-1,3)  admissible on 0/100 of the fine ladder; failures {'simple': 1, 'fin': 100, 'coinc': 1}
+    overlapping (P-side,Q-side) pairs at e=1e-40: [(6, 6, '(1,-1)', '(9999999999999999999999999999999999999999/10000000000000000000000000000000000000000,-9999999999999999999999999999999999999997/10000000000000000000000000000000000000000)')]
+    slide A: Q-sides COLLINEAR with P-side 0's line: [0]
+    slide B: Q-sides COLLINEAR with P-side 6's line: [6]
+
+CONCLUSION: every (Fin) failure above is e-INDEPENDENT -- the new side v
+lies on the OLD side v's line, so an overlap with a collinear Q-side is
+present for every e>0 and no shrinking of e removes it.
+
+------------------------------------------------------------------------------
+slide_sweep chunk=11 n=150 fam=col seed=11000050
+  corpus: 150 instances  col=150   (gen 3.1s)
+    ... 50/150  match=50  admA=50  AorB=50  col=50  [4s]
+    ... 100/150  match=100  admA=100  AorB=100  col=100  [5s]
+    ... 150/150  match=149  admA=150  AorB=150  col=150  [6s]
+  SUMMARY chunk 11 (col), 150 instances, 6.3s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            149/150
+        non-collinear apex 0/0
+        COLLINEAR apex     149/150
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            150/150
+        non-collinear apex 0/0
+        COLLINEAR apex     150/150
+        outcome stable across e=1e-8,1e-10,1e-12: 150/150
+        labels of points ACTUALLY lost   : {}
+        predicted-lost that SURVIVED     : {'only_v-1': 1}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 0
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+    Q2 old apex still a degPt after small-e slide A: 150/150   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 150/150;  dM_pt <0:0 =0:150 >0:0
+        joint (|degPts lost|, dcross) = {(0, 0): 150}
+    Q3' at the FIRST admissible e on the full ladder: 150 cases, dM_pt<0 in 0
+    Q4 A admissible 150/150, B admissible 150/150, A-or-B 150/150
+
+------------------------------------------------------------------------------
+slide_advers kind=colP n=25 seed=7
+  built 25 instances from 838 random P draws (64 Q-construction attempts)   [1.3s]
+  *** H1 REFUTED  v=6 j=5 collinear=True
+      P=[(2,-5), (-1,-2), (1,3), (-2,-1), (-1,4), (2,4), (2,2)]
+      Q=[(-5,-2), (-2,3), (2,3), (5,4), (5,3), (2,2), (5,-5)]
+      degPts=['(1,3)', '(2,2)', '(2,3)']
+      predicted lost (suppP=={5}) = ['(2,3)']
+      ACTUALLY lost at e=1e-12          = []
+      new apex = (2,2000000000007/1000000000000), admissible=True
+  *** H1 REFUTED  v=2 j=2 collinear=True
+      P=[(0,5), (-3,5), (-3,-2), (-3,-5), (3,-1), (3,4), (-2,4)]
+      Q=[(-3,3), (-5,4), (-3,-2), (1,3), (6,-6), (5,1), (-2,6)]
+      degPts=['(-3,-2)', '(-3,3)']
+      predicted lost (suppP=={1}) = ['(-3,3)']
+      ACTUALLY lost at e=1e-12          = []
+      new apex = (-3,-1999999999997/1000000000000), admissible=True
+  *** H1 REFUTED  v=1 j=3 collinear=True
+      P=[(0,1), (2,3), (4,5), (1,-5), (-1,0), (-2,1), (-5,3)]
+      Q=[(6,-4), (1,5), (-5,6), (2,3), (4,-1), (1,2), (-5,5)]
+      degPts=['(1,2)', '(2,3)']
+      predicted lost (suppP=={0}) = ['(1,2)']
+      ACTUALLY lost at e=1e-12          = []
+      new apex = (999999999999/500000000000,1499999999999/500000000000), admissible=True
+  *** H1 REFUTED  v=6 j=4 collinear=True
+      P=[(3,-5), (3,-2), (5,3), (4,3), (-2,5), (0,1), (2,-3)]
+      Q=[(-1,5), (4,2), (2,-2), (4,1), (2,-3), (-6,-2), (1,-1)]
+      degPts=['(1,-1)', '(2,-3)']
+      predicted lost (suppP=={5}) = ['(1,-1)']
+      ACTUALLY lost at e=1e-12          = []
+      new apex = (1999999999999/1000000000000,-1499999999999/500000000000), admissible=True
+    ... 20/25  H1=0 H2=20 [1s]
+  SUMMARY kind=colP: 25 instances
+    H1 (unqualified 'lost == suppP=={v-1}')      : 0/25
+    H2 (refined, empty when the apex is collinear): 25/25
+    slide A admissible at e=1e-12 : 25/25
+    old apex still a degPt        : 25/25
+    dM_pt  <0:0  =0:25  >0:0
+    A ok 25, B ok 25, A-or-B 25/25
+
+------------------------------------------------------------------------------
+slide_advers kind=both n=40 seed=11
+  built 40 instances from 288 random P draws (219 Q-construction attempts)   [0.9s]
+    ... 20/40  H1=20 H2=20 [1s]
+    ... 40/40  H1=40 H2=40 [1s]
+  SUMMARY kind=both: 40 instances
+    H1 (unqualified 'lost == suppP=={v-1}')      : 40/40
+    H2 (refined, empty when the apex is collinear): 40/40
+    slide A admissible at e=1e-12 : 36/40
+    old apex still a degPt        : 40/40
+    dM_pt  <0:5  =0:12  >0:19
+    A ok 36, B ok 39, A-or-B 40/40
+
+------------------------------------------------------------------------------
+slide_ab fam=both n=200 chunk=1 seed=7778884
+  built from 1272 P draws
+  corpus 200  [3.6s]
+    ... 50/200 someOK=49 neither=0 [4s]
+    ... 100/200 someOK=98 neither=0 [4s]
+    ... 150/200 someOK=148 neither=0 [5s]
+    ... 200/200 someOK=195 neither=0 [5s]
+  SUMMARY fam=both chunk=1: 200 instances, 5.2s
+    admissible somewhere on the ladder:  A 186, B 196,  A-or-B 200/200   NEITHER 0
+    at e=1e-12: A admissible 186 of which dM_pt<0 in 12;  B admissible 196 of which dM_pt<0 in 25
+    'some slide is admissible AND M_pt-non-decreasing' : 195/200
+    when A is admissible but loses M_pt, B saves it in 11/12
+    !! no admissible non-decreasing slide  [both] v=6 j=5 col=False
+       P=[(5,-5), (3,-4), (2,-5), (3,-3), (2,-2), (-5,-5), (3,-1)]
+       Q=[(4,-3), (1,-2), (-6,0), (-6,6), (1,3), (3,-1), (-2,2)]
+       A: adm_small=False adm_any=False dM=2 dDeg=0 dCross=2 fail={'simple': 0, 'fin': 11, 'coinc': 1}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+    !! no admissible non-decreasing slide  [both] v=6 j=0 col=False
+       P=[(3,5), (-4,0), (4,-2), (-5,-1), (-5,0), (-5,2), (1,5)]
+       Q=[(1,5), (-2,5), (-3,3), (2,-6), (6,-4), (2,5), (0,2)]
+       A: adm_small=False adm_any=False dM=1 dDeg=0 dCross=1 fail={'simple': 0, 'fin': 11, 'coinc': 0}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+    !! no admissible non-decreasing slide  [both] v=0 j=6 col=False
+       P=[(1,1), (-5,4), (-4,-2), (0,-1), (1,0), (3,3), (3,5)]
+       Q=[(5,-1), (2,3), (-1,2), (1,4), (-4,6), (2,-6), (1,1)]
+       A: adm_small=False adm_any=False dM=1 dDeg=0 dCross=1 fail={'simple': 4, 'fin': 11, 'coinc': 0}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 2, 'fin': 0, 'coinc': 0}
+    !! no admissible non-decreasing slide  [both] v=1 j=0 col=False
+       P=[(2,0), (5,0), (5,5), (3,5), (-5,4), (-2,1), (0,-4)]
+       Q=[(5,0), (3,2), (5,1), (2,6), (3,0), (-4,1), (5,-3)]
+       A: adm_small=False adm_any=False dM=0 dDeg=0 dCross=0 fail={'simple': 0, 'fin': 11, 'coinc': 0}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+    !! A<0 and B does not save  [both] v=4 j=6 col=False
+       P=[(-4,1), (0,2), (3,5), (-5,3), (-5,0), (1,-2), (1,0)]
+       Q=[(2,1), (-2,-1), (5,-2), (0,6), (-5,2), (2,2), (-5,0)]
+       A: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+    !! no admissible non-decreasing slide  [both] v=4 j=6 col=False
+       P=[(-4,1), (0,2), (3,5), (-5,3), (-5,0), (1,-2), (1,0)]
+       Q=[(2,1), (-2,-1), (5,-2), (0,6), (-5,2), (2,2), (-5,0)]
+       A: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+       B: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+
+==============================================================================
+slide_star.py -- the M_pt-decreasing star witness, and the slide-B mirror
+==============================================================================
+P=[(-4,1), (0,2), (3,5), (-5,3), (-5,0), (1,-2), (1,0)]
+Q=[(2,1), (-2,-1), (5,-2), (0,6), (-5,2), (2,2), (-5,0)]
+  simpleP=True simpleQ=True (Fin)=True  P[4]==Q[6]=True |coincSet|=1  apex collinear=False
+  crossPairs=[(1, 2), (2, 2), (2, 3), (5, 1), (6, 0), (6, 5), (6, 6)]  |crossPairs|=7
+  degPt (-5,0)  suppP=[3, 4]  Pvtx=True  Qvtx=True
+  degPt (-5,2)  suppP=[3]  Pvtx=False  Qvtx=True
+  degPt (-2,-1)  suppP=[4]  Pvtx=False  Qvtx=True
+  degPt (0,2)  suppP=[0, 1]  Pvtx=True  Qvtx=False
+  M_pt = 7 + 4 = 11
+  slide A E=(-6,2) e=1/1000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-5,2)'] gained=[] dCross=0 dM_pt=-1
+  slide A E=(-6,2) e=1/1000000000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-5,2)'] gained=[] dCross=0 dM_pt=-1
+  slide A E=(-6,2) e=1/1000000000000000000000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-5,2)'] gained=[] dCross=0 dM_pt=-1
+  slide B E=(0,-3) e=1/1000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-2,-1)'] gained=[] dCross=0 dM_pt=-1
+  slide B E=(0,-3) e=1/1000000000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-2,-1)'] gained=[] dCross=0 dM_pt=-1
+  slide B E=(0,-3) e=1/1000000000000000000000000: adm=True (simple=True fin=True coinc 1->0) lost=['(-2,-1)'] gained=[] dCross=0 dM_pt=-1
+
+-- MIRROR HYPOTHESIS for slide B: lost == (empty if the apex is a
+   straight pass-through, else {X in degPts : suppP(X) == {v}}) --
+  fam=mix: mirror holds 400/400; old apex still a degPt after slide B 400/400 [6s]
+  fam=both: mirror holds 250/250; old apex still a degPt after slide B 250/250 [5s]
+  fam=colP: mirror holds 120/120; old apex still a degPt after slide B 120/120 [6s]
+
+------------------------------------------------------------------------------
+slide_sweep chunk=7 n=400 fam=mix seed=7000038
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 6.3s)
+    ... 50/400  match=50  admA=48  AorB=50  col=2  [7s]
+    ... 100/400  match=100  admA=95  AorB=100  col=3  [9s]
+    ... 150/400  match=150  admA=143  AorB=150  col=4  [10s]
+    ... 200/400  match=200  admA=193  AorB=200  col=5  [11s]
+    ... 250/400  match=250  admA=238  AorB=250  col=7  [12s]
+    ... 300/400  match=300  admA=287  AorB=300  col=8  [13s]
+    ... 350/400  match=350  admA=337  AorB=350  col=9  [14s]
+    ... 400/400  match=397  admA=384  AorB=400  col=13  [15s]
+  SUMMARY chunk 7 (mix), 400 instances, 15.4s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            397/400
+        non-collinear apex 387/387
+        COLLINEAR apex     10/13
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 387/387
+        COLLINEAR apex     13/13
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 42}
+        predicted-lost that SURVIVED     : {'only_v-1': 3}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 16
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=1 j=5 gained=['(-500000009/100000000,500000001/100000000)']
+        P=[(-4,-4), (-5,5), (4,4), (-4,0), (5,1), (2,-2), (2,-4)]
+        Q=[(-6,8), (-10,11), (-10,14), (-15,11), (-14,6), (-5,5), (-11,9)]
+      GAIN v=2 j=5 gained=['(200000001/50000000,25000001/25000000)']
+        P=[(-4,0), (0,-4), (4,1), (2,-3), (5,1), (2,3), (0,3)]
+        Q=[(1,6), (-1,8), (7,6), (5,6), (5,3), (4,1), (2,6)]
+      GAIN v=0 j=6 gained=['(-49999999/50000000,-4)']
+        P=[(-1,-4), (-3,-4), (-2,3), (-2,4), (3,1), (-2,-2), (1,-3)]
+        Q=[(4,-4), (4,-3), (3,-3), (3,-1), (-1,1), (-2,-3), (-1,-4)]
+      GAIN v=2 j=3 gained=['(100000001/100000000,-150000001/50000000)']
+        P=[(4,-4), (-1,4), (1,-3), (0,-1), (-2,4), (-4,-2), (-3,-2)]
+        Q=[(7,-6), (8,-2), (4,-2), (1,-3), (3,-7), (2,-4), (4,-3)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 384/400;  dM_pt <0:5 =0:222 >0:157
+        joint (|degPts lost|, dcross) = {(0, 0): 208, (0, 1): 94, (0, 2): 42, (1, 0): 5, (1, 1): 14, (1, 2): 11, (1, 3): 5, (1, 4): 5}
+      dM_pt<0 [hardP] v=1 j=0 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-3,0), (-1,-2), (2,-4), (3,-3), (3,-2), (-1,-1), (0,-1)]
+        Q=[(-1,-2), (0,0), (2,-5), (0,1), (-2,-1), (-5,3), (-3,-5)]
+        lost=['(-2,-1)']
+      dM_pt<0 [hardP] v=0 j=6 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(1,3), (4,1), (1,2), (4,-3), (2,-2), (0,-5), (-3,5)]
+        Q=[(0,9), (-1,10), (-9,6), (-7,6), (-1,4), (-4,3), (1,3)]
+        lost=['(-1,4)']
+      dM_pt<0 [hardP] v=1 j=3 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-3,-1), (-3,4), (4,1), (4,-1), (1,-3), (1,-1), (-2,0)]
+        Q=[(2,8), (-1,7), (-5,8), (-3,4), (-1,4), (-3,2), (0,3)]
+        lost=['(-3,2)']
+      dM_pt<0 [hardP] v=4 j=3 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(2,-2), (-3,4), (-3,3), (0,0), (-3,-3), (4,-4), (4,1)]
+        Q=[(-7,1), (-7,-3), (-5,-6), (-3,-3), (-3,-4), (-2,-2), (0,-2)]
+        lost=['(-2,-2)']
+      dM_pt<0 [hardP] v=0 j=3 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-3,-3), (-4,-1), (-3,4), (1,4), (2,4), (4,4), (3,3)]
+        Q=[(1,2), (0,0), (-3,2), (-3,-3), (-4,0), (-3,5), (0,3)]
+        lost=['(0,0)']
+    Q3' at the FIRST admissible e on the full ladder: 384 cases, dM_pt<0 in 16
+    Q4 A admissible 384/400, B admissible 383/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_sweep chunk=8 n=400 fam=mix seed=8000041
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 5.4s)
+    ... 50/400  match=50  admA=48  AorB=50  col=0  [7s]
+    ... 100/400  match=99  admA=94  AorB=100  col=1  [8s]
+    ... 150/400  match=149  admA=139  AorB=150  col=2  [9s]
+    ... 200/400  match=197  admA=186  AorB=200  col=7  [10s]
+    ... 250/400  match=247  admA=235  AorB=250  col=9  [11s]
+    ... 300/400  match=297  admA=283  AorB=300  col=9  [12s]
+    ... 350/400  match=346  admA=329  AorB=350  col=10  [13s]
+    ... 400/400  match=395  admA=377  AorB=400  col=12  [14s]
+  SUMMARY chunk 8 (mix), 400 instances, 14.3s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            395/400
+        non-collinear apex 388/388
+        COLLINEAR apex     7/12
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 388/388
+        COLLINEAR apex     12/12
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 50}
+        predicted-lost that SURVIVED     : {'only_v-1': 5}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 23
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=5 j=0 gained=['(149999999/50000000,-300000001/100000000)']
+        P=[(5,1), (3,3), (1,3), (0,5), (-5,-2), (3,-3), (5,-2)]
+        Q=[(3,-3), (1,-2), (-3,-3), (-4,-1), (2,2), (4,-6), (1,-4)]
+      GAIN v=4 j=3 gained=['(3,200000001/50000000)']
+        P=[(-2,0), (2,0), (0,4), (2,1), (3,4), (3,2), (2,-1)]
+        Q=[(0,0), (2,2), (7,8), (3,4), (3,5), (1,6), (1,2)]
+      GAIN v=1 j=6 gained=['(-299999999/100000000,100000003/100000000)']
+        P=[(-3,-3), (-3,1), (-4,-2), (-5,0), (-4,2), (-3,3), (5,-3)]
+        Q=[(-8,5), (-6,-2), (-9,-2), (-10,-5), (0,-5), (-2,4), (-3,1)]
+      GAIN v=5 j=3 gained=['(75000001/25000000,4)']
+        P=[(1,2), (-1,0), (-4,2), (1,-4), (4,-4), (3,4), (-1,4)]
+        Q=[(0,10), (5,9), (5,4), (3,4), (-3,7), (-1,9), (-3,12)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 377/400;  dM_pt <0:6 =0:208 >0:163
+        joint (|degPts lost|, dcross) = {(0, 0): 189, (0, 1): 108, (0, 2): 33, (1, 0): 6, (1, 1): 19, (1, 2): 15, (1, 3): 4, (1, 4): 3}
+      dM_pt<0 [hardP] v=1 j=2 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-5,-4), (-5,5), (-2,4), (0,-1), (3,3), (3,0), (5,-3)]
+        Q=[(-5,2), (-2,5), (-5,5), (1,8), (5,5), (0,7), (4,4)]
+        lost=['(-5,2)']
+      dM_pt<0 [hardP] v=2 j=1 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(4,0), (1,1), (3,-1), (3,-2), (-1,2), (3,4), (4,2)]
+        Q=[(4,1), (3,-1), (4,-3), (-3,-3), (2,0), (-4,-3), (1,4)]
+        lost=['(2,0)']
+      dM_pt<0 [hardP] v=6 j=3 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-1,0), (1,1), (-1,4), (-4,1), (0,-1), (-4,-4), (4,-4)]
+        Q=[(1,-2), (1,-4), (3,-3), (4,-4), (2,2), (-2,3), (-1,-5)]
+        lost=['(1,-4)']
+      dM_pt<0 [hardP] v=6 j=2 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-5,-1), (-3,0), (-5,1), (0,3), (-4,-3), (5,-4), (-4,-4)]
+        Q=[(-3,-4), (-5,-3), (-4,-4), (-8,-1), (-6,-2), (-12,6), (-11,6)]
+        lost=['(-3,-4)']
+      dM_pt<0 [hardP] v=5 j=1 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(3,0), (4,2), (3,5), (-4,-2), (-3,-5), (1,-3), (4,-5)]
+        Q=[(2,-9), (1,-3), (6,-9), (4,-11), (1,-9), (0,-12), (-1,-4)]
+        lost=['(-1,-4)']
+    Q3' at the FIRST admissible e on the full ladder: 377 cases, dM_pt<0 in 12
+    Q4 A admissible 377/400, B admissible 377/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_sweep chunk=9 n=400 fam=mix seed=9000044
+  corpus: 400 instances  hardM=100 hardN=100 hardP=100 plain=100   (gen 5.3s)
+    ... 50/400  match=50  admA=48  AorB=50  col=0  [6s]
+    ... 100/400  match=100  admA=95  AorB=100  col=3  [7s]
+    ... 150/400  match=150  admA=142  AorB=150  col=3  [9s]
+    ... 200/400  match=200  admA=189  AorB=200  col=6  [10s]
+    ... 250/400  match=250  admA=234  AorB=250  col=6  [11s]
+    ... 300/400  match=299  admA=284  AorB=300  col=8  [12s]
+    ... 350/400  match=348  admA=329  AorB=350  col=9  [13s]
+    ... 400/400  match=398  admA=378  AorB=400  col=9  [14s]
+  SUMMARY chunk 9 (mix), 400 instances, 14.1s
+    Q1 hypothesis 'lost == {X : suppP(X)=={v-1}}' at e<=1e-8:
+        overall            398/400
+        non-collinear apex 391/391
+        COLLINEAR apex     7/9
+    Q1' REFINED H2 'lost == (empty if apex collinear else {X:suppP=={v-1}})':
+        overall            400/400
+        non-collinear apex 391/391
+        COLLINEAR apex     9/9
+        outcome stable across e=1e-8,1e-10,1e-12: 400/400
+        labels of points ACTUALLY lost   : {'only_v-1': 56}
+        predicted-lost that SURVIVED     : {'only_v-1': 2}
+        lost but NOT predicted           : {}
+        instances with a GAINED degPt    : 22
+        instances with an UNSTABLE outcome across the 3 rungs: 0
+      GAIN v=4 j=0 gained=['(-3,75000001/25000000)']
+        P=[(-1,-4), (2,-3), (-1,0), (2,-2), (-3,3), (-3,-1), (0,-3)]
+        Q=[(-3,3), (1,6), (1,0), (3,6), (2,7), (-1,5), (-3,6)]
+      GAIN v=4 j=4 gained=['(299999999/100000000,199999999/100000000)']
+        P=[(-5,3), (-4,0), (2,-1), (-2,2), (3,2), (4,3), (-3,3)]
+        Q=[(-3,-6), (-1,-4), (-1,-3), (1,0), (3,2), (-1,1), (-1,2)]
+      GAIN v=6 j=4 gained=['(-99999999/100000000,100000001/100000000)']
+        P=[(-2,0), (-3,-1), (-4,-3), (-4,4), (3,3), (-3,3), (-1,1)]
+        Q=[(-6,2), (-6,9), (1,6), (2,4), (-1,1), (-5,1), (-5,4)]
+      GAIN v=2 j=0 gained=['(-100000001/50000000,3)']
+        P=[(-4,0), (-3,1), (-2,3), (0,3), (4,4), (2,1), (-4,-1)]
+        Q=[(-2,3), (-4,3), (-8,1), (-7,3), (-6,3), (-4,5), (-2,4)]
+    Q2 old apex still a degPt after small-e slide A: 400/400   (instances with a bad e anywhere on the ladder: 0)
+    Q3 admissible small-e slide A: 378/400;  dM_pt <0:7 =0:205 >0:166
+        joint (|degPts lost|, dcross) = {(0, 0): 187, (0, 1): 107, (0, 2): 37, (1, 0): 5, (1, 1): 17, (1, 2): 8, (1, 3): 11, (1, 4): 2, (2, 1): 2, (2, 2): 1, (2, 4): 1}
+      dM_pt<0 [hardP] v=2 j=5 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(2,4), (2,-2), (-1,4), (-2,-2), (-3,-1), (-5,5), (4,4)]
+        Q=[(0,2), (-9,9), (-10,12), (-5,12), (-7,10), (-1,4), (-2,4)]
+        lost=['(0,2)']
+      dM_pt<0 [hardP] v=4 j=1 col=False dM=-1 nlost=2 ngain=0 dcross=1
+        P=[(3,-2), (2,-1), (4,4), (-4,-1), (0,-1), (0,-4), (1,-4)]
+        Q=[(1,0), (0,-1), (2,-2), (-1,-1), (0,-2), (2,-5), (-3,-1)]
+        lost=['(-3,-1)', '(-1,-1)']
+      dM_pt<0 [hardP] v=3 j=4 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(1,-3), (-4,-4), (0,-3), (0,3), (2,4), (2,2), (1,1)]
+        Q=[(0,-1), (5,0), (-1,-4), (0,4), (0,3), (1,3), (4,1)]
+        lost=['(0,-1)']
+      dM_pt<0 [hardP] v=2 j=2 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(4,4), (3,2), (-1,0), (-3,2), (-1,-1), (-3,-4), (4,0)]
+        Q=[(-6,6), (-5,2), (-1,0), (-2,2), (1,1), (2,5), (-3,6)]
+        lost=['(1,1)']
+      dM_pt<0 [hardP] v=3 j=6 col=False dM=-1 nlost=1 ngain=0 dcross=0
+        P=[(-4,-4), (0,2), (-1,3), (4,3), (0,1), (4,-3), (0,-2)]
+        Q=[(0,0), (1,3), (-1,2), (-1,0), (2,-5), (1,-3), (4,3)]
+        lost=['(1,3)']
+    Q3' at the FIRST admissible e on the full ladder: 378 cases, dM_pt<0 in 16
+    Q4 A admissible 378/400, B admissible 377/400, A-or-B 400/400
+
+------------------------------------------------------------------------------
+slide_ab fam=mix n=400 chunk=1 seed=7778884
+  corpus 400  [5.5s]
+    ... 50/400 someOK=50 neither=0 [6s]
+    ... 100/400 someOK=100 neither=0 [6s]
+    ... 150/400 someOK=150 neither=0 [7s]
+    ... 200/400 someOK=200 neither=0 [7s]
+    ... 250/400 someOK=250 neither=0 [7s]
+    ... 300/400 someOK=300 neither=0 [8s]
+    ... 350/400 someOK=349 neither=1 [8s]
+    ... 400/400 someOK=398 neither=1 [8s]
+  SUMMARY fam=mix chunk=1: 400 instances, 8.4s
+    admissible somewhere on the ladder:  A 385, B 380,  A-or-B 399/400   NEITHER 1
+    at e=1e-12: A admissible 385 of which dM_pt<0 in 7;  B admissible 380 of which dM_pt<0 in 6
+    'some slide is admissible AND M_pt-non-decreasing' : 398/400
+    when A is admissible but loses M_pt, B saves it in 6/7
+    !! no admissible non-decreasing slide  [hardP] v=1 j=3 col=False
+       P=[(2,-2), (0,0), (0,-4), (-1,-4), (0,1), (3,0), (4,-4)]
+       Q=[(0,-1), (3,4), (0,4), (0,0), (-1,1), (-2,1), (-3,-3)]
+       A: adm_small=False adm_any=False dM=1 dDeg=1 dCross=0 fail={'simple': 3, 'fin': 11, 'coinc': 1}
+       B: adm_small=False adm_any=False dM=1 dDeg=0 dCross=1 fail={'simple': 4, 'fin': 11, 'coinc': 1}
+    !! A<0 and B does not save  [hardP] v=1 j=0 col=False
+       P=[(-4,-2), (-4,5), (-5,-4), (3,-3), (2,3), (-2,-3), (-2,0)]
+       Q=[(-4,5), (-4,7), (-2,1), (-8,4), (-4,1), (-12,4), (-11,6)]
+       A: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+       B: adm_small=False adm_any=False dM=2 dDeg=1 dCross=1 fail={'simple': 0, 'fin': 11, 'coinc': 0}
+    !! no admissible non-decreasing slide  [hardP] v=1 j=0 col=False
+       P=[(-4,-2), (-4,5), (-5,-4), (3,-3), (2,3), (-2,-3), (-2,0)]
+       Q=[(-4,5), (-4,7), (-2,1), (-8,4), (-4,1), (-12,4), (-11,6)]
+       A: adm_small=True adm_any=True dM=-1 dDeg=-1 dCross=0 fail={'simple': 0, 'fin': 0, 'coinc': 0}
+       B: adm_small=False adm_any=False dM=2 dDeg=1 dCross=1 fail={'simple': 0, 'fin': 11, 'coinc': 0}
+
+------------------------------------------------------------------------------
+slide_ab fam=mix n=400 chunk=2 seed=15557765
+  corpus 400  [4.3s]
+    ... 50/400 someOK=50 neither=0 [5s]
+    ... 100/400 someOK=100 neither=0 [5s]
+    ... 150/400 someOK=150 neither=0 [5s]
+    ... 200/400 someOK=200 neither=0 [6s]
+    ... 250/400 someOK=250 neither=0 [6s]
+    ... 300/400 someOK=300 neither=0 [7s]
+    ... 350/400 someOK=349 neither=1 [7s]
+    ... 400/400 someOK=399 neither=1 [7s]
+  SUMMARY fam=mix chunk=2: 400 instances, 7.4s
+    admissible somewhere on the ladder:  A 378, B 379,  A-or-B 399/400   NEITHER 1
+    at e=1e-12: A admissible 378 of which dM_pt<0 in 8;  B admissible 379 of which dM_pt<0 in 5
+    'some slide is admissible AND M_pt-non-decreasing' : 399/400
+    when A is admissible but loses M_pt, B saves it in 8/8
+    !! no admissible non-decreasing slide  [hardP] v=4 j=1 col=False
+       P=[(-1,-2), (0,-3), (3,1), (1,-4), (-4,-4), (-2,-2), (0,0)]
+       Q=[(-6,-4), (-4,-4), (-5,-5), (-3,-4), (-3,-8), (-3,-12), (-6,-7)]
+       A: adm_small=False adm_any=False dM=2 dDeg=0 dCross=2 fail={'simple': 0, 'fin': 11, 'coinc': 1}
+       B: adm_small=False adm_any=False dM=1 dDeg=1 dCross=0 fail={'simple': 0, 'fin': 11, 'coinc': 0}
+
+==============================================================================
+slide_final.py -- the Lean-ready statement and its two sub-lemmas
+==============================================================================
+  fam=mix n=600 [11s]
+    L1 |crossPairs| never decreases under small-e slide A : 600/600
+    L2 every lost degPt is a Q-vertex and NOT a P-vertex  : 600/600
+    L3 the only point ever GAINED is the moved apex itself: 600/600
+    HYP (apex collinear OR no degPt supported only by side v-1) holds in 525/600
+      under HYP: nothing lost 525/525;  slide A admissible 497, of those M_pt non-decreasing 497/497
+      without HYP: slide A admissible 68, of those M_pt STRICTLY DECREASES in 5
+  fam=mix n=600 [11s]
+    L1 |crossPairs| never decreases under small-e slide A : 600/600
+    L2 every lost degPt is a Q-vertex and NOT a P-vertex  : 600/600
+    L3 the only point ever GAINED is the moved apex itself: 600/600
+    HYP (apex collinear OR no degPt supported only by side v-1) holds in 534/600
+      under HYP: nothing lost 534/534;  slide A admissible 507, of those M_pt non-decreasing 507/507
+      without HYP: slide A admissible 64, of those M_pt STRICTLY DECREASES in 10
+  fam=both n=250 [6s]
+    L1 |crossPairs| never decreases under small-e slide A : 250/250
+    L2 every lost degPt is a Q-vertex and NOT a P-vertex  : 250/250
+    L3 the only point ever GAINED is the moved apex itself: 250/250
+    HYP (apex collinear OR no degPt supported only by side v-1) holds in 11/250
+      under HYP: nothing lost 11/11;  slide A admissible 11, of those M_pt non-decreasing 11/11
+      without HYP: slide A admissible 224, of those M_pt STRICTLY DECREASES in 25
+  fam=colP n=150 [8s]
+    L1 |crossPairs| never decreases under small-e slide A : 150/150
+    L2 every lost degPt is a Q-vertex and NOT a P-vertex  : 150/150
+    L3 the only point ever GAINED is the moved apex itself: 150/150
+    HYP (apex collinear OR no degPt supported only by side v-1) holds in 150/150
+      under HYP: nothing lost 150/150;  slide A admissible 150, of those M_pt non-decreasing 150/150
+      without HYP: slide A admissible 0, of those M_pt STRICTLY DECREASES in 0
+  ---- TOTAL ----
+    n=1600  L1=1600  L2=1600  L3=1600
+    HYP 1220/1600;  under HYP nothing lost 1220/1220;  under HYP+admissible M_pt non-decreasing 1165/1165
+    without HYP: 356 admissible, M_pt strictly decreases in 40
+
+================================================================================
+FINAL SUMMARY  (slide_*.py, exact rational arithmetic throughout)
+================================================================================
+Q1  MAIN HYPOTHESIS, as stated ("under slide A with small enough e>0 a point of
+    degPts is lost IFF it is supported ONLY by P-side v-1"):
+
+      CONFIRMED whenever P[v-1],P[v],P[v+1] are NOT collinear   3222/3222
+      REFUTED   when they ARE collinear                            0/25
+                (targeted family slide_advers.py --kind colP)
+
+    REFINED STATEMENT, 3515/3515 exact set equality:
+      lost = {}                                     if orientR(P[v-1],P[v],P[v+1]) = 0
+      lost = {X in degPts : suppP(X) = {v-1}}       otherwise
+    Reason for the exception: SimpleClosed forces a collinear apex to lie
+    STRICTLY BETWEEN its neighbours, so E = P[v]-P[v+1] is ANTI-parallel to
+    side v-1; side v-1 SHRINKS along its own line and side v grows by exactly
+    the same sub-segment, leaving the P-boundary UNCHANGED AS A POINT SET.
+
+    Sub-lemmas, 1600/1600 each:
+      L1  |crossPairs| never decreases under a small-e slide A.
+      L2  every lost degenerate point is a Q-vertex and never a P-vertex.
+      L3  the only point ever GAINED is the moved apex itself (it is gained
+          exactly when the open ray P[v+1]->P[v] enters a Q-side at P[v]).
+
+Q2  old apex still a degenerate point after slide A: 3515/3515 at e<=1e-8 and
+    at EVERY admissible e of the 11-rung ladder.  This is a THEOREM, not an
+    observation: new side v = [P[v]+eE, P[v+1]] with E = P[v]-P[v+1] equals
+    [P[v+1] + (1+e)(P[v]-P[v+1]), P[v+1]] and contains P[v] for every e>0;
+    P[v] = Q[j] is a Q-vertex, so it stays in degPts.  Same for slide B.
+
+Q3  M_pt CAN STRICTLY DECREASE under an admissible small-e slide A.
+    Joint (|degPts lost|, dCross) over admissible small-e slide A, mix corpus:
+    the cell (1,0) is populated -- 40 of 356 admissible instances in the
+    slide_final corpus.  "Nothing is lost" is NOT the generic truth in the
+    adversarial family, and a crossing-gain lemma is NOT available: dCross = 0
+    while one degenerate point disappears.
+
+Q4  "slide A or slide B always works" is FALSE.  The failures are (Fin)
+    failures and are e-INDEPENDENT (slide A keeps the new side v on the OLD
+    side v's LINE), so no shrinking of e rescues them -- verified on a ladder
+    down to 1e-40 in slide_deep.py.
+
+Q5  the adversarial case (a degenerate point on side v-1 AND another on side v,
+    both besides the coincidence) is ABUNDANT, not rare: 200 instances built
+    from 288 random P draws.  The attack is STRONG.
+================================================================================
