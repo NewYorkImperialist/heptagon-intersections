@@ -1633,5 +1633,431 @@ theorem exists_move_coinc_lt_M_pt_le (R : Pair9) (hfin : (points9 R).Finite)
 #print axioms exists_eps0_finite_move_coincDir
 #print axioms exists_move_coinc_lt_M_pt_le
 
+/-! ## 9. The collinear apex: the slide that leaves the boundary fixed
+
+The hardest §9.1 family.  When the apex `P_v` is **collinear** with its two
+neighbours the two sides incident to it lie on one line, so they cannot be
+steered independently and the usual accounting fails.  What is true instead is
+much stronger: `SimpleClosed`'s third conjunct forces the apex to lie
+*between* its neighbours, and sliding it along that common line changes the
+union of the two incident sides not at all —
+
+>  `[A,X] ∪ [X,B] = [A,B]`  for every `X ∈ [A,B]`.
+
+Every other `P`-side and every `Q`-side is untouched by an apex-only move, so
+`∂P`, `∂P ∩ ∂Q` and hence the intersection point set are **literally
+unchanged** as point sets.  That is the free escape the numerics see.
+-/
+
+/-- `(v-1)+1 = v` in `Fin 7`. -/
+theorem fin7_pred_succ : ∀ v : Fin 7, v - 1 + 1 = v := by decide
+
+/-- `(v-1)+2 = v+1` in `Fin 7`; `SimpleClosed`'s third conjunct is stated
+with `+2`. -/
+theorem fin7_pred_add_two : ∀ v : Fin 7, v - 1 + 2 = v + 1 := by decide
+
+/-- `v-1 ≠ v` in `Fin 7`. -/
+theorem fin7_pred_ne_self : ∀ v : Fin 7, v - 1 ≠ v := by decide
+
+/-- `v+1 ≠ v` in `Fin 7`. -/
+theorem fin7_succ_ne_self : ∀ v : Fin 7, v + 1 ≠ v := by decide
+
+/-- **`[A,X] ∪ [X,B] = [A,B]` whenever `X ∈ [A,B]`.**  Mathlib has no such
+lemma (there is no `segment_union` anywhere in it), so here it is: `⊆` is
+convexity of `[A,B]`, and `⊇` is a case split on which side of `X`'s
+parameter the point falls. -/
+theorem segment_union_of_mem {M : Type*} [AddCommGroup M] [Module ℝ M]
+    {A B X : M} (hX : X ∈ segment ℝ A B) :
+    segment ℝ A X ∪ segment ℝ X B = segment ℝ A B := by
+  have hconv : Convex ℝ (segment ℝ A B) := convex_segment A B
+  refine Set.Subset.antisymm (Set.union_subset ?_ ?_) ?_
+  · exact hconv.segment_subset (left_mem_segment ℝ A B) hX
+  · exact hconv.segment_subset hX (right_mem_segment ℝ A B)
+  · rintro y hy
+    simp only [segment_eq_image', Set.mem_image, Set.mem_Icc] at hX hy
+    obtain ⟨s, ⟨hs0, hs1⟩, rfl⟩ := hX
+    obtain ⟨t, ⟨ht0, ht1⟩, rfl⟩ := hy
+    rcases le_total t s with hts | hts
+    · refine Or.inl ?_
+      rcases eq_or_lt_of_le hs0 with hs00 | hs00
+      · have htz : t = 0 := le_antisymm (by rw [hs00]; exact hts) ht0
+        exact ⟨1, 0, zero_le_one, le_refl 0, by ring, by rw [htz]; module⟩
+      · have hsne : s ≠ 0 := ne_of_gt hs00
+        have hle : t / s ≤ 1 := (div_le_one hs00).mpr hts
+        have hco : t / s * s = t := by field_simp
+        refine ⟨1 - t / s, t / s, by linarith, div_nonneg ht0 hs00.le, by ring, ?_⟩
+        calc (1 - t / s) • A + (t / s) • (A + s • (B - A))
+            = A + (t / s * s) • (B - A) := by module
+          _ = A + t • (B - A) := by rw [hco]
+    · refine Or.inr ?_
+      rcases eq_or_lt_of_le hs1 with hs11 | hs11
+      · have hto : t = 1 := le_antisymm ht1 (by rw [← hs11]; exact hts)
+        refine ⟨0, 1, le_refl 0, zero_le_one, by ring, ?_⟩
+        rw [hto, hs11]; module
+      · have hdne : (1 : ℝ) - s ≠ 0 := ne_of_gt (by linarith)
+        have hr1 : (t - s) / (1 - s) * (1 - s) = t - s := by field_simp
+        have hrle : (t - s) / (1 - s) ≤ 1 := by
+          rw [div_le_one (by linarith)]; linarith
+        have hst : s + (t - s) = t := by ring
+        refine ⟨1 - (t - s) / (1 - s), (t - s) / (1 - s), by linarith,
+          div_nonneg (by linarith) (by linarith), by ring, ?_⟩
+        calc (1 - (t - s) / (1 - s)) • (A + s • (B - A))
+              + ((t - s) / (1 - s)) • B
+            = A + (s + (t - s) / (1 - s) * (1 - s)) • (B - A) := by module
+          _ = A + (s + (t - s)) • (B - A) := by rw [hr1]
+          _ = A + t • (B - A) := by rw [hst]
+
+/-- **Three collinear points, the middle one meeting both sides only at
+itself, are ordered `A X B`.**  The abstract content of
+`collinear_apex_between`: if `X` were not between `A` and `B`, one of the two
+segments `[A,X]`, `[X,B]` would contain the other, and their intersection
+would be that whole segment rather than `{X}`. -/
+theorem between_of_orientR_zero {A X B : ℝ × ℝ}
+    (hAX : A ≠ X) (hXB : X ≠ B)
+    (hthird : segment ℝ A X ∩ segment ℝ X B = {X})
+    (hcol : orientR A X B = 0) :
+    X ∈ segment ℝ A B := by
+  have hu : X - A ≠ 0 := sub_ne_zero.mpr (Ne.symm hAX)
+  have hcz : (X - A).1 * (B - A).2 - (X - A).2 * (B - A).1 = 0 := by
+    simp only [orientR] at hcol
+    simp only [Prod.fst_sub, Prod.snd_sub]
+    linear_combination hcol
+  obtain ⟨γ, hγ⟩ := Heptagon.CollinearSegment.exists_smul_of_cross_zero hu hcz
+  have hB : B = A + γ • (X - A) := by rw [← hγ]; abel
+  rcases le_or_gt 1 γ with hg | hg
+  · have hγ0 : (0 : ℝ) < γ := lt_of_lt_of_le zero_lt_one hg
+    have hc : 1 / γ * γ = 1 := by field_simp
+    have hle : 1 / γ ≤ 1 := by rw [div_le_one hγ0]; exact hg
+    refine ⟨1 - 1 / γ, 1 / γ, by linarith, div_nonneg zero_le_one hγ0.le, by ring, ?_⟩
+    calc (1 - 1 / γ) • A + (1 / γ) • B
+        = (1 - 1 / γ) • A + (1 / γ) • (A + γ • (X - A)) := by rw [hB]
+      _ = A + (1 / γ * γ) • (X - A) := by module
+      _ = A + (1 : ℝ) • (X - A) := by rw [hc]
+      _ = X := by module
+  · exfalso
+    rcases le_or_gt 0 γ with hg0 | hg0
+    · -- `B` lies in `[A,X]`, so `[X,B] ⊆ [A,X]` and the intersection is `[X,B]`
+      have hBmem : B ∈ segment ℝ A X :=
+        ⟨1 - γ, γ, by linarith, hg0, by ring, by rw [hB]; module⟩
+      have hcx : Convex ℝ (segment ℝ A X) := convex_segment A X
+      have hsub : segment ℝ X B ⊆ segment ℝ A X :=
+        hcx.segment_subset (right_mem_segment ℝ A X) hBmem
+      have heq : segment ℝ X B = {X} := by
+        rw [← hthird]
+        exact (Set.inter_eq_self_of_subset_right hsub).symm
+      have hBin : B ∈ segment ℝ X B := right_mem_segment ℝ X B
+      rw [heq] at hBin
+      exact hXB (Set.mem_singleton_iff.mp hBin).symm
+    · -- `A` lies in `[X,B]`, so `[A,X] ⊆ [X,B]` and the intersection is `[A,X]`
+      have hd : (0 : ℝ) < 1 - γ := by linarith
+      have hdne : (1 : ℝ) - γ ≠ 0 := ne_of_gt hd
+      have hc1 : -γ / (1 - γ) + 1 / (1 - γ) * γ = 0 := by field_simp <;> ring
+      have hc2 : 1 / (1 - γ) - 1 / (1 - γ) * γ = 1 := by field_simp <;> ring
+      have hAmem : A ∈ segment ℝ X B := by
+        refine ⟨-γ / (1 - γ), 1 / (1 - γ), div_nonneg (by linarith) hd.le,
+          div_nonneg zero_le_one hd.le, by field_simp <;> ring, ?_⟩
+        calc (-γ / (1 - γ)) • X + (1 / (1 - γ)) • B
+            = (-γ / (1 - γ)) • X + (1 / (1 - γ)) • (A + γ • (X - A)) := by rw [hB]
+          _ = (1 / (1 - γ) - 1 / (1 - γ) * γ) • A
+                + (-γ / (1 - γ) + 1 / (1 - γ) * γ) • X := by module
+          _ = (1 : ℝ) • A + (0 : ℝ) • X := by rw [hc1, hc2]
+          _ = A := by module
+      have hcx : Convex ℝ (segment ℝ X B) := convex_segment X B
+      have hsub : segment ℝ A X ⊆ segment ℝ X B :=
+        hcx.segment_subset hAmem (left_mem_segment ℝ X B)
+      have heq : segment ℝ A X = {X} := by
+        rw [← hthird]
+        exact (Set.inter_eq_self_of_subset_left hsub).symm
+      have hAin : A ∈ segment ℝ A X := left_mem_segment ℝ A X
+      rw [heq] at hAin
+      exact hAX (Set.mem_singleton_iff.mp hAin)
+
+/-- **A collinear apex lies between its neighbours.**  The hypothesis is that
+`P_{v-1}`, `P_v`, `P_{v+1}` are collinear; the conclusion is the strictly
+stronger ordering statement, and it comes from `SimpleClosed`'s third
+conjunct at index `v-1`. -/
+theorem collinear_apex_between (R : Pair9) (v : Fin 7)
+    (hcol : orientR (R.V (pP (v - 1))) (R.V (pP v)) (R.V (pP (v + 1))) = 0) :
+    R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))) := by
+  have hAX : R.V (pP (v - 1)) ≠ R.V (pP v) := by
+    have h : R.V (pP (v - 1)) ≠ R.V (pP (v - 1 + 1)) := R.simpleP.1 (v - 1)
+    rwa [fin7_pred_succ v] at h
+  have hXB : R.V (pP v) ≠ R.V (pP (v + 1)) := R.simpleP.1 v
+  have hthird : segment ℝ (R.V (pP (v - 1))) (R.V (pP v))
+      ∩ segment ℝ (R.V (pP v)) (R.V (pP (v + 1))) = {R.V (pP v)} := by
+    have h : segment ℝ (R.V (pP (v - 1))) (R.V (pP (v - 1 + 1)))
+        ∩ segment ℝ (R.V (pP (v - 1 + 1))) (R.V (pP (v - 1 + 2)))
+        = {R.V (pP (v - 1 + 1))} := R.simpleP.2.2 (v - 1)
+    rwa [fin7_pred_succ v, fin7_pred_add_two v] at h
+  exact between_of_orientR_zero hAX hXB hthird hcol
+
+#print axioms segment_union_of_mem
+#print axioms between_of_orientR_zero
+#print axioms collinear_apex_between
+
+/-- The union of the two sides incident to the apex, when the apex lies
+between its neighbours: `[P_{v-1},P_v] ∪ [P_v,P_{v+1}] = [P_{v-1},P_{v+1}]`. -/
+theorem sideP9_incident_union (R : Pair9) (v : Fin 7)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1)))) :
+    sideP9 R (v - 1) ∪ sideP9 R v
+      = segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))) := by
+  simp only [sideP9, fin7_pred_succ]
+  exact segment_union_of_mem hX
+
+/-- **The slide leaves `∂P` fixed.**  The apex is between its neighbours both
+before and after the move, so the two incident sides cover exactly the same
+segment; every other `P`-side is untouched because the move is apex-only. -/
+theorem bdryP9_eq_of_apex_slide (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V v Edir e)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hX' : R.V (pP v) + e • Edir
+      ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1)))) :
+    bdryP9 R' = bdryP9 R := by
+  have e1 : R'.V (pP (v - 1)) = R.V (pP (v - 1)) := by
+    rw [hR']; exact moveV_pP_untouched R.V v Edir e (fin7_pred_ne_self v)
+  have e2 : R'.V (pP (v + 1)) = R.V (pP (v + 1)) := by
+    rw [hR']; exact moveV_pP_untouched R.V v Edir e (fin7_succ_ne_self v)
+  have e3 : R'.V (pP v) = R.V (pP v) + e • Edir := by
+    rw [hR']; exact moveV_apex R.V v Edir e
+  have hX'' : R'.V (pP v) ∈ segment ℝ (R'.V (pP (v - 1))) (R'.V (pP (v + 1))) := by
+    rw [e1, e2, e3]; exact hX'
+  have key : sideP9 R' (v - 1) ∪ sideP9 R' v = sideP9 R (v - 1) ∪ sideP9 R v := by
+    rw [sideP9_incident_union R' v hX'', sideP9_incident_union R v hX, e1, e2]
+  have huntouched : ∀ k : Fin 7, k ≠ v - 1 → k ≠ v → sideP9 R' k = sideP9 R k := by
+    intro k h2 h1
+    have a1 : R'.V (pP k) = R.V (pP k) := by
+      rw [hR']; exact moveV_pP_untouched R.V v Edir e h1
+    have a2 : R'.V (pP (k + 1)) = R.V (pP (k + 1)) := by
+      rw [hR']
+      exact moveV_pP_untouched R.V v Edir e (fun hc => h2 (eq_sub_of_add_eq hc))
+    simp only [sideP9, a1, a2]
+  ext x
+  simp only [bdryP9, Set.mem_iUnion]
+  constructor
+  · rintro ⟨k, hk⟩
+    by_cases h1 : k = v
+    · subst h1
+      have hm : x ∈ sideP9 R' (k - 1) ∪ sideP9 R' k := Or.inr hk
+      rw [key] at hm
+      rcases hm with h | h
+      exacts [⟨k - 1, h⟩, ⟨k, h⟩]
+    · by_cases h2 : k = v - 1
+      · subst h2
+        have hm : x ∈ sideP9 R' (v - 1) ∪ sideP9 R' v := Or.inl hk
+        rw [key] at hm
+        rcases hm with h | h
+        exacts [⟨v - 1, h⟩, ⟨v, h⟩]
+      · exact ⟨k, by rwa [huntouched k h2 h1] at hk⟩
+  · rintro ⟨k, hk⟩
+    by_cases h1 : k = v
+    · subst h1
+      have hm : x ∈ sideP9 R (k - 1) ∪ sideP9 R k := Or.inr hk
+      rw [← key] at hm
+      rcases hm with h | h
+      exacts [⟨k - 1, h⟩, ⟨k, h⟩]
+    · by_cases h2 : k = v - 1
+      · subst h2
+        have hm : x ∈ sideP9 R (v - 1) ∪ sideP9 R v := Or.inl hk
+        rw [← key] at hm
+        rcases hm with h | h
+        exacts [⟨v - 1, h⟩, ⟨v, h⟩]
+      · exact ⟨k, by rw [huntouched k h2 h1]; exact hk⟩
+
+/-- `Q` is untouched by an apex-only move, so `∂Q` is literally the same set. -/
+theorem bdryQ9_eq_of_move (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V v Edir e) : bdryQ9 R' = bdryQ9 R := by
+  simp only [bdryQ9, sideQ9, hR', moveV_Q]
+
+/-- **The slide leaves `∂P ∩ ∂Q` fixed, as a set of points.** -/
+theorem points9_eq_of_apex_slide (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V v Edir e)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hX' : R.V (pP v) + e • Edir
+      ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1)))) :
+    points9 R' = points9 R := by
+  simp only [points9]
+  rw [bdryP9_eq_of_apex_slide R R' v Edir e hR' hX hX',
+    bdryQ9_eq_of_move R R' v Edir e hR']
+
+/-- Hence `(Fin)` transfers, in both directions, for free. -/
+theorem points9_finite_iff_of_apex_slide (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ)
+    (e : ℝ) (hR' : R'.V = moveV R.V v Edir e)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hX' : R.V (pP v) + e • Edir
+      ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1)))) :
+    (points9 R').Finite ↔ (points9 R).Finite := by
+  rw [points9_eq_of_apex_slide R R' v Edir e hR' hX hX']
+
+/-- **The slide is nonempty.**  With the apex collinear, the direction
+`P_{v+1} − P_{v-1}` keeps it inside `[P_{v-1},P_{v+1}]` for every small `ε` —
+the apex is *strictly* between its neighbours, because `SimpleClosed`'s first
+conjunct forbids it from coinciding with either. -/
+theorem exists_eps0_collinear_slide_mem (R : Pair9) (v : Fin 7)
+    (hcol : orientR (R.V (pP (v - 1))) (R.V (pP v)) (R.V (pP (v + 1))) = 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| ≤ e₀ →
+      R.V (pP v) + e • (R.V (pP (v + 1)) - R.V (pP (v - 1)))
+        ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))) := by
+  have hAX : R.V (pP (v - 1)) ≠ R.V (pP v) := by
+    have h : R.V (pP (v - 1)) ≠ R.V (pP (v - 1 + 1)) := R.simpleP.1 (v - 1)
+    rwa [fin7_pred_succ v] at h
+  have hXB : R.V (pP v) ≠ R.V (pP (v + 1)) := R.simpleP.1 v
+  have hX := collinear_apex_between R v hcol
+  simp only [segment_eq_image', Set.mem_image, Set.mem_Icc] at hX
+  obtain ⟨s, ⟨hs0, hs1⟩, hXeq⟩ := hX
+  have hsne0 : s ≠ 0 := by
+    rintro rfl
+    exact hAX (by rw [← hXeq]; module)
+  have hsne1 : s ≠ 1 := by
+    rintro rfl
+    exact hXB (by rw [← hXeq]; module)
+  have hslt : 0 < s := lt_of_le_of_ne hs0 (Ne.symm hsne0)
+  have hslt1 : s < 1 := lt_of_le_of_ne hs1 hsne1
+  refine ⟨min s (1 - s), lt_min hslt (by linarith), fun e he => ?_⟩
+  obtain ⟨he1, he2⟩ := abs_le.mp he
+  have hm1 : min s (1 - s) ≤ s := min_le_left _ _
+  have hm2 : min s (1 - s) ≤ 1 - s := min_le_right _ _
+  refine ⟨1 - (s + e), s + e, by linarith, by linarith, by ring, ?_⟩
+  rw [← hXeq]; module
+
+/-- **§9.1's collinear family has a free escape.**  For a collinear apex there
+is a genuine `Pair9` move — the slide along the common line — that leaves
+`points9` *identically* equal.  Nothing is lost and nothing is gained: this is
+the structural reason the numerics report `ΔM_pt = 0` on every collinear
+instance. -/
+theorem exists_collinear_slide_points9_eq (R : Pair9) (v : Fin 7)
+    (hcol : orientR (R.V (pP (v - 1))) (R.V (pP v)) (R.V (pP (v + 1))) = 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, |e| ≤ e₀ →
+      ∃ R' : Pair9,
+        R'.V = moveV R.V v (R.V (pP (v + 1)) - R.V (pP (v - 1))) e ∧
+        points9 R' = points9 R := by
+  obtain ⟨e₁, h₁, hpair⟩ :=
+    exists_moved_pair9 R v (R.V (pP (v + 1)) - R.V (pP (v - 1)))
+  obtain ⟨e₂, h₂, hmem⟩ := exists_eps0_collinear_slide_mem R v hcol
+  refine ⟨min e₁ e₂, lt_min h₁ h₂, fun e he => ?_⟩
+  obtain ⟨R', hR'⟩ := hpair e (le_trans he (min_le_left _ _))
+  exact ⟨R', hR', points9_eq_of_apex_slide R R' v _ e hR'
+    (collinear_apex_between R v hcol) (hmem e (le_trans he (min_le_right _ _)))⟩
+
+#print axioms sideP9_incident_union
+#print axioms bdryP9_eq_of_apex_slide
+#print axioms points9_eq_of_apex_slide
+#print axioms points9_finite_iff_of_apex_slide
+#print axioms exists_collinear_slide_points9_eq
+
+/-! ### What the slide does **not** give for free
+
+`points9 R' = points9 R` is a statement about the intersection **point set**.
+`crossPairsOf` counts side **pairs**, and the slide can move a crossing point
+from side `v-1` to side `v`, so the two cardinalities are not equal by
+`points9_eq_of_apex_slide` alone.  What closes the gap is (E9) on **both**
+sides — with no vertex of either polygon on the other's boundary, `points9` is
+in bijection with `crossPairsOf` (`AKR9.points9_ncard`), and only then does the
+count transfer.  `(E9)` on `R'` is an extra hypothesis, carried explicitly; it
+is not a consequence of anything proved above.
+
+Likewise `degPts = points9 ∩ verts` is **not** invariant: `verts` genuinely
+changes, because the apex moved.  The old apex can survive in `degPts R'` as a
+`Q`-vertex (exactly when the coincidence `P_v = Q_j` that §9.1 is removing was
+there in the first place — `old_apex_mem_verts_of_coincidence`), and the new
+apex is generically not on `∂Q` at all.  Both side conditions are carried as
+named hypotheses below rather than asserted. -/
+
+/-- **The crossing-pair count transfers — but only under (E9) on both sides.**
+See the note above: this is *not* a corollary of
+`points9_eq_of_apex_slide` on its own. -/
+theorem crossPairsOf_card_eq_of_apex_slide (R R' : Pair9) (v : Fin 7)
+    (Edir : ℝ × ℝ) (e : ℝ) (hR' : R'.V = moveV R.V v Edir e)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hX' : R.V (pP v) + e • Edir
+      ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (h9 : NoVertexOnOther R) (h9' : NoVertexOnOther R') :
+    (RealPerturb.crossPairsOf R'.V).card
+      = (RealPerturb.crossPairsOf R.V).card := by
+  rw [← points9_ncard R' h9', ← points9_ncard R h9,
+    points9_eq_of_apex_slide R R' v Edir e hR' hX hX']
+
+/-- After an apex-only move every vertex is either an old vertex or the new
+apex. -/
+theorem verts_subset_insert_of_move (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ)
+    (e : ℝ) (hR' : R'.V = moveV R.V v Edir e) :
+    DegBound.verts R' ⊆ insert (R'.V (pP v)) (DegBound.verts R) := by
+  intro x hx
+  simp only [DegBound.verts, Set.mem_union, Set.mem_range] at hx
+  rcases hx with ⟨i, hi⟩ | ⟨j, hj⟩
+  · by_cases hiv : i = v
+    · subst hiv
+      exact Set.mem_insert_iff.mpr (Or.inl hi.symm)
+    · refine Set.mem_insert_iff.mpr (Or.inr (Set.mem_union_left _ ⟨i, ?_⟩))
+      rw [← hi, hR', moveV_pP_untouched R.V v Edir e hiv]
+  · refine Set.mem_insert_iff.mpr (Or.inr (Set.mem_union_right _ ⟨j, ?_⟩))
+    rw [← hj, hR', moveV_Q R.V v Edir e j]
+
+/-- …and conversely every old vertex is either a new vertex or the old apex. -/
+theorem verts_subset_insert_of_move' (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ)
+    (e : ℝ) (hR' : R'.V = moveV R.V v Edir e) :
+    DegBound.verts R ⊆ insert (R.V (pP v)) (DegBound.verts R') := by
+  intro x hx
+  simp only [DegBound.verts, Set.mem_union, Set.mem_range] at hx
+  rcases hx with ⟨i, hi⟩ | ⟨j, hj⟩
+  · by_cases hiv : i = v
+    · subst hiv
+      exact Set.mem_insert_iff.mpr (Or.inl hi.symm)
+    · refine Set.mem_insert_iff.mpr (Or.inr (Set.mem_union_left _ ⟨i, ?_⟩))
+      show R'.V (pP i) = x
+      rw [hR', moveV_pP_untouched R.V v Edir e hiv, hi]
+  · refine Set.mem_insert_iff.mpr (Or.inr (Set.mem_union_right _ ⟨j, ?_⟩))
+    show R'.V (pQ j) = x
+    rw [hR', moveV_Q R.V v Edir e j, hj]
+
+/-- **The old apex stays a vertex when it was a coincidence `P_v = Q_j`.**
+`Q` is untouched by an apex-only move, so the point is still a `Q`-vertex — the
+concrete reason `degPts` can survive the move. -/
+theorem old_apex_mem_verts_of_coincidence (R R' : Pair9) (v j : Fin 7)
+    (Edir : ℝ × ℝ) (e : ℝ) (hR' : R'.V = moveV R.V v Edir e)
+    (hco : R.V (pP v) = R.V (pQ j)) :
+    R.V (pP v) ∈ DegBound.verts R' := by
+  have hj : R'.V (pQ j) = R.V (pP v) := by rw [hR', moveV_Q, ← hco]
+  have h : R.V (pP v) ∈ (Set.range fun k : Fin 7 => R'.V (pQ k)) := ⟨j, hj⟩
+  exact Set.mem_union_right _ h
+
+/-- **`degPts` transfers, under two explicit side conditions.**  `verts`
+changes under the move, so this needs more than
+`points9_eq_of_apex_slide`: `hold` says the old apex, if it is an
+intersection point, is still a vertex afterwards (e.g. by
+`old_apex_mem_verts_of_coincidence`), and `hnew` says the new apex, if it is
+an intersection point, was already one.  Neither is automatic, and neither is
+claimed to be. -/
+theorem degPts_eq_of_apex_slide (R R' : Pair9) (v : Fin 7) (Edir : ℝ × ℝ) (e : ℝ)
+    (hR' : R'.V = moveV R.V v Edir e)
+    (hX : R.V (pP v) ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hX' : R.V (pP v) + e • Edir
+      ∈ segment ℝ (R.V (pP (v - 1))) (R.V (pP (v + 1))))
+    (hold : R.V (pP v) ∈ points9 R → R.V (pP v) ∈ DegBound.verts R')
+    (hnew : R'.V (pP v) ∈ points9 R → R'.V (pP v) ∈ DegBound.verts R) :
+    DegBound.degPts R' = DegBound.degPts R := by
+  have hpts : points9 R' = points9 R :=
+    points9_eq_of_apex_slide R R' v Edir e hR' hX hX'
+  ext x
+  simp only [DegBound.degPts, Set.mem_inter_iff, hpts]
+  constructor
+  · rintro ⟨hx1, hx2⟩
+    refine ⟨hx1, ?_⟩
+    rcases Set.mem_insert_iff.mp
+      (verts_subset_insert_of_move R R' v Edir e hR' hx2) with h | h
+    · subst h; exact hnew hx1
+    · exact h
+  · rintro ⟨hx1, hx2⟩
+    refine ⟨hx1, ?_⟩
+    rcases Set.mem_insert_iff.mp
+      (verts_subset_insert_of_move' R R' v Edir e hR' hx2) with h | h
+    · subst h; exact hold hx1
+    · exact h
+
+#print axioms crossPairsOf_card_eq_of_apex_slide
+#print axioms verts_subset_insert_of_move
+#print axioms verts_subset_insert_of_move'
+#print axioms old_apex_mem_verts_of_coincidence
+#print axioms degPts_eq_of_apex_slide
+
 end E9Directions
 end Heptagon
