@@ -1292,6 +1292,81 @@ theorem exists_coincFree_le_38 (R : Pair9) (hfin : (points9 R).Finite) :
 #print axioms exists_eps0_clearing_apex
 #print axioms exists_eps0_coincSet_lt
 
+/-! ### The move creates no new degeneracies
+
+The delegated sweep of `independent/e9_directions/move_effect_report.log`
+("claim B") finds this true only for small `e`, with the threshold depending on
+the configuration *and* on `E` — which is exactly the `∃ e₀, ∀ 0 < |e| < e₀`
+form below.  The proof is the usual dichotomy, with one twist: a `Q`-vertex on
+the *line* of an incident side but off its *segment* cannot be the side's fixed
+endpoint, so its rate is nonzero and it leaves the line. -/
+
+open scoped Classical in
+theorem exists_eps0_segDeg_subset (R : Pair9) (i : Fin 7) (E : ℝ × ℝ)
+    (hgoodN : ∀ j : Fin 7, R.V (pP (i + 1)) - R.V (pQ j) ≠ 0 →
+      cross E (R.V (pP (i + 1)) - R.V (pQ j)) ≠ 0)
+    (hgoodP : ∀ j : Fin 7, R.V (pQ j) - R.V (pP (i - 1)) ≠ 0 →
+      cross E (R.V (pQ j) - R.V (pP (i - 1))) ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      ∀ R' : Pair9, R'.V = moveV R.V i E e → segDeg R' ⊆ segDeg R := by
+  classical
+  obtain ⟨e₀, he₀, hord⟩ := exists_eps0_order_type R.V i E
+  refine ⟨e₀, he₀, fun e he hlt R' hR' p hp => ?_⟩
+  by_cases hkt : p.1 ∈ touchedMove i
+  · by_contra hnot
+    have hzero : orientR (moveV R.V i E e (pP p.1))
+        (moveV R.V i E e (pP (p.1 + 1))) (moveV R.V i E e (pQ p.2)) = 0 := by
+      have hmem : R'.V (pQ p.2) ∈ sideP9 R' p.1 := by
+        simpa only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+      rw [← hR', ← off_eq_orientR]
+      exact off_eq_zero_of_mem_segment hmem
+    have hrate : moveCoef R.V i E p.1 (pQ p.2) ≠ 0 := by
+      rcases (mem_touchedMove_iff i p.1).mp hkt with hk | hk
+      · rw [hk]
+        refine moveCoef_ne_zero_self R i E p.2 hgoodN (fun hc => hnot ?_)
+        simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and]
+        rw [← hk] at *
+        rw [hc]
+        exact right_mem_segment ℝ _ _
+      · rw [hk]
+        refine moveCoef_ne_zero_prev R i E p.2 hgoodP (fun hc => hnot ?_)
+        simp only [segDeg, Finset.mem_filter, Finset.mem_univ, true_and]
+        rw [← hk] at *
+        rw [hc]
+        exact left_mem_segment ℝ _ _
+    exact orientR_move_ne_zero R i E hord he hlt p.1 p.2 hrate hzero
+  · exact (segDeg_move_untouched_iff R R' i E e hR' hkt).mp hp
+
+open scoped Classical in
+theorem exists_eps0_segDegP_subset (R : Pair9) (i : Fin 7) (E : ℝ × ℝ)
+    (hgoodQ : ∀ m : Fin 7, R.V (pQ (m + 1)) - R.V (pQ m) ≠ 0 →
+      cross E (R.V (pQ (m + 1)) - R.V (pQ m)) ≠ 0) :
+    ∃ e₀ : ℝ, 0 < e₀ ∧ ∀ e : ℝ, e ≠ 0 → |e| < e₀ →
+      ∀ R' : Pair9, R'.V = moveV R.V i E e → segDegP R' ⊆ segDegP R := by
+  classical
+  obtain ⟨e₀, he₀, hord⟩ := exists_eps0_order_type R.V i E
+  refine ⟨e₀, he₀, fun e he hlt R' hR' p hp => ?_⟩
+  by_cases hv : p.2 = i
+  · have hzero : orientR (moveV R.V i E e (pQ p.1))
+        (moveV R.V i E e (pQ (p.1 + 1))) (moveV R.V i E e (pP p.2)) = 0 := by
+      have hmem : R'.V (pP p.2) ∈ sideQ9 R' p.1 := by
+        simpa only [segDegP, Finset.mem_filter, Finset.mem_univ, true_and] using hp
+      rw [← hR', ← off_eq_orientR]
+      exact off_eq_zero_of_mem_segment hmem
+    exfalso
+    rw [hv] at hzero
+    by_cases horig :
+        orientR (R.V (pQ p.1)) (R.V (pQ (p.1 + 1))) (R.V (pP i)) = 0
+    · rw [orientR_move_Qside, horig, zero_add] at hzero
+      exact mul_ne_zero he (moveCoefQ_ne_zero_apex R i E p.1 hgoodQ) hzero
+    · have hs := hord e hlt (pQ p.1) (pQ (p.1 + 1)) (pP i) horig
+      rw [hzero, mul_zero] at hs
+      exact lt_irrefl 0 hs
+  · exact (segDegP_move_untouched_iff R R' i E e hR' hv).mp hp
+
+#print axioms exists_eps0_segDeg_subset
+#print axioms exists_eps0_segDegP_subset
+
 #print axioms orientR_move_ne_zero
 #print axioms exists_eps0_finite_move
 
