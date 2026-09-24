@@ -1,0 +1,6 @@
+one-coincidence simple+finite instances : 3949
+  4-element set contains a non-decreasing admissible move : 3949
+  failures : 0
+  best-over-set histogram : {0: 1083, 1: 2687, 2: 179}
+
+VERDICT: CONFIRMED

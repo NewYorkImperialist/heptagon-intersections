@@ -135,7 +135,8 @@ def run(log=print):
     n_adm = 0
     for _ in range(18):
         inst = G.make(rng, rng.choice(['random', 'two_touch', 'many_touch',
-                                       'collinear_apex']))
+                                       'collinear_apex', 'extremal11',
+                                       'high_cross', 'multi_coinc']))
         if inst is None:
             continue
         for (u, kind) in L.cell_directions(inst)[:26]:

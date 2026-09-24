@@ -185,6 +185,7 @@ def main():
     ap.add_argument('--extra', type=int, default=0)
     ap.add_argument('--jag', type=float, default=0.0)
     ap.add_argument('--rmul', type=float, default=3.0)
+    ap.add_argument('--all-apex', dest='all_apex', type=int, default=0)
     ap.add_argument('--tag', default='')
     args = ap.parse_args()
 
@@ -210,11 +211,13 @@ def main():
     n_both = 0
     n_touch = 0
     n_trans = 0
+    n_degen = 0
+    dying = {}
     apexkind = {}
     maxcross = 0
 
     def consider(inst):
-        nonlocal n, n_disp, n_both, n_touch, n_trans, maxcross
+        nonlocal n, n_disp, n_both, n_touch, n_trans, n_degen, maxcross
         best, nadm = max_dM_fine(inst)
         n += 1
         n_disp += len(L.cell_directions(inst))
@@ -225,6 +228,9 @@ def main():
             n_both += 1
         n_touch += sum(1 for x in inst.anat if x['kind'] == 'touch')
         n_trans += sum(1 for x in inst.anat if x['kind'] == 'trans')
+        n_degen += sum(1 for x in inst.anat if x['kind'] == 'degen')
+        nd = sum(1 for x in inst.anat if x['interior'] and not x['elsewhere'])
+        dying[nd] = dying.get(nd, 0) + 1
         ak = L.apex_anatomy(inst)
         apexkind[ak] = apexkind.get(ak, 0) + 1
         maxcross = max(maxcross, len(inst.b_cross))
@@ -240,7 +246,18 @@ def main():
             inst = G.make(inst_rng(args.seed, fam, idx), fam)
             if inst is None:
                 continue
-            consider(inst)
+            if args.all_apex:
+                # the conjecture is attacked in its STRONGER, universally
+                # quantified form: a good move must exist at EVERY coincidence
+                # vertex, not merely at some one of them.
+                for (uu, jj) in sorted(inst.coinc):
+                    i2 = L.Inst(inst.P, inst.Q, uu, family=inst.family + '@v%d' % uu)
+                    if i2.j0 is None:
+                        continue
+                    i2.anat = L.incident_deg_anatomy(i2)
+                    consider(i2)
+            else:
+                consider(inst)
     else:
         rng = random.Random(args.seed * 31 + args.start)
         for s in range(args.count):
@@ -259,7 +276,10 @@ def main():
     log(f"  maxdM distribution: "
         f"{dict(sorted(dist.items(), key=lambda kv: (kv[0] is None, kv[0])))}")
     log(f"  instances with BOTH incident P-sides carrying a non-apex degPt: {n_both}")
-    log(f"  incident non-apex degPts: {n_touch} touch, {n_trans} transversal")
+    log(f"  incident non-apex degPts: {n_touch} touch, {n_trans} transversal, "
+        f"{n_degen} degenerate-neighbour")
+    log(f"  number of DYING non-apex incident degPts per instance "
+        f"(interior, not carried by another P-side): {dict(sorted(dying.items()))}")
     log(f"  apex character: {apexkind}")
     log(f"  largest base |crossPairs| seen: {maxcross}")
     log(f"  instances with maxdM <= 0: {len(hard)}")

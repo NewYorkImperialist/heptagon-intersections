@@ -221,8 +221,94 @@ def fam_multi_coinc(rng):
     return None
 
 
+def fam_extremal(rng, npos=1, nneg=1):
+    """THE THEORETICALLY EXTREMAL CONSTRUCTION.
+
+    Collinear apex (P[v-1], P[v], P[v+1] on one line L through the apex), with
+    TOUCH-type degenerate points placed on BOTH incident sides whose good pivot
+    directions CONFLICT: the ones on the P[v-1] side have both Q-neighbours on
+    the + side of L, the ones on the P[v+1] side have both Q-neighbours on the
+    - side.  Because the apex is collinear, the two incident sides pivot
+    together -- sign(f1) == sign(f2) -- so no displacement can satisfy both
+    groups.  This is the only mechanism that couples the two sides, and hence
+    the only candidate for a counterexample.
+    """
+    Q0 = random_simple_heptagon(rng, -14, 14)
+    if Q0 is None:
+        return None
+    j = rng.randrange(N)
+    X0 = Q0[j]
+    # a direction for the line L: through some other Q-vertex, or a small
+    # integer direction, so the snapped points stay rational and small.
+    if rng.random() < 0.5:
+        k = rng.randrange(N)
+        u = sub(Q0[k], X0)
+    else:
+        u = (F(rng.randint(-6, 6)), F(rng.randint(-6, 6)))
+    if u == (0, 0):
+        return None
+
+    def side_of(Z):
+        c = cross(u, sub(Z, X0))
+        return 0 if c == 0 else (1 if c > 0 else -1)
+
+    pos = [c for c in range(N) if c not in ((j - 1) % N, j, (j + 1) % N)
+           and side_of(Q0[(c - 1) % N]) == 1 and side_of(Q0[(c + 1) % N]) == 1]
+    neg = [c for c in range(N) if c not in ((j - 1) % N, j, (j + 1) % N)
+           and side_of(Q0[(c - 1) % N]) == -1 and side_of(Q0[(c + 1) % N]) == -1]
+    rng.shuffle(pos)
+    rng.shuffle(neg)
+    if len(pos) < npos or len(neg) < nneg:
+        bump('extremal:not_enough_conflicting_vertices')
+        return None
+    Q = Q0
+    tpos, tneg = [], []
+    used = set()
+    for c in pos[:npos]:
+        t = rng.choice(TS_IN)
+        Q = snap_onto_ray(Q, c, X0, u, t)
+        tpos.append(t)
+        used.add(c)
+    for c in neg[:nneg]:
+        t = rng.choice(TS_IN)
+        Q = snap_onto_ray(Q, c, X0, (-u[0], -u[1]), t)
+        tneg.append(t)
+        used.add(c)
+    if not simple_closed(Q):
+        bump('extremal:snap_broke_Q')
+        return None
+    s1 = max(tpos) + rng.choice([F(1, 4), F(1, 2), F(1)])
+    s2 = max(tneg) + rng.choice([F(1, 4), F(1, 2), F(1)])
+    Pm1 = add(X0, smul(s1, u))
+    Pp1 = add(X0, smul(s2, (-u[0], -u[1])))
+    rest = _close_up(X0, Pm1, Pp1, rng, rmul=3.0)
+    P = (Pm1, X0, Pp1) + tuple(rest)
+    if not simple_closed(P):
+        bump('extremal:P_not_simple')
+        return None
+    if not finite_boundary_intersection(P, Q):
+        bump('extremal:not_finite')
+        return None
+    return P, Q, 1, 'extremal', f'npos={npos} nneg={nneg}'
+
+
+def fam_extremal11(rng):
+    return fam_extremal(rng, 1, 1)
+
+
+def fam_extremal22(rng):
+    return fam_extremal(rng, 2, 2)
+
+
+def fam_extremal21(rng):
+    return fam_extremal(rng, 2, 1)
+
+
 FAMILIES = {
     'random': fam_random,
+    'extremal11': fam_extremal11,
+    'extremal22': fam_extremal22,
+    'extremal21': fam_extremal21,
     'two_touch': fam_two_touch,
     'many_touch': fam_many_touch,
     'collinear_apex': fam_collinear,
