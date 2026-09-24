@@ -2870,5 +2870,45 @@ theorem points9_le_38_of_joint (R Rend : Pair9) (hfin : (points9 R).Finite)
 
 #print axioms points9_le_38_of_joint
 
+/-! ## 46. The rate dichotomy, assembled
+
+The three touched sides, handled together. The shifted side needs nothing; the
+two neighbours need a transverse tilt and coincidence-freeness. -/
+
+theorem orientR_swap (a b c : ℝ × ℝ) : orientR a b c = -orientR b a c := by
+  simp only [orientR]; ring
+
+/-- **Every degeneracy on a touched side has nonzero rate.** -/
+theorem rate_ne_zero_of_touched (V : Fin 14 → ℝ × ℝ) (i : Fin 7) (t : ℝ) {k j : Fin 7}
+    (hk : k ∈ touched i) (hu : V (pP (i + 1)) - V (pP i) ≠ 0)
+    (hdeg : orientR (V (pP k)) (V (pP (k + 1))) (V (pQ j)) = 0)
+    (htrN : cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+        ((V (pP (i + 1))).1 - (V (pP (i + 1 + 1))).1,
+         (V (pP (i + 1))).2 - (V (pP (i + 1 + 1))).2) ≠ 0)
+    (htrP : cross (tilt (V (pP (i + 1)) - V (pP i)) t)
+        ((V (pP i)).1 - (V (pP (i - 1))).1, (V (pP i)).2 - (V (pP (i - 1))).2) ≠ 0)
+    (hnc : ∀ v m : Fin 7, V (pP v) ≠ V (pQ m)) :
+    shiftCoef V i t k (pQ j) ≠ 0 := by
+  have hQne : ∀ m : Fin 7, ((V (pQ j)).1 - (V (pP m)).1,
+      (V (pQ j)).2 - (V (pP m)).2) ≠ 0 := by
+    intro m hz
+    refine hnc m j ?_
+    have h1 : (V (pQ j)).1 - (V (pP m)).1 = 0 := congrArg Prod.fst hz
+    have h2 : (V (pQ j)).2 - (V (pP m)).2 = 0 := congrArg Prod.snd hz
+    exact Prod.ext (by linarith) (by linarith)
+  rw [mem_touched_iff] at hk
+  rcases hk with h | h | h
+  · rw [h]; exact shiftCoef_self_Q_ne_zero V i t hu j
+  · rw [h] at hdeg ⊢
+    refine shiftCoef_next_ne_zero V i t j htrN (hQne _) ?_
+    rw [orientR_swap, hdeg, neg_zero]
+  · rw [h] at hdeg ⊢
+    have hji : i - 1 + 1 = i := by simp
+    rw [hji] at hdeg
+    exact shiftCoef_prev_ne_zero V i t j htrP (hQne _) hdeg
+
+#print axioms orientR_swap
+#print axioms rate_ne_zero_of_touched
+
 end Pair9Shift
 end Heptagon
