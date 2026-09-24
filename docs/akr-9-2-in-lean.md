@@ -255,3 +255,56 @@ This is the part that matters, and it is not small.
 So: hypothesis 12 **(NC)** is no longer the obstruction, and the row in
 A9-RED now reads *superseded, not satisfied*. §9.2 is **not closed**, §9 is not
 closed, and `f(7,7) = 38` is not proved.
+
+---
+
+## Update, 2026-09-24 — items 2 and 3′ above are SUPERSEDED; §9.2 is closed
+
+Two of the open items in the list above no longer hold, and saying so is the
+point of this document.
+
+**Item 2 ("the step is per-side and per-configuration; the growth cannot yet be
+accumulated over the whole procedure") is superseded.** It can be accumulated.
+`step_invariant_joint` carries the per-step inequality, `exists_joint_step_free`
+supplies every one of its hypotheses from `(Fin)` and coincidence-freeness
+alone, `exists_delta0_deg_exact` shows a shift removes **exactly** the touched
+degeneracies and creates none — so `segDeg + segDegP` strictly drops — and both
+standing hypotheses were shown to **reproduce themselves** along the chain
+(`exists_delta0_coincFree`, `exists_delta0_finite`). A strong induction on
+`segDeg + segDegP` then runs to a degeneracy-free endpoint:
+
+    points9_le_38_of_coincFree (R : Pair9) (hfin : (points9 R).Finite)
+        (hcoinc : ∀ v j, R.V (pP v) ≠ R.V (pQ j)) : (points9 R).ncard ≤ 38
+
+**Item 3′ ("`degP` is untouched; the interleaving is not addressed") is
+superseded.** The two families are carried **at once**, with a single `δ`, and
+a single sign chosen by the averaging for the **combined** total — which is
+what §38 said had to happen and could not be done by composing the two
+accountings separately. The mirror bridge (`card_incidentP_eq_lcAtP`) is the
+`P`-vertex-on-`Q`-side analogue of the original, and `segDegP` is tracked
+alongside `segDeg` throughout.
+
+Two corrections to claims made above and elsewhere, both mine:
+
+* The count *"Sixteen modules, **376** declarations"* in the header is from
+  2026-09-22. The current sweep is **500** declarations, still exit 0 and still
+  **0** `sorryAx`.
+* The transversality conditions were described in an earlier status row as a
+  genuine remaining gap, on the grounds that *"a `Q`-vertex that touches a
+  `P`-side and turns back"* would violate them. That reasoning was wrong. The
+  condition is that the degenerate vertex's **own side** separates the other
+  side's **endpoints**, which is automatic for a vertex strictly inside, by the
+  identity `orientR C D A · orientR C D B = −s(1−s)·(orientR A B D)²`. Whether
+  the polygon turns back is irrelevant.
+
+**What is still not closed.** §9.**1** — removing vertex–vertex coincidences —
+remains imported, and is exactly the `hcoinc` hypothesis above. Its step cannot
+use §9.2's measure: a coincidence is **one** point but **four** incidences, and
+on a committed witness all 4,159 admissible apex moves drop
+`crossPairs + segDeg + segDegP` by exactly 3. The replacement measure
+`crossPairs + degPts` is identified and supported numerically, and the identity
+relating the two is proved in the coincidence-free case (`seg_card_eq_degPts`),
+but §9.1's monotonicity is **not proved**.
+
+`f(7,7) = 38` is still not proved: it remains a candidate resting on §9.1,
+unreviewed by any mathematician.
