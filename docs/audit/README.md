@@ -1,12 +1,13 @@
 # `docs/audit/` — generators for the reader's audit document
 
-Two tools that feed a PDF written for a mathematician who does not read Lean.
-The document's job is to convince him the code does what it claims, so
-everything in it must be either *quoted from the source* or *recomputed from
-scratch*. These two tools are the only places the document's content comes
-from.
+The deliverable is `audit.tex` -> `audit.pdf`, written for a mathematician who
+does not read Lean. The document's job is to convince him the code does what it
+claims, so everything in it must be either *quoted from the source* or
+*recomputed from scratch*. `extract_lean.py` and `gallery.py` below are the only
+places the document's evidence comes from; `make_tables.py` only reformats their
+output into LaTeX.
 
-Both are Python 3 **standard library only** (no matplotlib, no numpy), and both
+The first two are Python 3 **standard library only** (no matplotlib, no numpy), and both
 **self-test on startup and abort on failure**. All geometry is exact rational
 arithmetic (`fractions.Fraction`); no floating point is used for any geometric
 decision anywhere.
@@ -37,11 +38,13 @@ Two failure modes are made loud rather than silent:
   and the document cannot quietly drift away from the code.
 
 The declaration list is `TARGETS` at the top of the file. It currently holds
-the statement surface of the headline theorem: `pP`, `pQ`
+the statement surface of the headline theorem, sixteen declarations: `pP`, `pQ`
 (`lean/ResidualSymBase.lean`); `SimpleClosed`, `Pair9`, `NoVertexOnOther`,
 `sideP9`, `sideQ9`, `bdryP9`, `bdryQ9`, `points9` (`lean/AKR9.lean`);
 `attainedCoincFree`, `points9_le_38_of_coincFree`,
-`isGreatest_38_of_coincFree` (`lean/Pair9Shift.lean`).
+`isGreatest_38_of_coincFree`, and the non-vacuity group `nonVacuity`,
+`certPair9_not_le_37`, `isGreatest_attainedCoincFree_unique`
+(`lean/Pair9Shift.lean`).
 
 Outputs, in `out/`:
 
@@ -98,16 +101,73 @@ Each configuration carries an `expected` count. A mismatch is reported as a
 polygons are not `SimpleClosed`. The `certificate_38` entry is read from
 `data/lower_bound/lower_bound_38.json` and must come out at exactly 38.
 
+## 3. `make_tables.py` — the LaTeX fragments, and `audit.tex` — the document
+
+`audit.tex` is the deliverable: a PDF written for a mathematician who does not
+read Lean. It contains **no hand-typed Lean and no hand-computed count**.
+Everything of that kind reaches it through `make_tables.py`, which reads the
+two tools' outputs and emits LaTeX fragments into `out/`:
+
+| fragment | feeds | source it is copied from |
+| --- | --- | --- |
+| `statement_table.tex` | §2, the statement beside the mathematics | `out/lean_excerpts.json` |
+| `gallery_table.tex` | §3, the count table | `out/gallery/gallery_summary.json` |
+| `gallery_figures.tex` | §3, the figure plates | `out/png/*.svg.png` |
+| `l4_box.tex` | §4, the L4 before/after | `scripts/negative-tests.sh` itself |
+| `mutation_tables.tex` | §4, the group-A verdict table | `out/negative_tests_A.log` |
+| `group_l.tex` | §4, the group-L block *or its hedge* | `results/validation/2026-09-24_negative_tests_L.log` |
+| `headline_facts.tex` | §5, the build evidence | `results/validation/2026-09-24_headline_build.log` and `out/axiom_check_headline.log` |
+| `nonvacuity.tex` | §6, `nonVacuity` and its ten clauses | `out/lean_excerpts.json` |
+| `facts.tex` | every number quoted in prose | both tools |
+
+LaTeX escaping is `extract_lean.latex_escape`, the same routine that writes
+`lean_excerpts.tex`, so §2 and the appendix cannot disagree about what the code
+says. `write_l4_box` locates the mutation strings in `scripts/negative-tests.sh`
+by parsing it and raises if they are not there, so the document cannot describe
+a test the suite no longer performs.
+
+Two properties of the section-4 generator are load-bearing and easy to break:
+
+* **All five verdicts render.** `negative-tests.sh` can print `ACCEPTED`,
+  `CAUGHT`, `NOT CAUGHT`, `NOT APPLIED` and `WRONGLY REJECTED`. `parse_negtests`
+  carries all five and `verdict_table` renders all five. An earlier version knew
+  only three and would have *silently dropped a failing row* — the same defect
+  as a checker that cannot fail. If you touch `VERDICTS`, keep it exhaustive.
+* **`group_l.tex` degrades honestly.** Group L needs four real `lake build`s, so
+  its log is often absent or half-written. `write_group_l` emits the real verdict
+  table only when the run printed its own `RESULT:` line; otherwise it emits the
+  hedge (`L_HEDGE`) plus a sourced note on how far the run had got. It never
+  guesses a verdict, and a failing case is reported in prose with the suite's own
+  `FAILED TO REJECT` line quoted. **Re-run `make_tables.py` after a group-L job
+  lands**; its stdout says which path it took.
+
+The figures are the gallery's SVGs rendered to PNG. There is no SVG-to-PDF
+converter on this machine; macOS `qlmanage` is used:
+
+```
+for f in docs/audit/out/gallery/*.svg; do
+  qlmanage -t -s 1400 -o docs/audit/out/png "$f"; done
+```
+
 ## Re-running
 
-From the repository root:
+From the repository root, in this order:
 
 ```
-python3 docs/audit/extract_lean.py
-python3 docs/audit/gallery.py
+python3 docs/audit/extract_lean.py     # verbatim Lean   -> out/lean_excerpts.*
+python3 docs/audit/gallery.py          # figures, counts -> out/gallery/
+bash scripts/negative-tests.sh --groups A > docs/audit/out/negative_tests_A.log
+bash scripts/negative-tests.sh --lean --groups L \
+  > results/validation/2026-09-24_negative_tests_L.log   # four real lake builds
+bash scripts/verify-all.sh --axiom-log \
+  results/validation/2026-09-24_headline_build.log \
+  > docs/audit/out/axiom_check_headline.log              # no Lean needed
+python3 docs/audit/make_tables.py      # the LaTeX fragments
+python3 docs/audit/extract_lean.py --check    # drift tripwire; MUST exit 0
+cd docs/audit && tectonic audit.tex           # -> docs/audit/audit.pdf
 ```
 
-Neither tool touches anything outside `docs/audit/out/`, neither builds Lean,
-and both take a couple of seconds. Before shipping a PDF, re-run
+Neither Python tool touches anything outside `docs/audit/out/`, neither builds
+Lean, and both take a couple of seconds. Before shipping a PDF, re-run
 `python3 docs/audit/extract_lean.py --check` and confirm the gallery still
 exits zero.

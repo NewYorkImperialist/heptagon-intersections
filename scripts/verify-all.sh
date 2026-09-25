@@ -107,12 +107,16 @@
 #          scans the sources for sorry / admit / native_decide / axiom.
 #
 #   #print axioms
-#       prints ONLY when the module is recompiled, so a warm rebuild emits
-#       almost none of them while still exiting 0.  The newest log in
-#       results/validation/ carries 60 `depends on axioms` lines against 576
-#       `#print axioms` directives in the sources, and NOT ONE of the four
-#       headline theorems among them: a warm run proves nearly nothing about
-#       axioms.  => step 1b parses those lines, rejects any axiom outside
+#       prints only for modules that are actually IN the build; one that is
+#       never compiled never reports, while the run still exits 0.  Warmth is
+#       not the issue -- Lake replays cached diagnostics, so a warm build does
+#       print these lines (2026-09-24_headline_build.log is fully warm, 271
+#       `Replayed` and 0 `Built`, and carries all 408 of them).  The trap is
+#       coverage: the newest pre-`Headline` log in results/validation/ carried
+#       60 `depends on axioms` lines against 576 `#print axioms` directives in
+#       the sources, and NOT ONE of the four headline theorems among them,
+#       because defaultTargets omits those modules and a bare `lake build`
+#       never compiled them.  => step 1b parses those lines, rejects any axiom outside
 #       {propext, Classical.choice, Quot.sound}, rejects sorryAx anywhere, and
 #       REQUIRES the headline theorems' own lines to be present.  Absent
 #       evidence is a failure, exactly as a missing input file is.
@@ -285,13 +289,20 @@ forbid_line() {   # forbid_line <logfile> <extended-regex> <what it means>
 #     surfaces as `sorryAx` in that theorem's OWN line, however deep it is
 #     buried.  So the headline lines are the ones worth demanding.
 #
-#   * It is printed ONLY ON RECOMPILATION.  `#print axioms` is a command in a
-#     source file; a warm `lake build` replays almost nothing, so almost none
-#     of them run.  Measured on the committed evidence: the newest log in
-#     results/validation/ has 60 `depends on axioms` lines against 576
-#     `#print axioms` directives in lean/*.lean, and only ONE of the five
-#     headline theorems among them.  A warm run therefore proves next to
-#     nothing about axioms while still reporting success.  => the absence of
+#   * It is printed ONLY FOR MODULES THAT ARE IN THE BUILD.  `#print axioms`
+#     is a command in a source file, so a module that is never compiled never
+#     reports.  Note that WARMTH IS NOT THE ISSUE: Lake replays cached
+#     diagnostics, so a warm build does still print these lines.  Measured on
+#     the committed evidence 2026-09-24, results/validation/2026-09-24_headline
+#     _build.log is a FULLY warm run -- 271 `Replayed` progress lines, ZERO
+#     `Built` -- and it carries all 408 `depends on axioms` lines and all six
+#     headline theorems.  The real failure mode is the one in the NOTE below:
+#     the newest pre-`Headline` log had 60 `depends on axioms` lines against
+#     576 `#print axioms` directives in lean/*.lean, and only ONE of the five
+#     headline theorems, because lakefile.toml kept the section-9 modules out
+#     of defaultTargets and a bare `lake build` never compiled them at all.
+#     Such a run proves next to nothing about axioms while still reporting
+#     success.  => the absence of
 #     the headline lines is a FAILURE here, on the same principle as a missing
 #     input file.  When they are absent this step first tries to obtain them
 #     WITHOUT a rebuild, by running `#print axioms` against the .oleans that
@@ -359,8 +370,13 @@ def ours(s):
             or s.startswith("***") or s.startswith("assert OK")
             or s.startswith("expected:") or s.startswith("#"))
 
-REC   = re.compile(r"'([^']+)'\s*depends on axioms:\s*\[([^\]]*)\]")
-NOAX  = re.compile(r"'([^']+)'\s*" + NONE_MARK)
+# Lean identifiers may END IN A PRIME (exists_good_delta_affine'), so the log
+# reads  '...exists_good_delta_affine'' depends on axioms: [...]  -- a doubled
+# quote.  A non-greedy [^']+ stops at the first prime and fails to match, which
+# is how three real declarations went unparsed.  Greedy .+ anchored on the
+# literal marker takes the longest name and gets it right.
+REC   = re.compile(r"'(.+)'\s*depends on axioms:\s*\[([^\]]*)\]")
+NOAX  = re.compile(r"'(.+)'\s*" + NONE_MARK)
 FILEP = re.compile(r"([A-Za-z0-9_./-]+\.lean):\d+:\d+")
 NEWMSG = re.compile(r"^(info:|warning:|error:|information:|trace:|ℹ|⚠|✔|✗|✗)")
 
@@ -482,8 +498,8 @@ if sorry_warn:
 missing = [r for r, got in confirmed if not got]
 if missing:
     reasons.append("%d headline theorem(s) printed NO axiom line, so this run says "
-                   "nothing about them (a warm rebuild replays almost nothing, and "
-                   "#print axioms only runs on recompilation)" % len(missing))
+                   "nothing about them (their modules were not in the build at all "
+                   "-- check defaultTargets, or build the Headline target)" % len(missing))
 
 if reasons:
     print("AXIOM CHECK: FAILED -- " + "; ".join(reasons) + ".")
@@ -833,9 +849,10 @@ PYEOF
     say "             only $AXIOM_ALLOWED;"
     say "             sorryAx nowhere; and each of the $AXIOM_HEADLINE_N headline theorems"
     say "             reporting a line of its OWN.  The last of those is the point:"
-    say "             #print axioms runs only when its module is recompiled, so a"
-    say "             warm rebuild emits almost nothing and would otherwise 'pass'"
-    say "             while proving nothing."
+    say "             #print axioms reports only for modules that are actually in"
+    say "             the build, so a run that omits them would otherwise 'pass'"
+    say "             while proving nothing.  (Warmth is NOT the issue -- Lake"
+    say "             replays cached diagnostics, so a warm build does print them.)"
     say "   NOTE    : lakefile.toml keeps the AKR section-9 modules (AKR9,"
     say "             Pair9Shift, ...) out of defaultTargets, so a bare 'lake build'"
     say "             never compiles them and never prints their axioms.  The"

@@ -8,7 +8,10 @@
   "lean/AKR9.lean::sideP9": "d4fe0c17b127a83d939d5178d05d3c40eb948f008b5fd4e8619dc179e56672f9",
   "lean/AKR9.lean::sideQ9": "11eeae20593ea2a1bbac940d0ced691b9e5fa2edaa8429b002085af2a9274d29",
   "lean/Pair9Shift.lean::attainedCoincFree": "b6a2f36fb4b7a73a0bb47dd4ab3bf2be7e57985e098677a65529ec064cb178a4",
+  "lean/Pair9Shift.lean::certPair9_not_le_37": "38d9cfe24870f4e14089bdb0d41d813c9300527792f9924a66d35822ccedce0d",
   "lean/Pair9Shift.lean::isGreatest_38_of_coincFree": "65abe2c7433fde808b2490e1a5bc2d90aaa5d75ac25897298174cdb681a7c072",
+  "lean/Pair9Shift.lean::isGreatest_attainedCoincFree_unique": "51aec4825e4ace423cf0f4fa640101d6a1e7913e02923aef15e0bb67a094fd6b",
+  "lean/Pair9Shift.lean::nonVacuity": "3e3ab8050896ad6c1c73c0b204626f8a91af839ae64b4d436b939c73ed0f5002",
   "lean/Pair9Shift.lean::points9_le_38_of_coincFree": "a4ddd86b44750a3612a89bf568d4b04ef0944619c83c3e6d09ea27d4c4b11276",
   "lean/ResidualSymBase.lean::pP": "1a631ecfd616974a88558a20642ed191ca105d762a52e73c2fe3a96981fee710",
   "lean/ResidualSymBase.lean::pQ": "45ca49367b075294c4f9dea6c5b9b8665935ae2d6f32aa2d4860b417a6853007"

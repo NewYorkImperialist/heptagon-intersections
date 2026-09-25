@@ -77,3 +77,34 @@
 \leanline{~~rintro n $\langle$R, hfin, hco, rfl$\rangle$}
 \leanline{~~exact points9\_le\_38\_of\_coincFree R hfin hco}
 \end{leandecl}
+
+\begin{leandecl}{nonVacuity}{lean/Pair9Shift.lean}{5296}
+\leanline{theorem nonVacuity :}
+\leanline{~~~~Nonempty AKR9.Pair9}
+\leanline{~~~~$\land$ (points9 AKR9.certPair9).Nonempty}
+\leanline{~~~~$\land$ (points9 AKR9.certPair9).Finite}
+\leanline{~~~~$\land$ ($\forall$ v j : Fin 7, AKR9.certPair9.V (pP v) $\ne$ AKR9.certPair9.V (pQ j))}
+\leanline{~~~~$\land$ AKR9.NoVertexOnOther AKR9.certPair9}
+\leanline{~~~~$\land$ (points9 AKR9.certPair9).ncard = 38}
+\leanline{~~~~$\land$ $\lnot$ (points9 AKR9.certPair9).ncard $\le$ 37}
+\leanline{~~~~$\land$ (38 : $\mathbb{N}$) $\in$ attainedCoincFree}
+\leanline{~~~~$\land$ (39 : $\mathbb{N}$) $\notin$ attainedCoincFree}
+\leanline{~~~~$\land$ IsGreatest attainedCoincFree 38 :=}
+\leanline{~~$\langle$pair9\_nonempty, certPair9\_points9\_nonempty, certPair9\_finite,}
+\leanline{~~~certPair9\_coincFree, certPair9\_noVertexOnOther, AKR9.certPair9\_ncard,}
+\leanline{~~~certPair9\_not\_le\_37, mem\_attainedCoincFree\_38, not\_mem\_attainedCoincFree\_39,}
+\leanline{~~~isGreatest\_38\_of\_coincFree$\rangle$}
+\end{leandecl}
+
+\begin{leandecl}{certPair9\_not\_le\_37}{lean/Pair9Shift.lean}{5252}
+\leanline{theorem certPair9\_not\_le\_37 : $\lnot$ (points9 AKR9.certPair9).ncard $\le$ 37 := by}
+\leanline{~~intro h}
+\leanline{~~rw [AKR9.certPair9\_ncard] at h}
+\leanline{~~omega}
+\end{leandecl}
+
+\begin{leandecl}{isGreatest\_attainedCoincFree\_unique}{lean/Pair9Shift.lean}{5272}
+\leanline{theorem isGreatest\_attainedCoincFree\_unique \{n : $\mathbb{N}$\}}
+\leanline{~~~~(h : IsGreatest attainedCoincFree n) : n = 38 :=}
+\leanline{~~h.unique isGreatest\_38\_of\_coincFree}
+\end{leandecl}

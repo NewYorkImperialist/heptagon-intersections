@@ -130,6 +130,36 @@
       "doc": "/-- **38 is the greatest attainable count, assuming only `(Fin)` and that the\ntwo heptagons share no vertex.**\n\nStrictly weaker than `AKR9.isGreatest_38_of_E9`, whose hypothesis (E9) forbids\na vertex anywhere on the other boundary.  **This is still not `f(7,7) = 38`:**\ncoincidence-freeness is §9.1's conclusion and is assumed, not proved. -/",
       "text": "theorem isGreatest_38_of_coincFree : IsGreatest attainedCoincFree 38 := by\n  refine ⟨⟨AKR9.certPair9, certPair9_finite, certPair9_coincFree,\n    AKR9.certPair9_ncard⟩, ?_⟩\n  rintro n ⟨R, hfin, hco, rfl⟩\n  exact points9_le_38_of_coincFree R hfin hco",
       "sha256": "65abe2c7433fde808b2490e1a5bc2d90aaa5d75ac25897298174cdb681a7c072"
+    },
+    {
+      "name": "nonVacuity",
+      "file": "lean/Pair9Shift.lean",
+      "line": 5296,
+      "end_line": 5310,
+      "kind": "theorem",
+      "doc": "/-- **THE NON-VACUITY BUNDLE.**  One theorem a reader can check in one\nscreenful.  Reading the clauses in order:\n\n1. `Pair9` is inhabited — the ambient `SimpleClosed` hypotheses are satisfiable;\n2. `points9` of the witness is a non-empty set of actual points of `ℝ × ℝ`;\n3. it is finite — so `Set.ncard` is the honest count and not the `0` that\n   `ncard` returns on infinite sets;\n4. the witness is coincidence-free — the hypothesis of\n   `points9_le_38_of_coincFree` holds;\n5. the witness satisfies the *stronger* hypothesis (E9) of\n   `AKR9.isGreatest_38_of_E9` as well;\n6. its count is **exactly** `38` — the bound is attained;\n7. `≤ 37` is false there — the bound is not slack;\n8. `38` is attained, and\n9. `39` is not — so the upper-bound half is not vacuous;\n10. and `38` is the greatest attained count.\n\nClauses 2–7 all hold of the **same** configuration, which is the point: a\nhypothesis-by-hypothesis check would not rule out a theorem whose hypotheses\nare individually satisfiable but jointly contradictory. -/",
+      "text": "theorem nonVacuity :\n    Nonempty AKR9.Pair9\n    ∧ (points9 AKR9.certPair9).Nonempty\n    ∧ (points9 AKR9.certPair9).Finite\n    ∧ (∀ v j : Fin 7, AKR9.certPair9.V (pP v) ≠ AKR9.certPair9.V (pQ j))\n    ∧ AKR9.NoVertexOnOther AKR9.certPair9\n    ∧ (points9 AKR9.certPair9).ncard = 38\n    ∧ ¬ (points9 AKR9.certPair9).ncard ≤ 37\n    ∧ (38 : ℕ) ∈ attainedCoincFree\n    ∧ (39 : ℕ) ∉ attainedCoincFree\n    ∧ IsGreatest attainedCoincFree 38 :=\n  ⟨pair9_nonempty, certPair9_points9_nonempty, certPair9_finite,\n   certPair9_coincFree, certPair9_noVertexOnOther, AKR9.certPair9_ncard,\n   certPair9_not_le_37, mem_attainedCoincFree_38, not_mem_attainedCoincFree_39,\n   isGreatest_38_of_coincFree⟩",
+      "sha256": "3e3ab8050896ad6c1c73c0b204626f8a91af839ae64b4d436b939c73ed0f5002"
+    },
+    {
+      "name": "certPair9_not_le_37",
+      "file": "lean/Pair9Shift.lean",
+      "line": 5252,
+      "end_line": 5255,
+      "kind": "theorem",
+      "doc": "/-- **(NV6) The bound is not slack.**  `≤ 38` is attained; `≤ 37` is false on\nthe very configuration the theorem applies to.  So the constant `38` is forced\nand cannot be improved by a reader's inspection. -/",
+      "text": "theorem certPair9_not_le_37 : ¬ (points9 AKR9.certPair9).ncard ≤ 37 := by\n  intro h\n  rw [AKR9.certPair9_ncard] at h\n  omega",
+      "sha256": "38d9cfe24870f4e14089bdb0d41d813c9300527792f9924a66d35822ccedce0d"
+    },
+    {
+      "name": "isGreatest_attainedCoincFree_unique",
+      "file": "lean/Pair9Shift.lean",
+      "line": 5272,
+      "end_line": 5274,
+      "kind": "theorem",
+      "doc": "/-- **(NV9) `IsGreatest` pins the value.**  Any greatest element of\n`attainedCoincFree` equals `38`: the theorem does not merely assert an upper\nbound, it identifies the maximum. -/",
+      "text": "theorem isGreatest_attainedCoincFree_unique {n : ℕ}\n    (h : IsGreatest attainedCoincFree n) : n = 38 :=\n  h.unique isGreatest_38_of_coincFree",
+      "sha256": "51aec4825e4ace423cf0f4fa640101d6a1e7913e02923aef15e0bb67a094fd6b"
     }
   ]
 }

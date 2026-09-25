@@ -26,14 +26,14 @@
    "result": "VERIFIED UNSAT",
    "clauses": 64566,
    "steps": 663,
-   "seconds": 39.26641488075256
+   "seconds": 43.81199097633362
   },
   {
    "tag": "generic_both-hooked",
    "result": "VERIFIED UNSAT",
    "clauses": 64566,
    "steps": 606,
-   "seconds": 32.431644916534424
+   "seconds": 34.48971676826477
   },
   {
    "tag": "P-adj_none",
@@ -47,28 +47,28 @@
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 396,
-   "seconds": 9.05142331123352
+   "seconds": 9.599031925201416
   },
   {
    "tag": "P-adj_mixed-2",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 371,
-   "seconds": 7.670881032943726
+   "seconds": 8.282832145690918
   },
   {
    "tag": "P-adj_both-hooking",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 389,
-   "seconds": 8.765384912490845
+   "seconds": 9.265410661697388
   },
   {
    "tag": "P-adj_both-hooked",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 418,
-   "seconds": 12.717431783676147
+   "seconds": 13.410563230514526
   },
   {
    "tag": "Q-adj_none",
@@ -82,64 +82,64 @@
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 441,
-   "seconds": 13.060354948043823
+   "seconds": 13.70962405204773
   },
   {
    "tag": "Q-adj_mixed-2",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 382,
-   "seconds": 8.122390031814575
+   "seconds": 8.986664772033691
   },
   {
    "tag": "Q-adj_both-hooking",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 503,
-   "seconds": 13.207051992416382
+   "seconds": 16.16050624847412
   },
   {
    "tag": "Q-adj_both-hooked",
    "result": "VERIFIED UNSAT",
    "clauses": 37832,
    "steps": 290,
-   "seconds": 5.958950996398926
+   "seconds": 6.681005954742432
   },
   {
    "tag": "PQ-adj_none",
    "result": "VERIFIED UNSAT",
    "clauses": 20764,
    "steps": 329,
-   "seconds": 4.481247901916504
+   "seconds": 5.713487148284912
   },
   {
    "tag": "PQ-adj_mixed-1",
    "result": "VERIFIED UNSAT",
    "clauses": 20788,
    "steps": 283,
-   "seconds": 3.3283419609069824
+   "seconds": 3.709282159805298
   },
   {
    "tag": "PQ-adj_mixed-2",
    "result": "VERIFIED UNSAT",
    "clauses": 20788,
    "steps": 348,
-   "seconds": 4.999138832092285
+   "seconds": 5.495895147323608
   },
   {
    "tag": "PQ-adj_both-hooking",
    "result": "VERIFIED UNSAT",
    "clauses": 20788,
    "steps": 280,
-   "seconds": 3.215524911880493
+   "seconds": 3.625243902206421
   },
   {
    "tag": "PQ-adj_both-hooked",
    "result": "VERIFIED UNSAT",
    "clauses": 20788,
    "steps": 272,
-   "seconds": 3.1458990573883057
+   "seconds": 4.615917921066284
   }
  ],
- "total_seconds": 169.42341303825378
+ "total_seconds": 187.56198692321777
 }

@@ -1,0 +1,72 @@
+
+========================================================================
+heptagon-intersections :: verify-all
+========================================================================
+repository root : /Users/jaydenlin/dev/lean/heptagon-intersections
+mode            : full (steps 1-6)
+date            : 2026-09-25T02:07:59Z
+uname           : Darwin 24.6.0 arm64
+shell           : bash 3.2.57(1)-release
+python3         : python3 (Python 3.14.7)
+lake            : Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)
+sha256 tool     : shasum -a 256
+C++ compiler    : c++
+run log dir     : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-verify.92rRLR   (kept; nothing is written to evidence/logs/ by this script)
+
+========================================================================
+AXIOM CHECK ONLY -- results/validation/2026-09-24_headline_build.log
+========================================================================
+expected: every 'depends on axioms:' line lists only propext, Classical.choice, Quot.sound;
+          sorryAx nowhere; and all 6 headline theorems present.
+
+   axiom-check: evidence log                               : results/validation/2026-09-24_headline_build.log
+   axiom-check: lines scanned                              : 83021
+   axiom-check: 'depends on axioms' lines found            : 408
+   axiom-check: declarations parsed                        : 409
+   axiom-check: declarations using a disallowed axiom      : 0
+   axiom-check: occurrences of sorryAx                     : 0
+   axiom-check: occurrences of "declaration uses 'sorry'"  : 0
+   axiom-check: distinct axioms                            : 3
+   axiom-check:     OK         Classical.choice         in 398 declaration(s)
+   axiom-check:     OK         Quot.sound               in 405 declaration(s)
+   axiom-check:     OK         propext                  in 408 declaration(s)
+   axiom-check: source files that reported                 : 20
+   axiom-check:     Pair9Shift.lean                    204 declaration(s)
+   axiom-check:     RotationLaw.lean                   55 declaration(s)
+   axiom-check:     TiltedShift.lean                   41 declaration(s)
+   axiom-check:     CernyL2Derivation.lean             11 declaration(s)
+   axiom-check:     IntersectionCount.lean             11 declaration(s)
+   axiom-check:     SignExp.lean                       11 declaration(s)
+   axiom-check:     SimplicityStable.lean              11 declaration(s)
+   axiom-check:     AKR9.lean                          10 declaration(s)
+   axiom-check:     DegBound.lean                      8 declaration(s)
+   axiom-check:     R3Construct.lean                   7 declaration(s)
+   axiom-check:     RealUpperBound.lean                7 declaration(s)
+   axiom-check:     ConfigBridge.lean                  6 declaration(s)
+   axiom-check:     ... and 8 more source file(s)
+   axiom-check: headline theorems confirmed                : 6 of 6
+   axiom-check:     CONFIRMED  Heptagon.MainTheorem.isGreatest_38
+   axiom-check:                depends on axioms: [propext, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.RealUpperBound.isGreatest_38_real
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.AKR9.points_le_38_of_no_vertex_on_boundary
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.AKR9.isGreatest_38_of_E9
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.Pair9Shift.points9_le_38_of_coincFree
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.Pair9Shift.isGreatest_38_of_coincFree
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   AXIOM CHECK: CLEAN -- 409 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound; sorryAx appears nowhere; all 6 headline theorems confirmed.
+   assert OK   : the axiom report's own verdict line says CLEAN
+   assert OK   : the axiom report names no problem
+   assert OK   : at least one declaration actually reported its axioms (0 lines is no evidence)
+   assert OK   : every axiom listed is one of propext, Classical.choice, Quot.sound
+   assert OK   : sorryAx appears nowhere in the evidence
+   assert OK   : all 6 headline theorems printed an axiom line of their own (results/validation/2026-09-24_headline_build.log)
+
+--- PASS: 1b. axiom check (results/validation/2026-09-24_headline_build.log)
+
+AXIOM EVIDENCE ACCEPTED (exit 0) for this log.  Note the scope: this says
+what the LOG contains.  It is evidence about the build that produced the
+log, not about the working tree as it stands now.

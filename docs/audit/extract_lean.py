@@ -69,6 +69,10 @@ TARGETS: list[tuple[str, str]] = [
     ("lean/Pair9Shift.lean", "attainedCoincFree"),
     ("lean/Pair9Shift.lean", "points9_le_38_of_coincFree"),
     ("lean/Pair9Shift.lean", "isGreatest_38_of_coincFree"),
+    # non-vacuity: the hypotheses are satisfiable and the bound is tight
+    ("lean/Pair9Shift.lean", "nonVacuity"),
+    ("lean/Pair9Shift.lean", "certPair9_not_le_37"),
+    ("lean/Pair9Shift.lean", "isGreatest_attainedCoincFree_unique"),
 ]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

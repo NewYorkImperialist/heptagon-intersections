@@ -18,7 +18,7 @@
 # The suite has three groups:
 #
 #   N1-N8   evidence-level mutations (certificates, hashes, DRAT).  Cheap.
-#   A1-A7   the axiom check, driven through `verify-all.sh --axiom-log` against
+#   A1-A8   the axiom check, driven through `verify-all.sh --axiom-log` against
 #           SYNTHETIC logs.  These need no Lean and no build: the checker is a
 #           log parser, so it can be tested the way any parser is tested.
 #   L1-L4   Lean-level mutations -- a planted `sorry`, a declared `axiom`, a
@@ -492,13 +492,21 @@ WHAT="a headline theorem's axiom list contains sorryAx"
 ax_case "A3 sorryAx in a headline theorem" "$AXDIR/a3_sorryax.log" reject \
         'occurrences of sorryAx +: [1-9]'
 
-# --- A4: the WARM LOG.  Everything present is clean; the headline lines -----
-#     are simply absent, because nothing was recompiled.  This is the shape of
-#     every log currently in results/validation/, and the reason the check
-#     exists: without this rule such a log reports success and proves nothing.
+# --- A4: the UNCOVERED LOG.  Everything present is clean; the headline ------
+#     lines are simply absent, because those modules were never in the build.
+#     That is what `lake build` alone produces here: defaultTargets omits the
+#     section-9 modules, so it cannot print their axioms.  This is the shape of
+#     every log in results/validation/ predating the Headline target, and the
+#     reason the check exists: without this rule such a log reports success and
+#     proves nothing.
+#     NOTE: warmth is NOT the mechanism.  Lake replays cached diagnostics, so a
+#     warm build DOES print these lines -- measured 2026-09-24 on
+#     results/validation/2026-09-24_headline_build.log, which is 100% warm
+#     (271 Replayed, 0 Built) and carries all 408 of them.  This case was
+#     previously mislabelled "warm log", which stated the opposite.
 filler_lines > "$AXDIR/a4_warm.log"
-WHAT="a warm-rebuild log: clean, but the headline theorems never printed"
-ax_case "A4 warm log, headlines absent" "$AXDIR/a4_warm.log" reject \
+WHAT="a log whose headline modules were never built: clean, but they never printed"
+ax_case "A4 headline lines absent" "$AXDIR/a4_warm.log" reject \
         'headline theorem\(s\) printed NO axiom line'
 
 # --- A5: an axiom outside the allowed three.  Lean.ofReduceBool is exactly --

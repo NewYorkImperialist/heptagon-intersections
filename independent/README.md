@@ -37,16 +37,16 @@ Two consequences a reviewer should draw:
   themselves.
 
 **Most of this will not run on your machine.** Of the 280 committed
-Python/shell/C files here (**38,530 lines**), **36 Python files and 22 C files
+Python/shell/C files here (**38,530 lines**), **35 Python files and 22 C files
 hardcode absolute paths under `/Users/jaydenlin/…`** and will fail immediately
-from a fresh clone. They are concentrated in `eps_uniform/` (26),
+from a fresh clone. They are concentrated in `eps_uniform/` (25),
 `pi8_human/` (15), `pi14_split/` (7) and `akr_9_assembly/` (6), with one each in
 `pi8_tightness/`, `order_type_pi8/`, `akr_l7_reproduction/` and `akr_9_2/`.
 Re-run the count:
 
 ```bash
 cd independent
-grep -rl '/Users/jaydenlin' --include='*.py' --include='*.sh' . | wc -l   # -> 36
+grep -rl '/Users/jaydenlin' --include='*.py' --include='*.sh' . | wc -l   # -> 35
 grep -rl '/Users/jaydenlin' --include='*.c'  --include='*.h'  . | wc -l   # -> 22
 ```
 

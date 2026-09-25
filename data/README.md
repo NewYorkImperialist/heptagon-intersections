@@ -16,11 +16,45 @@ the bottom of `../.gitignore`.
 | `certificates/final_elimination_225_with_cernyL3.json` | control | Yes — same, `--with-l3`. |
 | `hashes/SHA256SUMS` | manifest for the five JSON files above | Yes — see below. |
 | `hashes/SHA256SUMS.tools` | manifest for the generator/checker scripts (4 files) | Yes. |
-| `hashes/SHA256SUMS.lean` | manifest for the Lean sources (28 files: 25 libraries + `lakefile.toml` + `lean-toolchain` + `gen_endgame_data.py`) | Yes. |
+| `hashes/SHA256SUMS.lean` | manifest for the Lean sources (**1,783 files**: all 1,779 `lean/*.lean` + `lakefile.toml` + `lean-toolchain` + `lake-manifest.json` + `gen_endgame_data.py`) | Yes — see below. |
 | `hashes/SHA256SUMS.implementation_b` | manifest for Implementation B (7 files) | Yes. |
 | `hashes/SHA256SUMS.order_type_audit` | manifest for the order-type audit (8 files) | Yes. |
 
 All five manifests are checked by `scripts/verify-all.sh` step 4.
+
+### Regenerating `SHA256SUMS.lean`, and a gap that was found in it
+
+`shasum -c` verifies **only the entries a manifest lists**. A file that is
+missing from the manifest is not reported as missing — it is simply not checked,
+and the step still passes. That is a check which can look green while covering
+nothing, so the file set matters as much as the hashes.
+
+**Found and fixed 2026-09-24.** The manifest had drifted to **1,765** entries
+and was omitting **17 Lean sources**, among them `Pair9Shift.lean` (which
+carries the headline theorems), `E9Directions.lean` and `Headline.lean` — i.e.
+precisely the AKR §9 work. Step 4 had been passing on them without checking
+them. `lake-manifest.json`, which pins the Mathlib revision the whole build
+resolves against, was never covered either. All 18 are now included, and the
+one genuine mismatch (`lakefile.toml`, changed deliberately when the `Headline`
+target was added) was regenerated.
+
+Regenerate with the command below. `LC_ALL=C` is not cosmetic: without it the
+order depends on the caller's locale — `AKR9.lean` and `AKRL5Derivation.lean`
+sort differently under `en_US` than under `C` — so the byte-for-byte output
+would not be reproducible by a third party.
+
+```bash
+cd <repo root>
+{ ls lean/*.lean
+  echo lean/gen_endgame_data.py
+  echo lean/lakefile.toml
+  echo lean/lean-toolchain
+  echo lean/lake-manifest.json
+} | LC_ALL=C sort | xargs shasum -a 256 > data/hashes/SHA256SUMS.lean
+```
+
+If the file count changes, say why in the commit message: a shrinking manifest
+is how coverage is lost silently.
 
 Rebuilding the certificates takes about 3 minutes each (they contain the whole
 13,003,620-graph enumeration); everything else here rebuilds in seconds. The

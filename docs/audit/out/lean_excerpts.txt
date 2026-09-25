@@ -89,3 +89,37 @@ theorem isGreatest_38_of_coincFree : IsGreatest attainedCoincFree 38 := by
     AKR9.certPair9_ncard⟩, ?_⟩
   rintro n ⟨R, hfin, hco, rfl⟩
   exact points9_le_38_of_coincFree R hfin hco
+
+=======================================
+nonVacuity  (lean/Pair9Shift.lean:5296)
+=======================================
+theorem nonVacuity :
+    Nonempty AKR9.Pair9
+    ∧ (points9 AKR9.certPair9).Nonempty
+    ∧ (points9 AKR9.certPair9).Finite
+    ∧ (∀ v j : Fin 7, AKR9.certPair9.V (pP v) ≠ AKR9.certPair9.V (pQ j))
+    ∧ AKR9.NoVertexOnOther AKR9.certPair9
+    ∧ (points9 AKR9.certPair9).ncard = 38
+    ∧ ¬ (points9 AKR9.certPair9).ncard ≤ 37
+    ∧ (38 : ℕ) ∈ attainedCoincFree
+    ∧ (39 : ℕ) ∉ attainedCoincFree
+    ∧ IsGreatest attainedCoincFree 38 :=
+  ⟨pair9_nonempty, certPair9_points9_nonempty, certPair9_finite,
+   certPair9_coincFree, certPair9_noVertexOnOther, AKR9.certPair9_ncard,
+   certPair9_not_le_37, mem_attainedCoincFree_38, not_mem_attainedCoincFree_39,
+   isGreatest_38_of_coincFree⟩
+
+================================================
+certPair9_not_le_37  (lean/Pair9Shift.lean:5252)
+================================================
+theorem certPair9_not_le_37 : ¬ (points9 AKR9.certPair9).ncard ≤ 37 := by
+  intro h
+  rw [AKR9.certPair9_ncard] at h
+  omega
+
+================================================================
+isGreatest_attainedCoincFree_unique  (lean/Pair9Shift.lean:5272)
+================================================================
+theorem isGreatest_attainedCoincFree_unique {n : ℕ}
+    (h : IsGreatest attainedCoincFree n) : n = 38 :=
+  h.unique isGreatest_38_of_coincFree

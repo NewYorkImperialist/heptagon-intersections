@@ -1,0 +1,397 @@
+# Continuous verification for heptagon-intersections.
+#
+# WHAT THIS IS FOR
+#   Every other artifact in this repository was produced on the author's own
+#   machine.  This workflow is the one piece of evidence that is not: GitHub
+#   clones the repository fresh onto a machine nobody here controls, installs
+#   the pinned toolchain, builds the headline chain, and asserts the axiom
+#   claim.  A green tick here means a stranger's computer reproduced it.
+#
+# WHAT IT DOES NOT DO
+#   It does NOT run `lake build` (all 1,779 declared libraries).  That is a
+#   ~17 CPU-hour cold build dominated by the 1,084 OTEnum*/Strat* enumeration
+#   shards, none of which is in the headline import closure.  See
+#   .github/workflows/README.md for the full scope statement.
+#
+# DO NOT ADD actions/cache FOR lean/.lake/build.  THE OMISSION IS THE POINT.
+#   The reason is PROVENANCE, not message emission.  Lake replays the stored
+#   diagnostics of an up-to-date module, so a cached build still prints every
+#   `#print axioms` line -- measured on this repository:
+#   results/validation/2026-09-24_headline_build.log is 271 Replayed jobs,
+#   0 Built, and still emits all 409 axiom directives in the closure, the six
+#   headline theorems among them.  A cache would therefore go GREEN while
+#   re-checking nothing: the axiom lines would be text restored from a tarball
+#   an earlier run uploaded, not output the kernel produced here.  That tick
+#   would attest GitHub's ability to unpack an archive.  The whole value of
+#   this workflow is that a machine nobody here controls elaborated the proofs
+#   FROM SOURCE, so the project's own modules must be compiled, every time.
+#
+#   Mathlib is the deliberate exception.  It is not the thing under test, a
+#   cold build of it alone would blow the 6-hour job limit, and `lake exe cache
+#   get` below fetches .oleans for exactly the revision pinned in
+#   lean/lake-manifest.json.  Caching a DEPENDENCY is ordinary; caching the
+#   artifact you are claiming to have verified is not.
+name: verify
+
+on:
+  # Deliberately limited to the default branch.  This is a multi-hour build on
+  # a private repo, where the Free tier allows 2,000 Actions-minutes a month.
+  # Unfiltered `push:` would start one on every push to every branch and could
+  # exhaust the quota -- and quota exhaustion presents as a FAILED (red) run,
+  # which a reader would reasonably misread as "the verification broke".  A
+  # misleading red mark is worse here than a missing one, because the whole
+  # point of this workflow is that its tick can be trusted at face value.
+  # Use `workflow_dispatch` (Actions tab -> verify -> Run workflow) to run it
+  # on demand from any branch.
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      run_lean_mutations:
+        description: >-
+          OPT-IN, VERY SLOW: also run the Lean-level mutation tests (L1-L4).
+          Each case runs a FULL `lake build` of a mutated copy of the repo.
+          Expect this to exceed the 6-hour hosted-runner limit; intended for a
+          self-hosted runner.  Leave unchecked for the normal run.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =====================================================================
+  # JOB 1 -- the one that runs on every push to master and every PR into it.
+  # =====================================================================
+  headline:
+    name: Headline build + axiom check + negative tests (group A)
+    runs-on: ubuntu-latest
+    # The cold cost of the 331-module Headline closure has never been measured
+    # on a 2-core runner; locally it is ~11 s WARM, which says nothing about
+    # cold.  The closure contains 28 `CoverCase*` modules that need ~730 MB RSS
+    # each.  This ceiling is deliberately generous; see the README.
+    timeout-minutes: 300
+    # Note: Lake 5.0 has no -j flag, so build parallelism is nproc (2 on a
+    # standard private-repo runner).  That is already close to serial, which is
+    # what the memory-heavy modules in this closure want.
+    env:
+      CI_OUT: ${{ github.workspace }}/ci-out
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Create the artifact directory
+        run: mkdir -p "$CI_OUT"
+
+      - name: Record the machine
+        # Diagnostics only: this step must never be the reason a run goes red.
+        run: |
+          set -uo pipefail
+          { echo "runner      : $RUNNER_OS $(uname -srm)"
+            echo "commit      : $GITHUB_SHA"
+            echo "cores       : $(nproc 2>/dev/null || echo '?')"
+            echo "memory      : $(free -h 2>/dev/null | awk 'NR==2{print $2" total, "$7" available"}' || echo '?')"
+            echo "disk        : $(df -h / 2>/dev/null | awk 'NR==2{print $4" free of "$2}' || echo '?')"
+            echo "python3     : $(python3 --version 2>&1 || echo MISSING)"
+            echo "rsync       : $(rsync --version 2>/dev/null | head -1 || echo MISSING)"
+          } | tee "$CI_OUT/machine.txt"
+          exit 0
+
+      - name: Ensure rsync is present
+        # scripts/negative-tests.sh hard-requires rsync (it exits 3 without it),
+        # even for group A which never copies the tree.
+        run: |
+          set -euo pipefail
+          command -v rsync >/dev/null 2>&1 || {
+            sudo apt-get update -qq && sudo apt-get install -y -qq rsync
+          }
+          rsync --version | head -1
+
+      - name: Install elan (the Lean toolchain manager)
+        run: |
+          set -euo pipefail
+          curl -sSfL --retry 3 --retry-delay 5 \
+            https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          bash "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Install and show the PINNED toolchain
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          # elan reads lean/lean-toolchain and installs exactly that.  The
+          # assertion below is the point: if the pin ever drifts, this fails
+          # here rather than silently verifying a different Lean.
+          pinned="$(tr -d '[:space:]' < lean-toolchain)"
+          echo "lean/lean-toolchain pins: $pinned"
+          test "$pinned" = "leanprover/lean4:v4.33.1" || {
+            echo "::error::lean-toolchain is '$pinned', expected leanprover/lean4:v4.33.1."
+            echo "::error::Update this assertion deliberately if the pin was moved on purpose."
+            exit 1
+          }
+          elan toolchain install "$pinned"
+          { echo "--- lean --version ---"; lean --version
+            echo "--- lake --version ---"; lake --version
+            echo "--- lean/lean-toolchain ---"; cat lean-toolchain
+            # NOT `sed -n '1,12p'`: line 2 of lakefile.toml is the
+            # defaultTargets array, a single 26,331-character line, and
+            # dumping it makes this artifact unreadable.
+            echo "--- mathlib pin (lakefile.toml) ---"
+            awk '/^\[\[require\]\]/{f=1} f&&NF{print} f&&!NF{exit}' lakefile.toml
+          } | tee "$CI_OUT/toolchain.txt"
+
+      - name: Show the dependency pins from lake-manifest.json
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee "$CI_OUT/manifest-pins.txt"
+          import json
+          m = json.load(open("lean/lake-manifest.json"))
+          print("manifest version:", m.get("version"))
+          for p in m["packages"]:
+              print("  %-18s %-10s %s" % (p.get("name"), p.get("inputRev"), p.get("rev")))
+          PY
+
+      - name: Fetch the Mathlib build cache
+        working-directory: lean
+        # Without this, Mathlib is a multi-hour cold build.  `cache get` pulls
+        # the .oleans for exactly the revision pinned in lake-manifest.json.
+        run: |
+          set -euo pipefail
+          lake exe cache get 2>&1 | tail -20
+          df -h /
+
+      # -----------------------------------------------------------------
+      # THE BUILD.  `Headline` only -- 331 modules, zero enumeration shards.
+      # -----------------------------------------------------------------
+      - name: Build the Headline target
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          start=$(date +%s)
+          # `tee` + pipefail: the log is an artifact AND lake's exit status is
+          # still the step's exit status.
+          lake build Headline 2>&1 | tee "$CI_OUT/headline-build.log"
+          echo "Headline build wall time: $(( $(date +%s) - start )) s" \
+            | tee -a "$CI_OUT/headline-build.log"
+
+      # -----------------------------------------------------------------
+      # ASSERTIONS ON THE BUILD OUTPUT.
+      # `lake build` exits 0 on a proof containing `sorry` -- it is only a
+      # warning -- so the exit code above is not on its own sufficient.
+      # -----------------------------------------------------------------
+      - name: Assert no sorry and no error in the build output
+        run: |
+          set -euo pipefail
+          log="$CI_OUT/headline-build.log"
+          bad=0
+
+          if grep -n "sorryAx" "$log"; then
+            echo "::error::sorryAx appears in the build output."
+            bad=1
+          else
+            echo "OK: 0 occurrences of sorryAx"
+          fi
+
+          if grep -n "declaration uses 'sorry'" "$log"; then
+            echo "::error::a declaration uses 'sorry'."
+            bad=1
+          else
+            echo "OK: 0 occurrences of \"declaration uses 'sorry'\""
+          fi
+
+          if grep -nE "(^|[[:space:]])error:" "$log"; then
+            echo "::error::the build log contains an error: line."
+            bad=1
+          else
+            echo "OK: no error: line"
+          fi
+
+          # A build that emitted no axiom lines at all attests nothing.  The
+          # authoritative check is the next step; this is an early, readable
+          # signal that the build produced kernel output at all.
+          #
+          # What this counter does NOT do: detect a warm build.  Lake replays a
+          # cached module's stored diagnostics, so a fully warm run still emits
+          # every `#print axioms` line (measured -- see the file header).  The
+          # only thing standing between this job and a green tick that verified
+          # nothing is the absence of actions/cache for lean/.lake.  Do not add
+          # one and expect this check to catch it; it will not.
+          n=$(grep -c "depends on axioms:" "$log" || true)
+          echo "OK: $n 'depends on axioms:' lines in the log"
+          if [ "$n" -eq 0 ]; then
+            echo "::error::the build printed no #print axioms output at all."
+            echo "::error::The log is empty or truncated, or the build never ran."
+            bad=1
+          fi
+
+          exit "$bad"
+
+      # -----------------------------------------------------------------
+      # THE REPOSITORY'S OWN CHECKER, run against the log this job produced.
+      # scripts/verify-all.sh --axiom-log FILE needs no Lean.  It rejects any
+      # axiom outside {propext, Classical.choice, Quot.sound}, rejects sorryAx
+      # anywhere, and FAILS if any of the six headline theorems printed no
+      # axiom line of its own.  --out DIR writes DIR/axiom_check.txt.
+      # -----------------------------------------------------------------
+      - name: Axiom check -- scripts/verify-all.sh --axiom-log
+        run: |
+          set -euo pipefail
+          mkdir -p "$CI_OUT/axiom-report"
+          bash scripts/verify-all.sh \
+            --axiom-log "$CI_OUT/headline-build.log" \
+            --out "$CI_OUT/axiom-report" \
+            2>&1 | tee "$CI_OUT/axiom-check.log"
+
+      # -----------------------------------------------------------------
+      # MUTATION TESTS.  Without these a green tick only says "the checker
+      # said yes"; these show the checker says no when it should.  Group A is
+      # eight synthetic-log cases against the axiom checker; ~6 s, no Lean.
+      # -----------------------------------------------------------------
+      - name: Negative tests -- the axiom checker must REJECT (group A)
+        run: |
+          set -euo pipefail
+          bash scripts/negative-tests.sh --groups A \
+            2>&1 | tee "$CI_OUT/negative-tests-A.log"
+
+      - name: Write the job summary
+        if: always()
+        run: |
+          set -uo pipefail
+          {
+            echo "## Headline verification"
+            echo
+            echo '```'
+            sed -n '1,8p' "$CI_OUT/machine.txt" 2>/dev/null || true
+            echo '```'
+            echo
+            echo "### Axiom lines the build emitted"
+            echo
+            echo '```'
+            grep "depends on axioms:" "$CI_OUT/headline-build.log" 2>/dev/null \
+              | grep -E "MainTheorem.isGreatest_38|isGreatest_38_real|points_le_38_of_no_vertex_on_boundary|isGreatest_38_of_E9|isGreatest_38_of_coincFree|points9_le_38_of_coincFree" \
+              || echo "(none found -- see the build log artifact)"
+            echo '```'
+            echo
+            echo "### Axiom check verdict"
+            echo
+            echo '```'
+            grep -E "^ *AXIOM CHECK:|^ *axiom-check: (declarations|occurrences|headline)" \
+              "$CI_OUT/axiom-report/axiom_check.txt" 2>/dev/null || echo "(no report)"
+            echo '```'
+            echo
+            echo "### Negative tests (group A)"
+            echo
+            echo '```'
+            grep -E "^RESULT:|^  (PASS|FAIL) " "$CI_OUT/negative-tests-A.log" 2>/dev/null \
+              || echo "(did not run)"
+            echo '```'
+            echo
+            echo "Scope: this job builds the \`Headline\` target only (331 modules)."
+            echo "It does not build the 1,447 modules outside that closure."
+            echo "See \`.github/workflows/README.md\`."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload the build log and the axiom report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: headline-verification-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ci-out/headline-build.log
+            ci-out/axiom-check.log
+            ci-out/axiom-report/
+            ci-out/negative-tests-A.log
+            ci-out/machine.txt
+            ci-out/toolchain.txt
+            ci-out/manifest-pins.txt
+          if-no-files-found: error
+          retention-days: 90
+
+  # =====================================================================
+  # JOB 2 -- OPT-IN ONLY.  Never runs on push or pull_request.
+  #
+  # L1-L4 are the most persuasive tests in the repository: a planted `sorry`,
+  # a declared `axiom`, a `native_decide`, and a CHANGED DEFINITION
+  # (points9 from an intersection to a union, proofs untouched).  They are
+  # what pins "Lean proved it" to the definitions the statement is written in.
+  #
+  # They are also, on a hosted runner, almost certainly INFEASIBLE.  Each case
+  # invokes `scripts/verify-all.sh --steps 1` on a mutated copy, and step 1 is
+  # `cd lean && lake build && lake build Headline` -- the FULL 1,779-library
+  # build, four times over, with only Mathlib warm.  negative-tests.sh wants a
+  # warm lean/.lake (NEGTESTS_LAKE_DIR); a fresh clone has none, so every case
+  # is cold.  Run this on a self-hosted machine with a warm build tree, or
+  # locally.  It is here so the command is recorded and correct, not because
+  # it is expected to go green on ubuntu-latest.
+  # =====================================================================
+  lean-mutations:
+    name: "OPT-IN (slow, may exceed the 6h limit): Lean mutation tests L1-L4"
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.run_lean_mutations == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 350   # GitHub's hard ceiling for a hosted job is 360.
+    env:
+      CI_OUT: ${{ github.workspace }}/ci-out
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Create the artifact directory
+        run: mkdir -p "$CI_OUT"
+
+      - name: Ensure rsync is present
+        run: |
+          set -euo pipefail
+          command -v rsync >/dev/null 2>&1 || {
+            sudo apt-get update -qq && sudo apt-get install -y -qq rsync
+          }
+
+      - name: Install elan (the Lean toolchain manager)
+        run: |
+          set -euo pipefail
+          curl -sSfL --retry 3 --retry-delay 5 \
+            https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh \
+            -o "$RUNNER_TEMP/elan-init.sh"
+          bash "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Fetch the Mathlib build cache
+        working-directory: lean
+        run: |
+          set -euo pipefail
+          lake exe cache get 2>&1 | tail -20
+
+      - name: Warm the build tree that the mutation tests clone
+        working-directory: lean
+        # negative-tests.sh clones NEGTESTS_LAKE_DIR (default <repo>/lean/.lake)
+        # into each mutated copy so only the mutated module is rebuilt.  This
+        # warms the Headline closure; it does NOT warm the enumeration shards
+        # that `verify-all.sh --steps 1` also builds.
+        run: |
+          set -euo pipefail
+          lake build Headline 2>&1 | tail -40
+
+      - name: Negative tests -- Lean-level mutations (group L)
+        run: |
+          set -euo pipefail
+          bash scripts/negative-tests.sh --lean --groups L \
+            2>&1 | tee "$CI_OUT/negative-tests-L.log"
+
+      - name: Upload the mutation-test log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-mutations-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ci-out/negative-tests-L.log
+          if-no-files-found: error
+          retention-days: 90

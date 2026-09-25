@@ -1,0 +1,59 @@
+negative-tests.sh
+  repository : /Users/jaydenlin/dev/lean/heptagon-intersections
+  workspace  : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-negtests.xdw8vU
+------------------------------------------------------------------------
+GROUP A -- the axiom check (synthetic logs; no Lean needed)
+------------------------------------------------------------------------
+  PASS  A1 complete clean log (control)        accepted (exit 0, as the control requires)
+        report: AXIOM CHECK: CLEAN -- 9 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound; 
+  PASS  A2 wrapped axiom list (control)        accepted (exit 0, as the control requires)
+        report: AXIOM CHECK: CLEAN -- 9 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound; 
+  PASS  A3 sorryAx in a headline theorem       rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- 1 declaration(s) depend on an axiom outside {propext, Classical.choice, Quot.sound}; sorryAx is present: a proof is closed by s
+  PASS  A4 headline lines absent               rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- 6 headline theorem(s) printed NO axiom line, so this run says nothing about them (their modules were not in the build at all --
+  PASS  A5 disallowed axiom (ofReduceBool)     rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- 1 declaration(s) depend on an axiom outside {propext, Classical.choice, Quot.sound}.
+  PASS  A6 project-declared axiom              rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- 1 declaration(s) depend on an axiom outside {propext, Classical.choice, Quot.sound}.
+  PASS  A7 no axiom output at all              rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- the log contains NO axiom output at all, so it establishes nothing; 6 headline theorem(s) printed NO axiom line, so this run sa
+  PASS  A8 disallowed axiom in wrapped tail    rejected (exit 1, and said why)
+        report: AXIOM CHECK: FAILED -- 1 declaration(s) depend on an axiom outside {propext, Classical.choice, Quot.sound}.
+        confirmed: the offending axiom is on a continuation line, not on
+                   the line that carries 'depends on axioms:'
+
+  (not scored) the newest committed evidence log, through the same check:
+    exit 1
+    axiom-check: declarations parsed                        : 61
+    axiom-check: declarations using a disallowed axiom      : 0
+    axiom-check: occurrences of sorryAx                     : 0
+    axiom-check: headline theorems confirmed                : 1 of 6
+    AXIOM CHECK: FAILED -- 5 headline theorem(s) printed NO axiom line, so this run says nothing about them (their modules were not in the build at all -- check defaultTargets, or build the Headline t
+------------------------------------------------------------------------
+GROUP L -- Lean-level mutations (sorry / axiom / native_decide / definition)
+------------------------------------------------------------------------
+  SKIPPED: not selected.  Re-run with --lean to include L1-L4.
+           These four are the tests that show the Lean development
+           itself is load-bearing; a run without them is incomplete.
+------------------------------------------------------------------------
+WHAT WAS BROKEN, AND WAS IT CAUGHT
+------------------------------------------------------------------------
+  VERDICT             CASE                                        WHAT WAS BROKEN
+  ACCEPTED            A1 complete clean log (control)             nothing -- a complete, clean #print axioms log
+  ACCEPTED            A2 wrapped axiom list (control)             nothing -- but one axiom list is wrapped across three lines
+  CAUGHT              A3 sorryAx in a headline theorem            a headline theorem's axiom list contains sorryAx
+  CAUGHT              A4 headline lines absent                    a log whose headline modules were never built: clean, but they never printed
+  CAUGHT              A5 disallowed axiom (ofReduceBool)          a headline theorem depends on Lean.ofReduceBool (what native_decide leaves)
+  CAUGHT              A6 project-declared axiom                   a headline theorem depends on a project-declared axiom
+  CAUGHT              A7 no axiom output at all                   a build log with no #print axioms output whatsoever
+  CAUGHT              A8 disallowed axiom in wrapped tail         a disallowed axiom hidden on the wrapped continuation line
+------------------------------------------------------------------------
+RESULT: 8 passed, 0 failed
+Every mutation that ran was rejected and every control was accepted.
+
+INCOMPLETE: the four Lean-level mutations L1-L4 did NOT run (not selected (no --lean)).
+  They are the cases that show the Lean development itself is
+  load-bearing -- a planted sorry, a declared axiom, a native_decide,
+  and a changed DEFINITION.  Nothing above substitutes for them.
+  Re-run with --lean (and a warm lean/.lake) to include them.

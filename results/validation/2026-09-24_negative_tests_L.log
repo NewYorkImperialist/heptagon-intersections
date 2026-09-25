@@ -1,0 +1,60 @@
+# Lean mutation tests (group L) transcript
+# date  : 2026-09-25T01:37:04Z
+# uname : Darwin 24.6.0 arm64
+# cmd   : NEGTESTS_LAKE_DIR=$PWD/lean/.lake bash scripts/negative-tests.sh --lean --groups L
+# what  : each case plants one defect in a copy-on-write clone and
+#         requires the verifier to REJECT it.  A checker that cannot
+#         fail proves nothing, so this is the evidence that it can.
+
+negative-tests.sh
+  repository : /Users/jaydenlin/dev/lean/heptagon-intersections
+  workspace  : /var/folders/qx/twq7qz814nq56nz28bgk946c0000gn/T//heptagon-negtests.JxiKem
+  building the pristine base copy ...
+  (copy-on-write clone; no disk consumed until something is written)
+------------------------------------------------------------------------
+GROUP L -- Lean-level mutations (sorry / axiom / native_decide / definition)
+------------------------------------------------------------------------
+  warm build tree : /Users/jaydenlin/dev/lean/heptagon-intersections/lean/.lake (cloned into each copy; never written to)
+
+L1 -- a SORRY planted in a dependency of a headline theorem.
+      points9_eq_range is three steps below points_le_38_of_no_vertex_
+      on_boundary.  lake build exits 0 on a sorry -- it is a warning --
+      and the headline theorem still compiles.  What changes is the
+      headline theorem's OWN axiom line, which now lists sorryAx.
+  replaced the proof of AKR9.points9_eq_range with sorry
+  PASS  L1 sorry in a dependency               rejected (exit 1, named the check)
+        and the log shows /sorryAx/ -- the mechanism under test fired
+
+L2 -- an AXIOM declared and used.  The same lemma is replaced by an
+      appeal to a new axiom of exactly its own statement.  Everything
+      compiles with no warning at all; only the axiom lists change.
+  declared axiom AKR9.points9_eq_range_ax and proved points9_eq_range from it
+  PASS  L2 declared axiom, used                rejected (exit 1, named the check)
+        and the log shows /points9_eq_range_ax/ -- the mechanism under test fired
+
+L3 -- NATIVE_DECIDE.  This one compiles cleanly and is not a sorry;
+      what it does is hand the proof to the compiler instead of the
+      kernel, which shows up as Lean.ofReduceBool in the axiom list.
+  added a theorem closed by native_decide, with its own #print axioms
+  PASS  L3 native_decide                       rejected (exit 1, named the check)
+        and the log shows /ofReduceBool|native_decide/ -- the mechanism under test fired
+
+L4 -- A CHANGED DEFINITION.  points9 R is defined as bdryP9 R INTER
+      bdryQ9 R: the set of points on both boundaries.  Change the one
+      character to a UNION and the theorem 'at most 38 points' is about
+      something else entirely, while every proof text is untouched.
+      No sorry, no axiom, no native_decide -- and it must still be
+      rejected, or the definitions are decoration.
+  changed lean/AKR9.lean: points9 := bdryP9 ∩ bdryQ9  ->  bdryP9 ∪ bdryQ9
+  PASS  L4 definition changed (intersect->union) rejected (exit 1, named the check)
+------------------------------------------------------------------------
+WHAT WAS BROKEN, AND WAS IT CAUGHT
+------------------------------------------------------------------------
+  VERDICT             CASE                                        WHAT WAS BROKEN
+  CAUGHT              L1 sorry in a dependency                    a sorry planted three lemmas below a headline theorem
+  CAUGHT              L2 declared axiom, used                     an axiom was declared and used beneath a headline theorem
+  CAUGHT              L3 native_decide                            a proof was closed by native_decide (compiler, not kernel)
+  CAUGHT              L4 definition changed (intersect->union)    points9 redefined from an INTERSECTION to a UNION (no proof touched)
+------------------------------------------------------------------------
+RESULT: 4 passed, 0 failed
+Every mutation that ran was rejected and every control was accepted.

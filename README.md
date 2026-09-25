@@ -26,6 +26,10 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 > `ConfigBridge.isGreatest_38_pointCount`: **38 is the greatest number of points
 > in `∂P ∩ ∂Q` as a set in `ℝ × ℝ`**, over configurations in general position.
 > It carries one hypothesis, `FullGP`.
+> *(Superseded 2026-09-24 — see the update below: `Pair9Shift.points9_le_38_of_coincFree`
+> reaches the same bound under `hcoinc`, "no shared vertex", which is strictly
+> weaker than `FullGP`. This sentence is left in place because this section is a
+> dated log, but it is no longer the strongest statement.)*
 >
 > **This is still not `f(7,7) = 38`, and exactly two things stand in the way.**
 >

@@ -1,0 +1,619 @@
+% audit.tex -- the reader's audit document.
+%
+% Build:  cd docs/audit && tectonic -X compile audit.tex   (or: tectonic audit.tex)
+% Regenerate its inputs first:
+%   python3 docs/audit/extract_lean.py
+%   python3 docs/audit/gallery.py
+%   python3 docs/audit/make_tables.py
+%   python3 docs/audit/extract_lean.py --check     <- must exit 0
+%
+% Every line of Lean in this document is pulled from the source by
+% extract_lean.py; every count is computed by gallery.py.  Nothing is retyped.
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=0.9in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,urlcolor=black,citecolor=black]{hyperref}
+\usepackage{titlesec}
+\usepackage{fancyvrb}
+
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.6em}{}
+\titlespacing*{\section}{0pt}{16pt}{6pt}
+
+\setlist[itemize]{leftmargin=1.2em,itemsep=2pt,topsep=3pt}
+\setlist[enumerate]{leftmargin=1.5em,itemsep=2pt,topsep=3pt}
+
+\input{out/lean_preamble.tex}
+\input{out/facts.tex}
+
+\newcommand{\code}[1]{\texttt{\small #1}}
+
+\newsavebox{\trustboxbuf}
+\newenvironment{trustbox}%
+  {\par\medskip\setlength{\fboxsep}{9pt}%
+   \begin{lrbox}{\trustboxbuf}%
+   \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule\relax}}%
+  {\end{minipage}\end{lrbox}%
+   \noindent\fcolorbox{black!35}{black!4}{\usebox{\trustboxbuf}}\par\medskip}
+
+\title{\bfseries Two simple heptagons meet in at most 38 points:\\
+what the machine checked, and what it did not}
+\author{An audit document for a reader who does not read Lean}
+\date{24 September 2026}
+
+\setcounter{section}{-1}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+\vspace{-1.2\baselineskip}
+
+\begin{trustbox}
+\textbf{In one paragraph.} A Lean~4 development in this repository contains a
+machine-checked theorem: \emph{if two simple heptagons in the plane have
+finitely many boundary intersection points and share no vertex, their
+boundaries meet in at most $38$ points, and $38$ is attained.} The proof has
+been checked by Lean's kernel; it uses no \code{sorry}, no axiom of this
+project's own, and no \code{native\_decide}. It is \textbf{not} a proof that
+$f(7,7)=38$: the ``share no vertex'' hypothesis is the conclusion of \S9.1 of
+Ackerman--Keszegh--Rote, which is assumed here, not proved. This document is
+written so that you can confirm the first sentence and the last one without
+reading Lean and without running anything.
+\end{trustbox}
+
+\section{Why you only need to read this document}
+
+You have said that the mathematics now rests on the code. The natural next
+question --- ``who has read the code?'' --- has an uncomfortable answer: nobody
+outside this AI-assisted process has read or run any of it. This section is an
+argument that for most of the code, that does not matter, and a precise
+account of the part where it does.
+
+\paragraph{Lean is a proof checker, not a programming language you must trust.}
+A Lean file is not an argument addressed to a reader. It is a sequence of
+instructions for constructing a formal proof object, which is then checked,
+term by term, against a small fixed set of inference rules --- the
+\emph{kernel}. If the file compiles, a proof object exists and the kernel has
+verified it. If a step is wrong, it does not compile. There is no ``looks
+right to me'' in between.
+
+The consequence is the one that should interest you: \textbf{nobody reads the
+proof files.} Not the author, not a Lean expert, not a referee. This
+development is 1{,}779 \code{.lean} files and roughly 1.6 million lines, all
+but a few dozen files being machine-generated case enumerations. Reading them
+would take years and would establish nothing the kernel has not already
+established more reliably. A Lean expert brought in to audit this repository
+would not read the proofs either. He would do what \S\S2--6 of this document
+do.
+
+\paragraph{What a human must read is the statement.}
+A proof checker verifies that a proof proves \emph{its own statement}. It has
+no opinion about whether that statement is the one you meant. Everything that
+can go wrong that a machine cannot catch lives in the definitions: if
+\code{points9} means the wrong set, or \code{SimpleClosed} secretly assumes
+general position, then a flawless kernel-checked proof establishes something
+you did not ask for.
+
+That surface is small. It is \ndecls\ declarations, fewer than sixty lines in
+total, and the seven that carry the content are printed in \S2 beside the
+mathematics they are supposed to say. \textbf{That table is the thing to
+read.} It is the one place where this could be wrong in a way no machine will
+find, and reading it takes ten minutes.
+
+\paragraph{The three loopholes, named.}
+There are exactly three ways to get something past the kernel, and all three
+are visible:
+
+\begin{itemize}
+\item \code{sorry} --- a placeholder that stands in for a missing proof. A file
+  containing \code{sorry} still compiles; Lean emits a \emph{warning}, not an
+  error, and the build exits~0. This is the dangerous one, because a build log
+  can say ``success'' over a hole.
+\item A declared \code{axiom} --- a statement asserted without proof. This also
+  compiles cleanly, with no warning at all.
+\item \code{native\_decide} --- a tactic that closes a goal by compiling it to
+  machine code and running it. It is not a hole and not an axiom; it moves the
+  work out of the 5{,}000-line kernel and into the whole Lean compiler and the
+  C toolchain beneath it. Vastly more code to trust.
+\end{itemize}
+
+All three are caught by one command. Lean's \code{\#print axioms} on a theorem
+lists the unproved assumptions its proof depends on --- \emph{transitively},
+through every lemma it uses. A \code{sorry} three lemmas down appears in the
+headline theorem's own axiom list as \code{sorryAx}; a project axiom appears by
+name; \code{native\_decide} appears as \code{Lean.ofReduceBool}. Nothing can be
+buried. The expected output for this development is exactly
+\[
+  \texttt{[propext, Classical.choice, Quot.sound]}
+\]
+which are Lean's own three foundational axioms --- propositional
+extensionality, choice, and quotient soundness --- the standard basis of
+ordinary classical mathematics, shared with all of Mathlib. Any fourth entry is
+a finding.
+
+\paragraph{What is left on trust when you finish this document.}
+Three things, and they are worth stating plainly because they are all that is
+left:
+
+\begin{enumerate}
+\item \textbf{Lean's kernel} --- that the proof checker itself is correct. It is
+  a small, heavily scrutinised program with independent reimplementations; this
+  is the assumption every formalisation in the literature makes.
+\item \textbf{That the statement in \S2 is the intended one.} You judge this
+  yourself, by reading the table. Nobody can do it for you.
+\item \textbf{AKR \S9.1} --- an external lemma, used as a hypothesis, discussed
+  in \S7.
+\end{enumerate}
+
+Compare this with an ordinary paper. There, a referee must check the
+definitions \emph{and} follow every step of the argument, and the second job is
+the one that takes months and the one referees are known to get wrong. Here the
+second job has been done by a machine. The residual trust is strictly smaller
+--- item~2 above is the referee's first job, unchanged, and items~1 and~3 are
+new but sharply bounded. That is the whole claim. It is not a claim that
+formalisation is infallible.
+
+\section{The claim, in ordinary mathematics}
+
+\begin{trustbox}
+\textbf{Proved.} Let $P$ and $Q$ be simple closed heptagons in the plane ---
+seven vertices each, sides $[P_i,P_{i+1}]$ and $[Q_j,Q_{j+1}]$ for
+$i,j\in\mathbb{Z}/7$, each polygon a closed curve that does not cross itself.
+Suppose $\partial P\cap\partial Q$ is finite. Then
+$\#(\partial P\cap\partial Q)\le 38$, and there is a pair for which the count
+is exactly $38$; so $38$ is the maximum.
+
+\medskip
+\textbf{Assumed, not proved.} That no vertex of $P$ is equal to a vertex of
+$Q$. This is a hypothesis of the theorem, written out explicitly; it is the
+conclusion of \S9.1 of Ackerman, Keszegh and Rote, which is not formalised
+here.
+\end{trustbox}
+
+\noindent Two remarks on what is \emph{not} assumed, because they are where a
+formalisation usually cheats.
+
+\emph{No general position.} Three collinear vertices are allowed. A straight
+vertex --- where two consecutive sides are collinear --- is allowed. A vertex of
+one polygon lying in the \emph{interior} of a side of the other is allowed, and
+is the case AKR \S9.2 removes by a perturbation argument; here it is proved,
+not assumed away. The only degeneracy excluded is vertex-equals-vertex.
+
+\emph{Points, not crossings.} The quantity bounded is the cardinality of a set
+of points of the plane. A tangential touch that does not cross counts as one
+point; a point where three sides concur counts once, not twice. This is the
+harder thing to bound and the thing the question actually asks.
+
+\section{The statement, beside the mathematics}
+
+This is the part to read. The left column is the claim in ordinary
+mathematical English; the right column is the Lean source, quoted verbatim by
+\code{docs/audit/extract\_lean.py} from the files and line numbers shown.
+\textbf{Your task is to decide whether the two columns say the same thing.}
+Nothing else in this document depends on your knowing any Lean: the notation
+you need is $\forall$, $\wedge$ (and), $\to$ (implies), $\cup$, $\cap$,
+\code{Fin 7} $=\mathbb{Z}/7$ with wraparound on \code{+}, and
+\code{segment $\mathbb{R}$ a b} $=[a,b]$, the closed segment.
+
+\input{out/statement_table.tex}
+
+\paragraph{The drift tripwire.} A quotation is only as good as its currency.
+\code{extract\_lean.py --check} recomputes the SHA-256 of every declaration
+above and compares it against the lockfile written when this document was
+generated. If any declaration has been renamed, moved, or altered by one
+character, it exits~1 and names the declaration. It is run as part of building
+this PDF. The table above therefore cannot have drifted away from the code
+without the build failing.
+
+\paragraph{One thing this table is not.} The repository contains a
+\emph{second} chain that also ends at the number $38$ ---
+\code{Heptagon.MainTheorem.isGreatest\_38}, over integer-coordinate
+combinatorial configurations --- and \S5 prints its axiom line alongside these.
+It is not the theorem above, and it is \textbf{not unconditional}: it carries
+three explicit hypotheses that are exactly the open part of that route, and
+\S5 sets them out. Six axiom lines in \S5 must therefore not be read as six
+unconditional results. \textbf{The claim this document makes is the one in the
+table above}, and nothing in \S\S1--4 or~6 depends on the other chain.
+
+\section{The gallery: hand-countable pictures beside the computed count}
+
+The definitions in \S2 are set-theoretic. This section checks that they compute
+what you would count by eye. \code{docs/audit/gallery.py} transcribes the same
+predicates into Python --- \code{orientR}, \code{SimpleClosed},
+\code{Adjacent}, \code{points9}, each annotated with the Lean file and line it
+came from --- draws \galcount\ configurations, and circles and numbers every
+point of $\partial P\cap\partial Q$. All arithmetic is exact rational
+arithmetic (\code{fractions.Fraction}); no floating point is used for any
+geometric decision. The tool self-tests 33 properties on startup and aborts if
+any fails, including a sweep confirming its segment-intersection routine agrees
+with the textbook orientation test on all 6{,}561 segment pairs over a
+$3\times3$ grid.
+
+\medskip
+\noindent\textbf{Lead with the certificate.} Figure~1 is
+\code{certificate\_38}: the configuration read from the file
+\code{lower\_bound\_38.json}, the same object the Lean proof
+uses as its witness. Its \certcount\ intersection points are circled and
+numbered $1$ through $\certcount$. You can count them. That is the entire
+lower bound, and it needs no trust at all.
+
+\input{out/gallery_table.tex}
+
+\medskip
+\noindent The five \code{easy\_*} rows are sanity checks with obvious answers
+(two convex heptagons overlapping in a lens: $2$; two crossing bars: $4$; a
+convex heptagon and a turned copy: $14$, which is $2$ per side and the maximum
+for two convex heptagons). The five \code{awkward\_*} rows are the ones that
+matter:
+
+\begin{itemize}
+\item \code{awkward\_vertex\_in\_edge\_interior} --- a vertex of $Q$ lies
+  exactly inside a side of $P$. This is the degeneracy AKR \S9.2 removes and
+  this project proves; it is \emph{not} excluded by the theorem's hypotheses,
+  and it is counted correctly.
+\item \code{awkward\_three\_collinear\_in\_P} --- $P_0,P_1,P_2$ are collinear,
+  so $P$'s base is one straight line split into two sides. \code{SimpleClosed}
+  accepts this, deliberately. Any definition that rejected it would be smuggling
+  in general position.
+\item \code{awkward\_shared\_vertex} --- $P_0=Q_0$. This is exactly the case the
+  theorem assumes away. It is drawn here so you can see what the hypothesis
+  excludes.
+\item \code{awkward\_tangential\_touch} --- the boundaries meet at one point
+  without crossing. Count $1$: a touch is a point of the intersection. A tool
+  that counted \emph{crossings} would report $0$ here and would be answering a
+  different question.
+\item \code{awkward\_overlapping\_sides\_infinite} --- a side of $P$ and a side
+  of $Q$ are collinear and overlap in a whole sub-segment, so
+  $\partial P\cap\partial Q$ is genuinely infinite. The tool reports
+  \textsc{infinite} and refuses to produce a number. This is the honest failure
+  mode, and it is why the theorem carries a finiteness hypothesis: without it
+  the count is not a natural number and \code{ncard} would silently return $0$.
+\end{itemize}
+
+Each configuration carries an expected count written down in advance; a
+mismatch, or a configuration whose polygons fail \code{SimpleClosed}, is
+reported as a discrepancy and the tool exits non-zero. It exits~$0$.
+
+\smallskip
+\noindent The \galcount\ figures follow. In each, $P$ is solid blue, $Q$ is
+dashed red, and every point of $\partial P\cap\partial Q$ is circled and
+numbered.
+
+\input{out/gallery_figures.tex}
+
+\section{Sabotage: does the checker ever say no?}
+
+A verification that cannot fail proves nothing. If a check passes on this
+repository, the first question is whether it would also pass on a broken one.
+The repository answers this with controlled mutations: take a throwaway copy,
+introduce one specific defect, and require that the check rejects it \emph{and
+names the right reason}. A control copy with no defect must still be accepted,
+so that ``rejects everything'' is not mistaken for rigour.
+
+\paragraph{L4 first, because it is the one that is not about broken proofs.}
+Every other test below breaks a \emph{proof}. L4 breaks a \emph{definition}.
+The mutation changes one character in \code{lean/AKR9.lean}:
+
+\begin{trustbox}
+\input{out/l4_box.tex}
+\end{trustbox}
+
+\noindent \textbf{Not one character of proof text is touched.} There is no
+\code{sorry}, no axiom, no \code{native\_decide}; the mutated file is a
+perfectly legitimate Lean development about the union of two boundaries instead
+of their intersection --- a set that is obviously not of size at most 38.
+\Lfourreq
+
+Without this test, ``Lean proved it'' would mean only that \emph{something} was
+proved. With it, the theorem is pinned to the definitions you read in \S2:
+change what \code{points9} means and the proofs must stop type-checking.
+\Lfourupshot
+
+\paragraph{The three groups.}
+\code{scripts/negative-tests.sh} has three groups. Group~N mutates the
+evidence files (certificates, hashes, refutation proofs). Group~A mutates the
+\emph{axiom log} and drives the repository's axiom checker over it --- these
+need no Lean at all, because the checker is a log parser and can be tested the
+way any parser is tested. Group~L is the four Lean-level mutations, L1--L4;
+they require a real \code{lake build} of each mutated copy and are opt-in
+behind a \code{--lean} flag.
+
+\smallskip
+\noindent\textbf{Groups~A and~L were both run while this document was written},
+and both transcripts are committed. The two tables below are copied line for
+line from those runs, not transcribed.
+
+\smallskip
+\noindent One thing to know before reading them. \code{negative-tests.sh} can
+print five verdicts --- \emph{accepted}, \emph{caught}, \textsc{not caught},
+\textsc{not applied}, \textsc{wrongly rejected} --- and the generator that
+builds these tables renders all five. \textbf{An absence of failures below is
+therefore a fact about the runs, not a limitation of the table.} That
+distinction is not rhetorical: an earlier version of the generator recognised
+only three of the five verdicts and would have silently dropped a failing row.
+That is the same defect as a checker that cannot fail --- the very thing this
+section exists to rule out --- and it was found and fixed before this document
+was built.
+
+\input{out/mutation_tables.tex}
+
+\input{out/group_l.tex}
+
+\section{What the machine checked, and how to re-run it}
+
+\begin{trustbox}
+\centering\code{cd lean \&\& lake build Headline}
+\end{trustbox}
+
+{\sloppy
+\noindent \code{lean/Headline.lean} declares nothing. It imports the four roots
+of the live chain --- \code{MainTheorem}, \code{RealUpperBound}, \code{AKR9},
+\code{Pair9Shift} --- and asks for the axiom lists of five declarations:\par}
+
+\begin{trustbox}
+\begin{Verbatim}[fontsize=\small]
+#print axioms Heptagon.MainTheorem.isGreatest_38
+#print axioms Heptagon.RealUpperBound.isGreatest_38_real
+#print axioms Heptagon.AKR9.isGreatest_38_of_E9
+#print axioms Heptagon.Pair9Shift.isGreatest_38_of_coincFree
+#print axioms Heptagon.Pair9Shift.points9_le_38_of_coincFree
+\end{Verbatim}
+\end{trustbox}
+
+\noindent Building that one target builds exactly the transitive closure of the
+four roots --- \textbf{331 modules} --- and nothing else. The roots are listed
+weakest-hypothesis-last; the last two printed declarations are the ones \S2
+quotes. (A bare \code{lake build} does \emph{not} build them: the project's
+\code{defaultTargets} deliberately omits the \S9 modules, so that rebuilding
+them cannot invalidate the 1{,}080 enumeration shards. \code{Headline} exists
+to close that gap with one command.)
+
+\paragraph{The transcript of that command is committed.}
+A full transcript of that build is in the repository, at \hllogpath:
+\hllines\ lines, opening with a provenance header that records the date
+(\hllogdate), the machine, the exact Lean version, and the exact command.
+Read out of that file:
+
+\begin{itemize}
+\item it ends with \code{Build completed successfully (\hljobs\ jobs).};
+\item it carries \hldepends\ \code{depends on axioms} lines, and across all of
+  them exactly \hlnaxioms\ distinct axioms appear: \code{propext},
+  \code{Classical.choice} and \code{Quot.sound}. There is no fourth entry
+  anywhere in the file;
+\item \code{sorryAx} occurs \hlsorry\ times in it, and
+  \code{Lean.ofReduceBool} --- what \code{native\_decide} would leave ---
+  \hlnative\ times;
+\item each of the six theorems the repository's checker demands printed an
+  axiom line of its own. Five of the \code{\#print axioms} \emph{directives}
+  that produce those lines sit in \code{lean/Headline.lean} at lines 45--49.
+  The sixth, for \code{points\_le\_38\_of\_no\_vertex\_on\_boundary}, is a
+  directive at \code{lean/AKR9.lean:420} --- the \emph{theorem} itself is
+  stated at \code{lean/AKR9.lean:354} --- which is why that one axiom line
+  appears about a thousand lines earlier in the log than the other five.
+\end{itemize}
+
+\noindent You need not accept my reading of it. The repository's axiom checker
+is a log parser that needs no Lean toolchain, and it can be pointed at that
+file directly:
+
+\begin{trustbox}
+\centering\code{bash scripts/verify-all.sh --axiom-log}\\
+\code{results/validation/2026-09-24\_headline\_build.log}
+\end{trustbox}
+
+\noindent It exits~0, and reports \hlparsed\ declarations parsed,
+\hlbadaxioms\ of them using a disallowed axiom, and \hlheadlines\ headline
+theorems confirmed. Its full output is committed at
+\code{docs/audit/out/axiom\_check\_headline.log}. The transcript's own
+provenance header, its six headline axiom lines, its last line, and the
+checker's verdict on it are reproduced here:
+
+\input{out/headline_facts.tex}
+
+\begin{trustbox}
+\textbf{Six axiom lines are not six unconditional theorems.} They all carry the
+number $38$ and they are not the same claim, so they are worth separating
+before you read the list above.
+
+\smallskip
+\noindent Five of the six are the chain \S2 quotes:
+\code{isGreatest\_38\_real}, \code{isGreatest\_38\_of\_E9},
+\code{points\_le\_38\_of\_no\_vertex\_on\_boundary},
+\code{points9\_le\_38\_of\_coincFree} and
+\code{isGreatest\_38\_of\_coincFree}. They assume nothing beyond the hypotheses
+written into their own statements --- which are exactly the ones you read in
+\S2: finiteness, and no shared vertex. The counting bound they all rest on,
+\code{RawConfig.raw\_crossPairs\_card\_le\_38}
+(\code{lean/RawConfig.lean:231}), takes a bare pair of heptagons and
+\emph{no general-position hypothesis at all}.
+
+\smallskip
+\noindent \textbf{The sixth is a different animal.}
+\code{MainTheorem.isGreatest\_38} (\code{lean/MainTheorem.lean:88}) is about a
+different object --- integer-coordinate, orientation-level \code{Config}s ---
+and it is \emph{conditional}. It carries three explicit hypotheses which are
+precisely what is still open on that route: that every configuration has an
+even crossing count, that none attains $42$, and that none attains $40$, the
+last of these being the entire $13{,}003{,}620$-graph enumeration. Its own
+doc-comment (\code{lean/MainTheorem.lean:45--48}) puts it plainly:
+
+\smallskip
+\noindent\emph{``So the honest reading of \code{isGreatest\_38} below is: `38
+is the maximum crossing count over integer-coordinate, orientation-level
+heptagon configurations, GIVEN the listed hypotheses.' Getting from there to
+\code{f(7,7) = 38} needs the Jordan-curve step and the general-position
+reduction, both external.''}
+
+\smallskip
+\noindent Note in the transcript above that this one has the \emph{shortest}
+axiom list of the six --- \code{[propext, Quot.sound]}, with no
+\code{Classical.choice}. That is a consequence of its being conditional, not a
+sign that it is the strongest of them: a hypothesis you have not discharged
+costs no axioms. \textbf{Nothing in this document rests on it.} The claim in
+\S1, the statement in \S2 and the non-vacuity of \S6 are all the other route.
+\end{trustbox}
+
+\paragraph{Two figures in this section that the transcript does \emph{not}
+establish.} It records no elapsed time, so the \textbf{11\,s} warm-build figure
+is still only the repository's own assertion (\code{lean/README.md}) and you
+should read it as that. And the log counts \emph{jobs}, not modules: the
+\hljobs\ above is a job count, while the \textbf{331 modules} figure is
+corroborated separately --- including by a transitive-closure computation
+recorded in \code{docs/verification-status.md} --- and the two must not be
+conflated.
+
+\paragraph{A correction, and what the axiom check really guards against.}
+An earlier draft of this section asserted that \code{\#print axioms} prints
+only when a module is actually recompiled, so that a warm rebuild ``replays
+nothing and therefore prints nothing'' and only a cold build could produce this
+evidence. \textbf{That was wrong}, and the committed transcript is what
+demonstrates it: all \hlreplayed\ of its progress lines read \code{Replayed}
+and not one reads \code{Built} --- it is a fully warm run --- and it
+nevertheless carries every one of the \hldepends\ axiom lines, because Lake
+replays the cached messages of the modules it does not recompile.
+
+The trap the checker really guards against is a different one, and a worse one:
+a log in which the headline theorems never appear \emph{at all}. That is what a
+bare \code{lake build} produces here, because \code{defaultTargets} omits the
+\S9 modules, so those theorems are never part of the build and never print.
+Such a log exits~0 and looks clean while establishing nothing whatever about
+the statements you care about. Test~A4 in \S4 is exactly that case and the
+checker rejects it. Its requirement is not that the build was cold; it is that
+each of the six named theorems printed an axiom line of its own.
+
+\paragraph{If you did want to run it.} A fresh clone must first download
+Mathlib (the Lean mathematical library, pinned here at \code{v4.33.1}) before
+any of this project's own code compiles. The repository records about
+\textbf{1.4\,GB} left in \code{lean/.lake} after a cold build, and flags that
+figure as measured before later modules were added and not re-measured since,
+so treat it as a lower bound. That download, not this development, dominates
+the cost of a first build. You are not expected to do any of this; the point
+of \S\S2--4 is that you do not have to.
+
+\section{Non-vacuity: the theorem is not true for a boring reason}
+
+{\sloppy
+A conditional theorem whose hypotheses are contradictory is vacuously true and
+worthless. An upper bound nobody attains is not a maximum. Both failure modes
+are closed explicitly at the end of \code{lean/Pair9Shift.lean}, by a single
+bundled declaration, \code{nonVacuity}, in the \code{Heptagon.Pair9Shift}
+namespace.\par}
+
+\input{out/nonvacuity.tex}
+
+\section{What is not proved}
+
+This section is the reason to believe the rest.
+
+\paragraph{$f(7,7)=38$ is not a Lean theorem.} The repository's own status
+document says so in those words --- ``\textbf{\code{f(7,7) = 38} is still not a
+Lean theorem}'' --- and the doc-comment on the theorem itself repeats it:
+``\emph{This is not \code{f(7,7) = 38}, and it is not all of AKR \S9.}'' What
+is proved is the statement in \S2, with the no-shared-vertex hypothesis
+explicit, and with finiteness of the intersection assumed rather than derived.
+That second hypothesis is not a technicality: the last row of \S3 is a genuine
+configuration where it fails.
+
+\paragraph{AKR \S9.1 is assumed.} The reference throughout is E.~Ackerman,
+B.~Keszegh and G.~Rote, \emph{An almost optimal bound on the number of
+intersections of two simple polygons}, Discrete Comput.\ Geom.\ \textbf{68}
+(2022) 1049--1077. Their \S9 shows that
+a pair of simple polygons may be perturbed into one where no vertex of either
+lies on the other's boundary, without decreasing the intersection count. It
+splits in two. \S9.2's half --- a vertex in the \emph{interior} of a side --- is
+\emph{proved here}, in Lean, and is no longer imported; that is what
+\code{points9\_le\_38\_of\_coincFree} accomplishes over its predecessor.
+\S9.1's half --- a vertex \emph{equal} to a vertex of the other polygon --- is
+still imported. It is carried as the single explicit hypothesis
+\code{hcoinc} rather than baked into a structure, precisely so that a reader can
+see it and check it against the paper.
+
+As a \emph{statement} it is the kind a geometer grants on sight: coinciding
+vertices, moved apart by enough to separate them and little enough to disturb
+nothing else. Its plausibility is not in question. Its \emph{proof} is another
+matter, and the repository's notes on \S9.1 are careful about this: AKR
+establish it through their Theorem~17 and a dependence-graph argument about
+which perturbations can be solved simultaneously, which is several pages and
+not a one-liner. So ``routine'' here means ``believable without checking'', not
+``short''. It is nonetheless \emph{not machine-checked here}, and the
+project has found two genuine defects elsewhere in AKR's published \S9
+procedure --- \S9.2's shift is undefined at a straight vertex, and a direction
+meeting AKR's stated criterion can make the perturbed intersection infinite ---
+so ``published'' has not been treated as ``correct'' in this development. Both
+defects are repairable and both repairs are this project's, not AKR's.
+
+\paragraph{Nobody outside this process has reviewed any of it.} Not the Lean,
+not the Python, not the mathematics. This document is the first artifact
+written to be read by someone outside it. The \emph{proofs} do not need a human
+reader, for the reason given in \S0; the \emph{statement} and this document's
+claims about it do, and you are that reader.
+
+\paragraph{What the complete argument therefore is.} Not a single artifact. It
+is \textbf{a machine-checked theorem plus one routine lemma a geometer grants on
+sight} --- where ``routine'' keeps the meaning fixed two paragraphs above:
+believable without checking, but roughly three pages of AKR to actually prove,
+and not short. The repository's status document calls \S9.1 ``the one remaining
+external input''. That is a real proof, and it is how a great deal of
+mathematics is actually assembled. But it is two pieces, of two different
+kinds, and it should be described that way --- not as ``formally verified''.
+
+\paragraph{And one smaller thing, so that the list is complete.} The gallery in
+\S3 is a Python \emph{transcription} of the Lean predicates, checked against
+them by hand and annotated with line numbers; it is independent evidence that
+the definitions compute what you expect, not a proof that the Python and the
+Lean agree. It does not affect the kernel-checked status of the theorem in
+\S2, but it does affect how much of \emph{this document} you are taking on my
+word rather than seeing for yourself.
+
+\smallskip
+\noindent Two further items stood in this list in an earlier draft, and it is
+better to record their closure than to delete them quietly. That the \S5 build
+numbers were ``the project's own assertions with no committed transcript'' is
+no longer true: the transcript is committed at \hllogpath, and the
+repository's axiom checker can be run over it by anyone, with no Lean
+toolchain. That ``group~L of the mutation suite has never been run in a way
+this repository records'' is no longer true either: it was run, its transcript
+is committed, and \S4 reports case by case what it found. Both were real gaps.
+Both are now artifacts you can open yourself, which is the only kind of answer
+this document is entitled to give.
+
+\appendix
+\section{The statement surface, verbatim and complete}
+
+All \ndecls\ declarations extracted by \code{docs/audit/extract\_lean.py},
+unedited, with file and line. The six that carry the content appear in \S2;
+these are the rest, and the full text of those six.
+
+\input{out/lean_excerpts.tex}
+
+\section{How this document was produced}
+
+\begin{Verbatim}[fontsize=\small]
+python3 docs/audit/extract_lean.py    # verbatim Lean   -> out/lean_excerpts.*
+python3 docs/audit/gallery.py         # figures, counts -> out/gallery/
+for f in docs/audit/out/gallery/*.svg; do            # SVG -> PNG (macOS)
+  qlmanage -t -s 1400 -o docs/audit/out/png "$f"; done
+bash scripts/negative-tests.sh --groups A \
+     > docs/audit/out/negative_tests_A.log           # group A table in 4
+bash scripts/negative-tests.sh --lean --groups L \                 # group L in 4
+     > results/validation/2026-09-24_negative_tests_L.log
+bash scripts/verify-all.sh \                                       # the numbers in 5
+     --axiom-log results/validation/2026-09-24_headline_build.log \
+     > docs/audit/out/axiom_check_headline.log
+python3 docs/audit/make_tables.py     # the LaTeX fragments
+python3 docs/audit/extract_lean.py --check   # drift tripwire; MUST exit 0
+cd docs/audit && tectonic audit.tex
+\end{Verbatim}
+
+\noindent No Lean in this document was typed by hand; no count in it was
+computed by hand. The prose in the left column of \S2 and in the notes beneath
+each row is written by a human and is exactly what you are being asked to
+check.
+
+\end{document}
