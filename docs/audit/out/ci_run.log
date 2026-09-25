@@ -1,0 +1,48 @@
+# GitHub Actions run transcript (extract)
+# run     : https://github.com/NewYorkImperialist/heptagon-intersections/actions/runs/36086080499
+# commit  : b78f372ac8889c0d00b74537f07e3ecb6b080420
+# started : 2026-09-25T02:23:47Z   ended: 2026-09-25T03:04:45Z   (40m54s)
+# runner  : GitHub-hosted ubuntu-latest; NOT a machine of this project
+# note    : the project's own modules are built FROM SOURCE -- 346 'Built',
+#           0 'Replayed'.  lean/.lake/build is deliberately NOT cached, so the
+#           axiom lines below are output this runner's kernel produced, not
+#           text restored from an archive.
+# note    : the '1 of 6' line below is INSIDE negative test A4, which feeds the
+#           checker a deliberately deficient log and requires it to REJECT.
+
+runner      : Linux Linux 6.17.0-1022-azure x86_64
+cores       : 2
+memory      : 7.8Gi total, 6.7Gi available
+lean/lean-toolchain pins: leanprover/lean4:v4.33.1
+Build completed successfully (3344 jobs).
+OK: 0 occurrences of sorryAx
+OK: 0 occurrences of "declaration uses 'sorry'"
+   axiom-check: declarations parsed                        : 409
+   axiom-check: declarations using a disallowed axiom      : 0
+   axiom-check: occurrences of sorryAx                     : 0
+   axiom-check: occurrences of "declaration uses 'sorry'"  : 0
+   axiom-check: distinct axioms                            : 3
+   axiom-check: headline theorems confirmed                : 6 of 6
+   AXIOM CHECK: CLEAN -- 409 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound; sorryAx appears nowhere; all 6 headline theorems confirmed.
+  PASS  A1 complete clean log (control)        accepted (exit 0, as the control requires)
+        report: AXIOM CHECK: CLEAN -- 9 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound;
+  PASS  A2 wrapped axiom list (control)        accepted (exit 0, as the control requires)
+  PASS  A3 sorryAx in a headline theorem       rejected (exit 1, and said why)
+  PASS  A4 headline lines absent               rejected (exit 1, and said why)
+  PASS  A5 disallowed axiom (ofReduceBool)     rejected (exit 1, and said why)
+  PASS  A6 project-declared axiom              rejected (exit 1, and said why)
+  PASS  A7 no axiom output at all              rejected (exit 1, and said why)
+  PASS  A8 disallowed axiom in wrapped tail    rejected (exit 1, and said why)
+    axiom-check: declarations parsed                        : 61
+    axiom-check: declarations using a disallowed axiom      : 0
+    axiom-check: occurrences of sorryAx                     : 0
+    axiom-check: headline theorems confirmed                : 1 of 6
+  ACCEPTED            A1 complete clean log (control)             nothing -- a complete, clean #print axioms log
+  ACCEPTED            A2 wrapped axiom list (control)             nothing -- but one axiom list is wrapped across three lines
+  CAUGHT              A3 sorryAx in a headline theorem            a headline theorem's axiom list contains sorryAx
+  CAUGHT              A4 headline lines absent                    a log whose headline modules were never built: clean, but they never printed
+  CAUGHT              A5 disallowed axiom (ofReduceBool)          a headline theorem depends on Lean.ofReduceBool (what native_decide leaves)
+  CAUGHT              A6 project-declared axiom                   a headline theorem depends on a project-declared axiom
+  CAUGHT              A7 no axiom output at all                   a build log with no #print axioms output whatsoever
+  CAUGHT              A8 disallowed axiom in wrapped tail         a disallowed axiom hidden on the wrapped continuation line
+RESULT: 8 passed, 0 failed

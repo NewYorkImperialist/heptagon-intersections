@@ -137,6 +137,14 @@ extensionality, choice, and quotient soundness --- the standard basis of
 ordinary classical mathematics, shared with all of Mathlib. Any fourth entry is
 a finding.
 
+\paragraph{And none of it has to be taken from this machine.} Everything above
+would still be one party's report about their own computer. It is not: the
+repository rebuilds itself on GitHub's machines from a fresh clone, runs the
+axiom check and the sabotage tests, and publishes the result as a pass or a
+fail that the author cannot forge. That run has happened and it passed,
+reproducing the figures in \S4 and \S5 exactly. \S\ref{sec:ci} gives the run,
+what it covers, and --- as importantly --- what it does not.
+
 \paragraph{What is left on trust when you finish this document.}
 Three things, and they are worth stating plainly because they are all that is
 left:
@@ -495,6 +503,73 @@ figure as measured before later modules were added and not re-measured since,
 so treat it as a lower bound. That download, not this development, dominates
 the cost of a first build. You are not expected to do any of this; the point
 of \S\S2--4 is that you do not have to.
+
+\section{Someone else already ran it}\label{sec:ci}
+
+Everything in \S\S2--6 was produced on the author's computer. You are entitled
+to ask why any of it should be believed, and the answer cannot be more output
+from the same machine.
+
+So the repository builds itself on GitHub's. On every push to the main branch,
+GitHub clones the repository onto a machine nobody involved here owns or can
+log into, installs the pinned Lean toolchain, compiles the headline chain
+\emph{from source}, and runs the axiom check and the group-A sabotage tests of
+\S4. If any step fails, the run goes red and stays red in public view. The
+green mark is not something the author can produce by hand.
+
+\begin{trustbox}
+\centering
+\textbf{First run: passed.} \quad 25 September 2026, \quad 40\,min 54\,s\\[2pt]
+{\footnotesize\ttfamily github.com/NewYorkImperialist/heptagon-intersections/actions/runs/36086080499}\\[2pt]
+{\footnotesize commit \texttt{b78f372}, runner \texttt{ubuntu-latest}, 2 cores, 7.8\,GiB}
+\end{trustbox}
+
+\noindent What that run reported, quoted from
+\code{docs/audit/out/ci\_run.log}:
+
+\begin{trustbox}
+\begin{Verbatim}[fontsize=\small]
+lean/lean-toolchain pins: leanprover/lean4:v4.33.1
+Build completed successfully (3344 jobs).
+OK: 0 occurrences of sorryAx
+   axiom-check: declarations parsed              : 409
+   axiom-check: distinct axioms                  : 3
+   axiom-check: headline theorems confirmed      : 6 of 6
+   AXIOM CHECK: CLEAN
+RESULT: 8 passed, 0 failed          (the group-A sabotage tests)
+\end{Verbatim}
+\end{trustbox}
+
+\noindent These are the same figures \S5 and \S4 report from the author's
+machine --- the same 3{,}344 jobs, the same 409 declarations, the same six
+theorems, the same three axioms. That is the point: an independent machine,
+starting from nothing but the repository, reached them again.
+
+\paragraph{The build is genuinely from source, and this is load-bearing.}
+Lake will happily restore a previous build and \emph{replay} its stored
+messages, which look identical to freshly produced ones. A workflow that cached
+the build tree would therefore go green while re-checking nothing --- its axiom
+lines would be text unpacked from an archive, and the tick would attest
+GitHub's ability to open a tarball. The workflow deliberately does not cache
+\code{lean/.lake/build}, and the run above shows \textbf{346 modules
+\emph{Built} and 0 \emph{Replayed}}: every one of this project's modules was
+elaborated by that runner's kernel. (Mathlib, the external library, \emph{is}
+fetched prebuilt. Caching a dependency is ordinary; caching the thing you claim
+to have verified is not.)
+
+\paragraph{What the green mark does not cover.} Two things, so that it is not
+read for more than it says. It does not run the \emph{Lean} mutation tests
+L1--L4 of \S4 --- each rebuilds a deliberately broken copy of the repository and
+would exceed the six-hour limit, so that job is opt-in and was skipped; their
+evidence is the committed transcript instead. And it builds the 332-module
+headline closure, not all 1{,}779 declared libraries, most of which are
+generated data modules from an abandoned approach that nothing current imports.
+Neither omission touches the six theorems.
+
+\paragraph{The repository is private.} It is held back deliberately, to
+establish priority before the result is public, so the run above is not visible
+to the world. A named collaborator can see it, and the intended reader of this
+document is expected to be one.
 
 \section{Non-vacuity: the theorem is not true for a boring reason}
 
