@@ -18,12 +18,12 @@ authors:
     affiliation: Northeastern University
 repository-code: "https://github.com/NewYorkImperialist/heptagon-intersections"
 url: "https://github.com/NewYorkImperialist/heptagon-intersections"
-version: "v1.0-theoremdb"
+version: "theoremdb-2026-10-04"
 commit: "6512fb4a330b6c311a720716dce41fbf1c499dd7"
 identifiers:
   - type: url
-    value: "https://github.com/NewYorkImperialist/heptagon-intersections/tree/v1.0-theoremdb"
-    description: "Release tag v1.0-theoremdb"
+    value: "https://github.com/NewYorkImperialist/heptagon-intersections/releases/tag/theoremdb-2026-10-04"
+    description: "Release theoremdb-2026-10-04 (alias tag v1.0-theoremdb), commit 6512fb4"
   - type: url
     value: "https://theoremdb.org/statement/?ref=maximum-boundary-intersections-two-simple-heptagons"
     description: "TheoremDB entry for the unrestricted problem (submitted; this repository is evidence for the no-shared-vertex result only)"
