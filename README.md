@@ -180,6 +180,7 @@ The Lean sources have not changed since commit `a211140`
 
 | evidence | produced | Lean sources | committed in | notes |
 |---|---|---|---|---|
+| `results/validation/2026-10-04_headline_build.log` | local, 2026-10-04, warm (1 module Built, 270 Replayed) | `a211140` + the `Headline.lean` docstring edit | built at `e2edc84`, clean tree (recorded in its header) | axiom check CLEAN, 409 declarations, 6 of 6 |
 | `results/validation/2026-09-24_headline_build.log` | local, 2026-09-25T01:36Z | `a211140` | `b070c2f` | header records date, machine, Lean 4.33.1 and command, but no commit |
 | `results/validation/2026-09-24_negative_tests_L.log` | local, 2026-09-25T01:37Z | `a211140` | `b070c2f` | group L, 4 passed |
 | `results/validation/2026-09-24_verify_all_after_audit.log` | local, 2026-09-25T02:12Z | `a211140` | `b78f372` | full `verify-all`, COMPLETE SUCCESS, 1,779 libraries, 6,523 jobs; the header's "Lean 4.34.1" was read at the repository root, outside the pin, and the build used 4.33.1 |
