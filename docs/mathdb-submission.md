@@ -1,6 +1,8 @@
 # MathDB submission draft: boundary intersections of two simple heptagons
 
-> **DRAFT — not submitted; for the author's review.**
+> **Historical draft (2026-10-04).** Prepared for MathDB and not submitted there. The
+> problem was instead submitted to TheoremDB; see the README section "TheoremDB". The
+> placeholders below were never filled in.
 
 ## Problem
 

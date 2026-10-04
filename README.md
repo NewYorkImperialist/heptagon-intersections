@@ -3,6 +3,14 @@
 A computer-assisted investigation of `f(7,7)`, the smallest open case of the
 Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygons.
 
+> **In one line.** Lean-verified: two simple heptagons that **share no vertex**
+> and meet in finitely many boundary points meet in **at most 38** points, and
+> 38 is attained (`Heptagon.Pair9Shift.points9_le_38_of_coincFree`,
+> `Heptagon.Pair9Shift.isGreatest_38_of_coincFree`). **Not** Lean-verified: the
+> unrestricted `f(7,7) = 38`, which also needs the AKR §9.1 shared-vertex
+> reduction. Stable version: tag `v1.0-theoremdb`, commit `6512fb4`. See
+> [TheoremDB](#theoremdb) and [Reproducing the evidence](#reproducing-the-evidence).
+
 ## Current status (4 October 2026)
 
 This section supersedes the dated log further down. The mathematical write-up
@@ -82,17 +90,29 @@ Therefore `f(7,7) = 38` is not established by this repository. It follows
 from the Lean theorem only together with the external reduction and the
 unresolved applicability point.
 
-## Status / TheoremDB
+## TheoremDB
 
-The unrestricted `f(7,7)` problem has been submitted to TheoremDB and is
-**pending review**: `<TheoremDB entry link, once assigned>`.
+The unrestricted problem — the maximum number of distinct boundary
+intersection points of two simple heptagons with finite boundary
+intersection, shared vertices allowed — has been submitted to TheoremDB:
+<https://theoremdb.org/statement/?ref=maximum-boundary-intersections-two-simple-heptagons>.
+Its status there is whatever that page shows; submission does not imply
+acceptance, endorsement or publication.
 
-- The finding attached to the submission is the no-shared-vertex bound of 38
-  above. It is contributor-supplied, self-reported evidence, not independent
-  review.
-- The shared-vertex step is recorded there as an open verification issue.
+This repository is the evidence for a **restricted** result only:
 
-The submission does not imply acceptance, endorsement or publication.
+| | |
+|---|---|
+| **Claim** | Two simple heptagons that share no vertex and whose boundaries meet in finitely many points meet in at most 38 points; 38 is attained. |
+| **Lean theorems** | `Heptagon.Pair9Shift.points9_le_38_of_coincFree` (the bound) and `Heptagon.Pair9Shift.isGreatest_38_of_coincFree` (38 is the maximum), in `lean/Pair9Shift.lean` |
+| **Stable source** | tag [`v1.0-theoremdb`](https://github.com/NewYorkImperialist/heptagon-intersections/releases/tag/v1.0-theoremdb) = commit [`6512fb4a330b6c311a720716dce41fbf1c499dd7`](https://github.com/NewYorkImperialist/heptagon-intersections/commit/6512fb4a330b6c311a720716dce41fbf1c499dd7) |
+| **Not claimed** | `f(7,7) = 38` for all pairs. That needs the vertex-coincidence reduction of AKR 2022 §9.1, which is not formalized here and whose applicability to these definitions is unresolved. It is recorded on TheoremDB as an open step. |
+| **Review** | Self-reported evidence; no independent review has been completed. |
+
+The evidence chain: TheoremDB problem → the restricted claim above → the tag
+and commit → the two Lean theorems → the commands in "Reproducing the
+evidence" → the audit (`docs/audit/audit.pdf`) and the build logs listed under
+"Provenance".
 
 ## Reproducing the evidence
 
@@ -187,9 +207,6 @@ The Lean sources have not changed since commit `a211140`
 | GitHub Actions run `36086080499` | 2026-09-25 | `a211140` | run at `b78f372` | headline build, axiom check and group A, passed |
 | GitHub Actions run `36089101301` | 2026-09-25 | `a211140` | run at `e984888` | same checks, passed |
 | `paper/heptagon-paper.pdf`, `docs/audit/audit.pdf` | revised 2026-10-04 | `a211140` | tag `v1.0-theoremdb` | documentation only |
-
-**Access.** As of 2026-10-04 the repository is private, and the CI runs are
-visible only to people with access.
 
 ## History of the status (dated log, superseded by the section above)
 
@@ -579,14 +596,31 @@ verified status. **No independent review has been completed** (see
 
 ## Citation and status warning
 
-**This repository should not be cited as a peer-reviewed proof of
-`f(7,7) = 38`**, and should not be described as having settled the case, unless
-and until its status changes.
+**This repository should not be cited as a proof of `f(7,7) = 38`.** Describe
+it as *a Lean-verified bound of 38 for simple heptagons sharing no vertex, with
+`f(7,7) = 38` depending on the external AKR §9.1 reduction*, and cite the
+release tag together with the commit:
 
-If you refer to this work in the meantime, describe it as *a Lean-verified
-bound of 38 for simple heptagons sharing no vertex, with `f(7,7) = 38`
-depending on the external AKR §9.1 reduction*, and cite the release tag or
-commit you examined. `CITATION.cff` carries the same warning in machine-readable form.
+```bibtex
+@software{lin_heptagon_2026,
+  author  = {Lin, Jayden},
+  title   = {Heptagon Intersection Project: a Lean-verified bound of 38 for
+             simple heptagons sharing no vertex, toward $f(7,7)$},
+  year    = {2026},
+  version = {v1.0-theoremdb},
+  url     = {https://github.com/NewYorkImperialist/heptagon-intersections/tree/v1.0-theoremdb},
+  note    = {Commit 6512fb4a330b6c311a720716dce41fbf1c499dd7. Lean theorems
+             Heptagon.Pair9Shift.points9\_le\_38\_of\_coincFree and
+             Heptagon.Pair9Shift.isGreatest\_38\_of\_coincFree. Not
+             independently reviewed}
+}
+```
+
+Plain text: J. Lin, *Heptagon Intersection Project: a Lean-verified bound of 38
+for simple heptagons sharing no vertex, toward f(7,7)*, version
+`v1.0-theoremdb` (commit `6512fb4`), 2026,
+<https://github.com/NewYorkImperialist/heptagon-intersections/tree/v1.0-theoremdb>.
+`CITATION.cff` carries the same information in machine-readable form.
 
 The lower bound `f(7,7) ≥ 38` may be cited as verified computation; it is also
 not new — the construction realizes the known Dillencourt–Mount–Saalfeld lower
