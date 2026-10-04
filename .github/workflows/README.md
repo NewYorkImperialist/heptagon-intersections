@@ -46,8 +46,11 @@ Heptagon.Pair9Shift.isGreatest_38_of_coincFree
 Five of the six are printed by `lean/Headline.lean` itself; the sixth,
 `points_le_38_of_no_vertex_on_boundary`, is printed by `lean/AKR9.lean:420`,
 which is inside the `Headline` closure. A CI run compiles all 332 modules of
-that closure from source, so all six lines are output the kernel produced on
-GitHub's machine, from this commit. Keeping them that way is why the workflow
+that closure from source (331 dependencies plus `Headline` itself), so all six
+lines are output the kernel produced on GitHub's machine, from this commit. In
+the two recorded runs (`36086080499`, `36089101301`) Lake printed 346 `Built`
+lines and 0 `Replayed`: the 332 project modules plus 14 jobs that build
+Mathlib's `cache` tool. Keeping them that way is why the workflow
 must not cache the project build tree — see §4, which is explicit about what
 that rule does and does not rest on.
 
@@ -77,9 +80,9 @@ This section is the important one. Read it before treating the tick as more
 than it is.
 
 **It does not build 1,447 of the 1,779 declared libraries.** `lake build
-Headline` builds the 332-module transitive closure of the four roots
-(`MainTheorem`, `RealUpperBound`, `AKR9`, `Pair9Shift`) — 331 dependencies plus
-`Headline` itself. The other 1,447 modules are never compiled in CI. Of those,
+Headline` builds 332 modules: the 331-module transitive closure of the four
+roots (`MainTheorem`, `RealUpperBound`, `AKR9`, `Pair9Shift`) plus `Headline`
+itself. The other 1,447 modules are never compiled in CI. Of those,
 **1,084 are `OTEnum*` (542) and `Strat*` (542)** — the per-shard data modules
 of the abandoned enumeration route. They are not in the headline import closure
 and nothing in the live chain imports them. A cold build of all 1,779 is

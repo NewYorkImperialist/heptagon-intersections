@@ -1,7 +1,10 @@
+> **Historical document (banner added 2026-10-04).** This file describes an earlier stage of the project and is kept for provenance. For the current statement see `README.md` → "Current status", `paper/heptagon-paper.pdf` (Theorem 1.2) and `docs/audit/audit.pdf`. f(7,7) = 38 is not established by this repository; it depends on the external AKR §9.1 reduction, whose applicability here is unresolved.
+
 # f(7,7) = 38 — the candidate proof, in theorem/lemma form
 
-**Claim.** Two simple heptagons in general position have at most 38 boundary
-intersection points, and 38 is attained.  Hence f(7,7) = 38.
+**Claim (historical route).** Two simple heptagons in general position have at
+most 38 boundary intersection points, and 38 is attained. f(7,7) = 38
+additionally needs the vertex-coincidence reduction; see paper §8.
 
 > **Status.** This is a *candidate* proof. It has no known computational gap, and
 > most steps are now kernel-checked or independently cross-checked, but it
@@ -15,8 +18,9 @@ intersection points, and 38 is attained.  Hence f(7,7) = 38.
 > **AKR Lemma 5, Černý Lemma 2 and the exceptional classification not at
 > all**, so (HP) and the two published lemmas named above are no longer
 > obstacles to it. They remain obstacles to *this* document's argument, which
-> is retained as the historical route and as the only treatment of
-> configurations outside general position. Read the correction block below the
+> is retained as the historical route. *(Updated 2026-10-04: configurations
+> outside general position are now covered by
+> `Pair9Shift.points9_le_38_of_coincFree` when no vertex is shared.)* Read the correction block below the
 > next paragraph before using anything here.
 >
 > **Changed 2026-09-16.** This paragraph named the interpretation of AKR

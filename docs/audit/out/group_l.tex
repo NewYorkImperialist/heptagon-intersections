@@ -20,5 +20,5 @@ case & the mutation & verdict\\
 \end{tabular}
 \par\medskip
 \noindent\textbf{\texttt{RESULT: 4 passed, 0 failed}}\ \ (\texttt{bash scripts/negative-tests.sh --lean --groups L})
-\par\medskip\noindent Every one of the four mutations was rejected by a real build of a real mutated copy.
- L4 is the one that bears on \S2 directly: not one character of proof text was altered, only the \emph{definition}, and the build still had to fail --- and did. The definitions you read in \S2 are therefore load-bearing, not decoration.
+\par\medskip\noindent Each of the four mutations was rejected by a build of a mutated copy. This shows that these four mutations are caught; it does not show that every defect would be.
+ L4 bears on \S2 directly: no proof text was altered, only the \emph{definition} of \texttt{points9}, and the build failed.

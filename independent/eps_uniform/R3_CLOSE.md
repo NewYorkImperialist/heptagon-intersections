@@ -6,7 +6,7 @@ AKR's rule, for which every **removable** witness polynomial is not identically
 zero.*
 
 Inputs read in full before any code was written: `R3.md` (all four findings),
-`FINDINGS.md` §3–§4, `docs/hostile-review-2026-09-21.md` §1, §1b, §2, §4,
+`FINDINGS.md` §3–§4, `archive/notes/hostile-review-2026-09-21.md` §1, §1b, §2, §4,
 `docs/akr-9-assembly.md` §3, and the sources `r3lib.py`, `r3.py`, `r3b.py`,
 `r3controls.py`, `uniform.py`, `epslib.py`.
 

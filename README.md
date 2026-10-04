@@ -3,6 +3,197 @@
 A computer-assisted investigation of `f(7,7)`, the smallest open case of the
 Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygons.
 
+## Current status (4 October 2026)
+
+This section supersedes the dated log further down. The mathematical write-up
+is [`paper/heptagon-paper.pdf`](paper/heptagon-paper.pdf). The audit of the
+formal statement and its evidence is [`docs/audit/audit.pdf`](docs/audit/audit.pdf).
+
+**The problem.** `f(7,7)` is the maximum number of distinct points in
+`∂P ∩ ∂Q`, over pairs of simple heptagons whose boundaries meet in finitely
+many points. Shared vertices, vertex–side contacts, tangencies, and several
+side pairs meeting at one point are all allowed, and each distinct point is
+counted once. The conjectured value is 38.
+
+### Proved (by human-readable argument)
+
+- **The lower bound.** An explicit pair of integer-coordinate heptagons whose
+  boundaries meet in exactly 38 points (paper, Proposition 6.1). It can be
+  checked by hand or with exact arithmetic.
+- **Elementary facts.** `I + |E^D| = 49`. The disjointness graph has minimum
+  degree at least 1, so `I ≤ 42`. `I` is even. The 28 degree vectors (four
+  shapes) of the `I = 40` case are enumerated in paper §2 and §4.
+- **The pattern Π₈ is non-realizable** (paper, Theorem 3.2, via Lemma 3.3).
+  This is also checked against all 3,315 order types of 8 points.
+
+### Lean-verified (kernel-checked)
+
+- **`Pair9Shift.points9_le_38_of_coincFree`** and
+  **`Pair9Shift.isGreatest_38_of_coincFree`** (paper, Theorem 1.2). The
+  hypotheses are exactly these:
+  - each heptagon is `SimpleClosed`: no degenerate side, non-adjacent sides
+    disjoint, and adjacent sides meeting only in their shared vertex;
+    collinear vertices are allowed;
+  - `(points9 R).Finite`: `∂P ∩ ∂Q` is finite;
+  - no vertex of `P` equals a vertex of `Q`.
+
+  Under these hypotheses the boundaries meet in at most 38 points, and 38 is
+  attained. A vertex of one polygon may lie in the interior of a side of the
+  other, and no general position is assumed.
+- **Pairs in general position** are covered by the theorem above. They are
+  also covered separately by `RealUpperBound.isGreatest_38_real`.
+- **Supporting results, all kernel-checked:**
+  - Π₁₄ is non-realizable;
+  - the covering theorem: every crossing pattern with `I ∈ {40, 42}` contains
+    Π₈ or Π₁₄;
+  - the transfer from sign data to real point sets;
+  - the removal of a vertex lying in the interior of a side.
+- **Axioms.** The headline theorems depend only on `propext`,
+  `Classical.choice` and `Quot.sound`. No `sorry`, no project axiom and no
+  `native_decide` is used.
+
+The kernel check is strong formal evidence for the theorem *as stated*. It
+does not establish that the formal definitions match the intended
+mathematics. Paper Appendix A and audit §2 set those definitions out for
+that check.
+
+### Assumed from the literature (external)
+
+- **The vertex-coincidence reduction** of Ackerman–Keszegh–Rote, *Discrete
+  Comput. Geom.* 68 (2022), §9.1. It says every pair can be replaced by one
+  that shares no vertex, without decreasing the number of intersection
+  points. It is **not formalized** here.
+
+### Unresolved
+
+- **Whether §9.1 applies to these exact definitions.** The perturbed pair
+  must again be simple and again have finite intersection. AKR state neither
+  explicitly. `SimplicityStable.heptagon_simplicity_stable_linear` is a
+  kernel-checked partial result: simplicity survives every sufficiently
+  small linear motion of the vertices. It has not been assembled with §9.1
+  (paper, Remark 8.10).
+- **Definitional faithfulness.** A human reader still has to judge whether
+  the Lean definitions are the intended objects.
+- **Independent review.** None has been completed. The project's records
+  note that a colleague began reading an earlier dependency manifest in
+  September 2026. No findings from that reading are recorded.
+
+Therefore `f(7,7) = 38` is not established by this repository. It follows
+from the Lean theorem only together with the external reduction and the
+unresolved applicability point.
+
+## Status / TheoremDB
+
+The unrestricted `f(7,7)` problem has been submitted to TheoremDB and is
+**pending review**: `<TheoremDB entry link, once assigned>`.
+
+- The finding attached to the submission is the no-shared-vertex bound of 38
+  above. It is contributor-supplied, self-reported evidence, not independent
+  review.
+- The shared-vertex step is recorded there as an open verification issue.
+
+The submission does not imply acceptance, endorsement or publication.
+
+## Reproducing the evidence
+
+All commands run from the repository root unless a working directory is
+given. Commands (b)–(e) were checked on 2026-10-04.
+
+**(a) The headline Lean theorems and their axiom check.** The toolchain is
+pinned to `leanprover/lean4:v4.33.1` (`lean/lean-toolchain`). Mathlib is
+pinned to tag `v4.33.1` (`lean/lake-manifest.json`).
+
+| working directory | command |
+|---|---|
+| `lean/` | `lake exe cache get` |
+| `lean/` | `lake build Headline 2>&1 \| tee ../headline-build.log` |
+| repository root | `bash scripts/verify-all.sh --axiom-log headline-build.log` |
+
+- **Cost.** The Mathlib cache download is about 1.4 GB or more. On GitHub's
+  2-core runners the headline build took about 32 minutes.
+- **A bare `lake build` is not sufficient.** `defaultTargets` omits `AKR9`,
+  `Pair9Shift` and `Headline`.
+- **What `Headline` covers.** It is 332 modules: the 331-module import
+  closure, plus `Headline` itself. Lake reports 3,344 jobs because Mathlib's
+  jobs are counted too.
+- **Expected checker output.** `AXIOM CHECK: CLEAN`, 409 declarations, and 6
+  of 6 headline theorems confirmed.
+
+**(b) Checking the committed build log without Lean.**
+
+```bash
+bash scripts/verify-all.sh --axiom-log results/validation/2026-09-24_headline_build.log
+```
+
+Expected: `AXIOM CHECK: CLEAN`, 409 declarations parsed, 6 of 6 headline
+theorems confirmed.
+
+**(c) Certificate verification.**
+
+```bash
+PYTHONPATH=$PWD/python/core python3 python/validation/check_lower_bound.py
+```
+
+Expected: `All checks passed.  This certifies f(7,7) >= 38.` The command
+`python3 python/validation/check_final_certificate.py data/certificates/final_elimination_225.json`
+checks the 225-case certificate of the **historical** enumeration route,
+which the current proof does not use.
+
+**(d) Negative tests**, which check that the checkers reject what they
+should:
+
+```bash
+bash scripts/negative-tests.sh --groups A                                        # 8 cases, ~6 s, no Lean
+NEGTESTS_LAKE_DIR=$PWD/lean/.lake bash scripts/negative-tests.sh --lean --groups L   # opt-in, slow
+```
+
+- **Group A** feeds synthetic logs to the axiom checker. Expected
+  `RESULT: 8 passed, 0 failed`.
+- **Group L** runs four full builds of deliberately mutated copies: a
+  `sorry`, an `axiom`, a `native_decide`, and a changed definition. Its
+  committed transcript, `results/validation/2026-09-24_negative_tests_L.log`,
+  shows 4 passed.
+
+**(e) Hash manifests.**
+
+```bash
+bash scripts/verify-all.sh --steps 4
+```
+
+The script exits 2 (PARTIAL) by design whenever steps are selected. Every
+executed check must show `PASS`.
+
+**(f) Everything.**
+
+```bash
+bash scripts/verify-all.sh
+```
+
+This runs the full build of all 1,779 declared libraries and every check
+above. A cold run is dominated by 1,084 enumeration modules (`OTEnum*`,
+`Strat*`) from the historical route, and takes many CPU-hours.
+
+## Provenance of the committed evidence
+
+The Lean sources have not changed since commit `a211140`
+(2026-09-24 23:59 UTC).
+
+| evidence | produced | Lean sources | committed in | notes |
+|---|---|---|---|---|
+| `results/validation/2026-09-24_headline_build.log` | local, 2026-09-25T01:36Z | `a211140` | `b070c2f` | header records date, machine, Lean 4.33.1 and command, but no commit |
+| `results/validation/2026-09-24_negative_tests_L.log` | local, 2026-09-25T01:37Z | `a211140` | `b070c2f` | group L, 4 passed |
+| `results/validation/2026-09-24_verify_all_after_audit.log` | local, 2026-09-25T02:12Z | `a211140` | `b78f372` | full `verify-all`, COMPLETE SUCCESS, 1,779 libraries, 6,523 jobs; the header's "Lean 4.34.1" was read at the repository root, outside the pin, and the build used 4.33.1 |
+| GitHub Actions run `36086080499` | 2026-09-25 | `a211140` | run at `b78f372` | headline build, axiom check and group A, passed |
+| GitHub Actions run `36089101301` | 2026-09-25 | `a211140` | run at `e984888` | same checks, passed |
+| `paper/heptagon-paper.pdf`, `docs/audit/audit.pdf` | revised 2026-10-04 | `a211140` | tag `v1.0-theoremdb` | documentation only |
+
+**Access.** As of 2026-10-04 the repository is private, and the CI runs are
+visible only to people with access.
+
+## History of the status (dated log, superseded by the section above)
+
+
+> *[Historical framing, superseded — see "Current status" above.]*
 > **Status: candidate computer-assisted proof that `f(7,7) = 38`, undergoing
 > independent verification and Lean formalization.**
 >
@@ -144,50 +335,49 @@ Dillencourt–Mount–Saalfeld conjecture on intersections of two simple polygon
 
 ## Problem
 
-For simple polygons `P` and `Q` with `m` and `n` sides in general position, let
-`I(P,Q)` be the number of points where their boundaries meet, and let `f(m,n)`
-be the maximum of `I(P,Q)`. The even cases were settled by Dillencourt, Mount
-and Saalfeld in 1993; the odd–odd case is conjectured to be
+For simple polygons `P` and `Q` with `m` and `n` sides, let `I(P,Q)` be the
+number of points where their boundaries meet, and let `f(m,n)` be the maximum
+of `I(P,Q)` over pairs whose boundaries meet in **finitely many** points.
+Degeneracies — shared vertices, a vertex on a side, tangencies — are allowed;
+overlapping sides are excluded by finiteness. Černý et al. (2003) and the
+SoCG version of Ackerman–Keszegh–Rote state the problem under general-position
+assumptions; the AKR journal version assumes finiteness and justifies its
+vertex condition in §9. The even cases were settled by Dillencourt, Mount and
+Saalfeld in 1993; the odd–odd case is conjectured to be
 `f(m,n) = mn − m − n + 3` and remains open in general.
 
-For `m = n = 7` the conjecture predicts **38**. The published bounds are
-`38 ≤ f(7,7) ≤ 40`, and `39` is excluded by parity — two closed curves in
-general position cross an even number of times. **The entire question is
-whether 40 is attainable.** Černý et al. (2003) explicitly flag `k = l = 7` as
-open, and the Ackerman–Keszegh–Rote (2022) bound, while asymptotically optimal,
-is vacuous at `m = n = 7`.
+For `m = n = 7` the conjecture predicts **38**. For pairs in general position
+the published bounds are `38 ≤ I ≤ 40` (Černý et al.), and `39` is excluded by
+parity — two closed curves in general position cross an even number of times;
+so in general position the question was whether 40 is attainable. Černý et al.
+(2003) explicitly flag `k = l = 7` as open, and the Ackerman–Keszegh–Rote
+(2022) bound, while asymptotically optimal, is vacuous at `m = n = 7`.
 
 ## Current claim
 
-> This repository contains a **candidate computer-assisted proof that
-> `f(7,7) = 38`**. The argument is undergoing independent verification and Lean
-> formalization.
-
-Two halves, with very different levels of support:
+See **Current status** at the top of this page; it supersedes this section's
+earlier text. In short: the bound 38 is kernel-checked for simple heptagons
+that share no vertex and meet in finitely many points (which includes every
+general-position pair), and `f(7,7) = 38` follows using the external AKR §9.1
+reduction, whose applicability to these exact definitions is not yet settled
+here.
 
 * **`f(7,7) ≥ 38`** — established. An explicit pair of integer-coordinate
   heptagons with 38 crossings, verifiable in under a second with no external
-  lemma and no enumeration.
-* **`f(7,7) ≤ 38`** — candidate. **For integer-coordinate configurations in
-  general position it is a Lean theorem** as of 2026-09-17, importing no
-  published lemma (`ConfigBridge.crossCountC_le_38_of_general_position`). What
-  remains conditional is the passage from that class to arbitrary simple
-  heptagons: integer → real coordinates, and the general-position reduction.
-  *Historically*, and still for configurations outside general position, the
-  argument is a finite case analysis conditional on external lemmas. Its Python
-  source was written in one LLM-assisted session; the finite graph/profile
-  reduction down to the 225 (class-pair, graph) triples has since been
-  reproduced by a separately written C++ implementation, but the **final
-  avoiding-pair filter has not** been run by any second implementation (K-20).
-  **No step of any of this has been checked by a human outside the AI-assisted
-  development process.**
+  lemma and no enumeration, and kernel-checked (`AKR9.certPair9_ncard`).
+* **Upper bound** — kernel-checked as Theorem 1.2 (above). The older route —
+  a finite case analysis conditional on external lemmas, whose final
+  avoiding-pair filter has no second implementation (K-20) — is historical and
+  is not used by the current proof.
 
 ## High-level proof idea
 
 > **Read this section as the historical route (note added 2026-09-17).** Steps
-> 2–7 below are how the upper bound was *found*, and they are still the only
-> argument that covers configurations **not** in general position. They are no
-> longer how the Lean development *proves* it. The formalized route is much
+> 2–7 below are how the upper bound was *found*. They are no longer how the
+> Lean development *proves* it. *(Corrected 2026-10-04: this note said they
+> were still the only argument covering configurations not in general
+> position. That is no longer true. Degenerate configurations that share no
+> vertex are covered by the Lean theorem `Pair9Shift.points9_le_38_of_coincFree`.)* The formalized route is much
 > shorter: a counterexample with `I = 40` (or `I = 42`) has a 7×7 disjointness
 > graph with 9 (or 7) edges and no isolated side; **two** minimal local crossing
 > patterns are impossible for any fourteen points in general position; every
@@ -243,6 +433,10 @@ combinatorial filters are the least secure steps in the argument — see
 > unproved clause), and the least secure step in the argument is now that §3
 > clause — one sentence asserted "for convenience", with no proof and no lemma
 > number. See [`docs/akr-9-1-obligation.md`](docs/akr-9-1-obligation.md).
+> *(Superseded 2026-10-04: §3's clause is now proved (`RawConfig`) and §9.2's
+> half is proved (`Pair9Shift`). Only the §9.1 vertex-coincidence reduction
+> remains external, and its applicability to these definitions is unresolved.
+> See "Current status" above.)*
 
 ## Repository map
 
@@ -250,13 +444,13 @@ combinatorial filters are the least secure steps in the argument — see
 |---|---|
 | `docs/` | Mathematical exposition and project status. Start with `verification-status.md`. |
 | `python/` | Active computational source. `core/` (exact predicates, chirotope enumeration), `classification/`, `elimination/`, `validation/`. |
-| `lean/` | Formalization. **1,779 declared `[[lean_lib]]` targets**, of which **1,756 are in `defaultTargets`** — the other **23 are not**, so a plain `lake build` does **not** build them; they include `AKR9` and `Pair9Shift`, which carry the §9 headline theorems. **Use the `Headline` target instead** (added 2026-09-24): `cd lean && lake build Headline` builds the 331-module chain carrying every headline theorem in ~11 s on a warm tree and prints their `#print axioms` lines. No project-specific `axiom` anywhere. The most recent committed full build is **1,762 libraries, 6,523 jobs, exit 0** (log: `results/validation/2026-09-17_verify_all_after_e9_attempt.log`, commit `8e6358a`); it predates the **16** modules added since — `SimplicityStable`, `SimplicityBridge`, `UniformEps`, `DependentSystem`, `DegBound`, `SignExp`, `R3Construct`, `TiltedShift`, `CrossTransport`, `CIInstance`, `RotationLaw`, `Pair9Shift`, `FactE`, `E9Directions`, `SwapPQ`, `Compose` — so "all compiling" is attested **14 commits and 16 modules behind**, and those 16 are exactly the §9 work. Most of the 1,779 are generated per-shard data modules; the hand-written development is a few dozen files. Exactly **five** import literally nothing and compile against an empty `LEAN_PATH`. See [`lean/README.md`](lean/README.md). *(Corrected 2026-09-17: this cell read "25 libraries … 1395 jobs … 735 theorems, 212 of them depending on no axioms at all … eight reach Mathlib". The theorem census has **not** been re-measured since 2026-09-15 and is therefore dropped rather than restated.)* *(**Re-measured 2026-09-24**, all figures in this cell re-read from commit `5bd737b` and from the build log itself. It previously read "1,756 declared libraries (commit `d22c313`)", "1,755 libraries, 6,518 jobs" against the `…_after_real_config.log`, and "attested two commits behind" — every one of those was stale, the build-log pointer was not the newest committed log, and the `defaultTargets` shortfall was not mentioned at all. Direct `import Mathlib` lines appear in **243** modules; at most **16** of those are hand-written.)* |
+| `lean/` | Formalization. **1,779 declared `[[lean_lib]]` targets**, of which **1,756 are in `defaultTargets`** — the other **23 are not**, so a plain `lake build` does **not** build them; they include `AKR9` and `Pair9Shift`, which carry the §9 headline theorems. **Use the `Headline` target instead** (added 2026-09-24): `cd lean && lake build Headline` builds the 332-module `Headline` target (the 331-module closure plus `Headline`) carrying every headline theorem in ~11 s on a warm tree and prints their `#print axioms` lines. No project-specific `axiom` anywhere. The most recent committed full build is **1,762 libraries, 6,523 jobs, exit 0** (log: `results/validation/2026-09-17_verify_all_after_e9_attempt.log`, commit `8e6358a`) *(Updated 2026-10-04: a newer full run, `results/validation/2026-09-24_verify_all_after_audit.log`, committed in `b78f372`, attests **all 1,779 libraries, 6,523 jobs, COMPLETE SUCCESS**, so the "behind" caveat that follows is superseded.)*; it predates the **16** modules added since — `SimplicityStable`, `SimplicityBridge`, `UniformEps`, `DependentSystem`, `DegBound`, `SignExp`, `R3Construct`, `TiltedShift`, `CrossTransport`, `CIInstance`, `RotationLaw`, `Pair9Shift`, `FactE`, `E9Directions`, `SwapPQ`, `Compose` — so "all compiling" is attested **14 commits and 16 modules behind**, and those 16 are exactly the §9 work. Most of the 1,779 are generated per-shard data modules; the hand-written development is a few dozen files. Exactly **five** import literally nothing and compile against an empty `LEAN_PATH`. See [`lean/README.md`](lean/README.md). *(Corrected 2026-09-17: this cell read "25 libraries … 1395 jobs … 735 theorems, 212 of them depending on no axioms at all … eight reach Mathlib". The theorem census has **not** been re-measured since 2026-09-15 and is therefore dropped rather than restated.)* *(**Re-measured 2026-09-24**, all figures in this cell re-read from commit `5bd737b` and from the build log itself. It previously read "1,756 declared libraries (commit `d22c313`)", "1,755 libraries, 6,518 jobs" against the `…_after_real_config.log`, and "attested two commits behind" — every one of those was stale, the build-log pointer was not the newest committed log, and the `defaultTargets` shortfall was not mentioned at all. Direct `import Mathlib` lines appear in **243** modules; at most **16** of those are hand-written.)* |
 | `data/` | Generated mathematical data and certificates: order types, exceptional profiles, the lower-bound certificate, the 225-case endgame certificate, SHA-256 manifests. |
 | `results/` | Reproduction logs, filter counts and validation output from the 2026-09-13 run, plus the 2026-09-14 kernel-enumeration benchmark. See [`results/README.md`](results/README.md). |
 | `independent/` | Separately written re-derivations, each in its own subdirectory: `implementation_b/` (a C++ reimplementation of the finite reduction, written from a written specification), `order_type_audit/` (an order-type/exceptional-classification audit against external data), `akr_l7_reproduction/` (the SAT/DRAT investigation of AKR Observation 6 / Lemma 7), `no_a7_experiment/` (what the pipeline gives with the A7 filter removed). See [`independent/README.md`](independent/README.md). |
-| `transcripts/` | Unmodified LLM session transcripts, kept as provenance. |
+| `transcripts/` | *Not distributed.* The LLM session transcripts are kept by the author as provenance and are not part of the public repository (removed from tracking 2026-10-04). |
 | `archive/superseded/` | The earlier pipeline, including a file with a documented defect. Preserved, not deleted. Do not cite. |
-| `paper/` | `proof-manifest.tex`/`.pdf` — the claim-by-claim manifest of what is and is not established, and its bibliography. |
+| `paper/` | **`heptagon-paper.tex`/`.pdf` — the mathematical write-up (primary).** The audit of the formal statement is `docs/audit/audit.pdf`. `proof-manifest.tex`/`.pdf` is the **historical** claim-by-claim manifest of the enumeration route; do not cite it for the current status. |
 | `scripts/` | `verify-all.sh` (the single end-to-end verification entry point), `negative-tests.sh`, `extract-transcripts.py`. |
 | `references/` | Notes on the cited papers, identified by DOI and SHA-256. The PDFs themselves are **not** redistributed. |
 | `PROGRESS.md` | Append-only working log of the formalization effort. Not a status document — `docs/verification-status.md` is. |
@@ -282,12 +476,12 @@ full table. In brief:
 | | |
 |---|---|
 | Verified in Lean, **unconditionally, for every configuration** | `I + \|E\| = 49`; minimum degree ≥ 1 (*derived* from a parity proof, not imported); **`I ≤ 42`**; **`I` is even**; the 38-crossing construction; the crossing-pair count **equals** the number of points of `∂P ∩ ∂Q` in `ℝ × ℝ` |
-| **Verified in Lean, for configurations in general position, importing no published lemma** *(new 2026-09-17, rows 42–44)* | **`I ≠ 40`**; **`I ≠ 42`**; **`I ≤ 38`**; and **`isGreatest_38_pointCount`** — 38 is the greatest number of boundary intersection **points**, over *integer*-coordinate configurations. One hypothesis, `FullGP` |
-| **Verified in Lean, for configurations with REAL coordinates in general position** *(new 2026-09-17, rows 46 and 47)* | **`pointsR_le_38`** — at most **38 boundary intersection points**, as a set in `ℝ × ℝ` — and **`isGreatest_38_real`**, the matching `IsGreatest`, so **38 is exactly the maximum**. Removes the integer-coordinate restriction outright, in both directions. One caveat: `Set.ncard` is 0 on infinite sets (general position excludes the bad case) |
+| **Verified in Lean, for configurations in general position, importing no published lemma** *(new 2026-09-17, rows 42–44; superseded by the no-shared-vertex theorem)* | **`I ≠ 40`**; **`I ≠ 42`**; **`I ≤ 38`**; and **`isGreatest_38_pointCount`** — 38 is the greatest number of boundary intersection **points**, over *integer*-coordinate configurations. One hypothesis, `FullGP` |
+| **Verified in Lean, for configurations with REAL coordinates in general position** *(new 2026-09-17, rows 46 and 47; superseded by the no-shared-vertex theorem)* | **`pointsR_le_38`** — at most **38 boundary intersection points**, as a set in `ℝ × ℝ` — and **`isGreatest_38_real`**, the matching `IsGreatest`, so **38 is exactly the maximum**. Removes the integer-coordinate restriction outright, in both directions. One caveat: `Set.ncard` is 0 on infinite sets (general position excludes the bad case) |
 | Verified in Lean, given the exceptional-class invariants | **`I ≠ 42`** — the *historical* proof (`Exclude42`). Superseded by the row above, which needs no class data at all, and which is therefore free of the K-22 entanglement |
 | Verified in Lean (enumeration obligations) | a counterexample lands in the searched domain; the domain has **13,003,620** elements; the search visits every element of it *(of the Lean transcription — there is no extraction)* |
 | Verified in Lean (interfaces) | all 225 endgame cases; the AKR-L5 bridge as an `iff`; the component labelling (both directions); a bipartiteness decision procedure; the 225 stored `avoiding` flags against the class table |
-| **The one open input** *(narrowed 2026-09-17, row 51)* | **AKR §9 alone** — "no vertex of one polygon lies on the boundary of the other" — carried as a single explicit Lean hypothesis, `AKR9.NoVertexOnOther`. *(§3's unproved "for convenience" clause was listed here too; it is now discharged for both the crossing-pair count (rows 48–50) and the point count (row 51) and is no longer an input anywhere.)* *(The integer-coordinate input, listed here earlier the same day, was closed **outright** — `RealUpperBound.pointsR_le_38` for the upper bound and `RealUpperBound.isGreatest_38_real` for the equality, the attaining configuration being the certificate cast into `ℝ × ℝ`.)* *This cell read: "**The one open input** — `I ≠ 40`, the 13,003,620-graph enumeration; `roadmap.md` §8a measures why it cannot currently be closed inside the kernel: memory, not time." `I ≠ 40` **is** now a kernel theorem for general position, by an argument that evaluates no graph at all; `roadmap.md` has not been updated and should be read as a 2026-09-14 document.* |
+| **The one open input** *(narrowed 2026-09-17, row 51)* | **AKR §9.1 alone** (shared vertices), outside the Lean theorem; the theorem's corresponding hypothesis is `hcoinc`. Its applicability to these definitions (simplicity and finiteness of the perturbed pair) is **unresolved**. *(Updated 2026-10-04. This cell previously named "AKR §9 alone", carried as `AKR9.NoVertexOnOther`; that described the superseded (E9) theorem.)* |
 | Verified by exact computation | lower bound; order types; classification; graph enumeration; the full elimination pipeline |
 | Superseded — known defect | the project's own Step 0 general-position argument (incorrect; replaced by a citation to AKR **§9** together with **§3**'s unproved clause — *citation corrected 2026-09-17; this cell said "§9.1", which does not say it*) |
 | **Open review item** | **AKR Observation 6 / Lemma 7 and the `H`-bipartite deduction** — a question about the published paper, **no longer a dependency** of anything here. See [`docs/akr-l7-review-request.md`](docs/akr-l7-review-request.md), which supersedes `akr-l7-human-review.md`; *this cell pointed at the superseded document* |
@@ -377,10 +571,10 @@ auditing, and formalization assistance in this project were performed using
 repository was itself performed by Claude.
 
 LLM output is not treated as authoritative here. Full session transcripts are
-preserved in `transcripts/` as provenance — they record where ideas came from,
+kept by the author as provenance (not distributed in this repository) — they record where ideas came from,
 including false starts and self-corrections, but a claim in a transcript has no
-verified status. **Human verification is ongoing and, at present, largely
-incomplete.** See [`docs/ai-disclosure.md`](docs/ai-disclosure.md).
+verified status. **No independent review has been completed** (see
+`docs/verification-status.md` row 18). See [`docs/ai-disclosure.md`](docs/ai-disclosure.md).
 
 ## Citation and status warning
 
@@ -388,9 +582,10 @@ incomplete.** See [`docs/ai-disclosure.md`](docs/ai-disclosure.md).
 `f(7,7) = 38`**, and should not be described as having settled the case, unless
 and until its status changes.
 
-If you refer to this work in the meantime, describe it as a *candidate
-computer-assisted proof undergoing verification*, and cite the specific commit
-you examined. `CITATION.cff` carries the same warning in machine-readable form.
+If you refer to this work in the meantime, describe it as *a Lean-verified
+bound of 38 for simple heptagons sharing no vertex, with `f(7,7) = 38`
+depending on the external AKR §9.1 reduction*, and cite the release tag or
+commit you examined. `CITATION.cff` carries the same warning in machine-readable form.
 
 The lower bound `f(7,7) ≥ 38` may be cited as verified computation; it is also
 not new — the construction realizes the known Dillencourt–Mount–Saalfeld lower
@@ -398,6 +593,9 @@ bound.
 
 ## License
 
-Code and documentation in this repository are released under the MIT License
-(see `LICENSE`). The preserved transcripts in `transcripts/` are a record of
-research provenance rather than licensed software; see `transcripts/README.md`.
+Program code (`lean/`, `python/`, `scripts/`, `independent/`,
+`docs/audit/*.py`, `.github/`) is released under the MIT License (`LICENSE`).
+The manuscript, the audit document, the rest of the documentation, the data and
+the recorded logs (`paper/`, `docs/`, `data/`, `results/` and the prose files)
+are released under CC BY 4.0 (`LICENSE-docs`). Third-party data reproduced in
+the repository remains under its own terms.

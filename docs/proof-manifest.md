@@ -1,3 +1,5 @@
+> **Historical document (banner added 2026-10-04).** This file describes an earlier stage of the project and is kept for provenance. For the current statement see `README.md` → "Current status", `paper/heptagon-paper.pdf` (Theorem 1.2) and `docs/audit/audit.pdf`. f(7,7) = 38 is not established by this repository; it depends on the external AKR §9.1 reduction, whose applicability here is unresolved.
+
 # A Proof Dependency Manifest for a Candidate Computer-Assisted Proof of `f(7,7) = 38`
 
 **Jayden Lin** — Northeastern University · 14 September 2026 *(LaTeX original revised 17 September 2026; this mirror is annotated, not rewritten)*

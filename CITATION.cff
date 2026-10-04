@@ -1,28 +1,15 @@
 cff-version: 1.2.0
-title: "Heptagon Intersection Project: a candidate computer-assisted proof that f(7,7) = 38"
+title: "Heptagon Intersection Project: a Lean-verified bound of 38 for simple heptagons sharing no vertex, toward f(7,7)"
 message: >-
-  STATUS WARNING. This repository contains a CANDIDATE computer-assisted proof
-  that f(7,7) = 38. It has NOT been peer-reviewed and has NOT been reviewed by
-  any expert outside the AI-assisted development process. Do not cite it as a
-  peer-reviewed or settled result.
-  Several components ARE now formally verified in Lean (the 38-crossing
-  construction, the Lemma A counting/parity core, the 225-case endgame as a
-  statement about a stored certificate, the AKR-L5 bridge, the purely logical
-  inference "disjoint status sets imply H bipartite", and a Lean transcription
-  of the Cerny-L2 filter predicate). Where AKR Lemma 7 and Cerny Lemma 2 appear
-  in Lean they enter as explicit named hypotheses, never as axioms; as of
-  2026-09-20 neither is a dependency of the main result any longer. The finite
-  reduction has been independently reimplemented in a second language, except
-  for its final avoiding-pair step.
-  But f(7,7) = 38 is NOT a Lean theorem. The single remaining external
-  mathematical input is Sect. 9 of Ackerman-Keszegh-Rote (2022) -- that no
-  vertex of one polygon lies on the other's boundary -- imported together with
-  the preservation of simplicity, which that paper does not state. It is not
-  formalized and not attempted. And nobody outside this AI-assisted process has
-  reviewed any of it.
-  If you refer to this work, describe it as a
-  candidate computer-assisted proof undergoing verification, and cite the
-  specific commit you examined. See docs/verification-status.md.
+  If you cite this repository, cite the release tag and commit you examined.
+  What is kernel-checked in Lean 4: two simple heptagons whose boundaries meet
+  in finitely many points and which share no vertex meet in at most 38 points,
+  and 38 is attained. f(7,7) = 38 is NOT established here. It additionally
+  depends on the vertex-coincidence reduction of Ackerman-Keszegh-Rote (2022),
+  Sect. 9.1. That reduction is not formalized, and its applicability to these
+  definitions is unresolved. No independent review has been completed. The
+  problem has been submitted to TheoremDB for review (pending). See README.md,
+  "Current status".
 type: software
 authors:
   - given-names: Jayden
@@ -30,16 +17,37 @@ authors:
     email: lin.jayd@northeastern.edu
     affiliation: Northeastern University
 repository-code: "https://github.com/NewYorkImperialist/heptagon-intersections"
+url: "https://github.com/NewYorkImperialist/heptagon-intersections"
+version: "v1.0-theoremdb"
+date-released: "2026-10-04"
+# Code is MIT (LICENSE); manuscript, audit, docs, data and logs are
+# CC BY 4.0 (LICENSE-docs).
+license:
+  - MIT
+  - CC-BY-4.0
 abstract: >-
-  Computational materials, proof notes, Lean formalization skeleton and full
-  research provenance for an investigation of f(7,7), the maximum number of
-  boundary intersections of two simple heptagons and the smallest open case of
-  the Dillencourt-Mount-Saalfeld conjecture. The repository contains an explicit
-  verified 38-crossing lower-bound construction, a new counting lemma
-  ("Lemma A"), an exhaustive classification of the 16 exceptional simple
-  heptagons (14 classes), and a finite elimination of the I = 40 case
-  conditional on Sect. 9 of Ackerman-Keszegh-Rote (2022). Substantial portions of the work were produced
-  with large-language-model assistance; see docs/ai-disclosure.md.
+  Lean 4 formalization, manuscript, audit document and reproduction material
+  for f(7,7), the maximum number of boundary intersection points of two simple
+  heptagons. This is the smallest open odd-odd case of the
+  Dillencourt-Mount-Saalfeld problem.
+  The kernel-checked theorem is Pair9Shift.points9_le_38_of_coincFree, with
+  isGreatest_38_of_coincFree. Its hypotheses: each heptagon is simple as a
+  point set (collinear vertices allowed), the boundaries meet in finitely many
+  points, and no vertex of one equals a vertex of the other. Its conclusion:
+  at most 38 boundary intersection points, with 38 attained by an explicit
+  integer certificate. The theorem covers every pair in general position, and
+  allows a vertex of one polygon to lie in the interior of a side of the other.
+  The proof excludes 40 and 42 intersections by two forbidden local crossing
+  patterns: one with 8 prescribed incidences, which has a human proof, and one
+  with 14 prescribed incidences, refuted by a solver and replayed in Lean.
+  A machine-checked covering theorem shows that every candidate crossing
+  pattern contains one of the two. Further steps transfer the result from
+  sign data to the real plane and remove vertex-side contacts.
+  The unrestricted f(7,7) = 38 additionally uses the external vertex-coincidence
+  reduction of Ackerman-Keszegh-Rote, Sect. 9.1. That reduction is not
+  formalized, and its applicability to these definitions is unresolved.
+  Substantial portions of the work were produced with generative-AI
+  assistance; see the manuscript's disclosure.
 keywords:
   - discrete geometry
   - computational geometry
@@ -49,9 +57,8 @@ keywords:
   - order types
   - chirotopes
   - computer-assisted proof
+  - formal verification
   - Lean 4
-license: MIT
-date-released: "2026-09-14"
 references:
   - type: article
     title: "On the number of intersections of two polygons"
@@ -70,6 +77,7 @@ references:
         given-names: "R."
     journal: "Commentationes Mathematicae Universitatis Carolinae"
     volume: 44
+    issue: 2
     start: 217
     end: 228
     year: 2003
@@ -84,9 +92,11 @@ references:
         given-names: "G."
     journal: "Discrete & Computational Geometry"
     volume: 68
+    issue: 4
     start: 1049
     end: 1077
     year: 2022
+    doi: "10.1007/s00454-022-00438-0"
   - type: conference-paper
     title: "On the maximum number of intersections of two polyhedra in 2 and 3 dimensions"
     authors:

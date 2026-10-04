@@ -1,3 +1,10 @@
+> **Append-only working log (banner added 2026-10-04).** Entries are dated and
+> left as written, including earlier status lines such as "candidate
+> computer-assisted proof that f(7,7) = 38", which are superseded. For the
+> current statement see `README.md` → "Current status": a Lean-verified bound of
+> 38 for simple heptagons sharing no vertex; f(7,7) = 38 depends additionally on
+> the external AKR §9.1 reduction, whose applicability here is unresolved.
+
 # Overnight progress log
 
 Persistent across context resets. Append; do not rewrite history.

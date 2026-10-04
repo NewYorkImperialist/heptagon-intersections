@@ -32,31 +32,38 @@
 
 \title{Two forbidden patterns bound the boundary intersections\\
 of two simple heptagons\\[2mm]
-\large A Lean-verified proof that $\lvert\partial P\cap\partial Q\rvert\le 38$
-when no vertex lies on the other boundary\\
---- the case $f(7,7)=38$ assuming a general-position reduction we do not prove}
+\large A Lean-verified bound $\lvert\partial P\cap\partial Q\rvert\le 38$
+for simple heptagons that share no vertex,\\
+and the vertex-coincidence reduction needed for $f(7,7)=38$}
 
 \author{Jayden Lin\thanks{This work was carried out with substantial
-generative-AI assistance; see \S\ref{sec:ai}.}\\[2pt]
+generative-AI assistance; see the disclosure that precedes the appendix.}\\[2pt]
 \normalsize Northeastern University}
 
-\date{17 September 2026}
+\date{Revised 4 October 2026 (first version 17 September 2026)}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Let $f(m,n)$ be the maximum number of points at which the boundaries of two
-simple polygons with $m$ and $n$ sides can meet. Dillencourt, Mount and
-Saalfeld posed the problem in 1993 and settled the cases where $m$ or $n$ is
-even; the odd--odd cases have resisted, and $m=n=7$ is the smallest open case.
-We prove that two simple heptagons \emph{sharing no vertex}, and meeting in
-finitely many points, meet in at most $38$ boundary points, and that $38$ is
-attained. A vertex of one is permitted to lie in the interior of a side of the
-other. The hypothesis on vertices is one half of a published reduction, which
-we import rather than prove --- the other half, removing vertices from the
-interiors of sides, is proved here --- so this is the case $f(7,7)=38$
-\emph{conditional} on that import, not a resolution of it.
+Let $f(m,n)$ be the maximum number of points at which the boundaries of a
+simple $m$-gon and a simple $n$-gon can meet, over pairs whose boundaries meet
+in finitely many points. Dillencourt, Mount and Saalfeld posed the problem in
+1993 and settled the cases where $m$ or $n$ is even; $m=n=7$ is the smallest
+open odd--odd case. We prove that if two simple heptagons \emph{share no
+vertex} and their boundaries meet in finitely many points, then the boundaries
+meet in at most $38$ points, and that $38$ is attained. A vertex of one
+heptagon may lie in the interior of a side of the other, and no collinearity
+condition is imposed; in particular the bound covers every pair in general
+position. This theorem is verified by the Lean~4 kernel. Deducing $f(7,7)=38$
+for all pairs, including pairs that share vertices, requires in addition a
+reduction that removes vertex--vertex coincidences without losing intersection
+points or simplicity. Ackerman, Keszegh and Rote (\S9.1 of the journal version)
+give such a reduction. We use it but do not formalize it, and we have not
+completed a check that its conclusion --- in particular that the perturbed
+polygons remain simple --- holds for the exact definitions used here
+(\S\ref{sec:import}). The equation $f(7,7)=38$ is therefore stated here as a
+consequence of that external reduction, with this qualification.
 
 The mathematical content is a reduction. Rather than enumerate the
 $13{,}003{,}620$ candidate crossing patterns with $40$ intersections --- the
@@ -70,16 +77,16 @@ non-realizable, and a degree argument over $28$ cases, itself discharged by
 machine, reduces the whole exclusion to those two facts. That discharge is not
 hand-checkable (Remark~\ref{rem:cover-machine}).
 
-Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
-verified by the Lean~4 kernel from primitive definitions, with no published
-result about $f(m,n)$ appealed to. Two negative observations in
-\S\ref{sec:e9attempt} are analytic and are \emph{not} machine-checked.
-The statement we do not prove is the reduction removing vertex--vertex
-coincidences, for which we import Ackerman--Keszegh--Rote \S9.1 and carry it as
-an explicit hypothesis. We are
-explicit throughout about which assertions are machine-checked, which are
-imported, and which --- notably the faithfulness of our definitions --- remain
-matters for a human reader.
+The mathematical assertions of \S\S\ref{sec:prelim}--\ref{sec:plane}, the
+vertex--side reduction of \S\ref{sec:e9attempt}, and
+Theorem~\ref{thm:main} itself are verified by the Lean~4 kernel from primitive
+definitions, with no published result about $f(m,n)$ used as an input. Two
+negative observations in \S\ref{sec:e9attempt} are analytic and are \emph{not}
+machine-checked. We distinguish throughout (a) what is kernel-checked,
+(b) what follows from it together with the external vertex-coincidence
+reduction, and (c) what remains unresolved in this project --- including
+whether the formal definitions express the intended objects, which is a matter
+for a human reader.
 \end{abstract}
 
 \tableofcontents
@@ -97,13 +104,19 @@ share infinitely many points --- but no further restriction is imposed.
 We will also need a technical condition. Two simple polygons are in
 \emph{general position} if no vertex of either lies on the boundary of the
 other and no three of the combined $m+n$ vertices are collinear. This is
-\emph{not} part of the definition of $f$, and the distinction is load-bearing:
-Theorem~\ref{thm:main} assumes only the first half of general position, so if
-$f$ were defined as a maximum over general-position pairs alone, that theorem
-would already determine $f(7,7)$ outright and
-Proposition~\ref{prop:reduction} --- the statement we import and do not prove
---- would have nothing to do. It is precisely because $f$ ranges over all
-simple pairs that the reduction is needed.
+\emph{not} part of the definition of $f$ used here, and the distinction
+matters. Several sources state the problem under general-position
+assumptions: \v{C}ern\'y et al.~\cite[\S2]{CernyEtAl2003} assume that all
+segment endpoints are in general position, and
+\cite[\S3]{AckermanKeszeghRote2022} assume finitely many intersection points,
+then assume that no vertex of one polygon lies on the other and justify that
+assumption in their \S9. Theorem~\ref{thm:main} assumes neither half of
+general position: it assumes only finiteness and that the two polygons share
+no vertex. It therefore determines the maximum over general-position pairs
+outright. It does not by itself determine $f(7,7)$ as defined above, because
+$f$ also ranges over pairs that share vertices; that step is
+Proposition~\ref{prop:reduction}, which we take from the literature and do not
+prove.
 
 \begin{quote}
 \textbf{Problem} (Dillencourt--Mount--Saalfeld~\cite{DillencourtMountSaalfeld1993}).
@@ -125,45 +138,76 @@ shown such a summary during preparation.
 
 Two elementary facts frame it. Each side of $P$ meets each side of $Q$ at most
 once in general position, so $I\le 49$; and since $\partial P$ and $\partial Q$
-are closed curves meeting transversally, $I$ is even. The published state of the art~\cite{CernyEtAl2003} gives $I\le 40$, and $38$ is
-attained. So the entire question is whether
-$40$ is attainable.
+are closed curves meeting transversally, $I$ is even. For pairs in general
+position, \v{C}ern\'y et al.~\cite{CernyEtAl2003} give $I\le 40$, and $38$ is
+attained. So, in general position, the question is whether $40$ is attainable.
 
 \subsection{What is proved here}
 
-\begin{theorem}[Main, conditional]\label{thm:main}
-Let $P$ and $Q$ be simple heptagons in the plane, each simple as a point set,
-whose boundaries meet in finitely many points, and such that \emph{no vertex of
-$P$ is a vertex of $Q$}. Then
+\begin{theorem}[Main]\label{thm:main}
+Let $P$ and $Q$ be heptagons in the plane, each simple as a point set
+(Appendix~\ref{app:defs}), whose boundaries meet in finitely many points, and
+such that \emph{no vertex of $P$ is a vertex of $Q$}. Then
 \[
   \lvert \partial P \cap \partial Q\rvert \;\le\; 38 ,
 \]
-and $38$ is attained. No condition on collinearity of vertices is assumed, and
-a vertex of one polygon \emph{is} permitted to lie in the interior of a side of
-the other.
+and $38$ is attained by such a pair. No condition on collinearity of vertices
+is assumed, and a vertex of one polygon \emph{is} permitted to lie in the
+interior of a side of the other.
 \end{theorem}
 
-The hypothesis is strictly weaker than ``no vertex of either lies on the
-boundary of the other'', which is the full conclusion of
-Ackerman--Keszegh--Rote~\cite[\S9]{AckermanKeszeghRote2022}. That conclusion
-splits in two, and only one half is imported here:
-\S9.1 removes vertex--vertex coincidences, and that half we assume;
-\S9.2 removes vertex--side incidences, and \textbf{that half is proved in this
-paper} (\S\ref{sec:e9attempt}), so it is no longer an import.
-\S\ref{sec:import} states precisely what remains imported and why.
+\begin{sloppypar}
+Theorem~\ref{thm:main} is an unconditional theorem under its stated
+hypotheses, and it is kernel-checked: it is the pair of Lean declarations
+\texttt{Pair9Shift.\allowbreak points9\_le\_38\_of\_coincFree} and
+\texttt{Pair9Shift.\allowbreak isGreatest\_38\_of\_coincFree}
+(\S\ref{sec:machine}). The finiteness of $\partial P\cap\partial Q$ is an
+explicit hypothesis. It cannot be dropped: two collinear overlapping sides meet
+in infinitely many points.
+\end{sloppypar}
 
-The finiteness hypothesis cannot be dropped and is not a technicality: two
-collinear overlapping sides meet in infinitely many points. Under the stronger
-hypothesis (E9) finiteness is automatic, so it did not need stating before;
-under the weaker one it does.
+\subsection{Scope}\label{sec:scope}
 
-\begin{remark}
-Theorem~\ref{thm:main} is \textbf{not} $f(7,7)=38$. Wherever that equation
-appears in this paper it is written conditionally, on
-Proposition~\ref{prop:reduction}. Theorem~\ref{thm:main} is the statement one
-obtains after the general-position reduction has been applied, and that
-reduction is imported, not proved.
-\end{remark}
+Three problems should be kept apart.
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Pairs in general position.} Such a pair shares no vertex, and
+    its boundary intersection is finite (an overlap of two sides would put
+    three vertices on a line). So Theorem~\ref{thm:main} applies, and the
+    maximum over general-position pairs is $38$. This case is also
+    kernel-checked separately, as \texttt{RealUpperBound.isGreatest\_38\_real},
+    where general position is part of the structure.
+  \item \textbf{Pairs with finite intersection and no shared vertex.} This is
+    Theorem~\ref{thm:main}. It allows a vertex of one polygon in the interior of
+    a side of the other, tangencies, and any collinearities.
+  \item \textbf{All pairs with finite intersection}, shared vertices included.
+    This is $f(7,7)$. The condition ``$P$ and $Q$ share no vertex'' is a
+    hypothesis of Theorem~\ref{thm:main}. It is a different thing from the
+    \emph{reduction} (Proposition~\ref{prop:reduction}) asserting that every
+    pair can be replaced by one that shares no vertex, is again simple, again
+    has finite intersection, and has no fewer intersection points. With that
+    reduction, Theorem~\ref{thm:main} gives $f(7,7)=38$.
+\end{enumerate}
+
+For the third problem we separate (a) what is kernel-checked:
+Theorem~\ref{thm:main}, including attainment; (b) what follows from (a)
+together with an external theorem: $f(7,7)=38$, using
+\cite[\S9.1]{AckermanKeszeghRote2022}; and (c) what this project has not
+resolved: whether \S9.1, read for the exact definitions used here, delivers a
+pair that is again simple in the sense of Appendix~\ref{app:defs} and again has
+finite intersection, in addition to the intersection-count inequality that
+\S9.1 states. \S\ref{sec:import} sets this out. Using a published theorem does
+not make an argument incomplete; the qualification here concerns only that
+applicability point, which we have not settled.
+
+Earlier versions of this paper assumed the stronger hypothesis (E9): no vertex
+of either polygon lies anywhere on the boundary of the other. That is the full
+conclusion of \cite[\S9]{AckermanKeszeghRote2022}, which splits into \S9.1
+(vertex--vertex coincidences) and \S9.2 (vertex--side incidences). The (E9)
+version remains kernel-checked (\texttt{AKR9.isGreatest\_38\_of\_E9}); under
+(E9) finiteness is a consequence rather than a hypothesis. It is superseded by
+Theorem~\ref{thm:main}, because the vertex--side half is proved in this paper
+(\S\ref{sec:e9attempt}).
 
 \subsection{What is new}
 
@@ -179,12 +223,14 @@ satisfiability problem, and refuting it mechanically --- are standard; see
   \item \textbf{The smaller pattern is human-readable} and needs no simplicity
     hypothesis: it constrains three consecutive sides of each polygon and
     prescribes eight incidences (\S\ref{sec:patterns}).
-  \item \textbf{The reduction to the plane is unconditional.} The combinatorial
-    argument is about orientation signs; getting from there to genuine point
-    sets in $\mathbb{R}^2$ --- including removing the collinearity assumption
-    that \cite[\S3]{AckermanKeszeghRote2022} assume ``for convenience'' and say
-    can ``be achieved easily'', without proof (quoted in full in
-    \S\ref{sec:import}) --- is carried out in full (\S\ref{sec:plane}).
+  \item \textbf{The reduction to the plane is carried out in full.} The
+    combinatorial argument is about orientation signs; getting from there to
+    genuine point sets in $\mathbb{R}^2$ --- including removing the
+    collinearity assumption that \cite[\S3]{AckermanKeszeghRote2022} make ``for
+    convenience'' and state can ``be achieved easily'', without giving the
+    details (quoted in full in \S\ref{sec:import}) --- and removing vertices
+    from the interiors of sides is proved and kernel-checked
+    (\S\S\ref{sec:plane},~\ref{sec:e9attempt}).
 \end{itemize}
 
 A bounded prior-art search found no previous statement of the covering result.
@@ -704,8 +750,9 @@ Theorem~\ref{thm:main}.
 \section{From orientation signs to the plane}\label{sec:plane}
 
 Sections~\ref{sec:patterns}--\ref{sec:exclude} are about sign vectors. Three
-further steps are needed to reach Theorem~\ref{thm:main}, and all three are
-carried out unconditionally.
+further steps, together with the vertex--side reduction of
+\S\ref{sec:e9attempt}, are needed to reach Theorem~\ref{thm:main}; all are
+proved and kernel-checked.
 
 \subsection{Integer coordinates are no restriction}
 
@@ -723,17 +770,24 @@ same $364$ signs. No rationals and no clearing of denominators are required.
 \subsection{Counting points, not side pairs}
 
 The combinatorial argument counts crossing \emph{pairs}; the theorem counts
-\emph{points}. Under Hypothesis~\ref{hyp:e9} --- \emph{not} under full general
-position, which Theorem~\ref{thm:main} does not assume --- these agree: a
-crossing pair meets in exactly one point, and conversely a shared point lying on
-a pair with a vanishing determinant would put a vertex on the other boundary,
-which (E9) forbids. The chain is then
+\emph{points}. Under Hypothesis~\ref{hyp:e9} these agree: a crossing pair meets
+in exactly one point, and conversely a shared point lying on a pair with a
+vanishing determinant would put a vertex on the other boundary, which (E9)
+forbids. The chain is then
 \[
   \#\text{points}(V) \;=\; \#\text{pairs}(V)
   \;\le\; \#\text{pairs}(V') \;\le\; 38,
 \]
-where $V'$ is a perturbation as in \S\ref{sec:removecollin}. Both equalities and
+where $V'$ is a perturbation as in \S\ref{sec:removecollin}. The equality and
 both inequalities are proved.
+
+Theorem~\ref{thm:main} does not assume (E9). Without it, a vertex of one
+polygon may lie in the interior of a side of the other, and a point of
+$\partial P\cap\partial Q$ can then lie on no crossing pair. That case is
+handled by the vertex--side reduction of \S\ref{sec:e9attempt}, which bounds
+the number of points by the number of crossing pairs plus vertex--side
+incidences and removes the incidences one at a time without decreasing that
+sum, ending at a configuration with none, where the chain above applies.
 
 \subsection{Removing the collinearity assumption}\label{sec:removecollin}
 
@@ -781,49 +835,51 @@ Note the direction: we need the perturbed configuration to have \emph{at least}
 as many crossings, not the same number, and openness gives exactly that.
 \end{remark}
 
-\section{What is imported}\label{sec:import}
+\section{The vertex-coincidence reduction}\label{sec:import}
 
-The conclusion of \cite[\S9]{AckermanKeszeghRote2022} is the following, and it
-is what earlier versions of this paper imported whole.
+Theorem~\ref{thm:main} uses no external result. This section concerns only the
+further step from Theorem~\ref{thm:main} to $f(7,7)=38$. The conclusion of
+\cite[\S9]{AckermanKeszeghRote2022} is the following, and earlier versions of
+this paper assumed it whole.
 
 \begin{hypothesis}[\textsc{(E9)}]\label{hyp:e9}
 No vertex of either polygon lies on the boundary of the other.
 \end{hypothesis}
 
 Its proof splits in two: \S9.1 removes vertex--vertex coincidences and \S9.2
-removes vertex--side ones. We now import only the first half, because the
-second is proved in \S\ref{sec:e9attempt}. The half we still assume is:
+removes vertex--side ones. The second half is proved in \S\ref{sec:e9attempt},
+so Theorem~\ref{thm:main} needs only the property corresponding to the first:
 
-\begin{hypothesis}[\textsc{(E9.1)}]\label{hyp:e91}
+\begin{hypothesis}[\textsc{(E9.1)}, no shared vertex]\label{hyp:e91}
 No vertex of $P$ is a vertex of $Q$.
 \end{hypothesis}
 
-\begin{remark}[What is conditional, exactly]
-Theorem~\ref{thm:main} is itself \emph{unconditional}: like any theorem it has
-hypotheses, and Hypothesis~\ref{hyp:e91} is one of them. What is conditional is
-the \emph{deduction} of $f(7,7)=38$, and that needs a \emph{reduction}, not a
-property. We state it with explicit quantifiers, since this is the precise
-object we import.
+\begin{remark}[A hypothesis and a reduction are different things]
+Theorem~\ref{thm:main} is unconditional under its hypotheses, and
+Hypothesis~\ref{hyp:e91} is one of them. The deduction of $f(7,7)=38$ needs
+something else: a \emph{reduction}, stating that every pair can be replaced by
+one satisfying Hypothesis~\ref{hyp:e91} and the other hypotheses of
+Theorem~\ref{thm:main} without losing intersection points. We state it with
+explicit quantifiers, since this is the precise statement we use.
 \end{remark}
 
-\begin{proposition}[Imported; \protect{\cite[\S9.1]{AckermanKeszeghRote2022}}]\label{prop:reduction}
+\begin{proposition}[External; \protect{\cite[\S9.1]{AckermanKeszeghRote2022}}]\label{prop:reduction}
 For every pair $(P,Q)$ of simple heptagons with finitely many boundary
 intersections there is a pair $(P',Q')$ of simple heptagons, again with
 finitely many boundary intersections, satisfying Hypothesis~\ref{hyp:e91} with
 $\lvert\partial P'\cap\partial Q'\rvert \ge \lvert\partial P\cap\partial Q\rvert$.
 \end{proposition}
 
-\begin{remark}[The import is strictly smaller than it was]
+\begin{remark}[Only \S9.1 is needed]
 Proposition~\ref{prop:reduction} asks only for vertex--vertex coincidences to
 be removed. It does \emph{not} ask that the perturbed pair avoid vertices lying
 in the interiors of sides, which is what \S9.2 would supply and what
-Theorem~\ref{thm:main} no longer needs. Anyone auditing this paper against
-\cite{AckermanKeszeghRote2022} should check it against \S9.1 alone.
+Theorem~\ref{thm:main} does not need. A reader comparing this paper with
+\cite{AckermanKeszeghRote2022} should compare it with \S9.1.
 \end{remark}
 
-\begin{corollary}
-Proposition~\ref{prop:reduction} together with Theorem~\ref{thm:main} gives
-$f(7,7)=38$.
+\begin{corollary}\label{cor:f77}
+Assume Proposition~\ref{prop:reduction}. Then $f(7,7)=38$.
 \end{corollary}
 
 \begin{proof}
@@ -836,8 +892,9 @@ that by $38$; the bound is attained by Proposition~\ref{prop:lower}.
 \end{proof}
 
 \noindent
-Proposition~\ref{prop:reduction} is the \emph{only} thing we take on trust, and
-we do not prove it. Three things should be said about it plainly.
+Proposition~\ref{prop:reduction} is the only external mathematical input to
+Corollary~\ref{cor:f77}, and we do not prove it. The following remarks record
+its source and the extent to which we have checked its applicability.
 
 \begin{remark}[Provenance]
 We read \cite{AckermanKeszeghRote2022} in its journal version, which is the only
@@ -858,9 +915,15 @@ cases \emph{without decreasing the number of intersection points}.''
 \end{quote}
 
 \noindent
-The second clause is exactly the inequality of
-Proposition~\ref{prop:reduction}: the Proposition is their sentence, not our
-paraphrase of it.
+The second clause is the inequality of Proposition~\ref{prop:reduction}. The
+other conditions of the Proposition --- that $P'$ and $Q'$ are again simple and
+again meet in finitely many points --- are not in that sentence; see
+Remark~\ref{rem:simplicity}. Their \S3 makes finiteness a standing assumption
+(``the basic assumption that is made throughout the paper is that $P$ and $Q$
+have only finitely many intersection points''), and their notion of a simple
+polygon is that the sides are pairwise disjoint except for the common
+endpoints of consecutive sides, which corresponds to (S2)--(S3) of
+Appendix~\ref{app:defs}, with (S1) implicit.
 \end{remark}
 
 \begin{remark}[Their standing assumption is broader, and why that is harmless]
@@ -888,48 +951,53 @@ So \S9 is \emph{prior} to the collinearity and non-parallelism clauses rather
 than dependent on them, and \S\ref{sec:removecollin} does remove the former from
 the final claim. The latter we never use.
 
-The quotation also shows that this second perturbation is \textbf{asserted and
-not proved}: ``for convenience'', ``can be achieved easily'', no lemma number
-and no argument. That is the clause \S\ref{sec:removecollin} discharges, and it
-is why we treat it separately from \S9 rather than lumping both under ``general
+The quotation also shows that this second perturbation is stated without a
+detailed argument: ``for convenience'', ``can be achieved easily'', with no
+lemma number. That is the step \S\ref{sec:removecollin} proves, and it is why
+we treat it separately from \S9 rather than grouping both under ``general
 position''.
 \end{remark}
 
-\begin{remark}[The import is slightly more than \S9 states]\label{rem:simplicity}
-Theorem~\ref{thm:main} assumes \emph{both} that the polygons are simple as point
-sets \emph{and} Hypothesis~\ref{hyp:e91}, so the reduction must deliver both. That
-the perturbed polygons remain \emph{simple} is, as far as we can tell, not
-stated in \cite{AckermanKeszeghRote2022}. What we import is therefore \S9's
-conclusion \emph{together with} simplicity-preservation, and the latter has no
-published warrant we can point to. We flag it rather than absorb it silently:
-it is the joint at which a previous attempt on this problem failed.
+\begin{remark}[Applicability: what this project has not settled]\label{rem:simplicity}
+Theorem~\ref{thm:main} assumes that the polygons are simple as point sets, that
+their boundaries meet in finitely many points, and Hypothesis~\ref{hyp:e91}, so
+the reduction must deliver all three, together with the count inequality.
+\S9.1 states the count inequality. We have not found an explicit statement in
+\cite{AckermanKeszeghRote2022} that the perturbed polygons remain simple, or
+that the perturbed boundaries again meet in finitely many points. Both are
+natural to expect of a sufficiently small perturbation, and this project has
+partial results: a kernel-checked lemma that simplicity, in the sense of
+Appendix~\ref{app:defs}, survives every sufficiently small linear motion of the
+vertices (\texttt{SimplicityStable}); and unreviewed pen-and-paper analysis of
+how the \S9.1 directions can be chosen so that the intersection stays finite.
+These have not been assembled with \S9.1 into a proof of
+Proposition~\ref{prop:reduction} for the definitions used here. Until that is
+done, or confirmed by a reader of \cite{AckermanKeszeghRote2022}, we state the
+applicability of \S9.1 to Proposition~\ref{prop:reduction} as unresolved in
+this project. We do not suggest that the result of \S9.1 is in doubt.
 \end{remark}
 
-Proposition~\ref{prop:reduction}, so understood, is the \emph{only} external
-mathematical input to Theorem~\ref{thm:main}.
-
-Why it is needed, precisely: without it, a point of
-$\partial P\cap\partial Q$ can lie on \emph{no} crossing pair. Two sides that
-merely touch share a point but have vanishing determinants, so the pair is not
-counted, and the bound on pairs does not bound points. The failure is in the
-unfavourable direction, which is why \S\ref{sec:removecollin} does not also
-dispose of it.
+Why the reduction is needed, precisely: without it, a point of
+$\partial P\cap\partial Q$ can be a shared vertex, and the counting argument of
+\S\ref{sec:e9attempt} does not apply there --- a shared vertex is one point but
+four vertex--side incidences, so the measure that drives \S\ref{sec:e9attempt}
+does not decrease when the coincidence is removed.
 
 \begin{remark}[Citation]
-It would be an under-citation to attribute all of the usual general-position
-package to \S9. \S9 gives Hypothesis~\ref{hyp:e9} and nothing more; the
-collinearity clause has its only warrant in one unproved sentence of \S3, and
-is discharged here (\S\ref{sec:removecollin}). Additionally, that the perturbed
-polygons remain simple is stated nowhere in that paper. We fold simplicity into
-Hypothesis~\ref{hyp:e91} deliberately, so that the gap is visible.
+We do not attribute all of the usual general-position package to \S9. \S9
+gives Hypothesis~\ref{hyp:e9}. The collinearity clause rests on one sentence
+of \S3 and is proved here (\S\ref{sec:removecollin}). Simplicity and
+finiteness of the perturbed pair are discussed in Remark~\ref{rem:simplicity}.
 \end{remark}
 
-\subsection{Removing half of it}\label{sec:e9attempt}
+\subsection{The vertex--side half is proved}\label{sec:e9attempt}
 
 Hypothesis~\ref{hyp:e9} decomposes into a vertex--vertex half (\S9.1) and a
 vertex--side half (\S9.2). \textbf{The vertex--side half is proved here}, in
-Lean, and is no longer imported; the vertex--vertex half is not, and is
-Hypothesis~\ref{hyp:e91}.
+Lean, by an argument of our own (a ``tilted'' shift) rather than by
+formalizing \S9.2 as printed. The vertex--vertex half is not proved; it is
+Hypothesis~\ref{hyp:e91} of Theorem~\ref{thm:main}, and the corresponding
+reduction is Proposition~\ref{prop:reduction}.
 
 \paragraph{What is proved.} If a vertex of $Q$ lies in the \emph{interior} of a
 side of $P$, it can be removed by a shift, and iterating terminates. The
@@ -977,12 +1045,20 @@ is substantial unfinished work.
 
 \section{Machine verification, and its limits}\label{sec:machine}
 
-Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
-verified by the Lean~4 kernel. There is no \texttt{sorry}, no
-\texttt{native\_decide}, and no project-specific axiom; every theorem depends on
-at most the three standard axioms \texttt{propext},
+The mathematical assertions of \S\S\ref{sec:prelim}--\ref{sec:plane}, the
+positive results of \S\ref{sec:e9attempt}, and Theorem~\ref{thm:main} are
+verified by the Lean~4 kernel. The build log of the headline target
+(\S\ref{sec:reproduce}) records no \texttt{sorry}; the axiom check finds no
+\texttt{native\_decide} (\texttt{Lean.ofReduceBool}) and no project-specific
+axiom among the dependencies of the declarations it inspects, each of which
+depends on at most the three standard axioms \texttt{propext},
 \texttt{Classical.choice}, \texttt{Quot.sound}. Hypothesis~\ref{hyp:e91} is a
-hypothesis of the statement, never an axiom.
+hypothesis of the statement, never an axiom. Kernel checking establishes the
+formal statements under their stated hypotheses and these foundational
+assumptions, relative to the correctness of Lean and of the Mathlib
+definitions used (for example \texttt{segment} and \texttt{Set.ncard}). It
+does not establish that the formal statements mean what this paper says they
+mean; that is Remark~\ref{rem:faithful}.
 
 \begin{remark}[What the kernel does not check]\label{rem:faithful}
 The kernel proves theorems about definitions; it does not certify that the
@@ -995,6 +1071,12 @@ One partial check is available and we have carried it out: the definitions,
 applied to the explicit $38$-crossing configuration of
 Proposition~\ref{prop:lower}, yield exactly $38$. A wrong definition would have
 to be wrong in a way that still lands on that value.
+
+One modelling choice deserves mention. A heptagon is formally a cyclic
+sequence of seven vertices satisfying (S1)--(S3); three consecutive vertices
+may be collinear, so a ``heptagon'' with a straight vertex is admitted. This
+enlarges the class over which the upper bound is proved, and the lower-bound
+example has no straight vertex, so it does not affect the value $38$.
 \end{remark}
 
 \subsection{Which results a human can check, and which are machine-only}
@@ -1003,7 +1085,7 @@ We think a referee is owed this table explicitly rather than having to infer it.
 
 \begin{center}
 \small
-\begin{tabular}{@{}lll@{}}
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.40\textwidth}>{\raggedright\arraybackslash}p{0.22\textwidth}>{\raggedright\arraybackslash}p{0.32\textwidth}@{}}
 \toprule
 \textbf{Result} & \textbf{Status} & \textbf{Checkable by hand?} \\
 \midrule
@@ -1021,40 +1103,73 @@ Proposition~\ref{prop:lower} (the $38$ example)
   & machine-checked & \textbf{yes} in principle; $364$ determinants \\
 \S\ref{sec:plane} (reduction to the plane)
   & machine-checked & \textbf{yes}; ordinary analysis \\
-Hypothesis~\ref{hyp:e91}
-  & \textbf{imported, not proved} & it is \cite[\S9.1]{AckermanKeszeghRote2022} \\
-\S9.2's half (vertex--side)
-  & machine-checked & proved here, no longer imported \\
+\S\ref{sec:e9attempt} (vertex--side half)
+  & machine-checked & long, but elementary steps \\
+Theorem~\ref{thm:main}
+  & machine-checked & by assembling the rows above \\
+Proposition~\ref{prop:reduction}
+  & \textbf{external, not formalized} & \cite[\S9.1]{AckermanKeszeghRote2022};
+    see Rem.~\ref{rem:simplicity} \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The three ``no'' rows are the substance of the exclusion, and we do not want to
-soften that. What the reduction achieves is that the machine-only part now rests
+\noindent Hypothesis~\ref{hyp:e91} does not appear as a row: it is a hypothesis
+of Theorem~\ref{thm:main}, not a claim. Proposition~\ref{prop:reduction} is
+used only for Corollary~\ref{cor:f77}.
+
+The two ``no'' rows are the substance of the exclusion. What the reduction
+achieves is that the machine-only part now rests
 on \emph{two} non-realizability facts about small explicit patterns instead of
 on an enumeration of $13{,}003{,}620$ objects --- and one of those two,
 $\Pi_8$, is small enough to state in a $3\times3$ table
 (Figure~\ref{fig:pat8}).
 
-\subsection{How to reproduce}
+\subsection{How to reproduce}\label{sec:reproduce}
 
 \begin{sloppypar}
-The development is at
-\url{https://github.com/NewYorkImperialist/heptagon-intersections}, at commit
-\texttt{8e6358a}. With Lean~4.33.1 and its Mathlib pinned by the repository:
+The development is in the repository\\
+\url{https://github.com/NewYorkImperialist/heptagon-intersections},\\
+which at the date of this revision is private (\S\ref{sec:status}). Its Lean sources
+have not changed since commit \texttt{a211140} (24~September~2026). The
+toolchain is pinned to Lean~4.33.1 in \texttt{lean/lean-toolchain}, and Mathlib
+to tag \texttt{v4.33.1} (revision \texttt{0df444a}) in
+\texttt{lean/lake-manifest.json}. The following builds the headline theorems
+and checks their axiom dependencies:
 \end{sloppypar}
 
 \begin{center}\small
-\begin{tabular}{@{}ll@{}}
+\begin{tabular}{@{}l@{\quad}l@{}}
 \toprule
-\texttt{cd lean \&\& lake build} & builds everything; no \texttt{sorry} \\
-\texttt{bash scripts/verify-all.sh} & full check, exits $0$ \\
-\texttt{\#print axioms} lines & in every module; expect the three standard \\
+\textbf{working directory} & \textbf{command} \\
+\midrule
+\texttt{lean/} & \texttt{lake exe cache get} \\
+\texttt{lean/} & \texttt{lake build Headline 2>\&1 | tee ../headline-build.log} \\
+repository root & \texttt{bash scripts/verify-all.sh --axiom-log headline-build.log} \\
 \bottomrule
 \end{tabular}
 \end{center}
+
 \noindent
-The results of this paper correspond to the following declarations.
+The first command downloads prebuilt Mathlib files for the pinned revision.
+The second builds the target \texttt{Headline}: $332$ modules of this project
+(the $331$-module import closure of \texttt{MainTheorem},
+\texttt{RealUpperBound}, \texttt{AKR9} and \texttt{Pair9Shift}, plus
+\texttt{Headline} itself), reported by Lake as $3{,}344$ jobs because Mathlib
+jobs are counted too. The third parses the \texttt{\#print axioms} output in the
+log, needs no Lean, and exits~$0$ only if no declaration depends on an axiom
+other than the three above, \texttt{sorryAx} appears nowhere, and each of six
+named headline theorems printed its own axiom line.
+
+A bare \texttt{lake build} is \emph{not} sufficient: the package's default
+targets omit \texttt{AKR9}, \texttt{Pair9Shift} and \texttt{Headline}.
+\texttt{bash scripts/verify-all.sh} with no arguments builds both the default
+targets and \texttt{Headline} and runs the repository's other checks; a cold
+run of it is dominated by the $1{,}084$ \texttt{OTEnum*} and \texttt{Strat*} enumeration modules of an earlier
+approach that the headline theorems do not import, and takes many CPU-hours.
+
+The results of this paper correspond to the following declarations (all in
+the namespace \texttt{Heptagon}).
 
 \begin{center}\footnotesize
 \begin{tabular}{@{}l@{\quad}l@{}}
@@ -1063,10 +1178,15 @@ The results of this paper correspond to the following declarations.
 \midrule
 Theorem~\ref{thm:pat8}   & \texttt{MinPatternClauses000.minpattern000\_impossible} \\
 Theorem~\ref{thm:pat14}  & \texttt{MinPatternClauses001.minpattern001\_impossible} \\
-Theorem~\ref{thm:main}   & \texttt{Pair9Shift.points9\_le\_38\_of\_coincFree} \\
-the equality             & \texttt{Pair9Shift.isGreatest\_38\_of\_coincFree} \\
+Theorem~\ref{thm:cover} with the above, $I=40$ & \texttt{Cover.no\_nine\_edges} \\
+\quad the same, $I=42$   & \texttt{Cover.no\_seven\_edges} \\
+Corollary~\ref{cor:not4042} & \texttt{ConfigBridge.crossCountC\_ne\_40}, \texttt{\_ne\_42} \\
 Lemma~\ref{lem:simple}   & \texttt{SegmentStable.exists\_eps\_disjoint\_stable} \\
+pair count, no general position & \texttt{RawConfig.raw\_crossPairs\_card\_le\_38} \\
+Theorem~\ref{thm:main}   & \texttt{Pair9Shift.points9\_le\_38\_of\_coincFree} \\
+\quad with attainment    & \texttt{Pair9Shift.isGreatest\_38\_of\_coincFree} \\
 Hypothesis~\ref{hyp:e91} & the \texttt{hcoinc} argument of the above \\
+general-position case    & \texttt{RealUpperBound.isGreatest\_38\_real} \\
 Hypothesis~\ref{hyp:e9}  & \texttt{AKR9.NoVertexOnOther} \\
 (E9) version, superseded & \texttt{AKR9.points\_le\_38\_of\_no\_vertex\_on\_boundary} \\
 \quad and its equality   & \texttt{AKR9.isGreatest\_38\_of\_E9} \\
@@ -1075,8 +1195,20 @@ Hypothesis~\ref{hyp:e9}  & \texttt{AKR9.NoVertexOnOther} \\
 \end{center}
 
 \noindent
-\texttt{SegmentStable} imports only Mathlib, so Lemma~\ref{lem:simple} can be
-read on its own.
+The pattern and covering theorems are stated for integer-coordinate
+configurations with all $364$ determinants nonzero; \S\ref{sec:plane} transfers
+them to the plane. \texttt{SegmentStable} imports only Mathlib, so
+Lemma~\ref{lem:simple} can be read on its own.
+
+\paragraph{Recorded builds.} The repository's GitHub Actions workflow runs the
+three commands above (with the Mathlib download but no cache of the project's
+own build) on a GitHub-hosted runner, together with eight tests confirming
+that the axiom checker rejects deliberately corrupted logs. It passed on
+commit \texttt{b78f372} (run \texttt{36086080499}, 25~September~2026) and on
+commit \texttt{e984888} (run \texttt{36089101301}, the same day); both
+commits have the Lean sources of \texttt{a211140}. These runs are records of
+that workflow at those revisions. They are not independent mathematical
+review, and they do not cover later changes to the repository.
 
 The solver refutations are shipped as certificates and re-checked by a
 standalone proof checker independent of the proof assistant; that checker is
@@ -1099,7 +1231,7 @@ problem and settled the even cases. \v{C}ern\'y, K\'ara, Kr\'al', Podbrdsk\'y, S
 \v{S}\'amal~\cite{CernyEtAl2003} gave bounds for odd cases and solved $k=5$,
 explicitly leaving $k=\ell=7$ open. Ackerman, Keszegh and
 Rote~\cite{AckermanKeszeghRote2022} obtained asymptotically optimal bounds;
-their \S9 is what we import. G\"unther's preprint~\cite{Gunther2012} on odd $n$
+their \S9.1 is the source of Proposition~\ref{prop:reduction}. G\"unther's preprint~\cite{Gunther2012} on odd $n$
 was withdrawn by its author.
 
 Both of our tools are standard. Encoding order-type or chirotope realizability
@@ -1222,33 +1354,42 @@ would be needed, since ``all $n$'' is not something a computation reaches.
 To state the position exactly:
 
 \begin{itemize}[leftmargin=*]
-  \item $f(7,7)=38$ is \textbf{not} proved. Theorem~\ref{thm:main} carries
-    Hypothesis~\ref{hyp:e91}, and the deduction needs
-    Proposition~\ref{prop:reduction}, which we import.
-  \item Every mathematical assertion in \S\S\ref{sec:prelim}--\ref{sec:plane} is
-    machine-checked from primitive definitions, with no published result about
-    $f(m,n)$ appealed to.
-  \item \textbf{No mathematician outside this process has reviewed any of it.}
+  \item \textbf{Kernel-checked:} Theorem~\ref{thm:main} --- for simple
+    heptagons sharing no vertex whose boundaries meet in finitely many points,
+    at most $38$ boundary intersection points, and $38$ attained --- together
+    with every assertion of \S\S\ref{sec:prelim}--\ref{sec:plane} and the
+    positive results of \S\ref{sec:e9attempt}, with no published result about
+    $f(m,n)$ used as an input. This includes all pairs in general position.
+  \item \textbf{Using an external theorem:} $f(7,7)=38$ follows from
+    Theorem~\ref{thm:main} and Proposition~\ref{prop:reduction}, which is
+    \cite[\S9.1]{AckermanKeszeghRote2022} and is not formalized here.
+  \item \textbf{Unresolved in this project:} whether \S9.1, for the
+    definitions of Appendix~\ref{app:defs}, also yields a pair that is again
+    simple and again has finite intersection (Remark~\ref{rem:simplicity}).
+  \item \textbf{Review:} no independent review of the mathematics or of the
+    formal development has been completed. The project's records note that a
+    colleague began reading an earlier dependency manifest in September 2026;
+    no findings from that reading are recorded.
+  \item \textbf{Access:} as of 4~October~2026 the repository, and with it the
+    recorded GitHub Actions runs, is private; access is by invitation.
 \end{itemize}
 
 \subsection{What can be judged without a proof assistant}
 
-The third point is the binding constraint and is why this paper exists. We
-stress that \textbf{no familiarity with Lean, or with formal verification at
-all, is needed to assess the parts where an expert's judgement is
-irreplaceable.} It is worth being precise about why.
+The machine-checked proofs in this work are long generated propagation
+chains, and they are not intended to be read line by line. A reader without
+Lean experience can nonetheless assess several parts that call for a
+mathematician's judgement: the statements and definitions, set out in ordinary
+notation in Appendix~\ref{app:defs}; the human-readable arguments of
+\S\S\ref{sec:prelim}--\ref{sec:plane}; and the external reduction. Checking
+that Appendix~\ref{app:defs} faithfully transcribes the Lean definitions, that
+the formal statements are the ones described, and that the recorded builds
+refer to the code described, is easier with Lean experience. The accompanying
+audit document (\texttt{docs/audit/audit.pdf}) quotes the formal statements
+verbatim beside their mathematical reading to support that check, but it does
+not replace review by a reader of Lean.
 
-The machine-checked proofs in this work are \emph{not} human-readable and are
-not meant to be: they are propagation chains of thousands of steps, generated
-rather than written. Nobody reads them --- a formalization specialist would not
-either. What any reader of a formal development actually inspects is the
-\emph{statements} and the \emph{definitions}, and we have put both into ordinary
-mathematical notation, the definitions in Appendix~\ref{app:defs}. So the
-practical difference between a Lean-literate reader and any other is close to
-nil.
-
-Three questions are the ones we would most value, and none of them involves a
-machine:
+Three questions are the ones we would most value:
 
 \begin{enumerate}[leftmargin=*]
   \item \textbf{Is Theorem~\ref{thm:pat14} true?} Twenty-one incidences on
@@ -1261,17 +1402,18 @@ machine:
     false, the exclusion of $40$ and $42$ collapses, though
     \S\ref{sec:prelim}, \S\ref{sec:lower} and \S\ref{sec:plane} would
     survive.
-  \item \textbf{Does \cite[\S9]{AckermanKeszeghRote2022} actually deliver
-    Proposition~\ref{prop:reduction}?} This is the one thing we import, and
-    settling it is a matter of reading that paper, not this one. One worry we
-    were able to resolve ourselves: \S9 does \emph{not} depend on AKR's
-    standing non-parallelism assumption, because their \S3 introduces \S9's
-    vertex condition \emph{before} that clause and derives the clause from it
-    (see the remark on their standing assumption in
-    \S\ref{sec:import}). What remains open is narrower and is recorded in
-    Remark~\ref{rem:simplicity}: \S9 delivers the intersection-count
-    inequality, but that the perturbed polygons remain \emph{simple} is not
-    stated there, and we import it alongside.
+  \item \textbf{Does \cite[\S9.1]{AckermanKeszeghRote2022} deliver
+    Proposition~\ref{prop:reduction} for the definitions used here?} This is
+    the one external input to Corollary~\ref{cor:f77}, and settling it is a
+    matter of reading that paper together with Appendix~\ref{app:defs}. One
+    point we were able to check ourselves: \S9 does \emph{not} depend on AKR's
+    standing collinearity and non-parallelism assumptions, because their \S3
+    introduces \S9's vertex condition \emph{before} those clauses and derives
+    them from it (see the remark on their standing assumption in
+    \S\ref{sec:import}). What remains is recorded in
+    Remark~\ref{rem:simplicity}: \S9.1 states the intersection-count
+    inequality, and we have not found an explicit statement there that the
+    perturbed polygons remain simple and meet in finitely many points.
   \item \textbf{Is the covering result (Theorem~\ref{thm:cover}) already known?}
     Our search found nothing, and we make no novelty claim
     (Remark~\ref{rem:novelty}).
@@ -1279,8 +1421,8 @@ machine:
 
 We would also welcome an opinion on Appendix~\ref{app:defs} --- whether those
 definitions are the intended objects --- which is the risk
-Remark~\ref{rem:faithful} identifies and the one thing no amount of computation
-can settle.
+Remark~\ref{rem:faithful} identifies and which further computation cannot
+settle.
 
 \section*{Disclosure of generative-AI use}\label{sec:ai}
 \addcontentsline{toc}{section}{Disclosure of generative-AI use}
@@ -1289,7 +1431,7 @@ Generative-AI systems were used substantially throughout: exploring the
 reduction, generating essentially all software including the formalization,
 auditing the cited sources, and drafting this paper. The named author is
 responsible for the claims. AI output was not treated as trustworthy: each
-major claim is discharged by a separately recorded mechanism --- source audit,
+major claim is checked by a separately recorded mechanism --- source audit,
 independent reimplementation, a machine-checkable certificate with a standalone
 checker, or kernel verification --- and errors introduced during development
 are catalogued in the project repository rather than quietly repaired. The
@@ -1318,14 +1460,6 @@ Let $P,Q:\mathbb{Z}/7\to\mathbb{R}^2$.
 Nothing here constrains collinearity: three consecutive vertices of $P$ may be
 collinear, and so may any three of the fourteen.
 
-\paragraph{The hypothesis (E9).} Hypothesis~\ref{hyp:e9} is
-\[
-  P_i \notin [Q_j,Q_{j+1}]
-  \quad\text{and}\quad
-  Q_j \notin [P_i,P_{i+1}]
-  \qquad\text{for all } i,j .
-\]
-
 \paragraph{What is counted.} The boundaries and their intersection are
 \[
   \partial P=\bigcup_{i}[P_i,P_{i+1}],\qquad
@@ -1333,21 +1467,39 @@ collinear, and so may any three of the fourteen.
   X = \partial P\cap\partial Q ,
 \]
 genuine subsets of $\mathbb{R}^2$, and the quantity bounded is the cardinality
-of $X$. Finiteness of $X$ is \emph{proved}, not assumed --- it follows from the
-injection of $X$ into the set of crossing side pairs --- which matters, because
-the formal cardinality function returns $0$ on infinite sets and a bound stated
-without finiteness would be vacuous for overlapping boundaries rather than
-informative.
+of $X$.
 
-\paragraph{The theorem.} With $P,Q$ simple in the above sense and (E9) holding,
-$\lvert X\rvert\le 38$; and $38$ is attained, by
-Proposition~\ref{prop:lower}.
+\paragraph{The hypotheses of Theorem~\ref{thm:main}.} Besides (S1)--(S3) for
+$P$ and for $Q$:
+\begin{enumerate}[label=(H\arabic*),leftmargin=*,nosep]
+  \item $X$ is finite;
+  \item $P_i\ne Q_j$ for all $i,j$ \quad(no shared vertex,
+    Hypothesis~\ref{hyp:e91}).
+\end{enumerate}
+(H1) is an explicit hypothesis, and it matters: the formal cardinality function
+returns $0$ on infinite sets, so without (H1) a bound would say nothing about
+overlapping boundaries.
+
+\paragraph{The theorem.} With $P,Q$ satisfying (S1)--(S3), (H1) and (H2),
+$\lvert X\rvert\le 38$; and $38$ is attained, by Proposition~\ref{prop:lower}.
+
+\paragraph{The older hypothesis (E9).} Hypothesis~\ref{hyp:e9}, used by the
+superseded (E9) version, is
+\[
+  P_i \notin [Q_j,Q_{j+1}]
+  \quad\text{and}\quad
+  Q_j \notin [P_i,P_{i+1}]
+  \qquad\text{for all } i,j .
+\]
+It implies (H2), and under it (H1) is a consequence rather than a hypothesis:
+$X$ then injects into the set of crossing side pairs.
 
 \medskip
 \noindent
-The question we are asking is simply whether (S1)--(S3), (E9) and $X$ above are
-the objects a geometer means by ``two simple heptagons whose boundaries meet in
-$k$ points''. If they are not, no amount of machine checking helps.
+The question we are asking is whether (S1)--(S3), (H1), (H2) and $X$ above are
+the objects a geometer means by ``two simple heptagons sharing no vertex whose
+boundaries meet in $k$ points''. If they are not, machine checking does not
+help.
 
 \bibliographystyle{plain}
 \bibliography{references}

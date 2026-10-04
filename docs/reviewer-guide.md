@@ -6,9 +6,18 @@ heard of this problem.
 polygon-intersection literature, order types / oriented matroids, Lean, or SAT
 certificates. Those are explained where they are used.
 
-**What this repository claims.** A *candidate* computer-assisted proof that
-`f(7,7) = 38`. Not peer-reviewed, and not reviewed by anyone outside an
-AI-assisted development process. The authoritative claim-by-claim status is
+**What this repository claims** *(updated 2026-10-04)*. A kernel-checked Lean
+theorem: two simple heptagons that share no vertex and whose boundaries meet in
+finitely many points meet in at most 38 points, and 38 is attained
+(`Pair9Shift.points9_le_38_of_coincFree`, `isGreatest_38_of_coincFree`). The
+unrestricted `f(7,7) = 38` additionally uses the vertex-coincidence reduction of
+AKR §9.1, which is not formalized; its applicability to these definitions is
+unresolved here. No independent review has been completed (a colleague began
+reading an earlier manifest in September 2026; no findings are recorded — see
+`verification-status.md` row 18). Much of this guide describes the earlier,
+enumeration-based route. *(This paragraph read: "A* candidate *computer-assisted
+proof that `f(7,7) = 38`. Not peer-reviewed, and not reviewed by anyone outside
+an AI-assisted development process.")* The authoritative claim-by-claim status is
 [`verification-status.md`](verification-status.md); where anything below appears
 to conflict with it, that file wins.
 

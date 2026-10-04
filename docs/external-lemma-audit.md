@@ -1558,8 +1558,9 @@ specific point while citing the journal for everything else.
 
 ## 10. Suggested author-contact questions
 
-To **Ackerman, Keszegh and Rote** (rote@inf.fu-berlin.de is the most likely
-respondent, and the §10.2 computer verification is his):
+Questions the project would put to **Ackerman, Keszegh and Rote** (contact
+details omitted; these are draft questions, not correspondence that has taken
+place):
 
 1. **Lemma 7, quantification.** "In Lemma 7, should 'both pairs are hooking' be read
    as '*each* pair has *some* associated pair witnessing hooking' (existential)? The

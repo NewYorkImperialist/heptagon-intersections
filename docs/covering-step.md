@@ -11,9 +11,14 @@ theorem crossCountC_ne_40 (K : Config) (hgp : FullGP K) : crossCountC K ≠ 40
 `FullGP` — no three of the fourteen combined vertices collinear — is a carried
 hypothesis, and it is exactly what AKR **§3**'s unproved "for convenience" clause supplies
 (`verification-status.md` rows 4 and 43 — *not* §9.1; the citation was corrected
-on 2026-09-17, see `docs/akr-9-1-obligation.md`). That clause is not formalized, so the
-*unconditional* `hne40` is still assumed and `f(7,7) = 38` is still not a Lean
-theorem. Read §4 before quoting anything here.
+on 2026-09-17, see `docs/akr-9-1-obligation.md`). *(Updated 2026-10-04: §3's clause is now discharged —
+`RawConfig.raw_crossPairs_card_le_38` — and the covering result feeds
+`Pair9Shift.points9_le_38_of_coincFree`, which needs no general position and
+assumes only finiteness and no shared vertex. `f(7,7) = 38` is still not a Lean
+theorem: it needs the external AKR §9.1 reduction. This paragraph read: "That
+clause is not formalized, so the* unconditional *`hne40` is still assumed and
+`f(7,7) = 38` is still not a Lean theorem.")* Read §4 before quoting anything
+here.
 
 ## 1. What the covering step gives
 

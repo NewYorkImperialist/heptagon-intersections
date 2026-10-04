@@ -2,6 +2,14 @@
 
 **Last updated:** 2026-09-17
 
+> **Superseded 2026-10-04:** the current statement is
+> `Pair9Shift.points9_le_38_of_coincFree` (finite intersection, no shared
+> vertex, no general position); only the AKR §9.1 vertex-coincidence reduction
+> remains external, and its applicability to these definitions is unresolved.
+> See `../README.md` → "Current status". The banner below, which names
+> `ConfigBridge.isGreatest_38_pointCount` / `FullGP` as the strongest statement
+> and AKR §9 as "not attempted", is historical.
+
 > **Scope banner added 2026-09-17. Most of this file is now about the
 > historical route.** On 2026-09-17 the whole upper bound, both the `I ≠ 40`
 > and the `I ≠ 42` branch, became a Lean theorem for configurations in

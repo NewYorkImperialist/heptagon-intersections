@@ -278,8 +278,11 @@ small certificate without rerunning the expensive search:
    13,003,620 graphs.
 6. **Filters** from Černý et al. Lemmas 1–3 and AKR Lemmas 5, 7 cut this to
    9,702, then class-dependent filters to 0.
-7. **Conclusion.** `I = 40` impossible; `I = 42` impossible; `I = 39, 41`
-   impossible by parity; with the 38-example, `f(7,7) = 38`.
+7. **Conclusion (historical route; conditional on the external lemmas listed,
+   and on the general-position reduction).** `I = 40` impossible; `I = 42`
+   impossible; `I = 39, 41` impossible by parity; with the 38-example, 38 is the
+   maximum in general position. f(7,7) = 38 is not established by this
+   repository; see `README.md` → "Current status".
 
 Steps 1–3 were `MANUALLY CHECKED` when this was written, 4–6 are `VERIFIED BY
 EXACT COMPUTATION` but from a single codebase, and the whole of 6 is conditional

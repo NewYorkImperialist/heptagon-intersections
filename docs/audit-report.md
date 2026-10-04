@@ -189,5 +189,5 @@ to the set found by random sampling.  Re-running the analysis on it reproduces
 
 ## Revised status
 
-The claim **f(7,7) = 38** survives the audit, with the corrected figures above.
+The claim **f(7,7) = 38** survives the audit, with the corrected figures above. *[Historical; see the banner at the top of this file. f(7,7) = 38 is not established by this repository.]*
 It remains conditional on (1) and (2).

@@ -3,24 +3,37 @@
 ## For a referee: read [`heptagon-paper.tex`](heptagon-paper.tex) first
 
 **[`heptagon-paper.tex`](heptagon-paper.tex)** (compiled:
-[`heptagon-paper.pdf`](heptagon-paper.pdf), 11 pages) is the **mathematical
-write-up** — the argument stated as mathematics, for a reader who has never
-seen this repository. It is the document to send to a mathematician. New
-2026-09-17.
+[`heptagon-paper.pdf`](heptagon-paper.pdf), 21 pages, revised 4 October 2026;
+first version 17 September 2026) is the **mathematical write-up** — the
+argument stated as mathematics, for a reader who has never seen this
+repository.
 
-It states the two forbidden patterns explicitly, the covering theorem, the
-reduction to the plane, and — separately and precisely — the one thing that is
-imported rather than proved (AKR §9). It is deliberately short.
+Its main result, **Theorem 1.2**, is kernel-checked: two simple heptagons that
+**share no vertex** and whose boundaries meet in **finitely many** points meet
+in at most 38 points, and 38 is attained
+(`Pair9Shift.points9_le_38_of_coincFree`, `Pair9Shift.isGreatest_38_of_coincFree`).
+§1.3 separates three scopes: general-position pairs (covered), the
+no-shared-vertex theorem, and `f(7,7)` over all finite pairs, which follows
+using the external AKR §9.1 reduction (Proposition 8.4, Corollary 8.6). Whether
+§9.1 also delivers simplicity and finiteness of the perturbed pair for these
+definitions is recorded as unresolved in this project (Remark 8.10).
+§9.2 gives the reproduction commands.
 
 The two entry points it nominates for a sceptical reader, because they need the
 least context:
 
 1. **Theorem 3.2** — the size-8 pattern is non-realizable. Eight incidences on
-   three consecutive sides of each polygon, *no simplicity hypothesis*. If it is
-   wrong, everything is wrong.
-2. **Lemma 7.4** — disjoint segments stay disjoint under a small perturbation.
-   Self-contained; its formalization (`lean/SegmentStable.lean`) depends on
-   nothing else in the development.
+   three consecutive sides of each polygon, *no simplicity hypothesis*, with a
+   hand proof via Lemma 3.3.
+2. **Lemma 7.2** — disjoint segments stay disjoint under a small perturbation.
+   Self-contained; its formalization (`lean/SegmentStable.lean`) imports only
+   Mathlib.
+
+Build (Tectonic):
+
+```bash
+cd paper && tectonic -X compile heptagon-paper.tex --keep-logs
+```
 
 Everything below is the older, repository-facing material.
 
@@ -40,6 +53,13 @@ A convenience mirror in Markdown is at [`../docs/proof-manifest.md`](../docs/pro
 Where the two differ, the LaTeX file is correct.
 
 ## What the manifest says, in one line
+
+> **Note added 2026-10-04.** The strongest formalised statement is now
+> `Pair9Shift.isGreatest_38_of_coincFree`: 38 is the greatest number of
+> boundary intersection points of two point-set-simple heptagons that share no
+> vertex and meet in finitely many points — no general-position hypothesis.
+> See `heptagon-paper.pdf` §1.3. The text below, from 2026-09-17, is
+> **superseded** and kept for the record.
 
 `f(7,7) = 38` is a **candidate** result and **not** a Lean theorem. But as of
 2026-09-17 the strongest formalised statement is
@@ -117,9 +137,13 @@ LaTeX intermediates (`.aux`, `.log`, `.bbl`, `.blg`, `.out`) are gitignored.
 
 ## Citation policy
 
-The AKR journal version (DCG 68 (2022) 1049–1077) is the primary citation. The
-SoCG 2020 version is cited **only** where the two differ in a way that matters —
-specifically, the cone conditions in the proof of Lemma 7. Project documents are
+The AKR journal version (DCG 68(4) (2022) 1049–1077, DOI
+10.1007/s00454-022-00438-0) is the primary citation. The SoCG 2020 version is
+LIPIcs 164, **Article 1, pp. 1:1–1:18, DOI 10.4230/LIPIcs.SoCG.2020.1**
+(corrected 2026-10-04: `references.bib` had article 24 and DOI `…2020.24`,
+which is a different paper). It is cited **only** where the two differ in a way
+that matters — specifically, the cone conditions in the proof of Lemma 7, and
+that it has no §9. Project documents are
 never cited as authority for an external lemma. Every entry in `references.bib`
 is cited at least once; the Günther preprint is cited precisely to record that
 it was withdrawn and is *not* relied on.

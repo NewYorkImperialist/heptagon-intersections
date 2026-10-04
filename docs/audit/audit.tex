@@ -42,10 +42,10 @@
   {\end{minipage}\end{lrbox}%
    \noindent\fcolorbox{black!35}{black!4}{\usebox{\trustboxbuf}}\par\medskip}
 
-\title{\bfseries Two simple heptagons meet in at most 38 points:\\
+\title{\bfseries Two simple heptagons sharing no vertex meet in at most 38 points:\\
 what the machine checked, and what it did not}
-\author{An audit document for a reader who does not read Lean}
-\date{24 September 2026}
+\author{An audit document for the Lean development,\\ written for readers with or without Lean experience}
+\date{Revised 4 October 2026 (first version 24 September 2026)}
 
 \setcounter{section}{-1}
 \begin{document}
@@ -56,116 +56,91 @@ what the machine checked, and what it did not}
 
 \begin{trustbox}
 \textbf{In one paragraph.} A Lean~4 development in this repository contains a
-machine-checked theorem: \emph{if two simple heptagons in the plane have
-finitely many boundary intersection points and share no vertex, their
-boundaries meet in at most $38$ points, and $38$ is attained.} The proof has
-been checked by Lean's kernel; it uses no \code{sorry}, no axiom of this
-project's own, and no \code{native\_decide}. It is \textbf{not} a proof that
-$f(7,7)=38$: the ``share no vertex'' hypothesis is the conclusion of \S9.1 of
-Ackerman--Keszegh--Rote, which is assumed here, not proved. This document is
-written so that you can confirm the first sentence and the last one without
-reading Lean and without running anything.
+kernel-checked theorem: \emph{if two simple heptagons in the plane share no
+vertex and their boundaries meet in finitely many points, then the boundaries
+meet in at most $38$ points; and $38$ is attained.} This includes every pair in
+general position. The recorded build of the theorem shows no \code{sorry}, no
+axiom declared by this project, and no \code{native\_decide}. The theorem is
+\textbf{not} by itself the statement $f(7,7)=38$, which ranges also over pairs
+that share vertices: that step uses the vertex-coincidence reduction of \S9.1
+of Ackerman--Keszegh--Rote, which is not formalized here and whose
+applicability to these exact definitions this project has not fully checked
+(\S\ref{sec:notproved}). This document sets out the formal statement, the
+evidence for it, and the limits of that evidence.
 \end{trustbox}
 
-\section{Why you only need to read this document}
+\section{What the evidence does and does not establish}
 
-You have said that the mathematics now rests on the code. The natural next
-question --- ``who has read the code?'' --- has an uncomfortable answer: nobody
-outside this AI-assisted process has read or run any of it. This section is an
-argument that for most of the code, that does not matter, and a precise
-account of the part where it does.
+\paragraph{Kernel checking.} A Lean file is a set of instructions for
+constructing proof objects, which Lean's kernel checks against a fixed set of
+inference rules. If the development builds, the kernel has accepted a proof of
+each theorem's formal statement, under its stated hypotheses and Lean's
+foundational axioms, relative to the correctness of Lean itself and of the
+Mathlib definitions the statements use. This development is 1{,}779
+\code{.lean} files and about 1.6 million lines; most files are generated case
+enumerations, and the proofs of the headline theorems are long generated
+propagation chains. They are not written to be read line by line, and reading
+them is not the usual way such a development is reviewed. Kernel checking does
+not establish that a formal statement says what its author intends, and it
+does not discharge the statement's hypotheses.
 
-\paragraph{Lean is a proof checker, not a programming language you must trust.}
-A Lean file is not an argument addressed to a reader. It is a sequence of
-instructions for constructing a formal proof object, which is then checked,
-term by term, against a small fixed set of inference rules --- the
-\emph{kernel}. If the file compiles, a proof object exists and the kernel has
-verified it. If a step is wrong, it does not compile. There is no ``looks
-right to me'' in between.
+\paragraph{The statement and definitions.} What a reviewer must read is the
+statement and the definitions it uses. If \code{points9} denoted the wrong
+set, or \code{SimpleClosed} encoded more than simplicity, a correct
+kernel-checked proof would establish something other than the intended
+result. The statement surface quoted here is \ndecls\ declarations, and the
+seven that carry the content are printed in \S2 beside a reading in ordinary
+mathematics. Other risks remain alongside the definitions: a hypothesis
+stronger than intended (addressed for satisfiability by \S\ref{sec:nonvac}), a mismatch
+between the code quoted here and the code that was built (addressed partly by
+the drift check of \S2), and the external reduction (\S\ref{sec:notproved}).
 
-The consequence is the one that should interest you: \textbf{nobody reads the
-proof files.} Not the author, not a Lean expert, not a referee. This
-development is 1{,}779 \code{.lean} files and roughly 1.6 million lines, all
-but a few dozen files being machine-generated case enumerations. Reading them
-would take years and would establish nothing the kernel has not already
-established more reliably. A Lean expert brought in to audit this repository
-would not read the proofs either. He would do what \S\S2--6 of this document
-do.
-
-\paragraph{What a human must read is the statement.}
-A proof checker verifies that a proof proves \emph{its own statement}. It has
-no opinion about whether that statement is the one you meant. Everything that
-can go wrong that a machine cannot catch lives in the definitions: if
-\code{points9} means the wrong set, or \code{SimpleClosed} secretly assumes
-general position, then a flawless kernel-checked proof establishes something
-you did not ask for.
-
-That surface is small. It is \ndecls\ declarations, fewer than sixty lines in
-total, and the seven that carry the content are printed in \S2 beside the
-mathematics they are supposed to say. \textbf{That table is the thing to
-read.} It is the one place where this could be wrong in a way no machine will
-find, and reading it takes ten minutes.
-
-\paragraph{The three loopholes, named.}
-There are exactly three ways to get something past the kernel, and all three
-are visible:
+\paragraph{The axiom check.}
+Lean's \code{\#print axioms} lists the axioms a declaration's proof depends on,
+transitively. Three kinds of dependency are relevant here, and the
+repository's axiom checker looks for each:
 
 \begin{itemize}
-\item \code{sorry} --- a placeholder that stands in for a missing proof. A file
-  containing \code{sorry} still compiles; Lean emits a \emph{warning}, not an
-  error, and the build exits~0. This is the dangerous one, because a build log
-  can say ``success'' over a hole.
-\item A declared \code{axiom} --- a statement asserted without proof. This also
-  compiles cleanly, with no warning at all.
-\item \code{native\_decide} --- a tactic that closes a goal by compiling it to
-  machine code and running it. It is not a hole and not an axiom; it moves the
-  work out of the 5{,}000-line kernel and into the whole Lean compiler and the
-  C toolchain beneath it. Vastly more code to trust.
+\item \code{sorry}, a placeholder for a missing proof. A file containing it
+  still compiles, with a warning, and the build exits~0. It appears in the
+  axiom list as \code{sorryAx}.
+\item A declared \code{axiom}, a statement asserted without proof. It appears
+  by name.
+\item \code{native\_decide}, which evaluates a goal with compiled code rather
+  than in the kernel, enlarging the trusted code base to the compiler. It
+  appears as \code{Lean.ofReduceBool}.
 \end{itemize}
 
-All three are caught by one command. Lean's \code{\#print axioms} on a theorem
-lists the unproved assumptions its proof depends on --- \emph{transitively},
-through every lemma it uses. A \code{sorry} three lemmas down appears in the
-headline theorem's own axiom list as \code{sorryAx}; a project axiom appears by
-name; \code{native\_decide} appears as \code{Lean.ofReduceBool}. Nothing can be
-buried. The expected output for this development is exactly
+The expected output for the headline theorems is
 \[
-  \texttt{[propext, Classical.choice, Quot.sound]}
+  \texttt{[propext, Classical.choice, Quot.sound]},
 \]
-which are Lean's own three foundational axioms --- propositional
-extensionality, choice, and quotient soundness --- the standard basis of
-ordinary classical mathematics, shared with all of Mathlib. Any fourth entry is
-a finding.
+Lean's standard foundational axioms, which Mathlib also uses. The check is
+evidence about the declarations whose axiom lists are printed and parsed. It
+does not show that a statement has the intended meaning, it does not discharge
+hypotheses, and it does not detect errors in Lean itself.
 
-\paragraph{And none of it has to be taken from this machine.} Everything above
-would still be one party's report about their own computer. It is not: the
-repository rebuilds itself on GitHub's machines from a fresh clone, runs the
-axiom check and the sabotage tests, and publishes the result as a pass or a
-fail that the author cannot forge. That run has happened and it passed,
-reproducing the figures in \S4 and \S5 exactly. \S\ref{sec:ci} gives the run,
-what it covers, and --- as importantly --- what it does not.
+\paragraph{Recorded builds.} The repository's GitHub Actions workflow builds
+the headline target from a fresh checkout on a GitHub-hosted runner, runs the
+axiom check, and runs the group-A tests of \S4. Two runs have passed
+(\S\ref{sec:ci}). A run records that the committed workflow passed at one
+revision. The repository owner writes the workflow, so the run shows what that
+workflow checked, not an independent party's choice of checks. It is not a
+mathematical review.
 
-\paragraph{What is left on trust when you finish this document.}
-Three things, and they are worth stating plainly because they are all that is
-left:
-
+\paragraph{What a reader still has to judge.}
 \begin{enumerate}
-\item \textbf{Lean's kernel} --- that the proof checker itself is correct. It is
-  a small, heavily scrutinised program with independent reimplementations; this
-  is the assumption every formalisation in the literature makes.
-\item \textbf{That the statement in \S2 is the intended one.} You judge this
-  yourself, by reading the table. Nobody can do it for you.
-\item \textbf{AKR \S9.1} --- an external lemma, used as a hypothesis, discussed
-  in \S7.
+\item \textbf{The toolchain:} that Lean's kernel, and the Mathlib definitions
+  used in the statement, are correct. This is assumed by every Lean
+  formalization.
+\item \textbf{The statement:} that the formal statement in \S2 expresses the
+  intended theorem. The table in \S2 supports this check; it is easier for a
+  reader who knows Lean.
+\item \textbf{The connection between this document and the code:} that what
+  is quoted here is what was built (\S\S2 and~5).
+\item \textbf{The external reduction:} AKR \S9.1, and whether it applies to
+  these definitions (\S\ref{sec:notproved}).
 \end{enumerate}
-
-Compare this with an ordinary paper. There, a referee must check the
-definitions \emph{and} follow every step of the argument, and the second job is
-the one that takes months and the one referees are known to get wrong. Here the
-second job has been done by a machine. The residual trust is strictly smaller
---- item~2 above is the referee's first job, unchanged, and items~1 and~3 are
-new but sharply bounded. That is the whole claim. It is not a claim that
-formalisation is infallible.
 
 \section{The claim, in ordinary mathematics}
 
@@ -173,19 +148,22 @@ formalisation is infallible.
 \textbf{Proved.} Let $P$ and $Q$ be simple closed heptagons in the plane ---
 seven vertices each, sides $[P_i,P_{i+1}]$ and $[Q_j,Q_{j+1}]$ for
 $i,j\in\mathbb{Z}/7$, each polygon a closed curve that does not cross itself.
-Suppose $\partial P\cap\partial Q$ is finite. Then
-$\#(\partial P\cap\partial Q)\le 38$, and there is a pair for which the count
-is exactly $38$; so $38$ is the maximum.
+Suppose $\partial P\cap\partial Q$ is finite and no vertex of $P$ is equal to
+a vertex of $Q$. Then $\#(\partial P\cap\partial Q)\le 38$, and there is such a
+pair for which the count is exactly $38$; so $38$ is the maximum over such
+pairs. Every pair in general position satisfies these hypotheses.
 
 \medskip
-\textbf{Assumed, not proved.} That no vertex of $P$ is equal to a vertex of
-$Q$. This is a hypothesis of the theorem, written out explicitly; it is the
-conclusion of \S9.1 of Ackerman, Keszegh and Rote, which is not formalised
-here.
+\textbf{Hypotheses, not conclusions.} Finiteness and ``no shared vertex'' are
+hypotheses of the theorem, written out explicitly. That every pair of simple
+heptagons with finite intersection can be replaced by one with no shared
+vertex, again simple and with no fewer intersection points, is a separate
+\emph{reduction}: it is the subject of \S9.1 of Ackerman, Keszegh and Rote,
+and it is not formalized here (\S\ref{sec:notproved}).
 \end{trustbox}
 
-\noindent Two remarks on what is \emph{not} assumed, because they are where a
-formalisation usually cheats.
+\noindent Two remarks on what is \emph{not} assumed, because these are the
+places where a formal statement is most easily narrower than intended.
 
 \emph{No general position.} Three collinear vertices are allowed. A straight
 vertex --- where two consecutive sides are collinear --- is allowed. A vertex of
@@ -211,23 +189,23 @@ you need is $\forall$, $\wedge$ (and), $\to$ (implies), $\cup$, $\cap$,
 
 \input{out/statement_table.tex}
 
-\paragraph{The drift tripwire.} A quotation is only as good as its currency.
-\code{extract\_lean.py --check} recomputes the SHA-256 of every declaration
-above and compares it against the lockfile written when this document was
-generated. If any declaration has been renamed, moved, or altered by one
-character, it exits~1 and names the declaration. It is run as part of building
-this PDF. The table above therefore cannot have drifted away from the code
-without the build failing.
+\paragraph{The drift check.} \code{extract\_lean.py --check} recomputes the
+SHA-256 of each of the \ndecls\ quoted declarations and compares it against the
+lockfile written when this document was generated. If one of them has been
+renamed, removed, or altered by one character, it exits~1 and names it. It is
+part of the documented procedure for building this PDF. It covers only the
+quoted text: a change to a definition those declarations use but that is not
+quoted here --- for example \code{LowerBound.Adjacent}, or Mathlib's
+\code{segment} --- would not be detected by it.
 
 \paragraph{One thing this table is not.} The repository contains a
 \emph{second} chain that also ends at the number $38$ ---
 \code{Heptagon.MainTheorem.isGreatest\_38}, over integer-coordinate
 combinatorial configurations --- and \S5 prints its axiom line alongside these.
-It is not the theorem above, and it is \textbf{not unconditional}: it carries
-three explicit hypotheses that are exactly the open part of that route, and
-\S5 sets them out. Six axiom lines in \S5 must therefore not be read as six
-unconditional results. \textbf{The claim this document makes is the one in the
-table above}, and nothing in \S\S1--4 or~6 depends on the other chain.
+It is not the theorem above: it carries three explicit hypotheses that that
+route does not itself prove, and \S5 sets them out. The six axiom lines in
+\S5 are six statements with different hypotheses, not six versions of one
+result. The claim this document makes is the one in the table above, and nothing in \S\S1--4 or~\ref{sec:nonvac} depends on the other chain.
 
 \section{The gallery: hand-countable pictures beside the computed count}
 
@@ -248,8 +226,9 @@ $3\times3$ grid.
 \code{certificate\_38}: the configuration read from the file
 \code{lower\_bound\_38.json}, the same object the Lean proof
 uses as its witness. Its \certcount\ intersection points are circled and
-numbered $1$ through $\certcount$. You can count them. That is the entire
-lower bound, and it needs no trust at all.
+numbered $1$ through $\certcount$, so a reader can count them. The
+kernel-checked counterpart is \code{AKR9.certPair9\_ncard}, which computes the
+same count from the same coordinates.
 
 \input{out/gallery_table.tex}
 
@@ -279,9 +258,9 @@ matter:
 \item \code{awkward\_overlapping\_sides\_infinite} --- a side of $P$ and a side
   of $Q$ are collinear and overlap in a whole sub-segment, so
   $\partial P\cap\partial Q$ is genuinely infinite. The tool reports
-  \textsc{infinite} and refuses to produce a number. This is the honest failure
-  mode, and it is why the theorem carries a finiteness hypothesis: without it
-  the count is not a natural number and \code{ncard} would silently return $0$.
+  \textsc{infinite} and does not produce a number. This is why the theorem
+  carries a finiteness hypothesis: without it
+  the count is not a natural number and \code{ncard} would return $0$.
 \end{itemize}
 
 Each configuration carries an expected count written down in advance; a
@@ -312,16 +291,15 @@ The mutation changes one character in \code{lean/AKR9.lean}:
 \input{out/l4_box.tex}
 \end{trustbox}
 
-\noindent \textbf{Not one character of proof text is touched.} There is no
-\code{sorry}, no axiom, no \code{native\_decide}; the mutated file is a
-perfectly legitimate Lean development about the union of two boundaries instead
-of their intersection --- a set that is obviously not of size at most 38.
-\Lfourreq
+\noindent No proof text is touched. There is no \code{sorry}, no axiom, no
+\code{native\_decide}; the mutated file is a Lean development about the union
+of two boundaries instead of their intersection, a set that is not finite of
+size at most 38. \Lfourreq
 
-Without this test, ``Lean proved it'' would mean only that \emph{something} was
-proved. With it, the theorem is pinned to the definitions you read in \S2:
-change what \code{points9} means and the proofs must stop type-checking.
-\Lfourupshot
+The test shows that the proofs depend on \code{points9} at least to the extent
+that this change breaks them. It does not show that every unintended
+definition would be rejected; mutation tests demonstrate rejection of the
+particular mutations tested. \Lfourupshot
 
 \paragraph{The three groups.}
 \code{scripts/negative-tests.sh} has three groups. Group~N mutates the
@@ -333,21 +311,18 @@ they require a real \code{lake build} of each mutated copy and are opt-in
 behind a \code{--lean} flag.
 
 \smallskip
-\noindent\textbf{Groups~A and~L were both run while this document was written},
-and both transcripts are committed. The two tables below are copied line for
-line from those runs, not transcribed.
+\noindent Groups~A and~L were both run on 25~September~2026 (UTC), on the
+author's machine, and both transcripts are committed. The two tables below are
+generated from those transcripts.
 
 \smallskip
 \noindent One thing to know before reading them. \code{negative-tests.sh} can
 print five verdicts --- \emph{accepted}, \emph{caught}, \textsc{not caught},
 \textsc{not applied}, \textsc{wrongly rejected} --- and the generator that
-builds these tables renders all five. \textbf{An absence of failures below is
-therefore a fact about the runs, not a limitation of the table.} That
-distinction is not rhetorical: an earlier version of the generator recognised
-only three of the five verdicts and would have silently dropped a failing row.
-That is the same defect as a checker that cannot fail --- the very thing this
-section exists to rule out --- and it was found and fixed before this document
-was built.
+builds these tables renders all five, so an absence of failures below reflects
+the runs rather than the table. An earlier version of the generator
+recognised only three of the five verdicts and would have dropped a failing
+row; this was found and fixed before this document was built.
 
 \input{out/mutation_tables.tex}
 
@@ -356,8 +331,18 @@ was built.
 \section{What the machine checked, and how to re-run it}
 
 \begin{trustbox}
-\centering\code{cd lean \&\& lake build Headline}
+\begin{tabular}{@{}ll@{}}
+\textit{working directory} & \textit{command}\\[2pt]
+\code{lean/} & \code{lake exe cache get}\\
+\code{lean/} & \code{lake build Headline 2>\&1 | tee ../headline-build.log}\\
+repository root & \code{bash scripts/verify-all.sh --axiom-log headline-build.log}
+\end{tabular}
 \end{trustbox}
+
+\noindent The first command downloads prebuilt Mathlib files for the revision
+pinned in \code{lean/lake-manifest.json}; the second builds the headline
+theorems; the third is the axiom check, which needs no Lean.
+\medskip
 
 {\sloppy
 \noindent \code{lean/Headline.lean} declares nothing. It imports the four roots
@@ -374,24 +359,28 @@ of the live chain --- \code{MainTheorem}, \code{RealUpperBound}, \code{AKR9},
 \end{Verbatim}
 \end{trustbox}
 
-\noindent Building that one target builds exactly the transitive closure of the
-four roots --- \textbf{331 modules} --- and nothing else. The roots are listed
-weakest-hypothesis-last; the last two printed declarations are the ones \S2
-quotes. (A bare \code{lake build} does \emph{not} build them: the project's
-\code{defaultTargets} deliberately omits the \S9 modules, so that rebuilding
-them cannot invalidate the 1{,}080 enumeration shards. \code{Headline} exists
-to close that gap with one command.)
+\noindent Building that target builds the transitive closure of the four
+roots --- 331 modules --- plus \code{Headline} itself: 332 modules of this
+project, and no enumeration shard. Lake reports this as \hljobs\ \emph{jobs},
+a count that also includes Mathlib's modules. The last two printed
+declarations are the ones \S2 quotes. A bare \code{lake build} does
+\emph{not} build them: the project's \code{defaultTargets} omits the \S9
+modules, including \code{AKR9}, \code{Pair9Shift} and \code{Headline}.
 
 \paragraph{The transcript of that command is committed.}
-A full transcript of that build is in the repository, at \hllogpath:
-\hllines\ lines, opening with a provenance header that records the date
-(\hllogdate), the machine, the exact Lean version, and the exact command.
+A full transcript of a local build of that target is in the repository, at
+\hllogpath: \hllines\ lines, opening with a header that records the date
+(\hllogdate), the machine, the Lean version, and the command. The header does
+not record a commit. The Lean sources were last changed in commit
+\code{a211140} (24~September~2026, 23:59 UTC), before this build, and have
+not changed since; the transcript was committed in \code{b070c2f}.
 Read out of that file:
 
 \begin{itemize}
 \item it ends with \code{Build completed successfully (\hljobs\ jobs).};
-\item it carries \hldepends\ \code{depends on axioms} lines, and across all of
-  them exactly \hlnaxioms\ distinct axioms appear: \code{propext},
+\item it carries \hldepends\ \code{depends on axioms} lines and one line for a
+  declaration that depends on no axioms --- \hlparsed\ declarations in all ---
+  and across them exactly \hlnaxioms\ distinct axioms appear: \code{propext},
   \code{Classical.choice} and \code{Quot.sound}. There is no fourth entry
   anywhere in the file;
 \item \code{sorryAx} occurs \hlsorry\ times in it, and
@@ -406,7 +395,7 @@ Read out of that file:
   appears about a thousand lines earlier in the log than the other five.
 \end{itemize}
 
-\noindent You need not accept my reading of it. The repository's axiom checker
+\noindent The repository's axiom checker
 is a log parser that needs no Lean toolchain, and it can be pointed at that
 file directly:
 
@@ -430,23 +419,30 @@ number $38$ and they are not the same claim, so they are worth separating
 before you read the list above.
 
 \smallskip
-\noindent Five of the six are the chain \S2 quotes:
-\code{isGreatest\_38\_real}, \code{isGreatest\_38\_of\_E9},
-\code{points\_le\_38\_of\_no\_vertex\_on\_boundary},
-\code{points9\_le\_38\_of\_coincFree} and
-\code{isGreatest\_38\_of\_coincFree}. They assume nothing beyond the hypotheses
-written into their own statements --- which are exactly the ones you read in
-\S2: finiteness, and no shared vertex. The counting bound they all rest on,
-\code{RawConfig.raw\_crossPairs\_card\_le\_38}
-(\code{lean/RawConfig.lean:231}), takes a bare pair of heptagons and
-\emph{no general-position hypothesis at all}.
+\noindent Five of the six are statements about point sets in $\mathbb{R}^2$,
+and they differ in their hypotheses:
+\begin{itemize}
+\item \code{points9\_le\_38\_of\_coincFree} and
+  \code{isGreatest\_38\_of\_coincFree}: finiteness and no shared vertex --- the
+  statement of \S2;
+\item \code{points\_le\_38\_of\_no\_vertex\_on\_boundary} and
+  \code{isGreatest\_38\_of\_E9}: the older, stronger hypothesis (E9), that no
+  vertex of either polygon lies anywhere on the other's boundary; finiteness
+  is then a consequence. Superseded by the two above;
+\item \code{isGreatest\_38\_real}: general position, carried as a field of the
+  structure \code{RConfig}.
+\end{itemize}
+Each assumes only the hypotheses written into its own statement. The
+crossing-pair bound they rest on, \code{RawConfig.raw\_crossPairs\_card\_le\_38}
+(\code{lean/RawConfig.lean:231}), takes a pair of point-set simple heptagons
+with no general-position hypothesis.
 
 \smallskip
 \noindent \textbf{The sixth is a different animal.}
 \code{MainTheorem.isGreatest\_38} (\code{lean/MainTheorem.lean:88}) is about a
 different object --- integer-coordinate, orientation-level \code{Config}s ---
-and it is \emph{conditional}. It carries three explicit hypotheses which are
-precisely what is still open on that route: that every configuration has an
+and it carries three explicit hypotheses which are what that route does
+not itself prove: that every configuration has an
 even crossing count, that none attains $42$, and that none attains $40$, the
 last of these being the entire $13{,}003{,}620$-graph enumeration. Its own
 doc-comment (\code{lean/MainTheorem.lean:45--48}) puts it plainly:
@@ -462,19 +458,18 @@ reduction, both external.''}
 \noindent Note in the transcript above that this one has the \emph{shortest}
 axiom list of the six --- \code{[propext, Quot.sound]}, with no
 \code{Classical.choice}. That is a consequence of its being conditional, not a
-sign that it is the strongest of them: a hypothesis you have not discharged
-costs no axioms. \textbf{Nothing in this document rests on it.} The claim in
-\S1, the statement in \S2 and the non-vacuity of \S6 are all the other route.
+sign that it is the strongest of them: an undischarged hypothesis costs no
+axioms. Nothing in this document rests on it. The claim in \S1, the statement
+in \S2 and the non-vacuity of \S\ref{sec:nonvac} are all the other route.
 \end{trustbox}
 
 \paragraph{Two figures in this section that the transcript does \emph{not}
 establish.} It records no elapsed time, so the \textbf{11\,s} warm-build figure
 is still only the repository's own assertion (\code{lean/README.md}) and you
 should read it as that. And the log counts \emph{jobs}, not modules: the
-\hljobs\ above is a job count, while the \textbf{331 modules} figure is
-corroborated separately --- including by a transitive-closure computation
-recorded in \code{docs/verification-status.md} --- and the two must not be
-conflated.
+\hljobs\ above is a job count, while the module count (331 in the closure of
+the four roots, 332 with \code{Headline}) comes from a transitive-closure
+computation over the \code{import} lines, repeated for this revision.
 
 \paragraph{A correction, and what the axiom check really guards against.}
 An earlier draft of this section asserted that \code{\#print axioms} prints
@@ -495,36 +490,38 @@ the statements you care about. Test~A4 in \S4 is exactly that case and the
 checker rejects it. Its requirement is not that the build was cold; it is that
 each of the six named theorems printed an axiom line of its own.
 
-\paragraph{If you did want to run it.} A fresh clone must first download
-Mathlib (the Lean mathematical library, pinned here at \code{v4.33.1}) before
-any of this project's own code compiles. The repository records about
-\textbf{1.4\,GB} left in \code{lean/.lake} after a cold build, and flags that
-figure as measured before later modules were added and not re-measured since,
-so treat it as a lower bound. That download, not this development, dominates
-the cost of a first build. You are not expected to do any of this; the point
-of \S\S2--4 is that you do not have to.
+\paragraph{Cost of a first build.} A fresh clone must first download
+Mathlib (the Lean mathematical library, pinned here at tag \code{v4.33.1})
+before any of this project's own code compiles. The repository records about
+1.4\,GB in \code{lean/.lake} after a cold build, measured before later modules
+were added, so treat it as a lower bound. On the GitHub-hosted runners of
+\S\ref{sec:ci} (2 cores) the headline build step took about 32 minutes in the
+second run.
 
-\section{Someone else already ran it}\label{sec:ci}
+\section{Recorded CI builds}\label{sec:ci}
 
-Everything in \S\S2--6 was produced on the author's computer. You are entitled
-to ask why any of it should be believed, and the answer cannot be more output
-from the same machine.
-
-So the repository builds itself on GitHub's. On every push to the main branch,
-GitHub clones the repository onto a machine nobody involved here owns or can
-log into, installs the pinned Lean toolchain, compiles the headline chain
-\emph{from source}, and runs the axiom check and the group-A sabotage tests of
-\S4. If any step fails, the run goes red and stays red in public view. The
-green mark is not something the author can produce by hand.
+The evidence in \S\S2--5 was produced on the author's computer. The repository
+also has a GitHub Actions workflow (\code{.github/workflows/verify.yml}) that,
+on each push to the main branch, checks out the repository on a
+GitHub-hosted runner, installs the pinned Lean toolchain, fetches prebuilt
+Mathlib files, builds the \code{Headline} target, and runs the axiom check
+and the group-A tests of \S4. Two runs are recorded, both passing:
 
 \begin{trustbox}
-\centering
-\textbf{First run: passed.} \quad 25 September 2026, \quad 40\,min 54\,s\\[2pt]
-{\footnotesize\ttfamily github.com/NewYorkImperialist/heptagon-intersections/actions/runs/36086080499}\\[2pt]
-{\footnotesize commit \texttt{b78f372}, runner \texttt{ubuntu-latest}, 2 cores, 7.8\,GiB}
+\small
+\begin{tabular}{@{}lll@{}}
+\textit{run} & \textit{commit} & \textit{started (UTC), duration}\\[2pt]
+\code{36086080499} & \code{b78f372} & 25 Sep 2026 02:23, 40\,min 54\,s\\
+\code{36089101301} & \code{e984888} & 25 Sep 2026 03:07, 35\,min 05\,s
+\end{tabular}
+
+\smallskip
+{\footnotesize Both on \code{ubuntu-latest}, 2 cores, 7.8\,GiB. Both commits
+have the Lean sources of \code{a211140}. Run pages are at\\
+\texttt{github.com/NewYorkImperialist/heptagon-intersections/actions/runs/<run>}.}
 \end{trustbox}
 
-\noindent What that run reported, quoted from
+\noindent What the first run reported, quoted from the extract committed at
 \code{docs/audit/out/ci\_run.log}:
 
 \begin{trustbox}
@@ -536,127 +533,119 @@ OK: 0 occurrences of sorryAx
    axiom-check: distinct axioms                  : 3
    axiom-check: headline theorems confirmed      : 6 of 6
    AXIOM CHECK: CLEAN
-RESULT: 8 passed, 0 failed          (the group-A sabotage tests)
+RESULT: 8 passed, 0 failed          (the group-A tests)
 \end{Verbatim}
 \end{trustbox}
 
-\noindent These are the same figures \S5 and \S4 report from the author's
-machine --- the same 3{,}344 jobs, the same 409 declarations, the same six
-theorems, the same three axioms. That is the point: an independent machine,
-starting from nothing but the repository, reached them again.
+\noindent The second run reported the same figures; its extract is
+\code{docs/audit/out/ci\_run\_2.log}. They agree with the local transcript of
+\S5: the same job count, the same 409 declarations, the same six theorems and
+the same three axioms.
 
-\paragraph{The build is genuinely from source, and this is load-bearing.}
-Lake will happily restore a previous build and \emph{replay} its stored
-messages, which look identical to freshly produced ones. A workflow that cached
-the build tree would therefore go green while re-checking nothing --- its axiom
-lines would be text unpacked from an archive, and the tick would attest
-GitHub's ability to open a tarball. The workflow deliberately does not cache
-\code{lean/.lake/build}, and the run above shows \textbf{346 modules
-\emph{Built} and 0 \emph{Replayed}}: every one of this project's modules was
-elaborated by that runner's kernel. (Mathlib, the external library, \emph{is}
-fetched prebuilt. Caching a dependency is ordinary; caching the thing you claim
-to have verified is not.)
+\paragraph{The project's modules were compiled, not restored.} Lake can
+restore a previous build and replay its stored messages, which look the same
+as freshly produced ones. The workflow does not cache \code{lean/.lake/build}.
+In each run, Lake's progress output has 346 lines marked \emph{Built} and none
+marked \emph{Replayed}: 332 are this project's modules (the whole
+\code{Headline} closure) and 14 are jobs building Mathlib's \code{cache}
+tool. Mathlib itself is fetched prebuilt for the pinned revision.
 
-\paragraph{What the green mark does not cover.} Two things, so that it is not
-read for more than it says. It does not run the \emph{Lean} mutation tests
-L1--L4 of \S4 --- each rebuilds a deliberately broken copy of the repository and
-would exceed the six-hour limit, so that job is opt-in and was skipped; their
-evidence is the committed transcript instead. And it builds the 332-module
-headline closure, not all 1{,}779 declared libraries, most of which are
-generated data modules from an abandoned approach that nothing current imports.
-Neither omission touches the six theorems.
+\paragraph{What these runs do and do not show.} They record that the committed
+workflow passed at those two revisions on a machine not controlled by the
+author. The workflow itself is written by the repository owner, so the runs
+show what that workflow checks, and they do not cover later changes to the
+repository. They do not run the Lean mutation tests L1--L4 of \S4 (an opt-in
+job, not run; those results come from the local transcript), and they build
+the 332-module headline closure, not all 1{,}779 declared libraries. They are
+not a review of the mathematics or of the formal statements.
 
-\paragraph{The repository is private.} It is held back deliberately, to
-establish priority before the result is public, so the run above is not visible
-to the world. A named collaborator can see it, and the intended reader of this
-document is expected to be one.
+\paragraph{Access.} As of 4~October~2026 the repository is private (checked
+with the GitHub command-line tool). The run pages and their artifacts are
+visible only to people with access to the repository, and the artifacts expire
+90 days after each run.
 
-\section{Non-vacuity: the theorem is not true for a boring reason}
+\section{Non-vacuity: the hypotheses can be met, and the bound is attained}\label{sec:nonvac}
 
 {\sloppy
 A conditional theorem whose hypotheses are contradictory is vacuously true and
-worthless. An upper bound nobody attains is not a maximum. Both failure modes
+says nothing. An upper bound nobody attains is not a maximum. Both failure modes
 are closed explicitly at the end of \code{lean/Pair9Shift.lean}, by a single
 bundled declaration, \code{nonVacuity}, in the \code{Heptagon.Pair9Shift}
 namespace.\par}
 
 \input{out/nonvacuity.tex}
 
-\section{What is not proved}
+\section{What is not proved}\label{sec:notproved}
 
-This section is the reason to believe the rest.
+\paragraph{$f(7,7)=38$ is not a Lean theorem.} What is kernel-checked is the
+statement in \S2: the bound $38$ for simple heptagons that share no vertex and
+whose boundaries meet in finitely many points, with $38$ attained. Finiteness
+is a hypothesis, not a conclusion; the last row of \S3 is a configuration
+where it fails. The doc-comment on the theorem says the same: ``\emph{This is
+not \code{f(7,7) = 38}, and it is not all of AKR \S9.}''
 
-\paragraph{$f(7,7)=38$ is not a Lean theorem.} The repository's own status
-document says so in those words --- ``\textbf{\code{f(7,7) = 38} is still not a
-Lean theorem}'' --- and the doc-comment on the theorem itself repeats it:
-``\emph{This is not \code{f(7,7) = 38}, and it is not all of AKR \S9.}'' What
-is proved is the statement in \S2, with the no-shared-vertex hypothesis
-explicit, and with finiteness of the intersection assumed rather than derived.
-That second hypothesis is not a technicality: the last row of \S3 is a genuine
-configuration where it fails.
-
-\paragraph{AKR \S9.1 is assumed.} The reference throughout is E.~Ackerman,
+\paragraph{The vertex-coincidence reduction.} The reference is E.~Ackerman,
 B.~Keszegh and G.~Rote, \emph{An almost optimal bound on the number of
 intersections of two simple polygons}, Discrete Comput.\ Geom.\ \textbf{68}
-(2022) 1049--1077. Their \S9 shows that
-a pair of simple polygons may be perturbed into one where no vertex of either
-lies on the other's boundary, without decreasing the intersection count. It
-splits in two. \S9.2's half --- a vertex in the \emph{interior} of a side --- is
-\emph{proved here}, in Lean, and is no longer imported; that is what
-\code{points9\_le\_38\_of\_coincFree} accomplishes over its predecessor.
-\S9.1's half --- a vertex \emph{equal} to a vertex of the other polygon --- is
-still imported. It is carried as the single explicit hypothesis
-\code{hcoinc} rather than baked into a structure, precisely so that a reader can
-see it and check it against the paper.
+(2022) 1049--1077; \S9 appears only in this journal version. Their \S9 shows
+that degenerate cases --- a vertex of one polygon on the boundary of the other
+--- can be removed without decreasing the number of intersection points. It
+has two parts. \S9.2's part, a vertex in the \emph{interior} of a side, is
+\emph{proved here} in Lean, by the project's own argument; that is what
+\code{points9\_le\_38\_of\_coincFree} adds over its (E9) predecessor. \S9.1's
+part, a vertex \emph{equal} to a vertex of the other polygon, is not proved
+here. To obtain $f(7,7)=38$ one needs:
+\begin{enumerate}
+\item[(a)] \emph{kernel-checked:} the statement of \S2;
+\item[(b)] \emph{from an external theorem:} the reduction of AKR \S9.1, that
+  every pair can be replaced by one sharing no vertex without decreasing the
+  number of intersection points;
+\item[(c)] \emph{not settled in this project:} that the replaced pair is again
+  simple in the sense of \S2 and again has finite intersection, as \S2's
+  hypotheses require. We have not found either stated explicitly in AKR \S9.
+  The project has a kernel-checked lemma that simplicity survives every
+  sufficiently small linear motion of the vertices
+  (\code{SimplicityStable.heptagon\_simplicity\_stable\_linear}), and
+  unreviewed pen-and-paper notes on choosing the \S9.1 directions so that the
+  intersection stays finite, but it has not assembled these with \S9.1 into a
+  proof of the reduction for these definitions.
+\end{enumerate}
+Using a published theorem does not by itself make an argument incomplete;
+the qualification here is item~(c).
 
-As a \emph{statement} it is the kind a geometer grants on sight: coinciding
-vertices, moved apart by enough to separate them and little enough to disturb
-nothing else. Its plausibility is not in question. Its \emph{proof} is another
-matter, and the repository's notes on \S9.1 are careful about this: AKR
-establish it through their Theorem~17 and a dependence-graph argument about
-which perturbations can be solved simultaneously, which is several pages and
-not a one-liner. So ``routine'' here means ``believable without checking'', not
-``short''. It is nonetheless \emph{not machine-checked here}, and the
-project has found two genuine defects elsewhere in AKR's published \S9
-procedure --- \S9.2's shift is undefined at a straight vertex, and a direction
-meeting AKR's stated criterion can make the perturbed intersection infinite ---
-so ``published'' has not been treated as ``correct'' in this development. Both
-defects are repairable and both repairs are this project's, not AKR's.
+\paragraph{Points the project noted in AKR \S9.} Two points arose while
+working on \S9, recorded here because they bear on how much of \S9 can be
+cited unchanged. They concern the procedure as printed, not the truth of the
+theorem. First, \S9.2 moves the endpoints of a side along the lines of the
+adjacent sides; when two consecutive sides are collinear, a configuration the
+definitions of \S2 allow, the printed description does not determine the
+move, and the project uses a different (``tilted'') shift. Second, the
+criterion stated in \S9.1 for choosing perturbation directions does not, as
+written, exclude directions that make the perturbed intersection infinite; an
+additional condition, which AKR may regard as implicit, is needed. The project's
+supplements are its own and are not reviewed. These points are documented in
+\code{docs/verification-status.md}, rows 60--62.
 
-\paragraph{Nobody outside this process has reviewed any of it.} Not the Lean,
-not the Python, not the mathematics. This document is the first artifact
-written to be read by someone outside it. The \emph{proofs} do not need a human
-reader, for the reason given in \S0; the \emph{statement} and this document's
-claims about it do, and you are that reader.
+\paragraph{Review status.} No independent review of the mathematics, the Lean
+development or the Python tools has been completed. The project's records
+(\code{docs/verification-status.md}, row~18) note that a colleague began
+reading an earlier dependency manifest in September 2026, and record no
+findings from that reading. Human review still matters for the statement and
+definitions (\S2), for the external reduction and its applicability (above),
+and for the connection between this document and the code that was checked
+(\S\S2 and~5).
 
-\paragraph{What the complete argument therefore is.} Not a single artifact. It
-is \textbf{a machine-checked theorem plus one routine lemma a geometer grants on
-sight} --- where ``routine'' keeps the meaning fixed two paragraphs above:
-believable without checking, but roughly three pages of AKR to actually prove,
-and not short. The repository's status document calls \S9.1 ``the one remaining
-external input''. That is a real proof, and it is how a great deal of
-mathematics is actually assembled. But it is two pieces, of two different
-kinds, and it should be described that way --- not as ``formally verified''.
+\paragraph{The gallery.} The gallery in \S3 is a Python \emph{transcription}
+of the Lean predicates, checked against them by hand and annotated with line
+numbers. It is evidence that the definitions compute what one expects on ten
+examples, not a proof that the Python and the Lean agree.
 
-\paragraph{And one smaller thing, so that the list is complete.} The gallery in
-\S3 is a Python \emph{transcription} of the Lean predicates, checked against
-them by hand and annotated with line numbers; it is independent evidence that
-the definitions compute what you expect, not a proof that the Python and the
-Lean agree. It does not affect the kernel-checked status of the theorem in
-\S2, but it does affect how much of \emph{this document} you are taking on my
-word rather than seeing for yourself.
-
-\smallskip
-\noindent Two further items stood in this list in an earlier draft, and it is
-better to record their closure than to delete them quietly. That the \S5 build
-numbers were ``the project's own assertions with no committed transcript'' is
-no longer true: the transcript is committed at \hllogpath, and the
-repository's axiom checker can be run over it by anyone, with no Lean
-toolchain. That ``group~L of the mutation suite has never been run in a way
-this repository records'' is no longer true either: it was run, its transcript
-is committed, and \S4 reports case by case what it found. Both were real gaps.
-Both are now artifacts you can open yourself, which is the only kind of answer
-this document is entitled to give.
+{\sloppy\paragraph{Earlier gaps, now closed.} An earlier draft listed two further
+items. That the \S5 build figures had no committed transcript is no longer
+true: the transcript is at \hllogpath, and the axiom checker can be run over it
+without Lean. That group~L of the mutation suite had never been run in a
+recorded way is no longer true either: it was run, its transcript is
+committed, and \S4 reports each case.\par}
 
 \appendix
 \section{The statement surface, verbatim and complete}
@@ -681,14 +670,15 @@ bash scripts/negative-tests.sh --lean --groups L \                 # group L in 
 bash scripts/verify-all.sh \                                       # the numbers in 5
      --axiom-log results/validation/2026-09-24_headline_build.log \
      > docs/audit/out/axiom_check_headline.log
+gh run view 36089101301 --log                     # source of out/ci_run_2.log
 python3 docs/audit/make_tables.py     # the LaTeX fragments
 python3 docs/audit/extract_lean.py --check   # drift tripwire; MUST exit 0
 cd docs/audit && tectonic audit.tex
 \end{Verbatim}
 
-\noindent No Lean in this document was typed by hand; no count in it was
-computed by hand. The prose in the left column of \S2 and in the notes beneath
-each row is written by a human and is exactly what you are being asked to
-check.
+\noindent The Lean text in \S2, \S\ref{sec:nonvac} and Appendix~A is extracted by
+\code{extract\_lean.py}, and the counts are generated by the scripts above. The
+prose in the left column of \S2 and in the notes beneath each row is written
+by hand, and it is what a reader is asked to check against the Lean.
 
 \end{document}

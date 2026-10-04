@@ -46,7 +46,7 @@
 \par\smallskip\noindent\hspace*{0.29\textwidth}\begin{minipage}{0.70\textwidth}{\footnotesize\textit{Note.}\ A set of points, not a list of crossings and not a multiset. A point where three sides concur is one element, not two.}\end{minipage}
 \par\medskip\noindent\rule{\textwidth}{0.3pt}\par\smallskip
 \noindent\begin{tabular}{@{}p{0.27\textwidth}@{\hspace{9pt}}p{0.70\textwidth}@{}}
-\textbf{(5)}\ \emph{Assumed:} no vertex of $P$ equals a vertex of $Q$. (This is the conclusion of AKR \S9.1; see \S7.) & {\scriptsize\ttfamily\setlength{\parindent}{0pt}\raggedright
+\textbf{(5)}\ \emph{Hypothesis:} no vertex of $P$ equals a vertex of $Q$. (Removing shared vertices is the reduction of AKR \S9.1, not formalized here; see \S\ref{sec:notproved}.) & {\scriptsize\ttfamily\setlength{\parindent}{0pt}\raggedright
 \mbox{}def~attainedCoincFree~:~Set~$\mathbb{N}$~:=\\[-1pt]
 \mbox{}~~\{~n~|~$\exists$~R~:~Pair9,~(points9~R).Finite~$\land$\\[-1pt]
 \mbox{}~~~~~~($\forall$~v~j~:~Fin~7,~R.V~(pP~v)~$\ne$~R.V~(pQ~j))~$\land$~(points9~R).ncard~=~n~\}\\[-1pt]

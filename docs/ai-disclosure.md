@@ -1,6 +1,14 @@
 # AI-assisted research disclosure
 
-**Last updated:** 2026-09-14
+**Last updated:** 2026-09-14 *(note added 2026-10-04)*
+
+> **Note, 2026-10-04.** The current AI-use disclosure is the one in
+> `../paper/heptagon-paper.pdf` (the section preceding the appendix). On
+> review status, see `verification-status.md` row 18: a colleague began
+> reading an earlier dependency manifest in September 2026 and no findings are
+> recorded; no independent review has been completed. The statements below
+> that "independent human verification is still none" were written on
+> 2026-09-14 and predate that row.
 
 > The authoritative, and more complete, AI-use disclosure is now the one on the
 > title page of [`../paper/proof-manifest.tex`](../paper/proof-manifest.tex)
@@ -93,6 +101,10 @@ organizing verification.
   a **candidate** computer-assisted proof, undergoing verification.
 
 ## Why the transcripts are kept
+
+> **Note (2026-10-04).** The transcripts are no longer distributed in the
+> repository; the author keeps them as provenance. The paragraphs below describe
+> why they were kept.
 
 `transcripts/` preserves the full session record, unmodified, so that a reader
 can separate two very different things:

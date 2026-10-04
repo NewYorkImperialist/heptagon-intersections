@@ -102,8 +102,9 @@ ROWS = [
         r"A point where three sides concur is one element, not two.",
     ),
     (
-        r"\emph{Assumed:} no vertex of $P$ equals a vertex of $Q$. "
-        r"(This is the conclusion of AKR \S9.1; see \S7.)",
+        r"\emph{Hypothesis:} no vertex of $P$ equals a vertex of $Q$. "
+        r"(Removing shared vertices is the reduction of AKR \S9.1, not "
+        r"formalized here; see \S\ref{sec:notproved}.)",
         "attainedCoincFree",
         r"The middle clause is the assumption, written out. It forbids "
         r"\emph{equality} of vertices only --- a vertex lying in the "
@@ -254,7 +255,7 @@ def write_gallery_figures(g: dict) -> None:
         r"Sanity checks with answers you can see at a glance.",
         r"Degeneracies that the theorem's hypotheses \emph{allow}, plus the "
         r"one they exclude (\texttt{awkward\_shared\_vertex}).",
-        r"The honest failure mode: two sides overlap in a whole sub-segment, "
+        r"Excluded by the finiteness hypothesis: two sides overlap in a whole sub-segment, "
         r"so the intersection is genuinely infinite. It is flagged, not "
         r"miscounted.",
     ]
@@ -307,12 +308,9 @@ def write_facts(decls: dict, g: dict, h: dict, ax: dict, l: dict) -> None:
             r"\newcommand{\Lfourreq}{The requirement is that the build "
             r"\emph{fail}. It does: that is case~L4 of the run recorded "
             r"below.}",
-            r"\newcommand{\Lfourupshot}{That is what shows the definitions "
-            r"are load-bearing and not decoration --- and it is what the run "
-            r"below shows. A reader who spends ten minutes on the %d rows of "
-            r"\S2 is therefore checking text that genuinely determines the "
-            r"result, not prose sitting above proofs that would compile "
-            r"whatever it said.}" % len(ROWS),
+            r"\newcommand{\Lfourupshot}{So the %d rows of \S2 are not "
+            r"independent of the proofs: at least this change to them is "
+            r"rejected by the build.}" % len(ROWS),
         ]
     else:
         cmds += [
@@ -635,14 +633,15 @@ def write_group_l(l: dict) -> None:
     else:
         l4 = [r for r in rows if r[1].startswith("L4")]
         parts.append(
-            r"\par\medskip\noindent Every one of the four mutations was "
-            r"rejected by a real build of a real mutated copy.")
+            r"\par\medskip\noindent Each of the four mutations was "
+            r"rejected by a build of a mutated copy. This shows that these "
+            r"four mutations are caught; it does not show that every defect "
+            r"would be.")
         if l4 and l4[0][0] == "CAUGHT":
             parts.append(
-                r" L4 is the one that bears on \S2 directly: not one character "
-                r"of proof text was altered, only the \emph{definition}, and "
-                r"the build still had to fail --- and did. The definitions you "
-                r"read in \S2 are therefore load-bearing, not decoration.")
+                r" L4 bears on \S2 directly: no proof text was altered, only "
+                r"the \emph{definition} of \texttt{points9}, and the build "
+                r"failed.")
     with open(os.path.join(OUT, "group_l.tex"), "w") as f:
         f.write("\n".join(parts) + "\n")
 
@@ -829,9 +828,7 @@ def write_nonvacuity(decls: dict, unmapped: set[str]) -> None:
         r"that \textbf{(2)--(7) all hold of the \emph{same} configuration}, "
         r"\code{AKR9.certPair9}. Checking hypotheses one at a time would not "
         r"rule out a theorem whose hypotheses are each satisfiable but "
-        r"jointly contradictory; a single shared witness does. That is "
-        r"precisely the failure mode an absent human reviewer would be "
-        r"looking for, and the declaration's own doc-comment says so.",
+        r"jointly contradictory; a single shared witness does.",
     ]
     u = decls["isGreatest_attainedCoincFree_unique"]
     parts += [

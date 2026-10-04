@@ -557,6 +557,9 @@ axiom_assert() {
 
 banner "heptagon-intersections :: verify-all"
 say "repository root : $ROOT"
+say "git commit      : $(git -C "$ROOT" rev-parse HEAD 2>/dev/null || echo unknown)"
+say "git worktree    : $(git -C "$ROOT" status --porcelain 2>/dev/null | wc -l | tr -d ' ') uncommitted change(s)"
+say "lean (pinned)   : $(cd "$ROOT/lean" 2>/dev/null && lean --version 2>/dev/null | head -1 || echo ABSENT)"
 if [ "$QUICK" = 1 ]; then
   say "mode            : --quick (steps 1-4 and 5a; 5b-5d and 6 deferred)"
 elif [ "$STEPS_EXPLICIT" = 1 ]; then
@@ -654,9 +657,9 @@ say "          native_decide/axiom in the sources"
 say "ALSO    : 'lake build Headline' -- because defaultTargets omits the AKR"
 say "          section-9 modules, a bare 'lake build' does not compile the"
 say "          headline theorems at all.  Both invocations are asserted on."
-say "NOTE    : a COLD Lean build is now dominated by the 135 OTEnum* shards,"
-say "          which kernel-check the (E7a) exhaustiveness enumeration one"
-say "          order-type representative at a time -- about 17 CPU-hours, so a"
+say "NOTE    : a COLD Lean build is now dominated by the 542 OTEnum* and 542"
+say "          Strat* shards, which kernel-check the (E7a) exhaustiveness"
+say "          enumeration -- about 17 CPU-hours, so a"
 say "          few wall-clock hours at -j6.  A WARM rebuild is still seconds,"
 say "          so repeat runs of this script are unaffected.  Everything else"
 say "          in the development builds in about two minutes; if you want that"
@@ -692,12 +695,12 @@ else
 
   # `lake build` builds defaultTargets, and defaultTargets DELIBERATELY omits
   # the AKR section-9 modules -- AKR9, Pair9Shift and their line of work -- to
-  # keep them out of a default build dominated by the 1,080 enumeration shards.
+  # keep them out of a default build dominated by the 1,084 enumeration shards.
   # The consequence is easy to miss and was: the documented command does not
   # compile the headline theorems at all, so it can neither fail on them nor
   # print their axioms.  lean/Headline.lean exists to close that gap: it is a
-  # leaf importing exactly the four roots, and its closure is ~331 modules with
-  # no shard in it.  Built here, by name, so that step 1 really does cover the
+  # leaf importing exactly the four roots: 331 modules in their closure, 332
+  # with Headline, no shard among them.  Built here, by name, so that step 1 really does cover the
   # punchline and step 1b has evidence to read.
   if [ -f "$ROOT/lean/Headline.lean" ] \
   && grep -q '^name = "Headline"' "$ROOT/lean/lakefile.toml"; then
@@ -891,7 +894,7 @@ PYEOF
           say "   *** and cannot print their axioms.  Build them by name first:"
           say "   ***     cd lean && lake build Headline"
           say "   *** (lean/Headline.lean is a leaf importing exactly those roots;"
-          say "   ***  its closure is ~331 modules and no enumeration shard.)"
+          say "   ***  332 modules with Headline, and no enumeration shard.)"
           say "   *** Continuing with the build log alone -- which means the headline"
           say "   *** assertion below will fail.  That is the correct outcome: the"
           say "   *** evidence was not obtained, so the claim is not established."
@@ -1484,7 +1487,9 @@ say "and a vertex-side half (9.2), and 9.2's half is now PROVED --"
 say "Pair9Shift.points9_le_38_of_coincFree bounds the point count assuming only"
 say "that the two heptagons share no VERTEX, which is strictly weaker than"
 say "section 9's conclusion; a vertex may lie in the interior of a side."
-say "Section 9.1's half is still imported as prose and is not formalized."
-say "And no person outside this AI-assisted process has reviewed any of it."
+say "Section 9.1's half -- removing shared vertices -- is an external result"
+say "(AKR 2022) and is not formalized; its applicability to these definitions"
+say "(simplicity and finiteness of the perturbed pair) is unresolved here."
+say "No independent review has been completed (verification-status row 18)."
 say "See docs/verification-status.md rows 4, 18, 46, 47, 50, 51, 113, 121."
 exit 0

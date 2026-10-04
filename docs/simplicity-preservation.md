@@ -1,6 +1,9 @@
-# Simplicity preservation, proved
+# Simplicity is stable under small linear motions
 
 **Status: a Lean theorem, kernel-checked, no `sorry` and no project axiom.**
+**This does not by itself show that AKR §9.1's perturbation yields a simple
+pair; that assembly is not done (paper Remark 8.10).** *(Title and this
+sentence changed 2026-10-04; the title read "Simplicity preservation, proved".)*
 Written 2026-09-20. The artifact is
 [`../lean/SimplicityStable.lean`](../lean/SimplicityStable.lean), built with
 `lake build SimplicityStable`.
@@ -27,7 +30,7 @@ appears nowhere in AKR: §9.1 moves free vertices, §9.2 shifts a side, and
 neither passage mentions simplicity. It is the one clause of the import with no
 published warrant at all.
 
-This document reports a proof of that clause, in the form:
+This document reports a result toward that clause, in the form:
 **a simple closed polygon stays simple under any small enough perturbation of
 its vertices**, with an explicit uniform ε, over any real normed space.
 

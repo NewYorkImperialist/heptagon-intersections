@@ -11,7 +11,7 @@ import Pair9Shift
 of work, `AKR9` and `Pair9Shift` among them.  That omission is recorded in
 `docs/verification-status.md` (rows 66, 71, 81, 105, 109, 119) and in
 `docs/uniform-eps-lean.md`; its purpose is to keep the §9 development out of
-the 1,756-target default build, which is dominated by the 1,080 `OTEnum*` /
+the 1,756-target default build, which is dominated by the 1,084 `OTEnum*` /
 `Strat*` enumeration shards.
 
 The cost of that choice is that the documented command — a bare `lake build` —
@@ -21,7 +21,7 @@ the live chain, so
 
     lake build Headline
 
-builds exactly their transitive closure (331 modules) and nothing else.  No
+builds their closure (331 modules) plus `Headline` (332) and nothing else.  No
 enumeration shard is in that closure, so the target cannot invalidate them.
 
 The four roots, weakest hypothesis last:

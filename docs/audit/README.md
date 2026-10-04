@@ -1,9 +1,9 @@
 # `docs/audit/` — generators for the reader's audit document
 
-The deliverable is `audit.tex` -> `audit.pdf`, written for a mathematician who
-does not read Lean. The document's job is to convince him the code does what it
-claims, so everything in it must be either *quoted from the source* or
-*recomputed from scratch*. `extract_lean.py` and `gallery.py` below are the only
+The deliverable is `audit.tex` -> `audit.pdf`, written for readers with or
+without Lean experience. Its job is to let a reader check what the code claims
+and what the evidence for it does and does not establish, so everything in it
+must be either *quoted from the source* or *recomputed from scratch*. `extract_lean.py` and `gallery.py` below are the only
 places the document's evidence comes from; `make_tables.py` only reformats their
 output into LaTeX.
 
@@ -103,8 +103,8 @@ polygons are not `SimpleClosed`. The `certificate_38` entry is read from
 
 ## 3. `make_tables.py` — the LaTeX fragments, and `audit.tex` — the document
 
-`audit.tex` is the deliverable: a PDF written for a mathematician who does not
-read Lean. It contains **no hand-typed Lean and no hand-computed count**.
+`audit.tex` is the deliverable: a PDF written for readers with or without Lean
+experience. It contains **no hand-typed Lean and no hand-computed count**.
 Everything of that kind reaches it through `make_tables.py`, which reads the
 two tools' outputs and emits LaTeX fragments into `out/`:
 
@@ -117,7 +117,7 @@ two tools' outputs and emits LaTeX fragments into `out/`:
 | `mutation_tables.tex` | §4, the group-A verdict table | `out/negative_tests_A.log` |
 | `group_l.tex` | §4, the group-L block *or its hedge* | `results/validation/2026-09-24_negative_tests_L.log` |
 | `headline_facts.tex` | §5, the build evidence | `results/validation/2026-09-24_headline_build.log` and `out/axiom_check_headline.log` |
-| `nonvacuity.tex` | §6, `nonVacuity` and its ten clauses | `out/lean_excerpts.json` |
+| `nonvacuity.tex` | §7, `nonVacuity` and its ten clauses | `out/lean_excerpts.json` |
 | `facts.tex` | every number quoted in prose | both tools |
 
 LaTeX escaping is `extract_lean.latex_escape`, the same routine that writes
@@ -163,7 +163,7 @@ bash scripts/verify-all.sh --axiom-log \
   results/validation/2026-09-24_headline_build.log \
   > docs/audit/out/axiom_check_headline.log              # no Lean needed
 python3 docs/audit/make_tables.py      # the LaTeX fragments
-python3 docs/audit/extract_lean.py --check    # drift tripwire; MUST exit 0
+python3 docs/audit/extract_lean.py --check    # drift check; MUST exit 0
 cd docs/audit && tectonic audit.tex           # -> docs/audit/audit.pdf
 ```
 
@@ -171,3 +171,12 @@ Neither Python tool touches anything outside `docs/audit/out/`, neither builds
 Lean, and both take a couple of seconds. Before shipping a PDF, re-run
 `python3 docs/audit/extract_lean.py --check` and confirm the gallery still
 exits zero.
+
+## CI extracts
+
+`out/ci_run.log` and `out/ci_run_2.log` are line-filtered extracts of the two
+recorded GitHub Actions runs (36086080499 at `b78f372`, 36089101301 at
+`e984888`). The second was extracted on 2026-10-04 with
+`gh run view 36089101301 --log`; its header states the filter used. The
+repository is private, so the run pages themselves are visible only to people
+with access.

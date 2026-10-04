@@ -198,3 +198,6 @@ independent/pi14_split/lemma4
 # Personal study guide -- not part of the published artifact.
 # Remove this line if it is ever made public.
 studyguide/
+
+# LLM session transcripts: kept locally as provenance, not distributed (2026-10-04)
+transcripts/

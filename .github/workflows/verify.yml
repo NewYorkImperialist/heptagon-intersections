@@ -72,7 +72,7 @@ jobs:
   headline:
     name: Headline build + axiom check + negative tests (group A)
     runs-on: ubuntu-latest
-    # The cold cost of the 331-module Headline closure has never been measured
+    # The cold cost of the 332-module Headline target has never been measured
     # on a 2-core runner; locally it is ~11 s WARM, which says nothing about
     # cold.  The closure contains 28 `CoverCase*` modules that need ~730 MB RSS
     # each.  This ceiling is deliberately generous; see the README.
@@ -169,7 +169,7 @@ jobs:
           df -h /
 
       # -----------------------------------------------------------------
-      # THE BUILD.  `Headline` only -- 331 modules, zero enumeration shards.
+      # THE BUILD.  `Headline` only -- 332 modules, zero enumeration shards.
       # -----------------------------------------------------------------
       - name: Build the Headline target
         working-directory: lean
@@ -294,7 +294,7 @@ jobs:
               || echo "(did not run)"
             echo '```'
             echo
-            echo "Scope: this job builds the \`Headline\` target only (331 modules)."
+            echo "Scope: this job builds the \`Headline\` target only (332 modules: the 331-module closure plus Headline)."
             echo "It does not build the 1,447 modules outside that closure."
             echo "See \`.github/workflows/README.md\`."
           } >> "$GITHUB_STEP_SUMMARY"

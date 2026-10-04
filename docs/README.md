@@ -1,5 +1,16 @@
 # Documentation index
 
+> **Start here (added 2026-10-04).** The current statement of what is proved,
+> what is Lean-verified, what is external and what is unresolved is in
+> [`../README.md`](../README.md) → "Current status". The mathematical write-up
+> is [`../paper/heptagon-paper.pdf`](../paper/heptagon-paper.pdf) (Theorem 1.2);
+> the audit of the formal statement and its evidence is
+> [`audit/audit.pdf`](audit/audit.pdf);
+> [`mathdb-submission.md`](mathdb-submission.md) is a submission draft prepared
+> for MathDB (the problem has since been submitted to TheoremDB instead). Many
+> files below describe earlier stages of the project and carry historical
+> banners.
+
 Two kinds of document live here, and the difference matters.
 
 **Written during repository organization (2026-09-13)** — these describe the
@@ -8,10 +19,11 @@ project's status conservatively and are maintained going forward:
 | File | Purpose |
 |---|---|
 | [`verification-status.md`](verification-status.md) | **Authoritative.** Trust status of every claim. Overrides every other document and every transcript. |
-| [`roadmap.md`](roadmap.md) | **Dependency roadmap** toward a kernel-checked theorem: current state by component, risks ranked by track record rather than effort, three candidate A7 routes, and the single recommended next milestone. |
+| [`mathdb-submission.md`](mathdb-submission.md) | **Submission draft (2026-10-04)** prepared for MathDB; the problem has since been submitted to TheoremDB. States the proved scope, the external §9.1 reduction and the review status. |
+| [`roadmap.md`](roadmap.md) | **SUPERSEDED 2026-09-17 —** **Dependency roadmap** toward a kernel-checked theorem: current state by component, risks ranked by track record rather than effort, three candidate A7 routes, and the single recommended next milestone. |
 | [`known-issues.md`](known-issues.md) | Every open gap and unresolved question, numbered `K-01`…`K-22`. *(Range corrected 2026-09-17: it read `K-21`, and `K-22` has existed since 2026-09-14.)* |
 | [`covering-step.md`](covering-step.md) | **The current upper-bound route.** The two minimal forbidden crossing patterns, the five-layer covering argument, and the bridge to `Config`. Added 2026-09-17. |
-| [`akr-9-1-obligation.md`](akr-9-1-obligation.md) | **Authoritative on the general-position citation.** What AKR §9 proves, what §9.1 does *not* say, and why the collinearity clause the development consumes rests on one unproved sentence of §3. |
+| [`akr-9-1-obligation.md`](akr-9-1-obligation.md) | **Authoritative on the general-position citation.** What AKR §9 proves, what §9.1 does *not* say, and why the collinearity clause rested on one sentence of §3. *(Historical on that point: the collinearity clause is now proved, `RawConfig.raw_crossPairs_card_le_38`.)* |
 | [`residual-412-lean.md`](residual-412-lean.md) | The 412 AKR-Lemma-7-free residual graphs, refuted in Lean. Superseded as a route by `covering-step.md`; §4 remains the clearest statement of the `GP`-versus-`Config` gap. |
 | [`akr-l7-review-request.md`](akr-l7-review-request.md) | **The AKR Lemma 7 question, as it should now be asked.** Supersedes `akr-l7-human-review.md`. Self-contained, with a drafted author question. |
 | [`e7-geometric-residue.md`](e7-geometric-residue.md) | Analysis of what the exceptional classification's geometric residue would require. Nothing proved; and since 2026-09-17 the classification is not an input to the upper bound. |
@@ -25,14 +37,14 @@ project's status conservatively and are maintained going forward:
 | [`reviewer-guide.md`](reviewer-guide.md) | **PARTLY SUPERSEDED — read the banner first, and read `verification-status.md` alongside it.** Self-contained walkthrough for a combinatorialist who has never seen the problem. Its §1 and §6 preamble are still the best orientation in the repository, but **its own banner declares §§2, 3, 4, 5 and 6.1–6.8 superseded** (they are written for the enumeration route, which the upper bound no longer uses), §7's "what would falsify this" table targets that same dead route, and **it knows nothing after 2026-09-17** — in particular nothing about the AKR §9 work, which is where all of the remaining risk now sits. *(Relabelled 2026-09-24. This row read "**Start here if you are reviewing.**" with no caveat, which sent a reviewer straight into five superseded sections. If you are reviewing, start with `verification-status.md` and this file's §1/§6 preamble.)* |
 | [`a7-specification.md`](a7-specification.md) | Precise specification of the A7 geometry-to-finite-model bridges. |
 | [`proof-manifest.md`](proof-manifest.md) | Per-claim dependency manifest (mirrors `paper/proof-manifest.tex`). |
-| [`handoff-2026-09-14.md`](handoff-2026-09-14.md) | Chronological session log for 2026-09-14. Sections are append-only and **earlier sections are superseded by later ones** — §10 is the final position. |
+| [`handoff-2026-09-14.md`](../archive/notes/handoff-2026-09-14.md) *(moved to `archive/notes/`)* | Chronological session log for 2026-09-14. Sections are append-only and **earlier sections are superseded by later ones** — §10 is the final position. |
 | [`akr-9-2-in-lean.md`](akr-9-2-in-lean.md) | **§9.2's half of the general-position reduction, in Lean — what is proved and what is not.** Written 2026-09-22. Companion to `../independent/akr_9_2/REPAIR.md`, which states the repair on paper. Sixteen modules, 376 declarations, `sorry`-free and `native_decide`-free. This is the document behind `verification-status.md` rows 113 and 121: `Pair9Shift.points9_le_38_of_coincFree`. |
 | [`akr-9-assembly.md`](akr-9-assembly.md) | **How the §9 pieces compose, and where they do not.** Written 2026-09-21. The dependency graph of §9 step by step, the count inequality assembled — "the piece nobody had written down" — and the reduction theorem. Explicitly *"an assembly document. It closes nothing."* Every claim about a Lean theorem was checked against the `.lean` source. |
 | [`akr-9-2-obligation.md`](akr-9-2-obligation.md) | **§9.2 stated as an obligation, with explicit quantifiers.** Written 2026-09-20; the §9.2 companion to `akr-9-1-obligation.md`. Records that §9.2's published argument is **five sentences with no case analysis and no lemma**, that its load-bearing averaging claim is **asserted without proof**, and proves it under hypotheses AKR do not state. Predates `akr-9-2-in-lean.md`; its "nothing here is in Lean" scope note is no longer true. |
 | [`akr-9-attempt.md`](akr-9-attempt.md) | **The first §9 attempt (2026-09-17), and its negative outcome.** `exists_noVertexOnOther_ge` is **not** proved; neither global E9a nor global E9b is proved. Records two useful negative findings, including the cone-containment witness that independently reproduces the project's own K-10 defect. `verification-status.md` row 53. |
-| [`simplicity-preservation.md`](simplicity-preservation.md) | **A Lean theorem: the §9 perturbation preserves simplicity.** Written 2026-09-20; the artifact is `../lean/SimplicityStable.lean`. AKR never state this step at all. Also records **one case in which the informal argument of `akr-9-1-obligation.md` §6.2 is false**. |
+| [`simplicity-preservation.md`](simplicity-preservation.md) | **A Lean lemma: simplicity survives every sufficiently small linear motion of the vertices.** A partial result toward the simplicity half of the §9.1 reduction, not yet assembled with it. Written 2026-09-20; the artifact is `../lean/SimplicityStable.lean`. AKR never state this step at all. Also records **one case in which the informal argument of `akr-9-1-obligation.md` §6.2 is false**. |
 | [`uniform-eps-lean.md`](uniform-eps-lean.md) | **The uniform-ε machinery, formalised** (`../lean/UniformEps.lean`). Lemma U, Theorem U, Corollary U′ and the bootstrapping principle — the quantitative step of §9 that the earlier audit called the hardest to formalize. A **live progress log**, updated as the work happens; read its status line before quoting it. |
-| [`hostile-review-2026-09-21.md`](hostile-review-2026-09-21.md) | **Adversarial pass over the §9 work of 2026-09-20/21**, written to break things rather than extend them. Graded BROKEN / GAP / DOUBTFUL / SURVIVES, with exact arithmetic throughout and no Lean build run. Read this before believing any §9 claim in the other four §9 documents above. |
+| [`hostile-review-2026-09-21.md`](../archive/notes/hostile-review-2026-09-21.md) *(moved to `archive/notes/`)* | **Adversarial pass over the §9 work of 2026-09-20/21**, written to break things rather than extend them. Graded BROKEN / GAP / DOUBTFUL / SURVIVES, with exact arithmetic throughout and no Lean build run. Read this before believing any §9 claim in the other four §9 documents above. |
 | [`literature-check.md`](literature-check.md) | **Prior-art search** for the claims of `covering-step.md` and `verification-status.md` rows 41–44 (2026-09-17). Performed by an AI agent, not a domain expert, over roughly two dozen queries with **no paywalled full text reached**. It is a search log with assessments, and is explicitly **not** an assertion of novelty. |
 
 *(Index completed 2026-09-14: these five files existed but were not listed.)*
@@ -47,7 +59,7 @@ at this index would not have found them.)*
 *(Index completed a **third** time, 2026-09-24: **eight** more files existed and
 were not listed — `akr-9-2-in-lean.md`, `akr-9-assembly.md`,
 `akr-9-2-obligation.md`, `akr-9-attempt.md`, `simplicity-preservation.md`,
-`uniform-eps-lean.md`, `hostile-review-2026-09-21.md` and
+`uniform-eps-lean.md`, `archive/notes/hostile-review-2026-09-21.md` and
 `literature-check.md`. Seven of the eight are the **AKR §9 work**, which is the
 whole of the remaining mathematical risk and the newest thing in the
 repository; a reader arriving at this index would have found no trace of it.
@@ -61,7 +73,8 @@ the same commit.**)*
 2026-09-13. **`proof-outline.md` has since been edited**: its Step 0 was found to
 be mathematically incorrect and has been replaced by a citation to AKR **§9,
 together with §3's unproved "for convenience" clause** (see `known-issues.md`
-K-10, and `akr-9-1-obligation.md` which is authoritative on the attribution).
+K-10, and `akr-9-1-obligation.md` which is authoritative on the attribution). *(Updated 2026-10-04: §3's clause and §9.2 are now
+proved; §9.1 alone remains external.)*
 The active proof must be correct, so the repair was made in place; the failed
 argument remains in git history and the supersession is stated in the file
 itself. *(Citation corrected 2026-09-17: this paragraph said "§9.1". §9.1 is

@@ -1,0 +1,81 @@
+# GitHub Actions run transcript (extract)
+# run     : https://github.com/NewYorkImperialist/heptagon-intersections/actions/runs/36089101301
+# commit  : e9848887bcd85e7e03e912781fba8f51c1d3121b
+# started : 2026-09-25T03:07:53Z   ended: 2026-09-25T03:42:58Z   (35m05s)
+# runner  : GitHub-hosted ubuntu-latest
+# lean/   : identical to commit a211140 (no lean/ change in a211140..e984888)
+# note    : Lake progress lines: 346 'Built' (332 project modules + 14 jobs
+#           building Mathlib's cache tool), 0 'Replayed'.
+# extracted 2026-10-04 with: gh run view 36089101301 --log, filtered by grep
+#           for the lines below; nothing else edited.
+
+runner      : Linux Linux 6.17.0-1022-azure x86_64
+cores       : 2
+memory      : 7.8Gi total, 6.7Gi available
+lean/lean-toolchain pins: leanprover/lean4:v4.33.1
+Build completed successfully (3344 jobs).
+Headline build wall time: 1903 s
+OK: 0 occurrences of sorryAx
+OK: 0 occurrences of "declaration uses 'sorry'"
+OK: no error: line
+OK: 408 'depends on axioms:' lines in the log
+   axiom-check: evidence log                               : /home/runner/work/heptagon-intersections/heptagon-intersections/ci-out/headline-build.log
+   axiom-check: lines scanned                              : 83077
+   axiom-check: 'depends on axioms' lines found            : 408
+   axiom-check: declarations parsed                        : 409
+   axiom-check: declarations using a disallowed axiom      : 0
+   axiom-check: occurrences of sorryAx                     : 0
+   axiom-check: occurrences of "declaration uses 'sorry'"  : 0
+   axiom-check: distinct axioms                            : 3
+   axiom-check:     OK         Classical.choice         in 398 declaration(s)
+   axiom-check:     OK         Quot.sound               in 405 declaration(s)
+   axiom-check:     OK         propext                  in 408 declaration(s)
+   axiom-check: source files that reported                 : 20
+   axiom-check:     Pair9Shift.lean                    204 declaration(s)
+   axiom-check:     RotationLaw.lean                   55 declaration(s)
+   axiom-check:     TiltedShift.lean                   41 declaration(s)
+   axiom-check:     CernyL2Derivation.lean             11 declaration(s)
+   axiom-check:     IntersectionCount.lean             11 declaration(s)
+   axiom-check:     SignExp.lean                       11 declaration(s)
+   axiom-check:     SimplicityStable.lean              11 declaration(s)
+   axiom-check:     AKR9.lean                          10 declaration(s)
+   axiom-check:     DegBound.lean                      8 declaration(s)
+   axiom-check:     R3Construct.lean                   7 declaration(s)
+   axiom-check:     RealUpperBound.lean                7 declaration(s)
+   axiom-check:     ConfigBridge.lean                  6 declaration(s)
+   axiom-check:     ... and 8 more source file(s)
+   axiom-check: headline theorems confirmed                : 6 of 6
+   axiom-check:     CONFIRMED  Heptagon.MainTheorem.isGreatest_38
+   axiom-check:                depends on axioms: [propext, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.RealUpperBound.isGreatest_38_real
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.AKR9.points_le_38_of_no_vertex_on_boundary
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.AKR9.isGreatest_38_of_E9
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.Pair9Shift.points9_le_38_of_coincFree
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   axiom-check:     CONFIRMED  Heptagon.Pair9Shift.isGreatest_38_of_coincFree
+   axiom-check:                depends on axioms: [propext, Classical.choice, Quot.sound]
+   AXIOM CHECK: CLEAN -- 409 declaration(s) reported their axioms; every one of the 3 distinct axioms used is among propext, Classical.choice, Quot.sound; sorryAx appears nowhere; all 6 headline theorems confirmed.
+  PASS  A1 complete clean log (control)        accepted (exit 0, as the control requires)
+  PASS  A2 wrapped axiom list (control)        accepted (exit 0, as the control requires)
+  PASS  A3 sorryAx in a headline theorem       rejected (exit 1, and said why)
+  PASS  A4 headline lines absent               rejected (exit 1, and said why)
+  PASS  A5 disallowed axiom (ofReduceBool)     rejected (exit 1, and said why)
+  PASS  A6 project-declared axiom              rejected (exit 1, and said why)
+  PASS  A7 no axiom output at all              rejected (exit 1, and said why)
+  PASS  A8 disallowed axiom in wrapped tail    rejected (exit 1, and said why)
+    axiom-check: declarations parsed                        : 61
+    axiom-check: declarations using a disallowed axiom      : 0
+    axiom-check: occurrences of sorryAx                     : 0
+    axiom-check: headline theorems confirmed                : 1 of 6
+  ACCEPTED            A1 complete clean log (control)             nothing -- a complete, clean #print axioms log
+  ACCEPTED            A2 wrapped axiom list (control)             nothing -- but one axiom list is wrapped across three lines
+  CAUGHT              A3 sorryAx in a headline theorem            a headline theorem's axiom list contains sorryAx
+  CAUGHT              A4 headline lines absent                    a log whose headline modules were never built: clean, but they never printed
+  CAUGHT              A5 disallowed axiom (ofReduceBool)          a headline theorem depends on Lean.ofReduceBool (what native_decide leaves)
+  CAUGHT              A6 project-declared axiom                   a headline theorem depends on a project-declared axiom
+  CAUGHT              A7 no axiom output at all                   a build log with no #print axioms output whatsoever
+  CAUGHT              A8 disallowed axiom in wrapped tail         a disallowed axiom hidden on the wrapped continuation line
+RESULT: 8 passed, 0 failed
